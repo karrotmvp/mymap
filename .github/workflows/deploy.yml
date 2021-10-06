@@ -70,7 +70,7 @@ jobs:
           aws-region: ap-northeast-2
           
       - name: S3 Upload
-        run: aws deploy push --aplication-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy.zip --source .
+        run: aws deploy push --application-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy.zip --source .
         
       - name: code deploy
         run: aws deploy create-deployment --application-name mymap-deploy --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name dev --s3-location bucket=mymapdeploy,bundleType=zip,key=deploy.zip
