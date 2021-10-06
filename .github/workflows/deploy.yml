@@ -27,11 +27,6 @@ jobs:
       matrix:
         node-version: ['14.x']
         
-    defaults:
-      run:
-        shell: bash
-        working-directory: client
-        
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
