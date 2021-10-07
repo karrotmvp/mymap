@@ -4,7 +4,8 @@ MAINTAINER rudy <rudy@daangn.com>
 
 VOLUME /deploy/mymap
 
-RUN npm install -g @nestjs/cli && npm install -g pm2
+RUN npm install -g @nestjs/cli
+    && npm install -g pm2
 
 COPY ./start.sh /usr/local/bin
 
