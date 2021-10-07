@@ -7,8 +7,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -74,6 +72,7 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          find ./ -name "docker-compose.*.yml" -exec perl -pi -e 's/tagname/tagnametest/g' {} \;
           
       - name: S3 Upload
         run: aws deploy push --application-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy.zip --source .
