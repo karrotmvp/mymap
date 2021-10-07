@@ -69,11 +69,12 @@ jobs:
           ECR_REPOSITORY: mymapdeploy
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo $IMAGE_TAG
+          find ./ -name "docker-compose.*.yml" -exec perl -pi -e 's/tagname/$IMAGE_TAG/g' {} \;
+          cat docker-compose.blue.yml
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          find ./ -name "docker-compose.*.yml" -exec perl -pi -e 's/tagname/$IMAGE_TAG/g' {} \;
+          
           
       - name: S3 Upload
         run: aws deploy push --application-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy.zip --source .
