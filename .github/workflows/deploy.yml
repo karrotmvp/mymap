@@ -54,9 +54,6 @@ jobs:
         run : npm run build
         working-directory: ${{ env.server-directory }}
       
-      - name: Generate deployment package
-        run: zip -r deploy.zip .
-      
       - name: configure AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
