@@ -67,7 +67,7 @@ jobs:
         
       - name: Build, tag, and push image to ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.regisry }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: mymapdeploy
           IMAGE_TAG: ${{ github.sha }}
         run: |
