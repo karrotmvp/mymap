@@ -53,6 +53,20 @@ jobs:
       - name: Run server build
         run : npm run build
         working-directory: ${{ env.server-directory }}
+        
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        
+      - name: Build, tag, and push image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.regisry }}
+          ECR_REPOSITORY: mymapdeploy
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       
       - name: configure AWS
         uses: aws-actions/configure-aws-credentials@v1
