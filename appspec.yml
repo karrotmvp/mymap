@@ -1,0 +1,9 @@
+version: 0.0
+os: linux
+files:
+  - source:  /
+    destination: /home/ubuntu/deploy/mymap/ # S3에서 가지고온 파일을 저장할 디렉터리 지정
+hooks:
+  AfterInstall: # 배포가 끝나면 아래 명령어를 실행
+    - location: execute-deploy.sh
+      timeout: 180
