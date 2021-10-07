@@ -1,4 +1,5 @@
 import "styled-components";
+import { css } from "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
@@ -15,5 +16,6 @@ declare module "styled-components" {
       purple: "0 3px 8px 0 #d6c9ff";
       blue: "0 3px 8px 0 #b3e2e6";
     };
+    flexCenter: css;
   }
 }

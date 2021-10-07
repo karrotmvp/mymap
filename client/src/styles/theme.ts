@@ -1,4 +1,10 @@
-import { DefaultTheme } from "styled-components";
+import { DefaultTheme, css } from "styled-components";
+
+const flexCenter = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export const theme: DefaultTheme = {
   color: {
@@ -14,4 +20,5 @@ export const theme: DefaultTheme = {
     purple: "0 3px 8px 0 #d6c9ff",
     blue: "0 3px 8px 0 #b3e2e6",
   },
+  flexCenter,
 };
