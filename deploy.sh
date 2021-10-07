@@ -15,6 +15,8 @@ if [ -z "$EXIST_BLUE" ]; then
 
     if [ $RES_CODE -eq 200 ]; then
         docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml down
+    else
+        docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml down
     fi
 
 else
@@ -28,6 +30,8 @@ else
 
     if [ $RES_CODE -eq 200 ]; then
         docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml down
+    else
+        docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml down
     fi
 
 fi
