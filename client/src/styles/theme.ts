@@ -12,6 +12,26 @@ export const WrapperWithHeaderFooter = css`
   box-sizing: border-box;
 `;
 
+const calculateMargin = (
+  gap: string,
+  direction: "row" | "column" | "column-reverse"
+) => {
+  if (direction === "row") return `margin-left: ${gap}`;
+  if (direction === "column") return `margin-top: ${gap}`;
+  if (direction === "column-reverse") return `margin-bottom: ${gap}`;
+  return "";
+};
+export const gap = (
+  gapLength: string,
+  direction: "row" | "column" | "column-reverse" = "row"
+) => {
+  return css`
+    & > * + * {
+      ${calculateMargin(gapLength, direction)}
+    }
+  `;
+};
+
 export const theme: DefaultTheme = {
   color: {
     purple: "#8661de",
