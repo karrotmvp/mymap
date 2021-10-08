@@ -2,8 +2,6 @@ import { createGlobalStyle } from "styled-components";
 import "./reset.scss";
 
 export const GlobalStyle = createGlobalStyle`
-    @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
-
     :focus {
         outline: none;
         border: none;

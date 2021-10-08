@@ -13,7 +13,12 @@ const Wrapper = styled.div`
   ${theme.flexCenter};
   width: 100%;
   height: 7rem;
-  border-bottom: 0.1rem solid black;
+  border-bottom: 0.1rem solid lightgray;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #fff;
+  font-size: 1.8rem;
 `;
 
 export default Header;

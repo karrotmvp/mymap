@@ -1,9 +1,15 @@
-import { DefaultTheme, css } from "styled-components";
+import styled, { DefaultTheme, css } from "styled-components";
 
 const flexCenter = css`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const WrapperWithHeaderFooter = css`
+  padding-top: 7.1rem;
+  padding-bottom: 8.8rem;
+  box-sizing: border-box;
 `;
 
 export const theme: DefaultTheme = {
