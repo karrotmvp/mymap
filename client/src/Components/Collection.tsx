@@ -31,6 +31,7 @@ const Wrapper = styled.div`
   .title {
     font-size: 1.7rem;
     line-height: 120%;
+    font-weight: bold;
   }
   .profile {
     font-size: 1.2rem;
@@ -41,7 +42,9 @@ const Wrapper = styled.div`
   .places {
     display: flex;
     width: 100%;
-    overflow-y: scroll;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin-top: 1.2rem;
   }
 `;
 
