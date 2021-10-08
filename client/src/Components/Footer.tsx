@@ -27,6 +27,7 @@ const Wrapper = styled.div`
   justify-content: space-around;
   box-shadow: 4px 0px 7px rgba(0, 0, 0, 0.13);
   position: fixed;
+  z-index: 100;
   left: 0;
   bottom: 0;
   background-color: #fff;

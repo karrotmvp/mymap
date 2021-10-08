@@ -7,8 +7,24 @@ const flexCenter = css`
 `;
 
 export const WrapperWithHeaderFooter = css`
+  width: 100%;
   padding-top: 7rem;
   padding-bottom: 8.8rem;
+  box-sizing: border-box;
+`;
+export const WrapperWithHeader = css`
+  width: 100%;
+  padding-top: 7rem;
+  box-sizing: border-box;
+`;
+
+export const Button = styled.div`
+  ${flexCenter};
+  background-color: #000;
+  color: #fff;
+  padding: 1.4rem 0;
+  font-size: 1.6rem;
+  border-radius: 1.2rem;
   box-sizing: border-box;
 `;
 

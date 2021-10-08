@@ -17,4 +17,11 @@ export const GlobalStyle = createGlobalStyle`
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    // naver map
+    #react-naver-map{
+        & > div {
+            display: none;
+        }
+    }
 `;

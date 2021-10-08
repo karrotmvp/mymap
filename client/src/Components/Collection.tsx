@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const PlaceBox = ({ name }: { name: string }) => {
@@ -12,16 +13,17 @@ const PlaceBox = ({ name }: { name: string }) => {
 const Collection = () => {
   return (
     <Wrapper>
-      <div>
-        <div className="title">혼밥하기 좋은 우리 동네 식당</div>
-        <div className="profile">미니 논현동</div>
-      </div>
-
-      <div className="places">
-        {[0, 0, 0, 0].map((_, i) => (
-          <PlaceBox key={i} name="인싸다이닝카페" />
-        ))}
-      </div>
+      <Link to="/detail/1">
+        <div>
+          <div className="title">혼밥하기 좋은 우리 동네 식당</div>
+          <div className="profile">미니 논현동</div>
+        </div>
+        <div className="places">
+          {[0, 0, 0, 0].map((_, i) => (
+            <PlaceBox key={i} name="인싸다이닝카페" />
+          ))}
+        </div>
+      </Link>
     </Wrapper>
   );
 };
