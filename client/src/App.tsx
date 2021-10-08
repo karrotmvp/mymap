@@ -3,6 +3,7 @@ import Main from "./Pages/Main";
 import Around from "./Pages/Around";
 import Mypage from "./Pages/Mypage";
 import Detail from "./Pages/Detail";
+import Write from "./Pages/Write";
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
           </Route>
           <Route exact path="/mypage">
             <Mypage />
+          </Route>
+          <Route exact path="/write">
+            <Write />
           </Route>
         </Switch>
       </div>

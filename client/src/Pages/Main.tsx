@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Collection from "../Components/Collection";
+import CreateButton from "../Components/CreateButton";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import { WrapperWithHeaderFooter } from "../styles/theme";
@@ -16,6 +17,8 @@ const Main = () => {
           <Collection key={i} />
         ))}
       </div>
+
+      <CreateButton />
 
       <Footer />
     </Wrapper>

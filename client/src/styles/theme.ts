@@ -1,6 +1,6 @@
 import styled, { DefaultTheme, css } from "styled-components";
 
-const flexCenter = css`
+export const flexCenter = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,6 +26,18 @@ export const Button = styled.div`
   font-size: 1.6rem;
   border-radius: 1.2rem;
   box-sizing: border-box;
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const Input = styled.input`
+  width: auto;
+  padding: 1.5rem 0;
+  padding-left: 1.6rem;
+  border: 0.1rem solid lightgray;
+  border-radius: 1rem;
+  font-size: 1.4rem;
 `;
 
 const calculateMargin = (

@@ -146,9 +146,6 @@ a {
 input,
 textarea {
   background: none;
-  &:focus {
-    outline: none;
-  }
 }
 textarea {
   border: none;
