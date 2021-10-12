@@ -32,12 +32,16 @@ export const Button = styled.div`
 `;
 
 export const Input = styled.input`
-  width: auto;
+  width: 100%;
   padding: 1.5rem 0;
   padding-left: 1.6rem;
   border: 0.1rem solid lightgray;
   border-radius: 1rem;
   font-size: 1.4rem;
+  box-sizing: border-box;
+  &:focus {
+    border: 0.1rem solid lightgray;
+  }
 `;
 
 const calculateMargin = (

@@ -63,17 +63,6 @@ const Contents = styled.div`
     margin-top: 1.6rem;
     ${gap("1.6rem", "column")}
   }
-
-  .save-button {
-    width: -webkit-fill-available;
-    position: fixed;
-    bottom: 0;
-    left: 2rem;
-    right: 2rem;
-    width: auto;
-    padding: 0 2rem;
-    box-sizing: border-box;
-  }
 `;
 
 const SaveBtn = styled(Button)`
