@@ -6,4 +6,4 @@ services:
      volumes:
           - /home/ubuntu/deploy/mymap:/deploy/mymap
      ports:
-          - "5001:5000"
+          - "3001:3000"
