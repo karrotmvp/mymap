@@ -50,4 +50,9 @@ export class PostController {
         return await this.postService.readSavedPost(req.user.userId, page, perPage);
     }
 
+    @Get('/feed/:regionId')
+    async readRegionPost(@Param('regionId') regionId: string, @Query('start') start: number, @Query('end') end: number, @Query('perPage') perPage: number) {
+        return await this.postService.readRegionPost(regionId, start, end, perPage);
+    }
+
 }

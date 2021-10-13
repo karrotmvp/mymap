@@ -1,4 +1,4 @@
-import { Injectable, NotAcceptableException, Put } from '@nestjs/common';
+import { BadRequestException, Injectable, NotAcceptableException, Put } from '@nestjs/common';
 import { PlaceDTO } from 'src/place/dto/place.dto';
 import { PlaceService } from 'src/place/place.service';
 import { UserDTO } from 'src/user/dto/user.dto';
@@ -37,6 +37,7 @@ export class PostService {
     async readPost(postId: number): Promise<PostDTO> {
         try {
             const post: Post = await this.postRepository.findWithPostId(postId);
+            if (!post) throw new BadRequestException();
             const user: UserDTO = await this.userService.readUserDetail(post.getUser());
             const detailPins: PinDTO[] = await this.readPinDetail(post.pins);
             const detailPost: PostDTO = new PostDTO(post, user, detailPins);
@@ -84,7 +85,7 @@ export class PostService {
         }
     }
 
-    async deletePost(userId: number, postId: number) {
+    async deletePost(userId: number, postId: number): Promise<void> {
         try {
             const post = await this.postRepository.findOne(postId);
             if (post.userId !== userId) throw new NotAcceptableException();
@@ -94,7 +95,7 @@ export class PostService {
         }
     }
 
-    async savePost(userId: number, postId: number) {
+    async savePost(userId: number, postId: number): Promise<void> {
         try {
             const post = await this.postRepository.findOne(postId);
             const user = await this.userService.readUser(userId);
@@ -105,10 +106,20 @@ export class PostService {
         }
     }
 
-    async readSavedPost(userId: number, page: number, perPage: number) {
+    async readSavedPost(userId: number, page: number, perPage: number): Promise<PostDTO[]> {
         try {
             const savedPostIds: number[] = await this.savedPostRepository.findWithUserId(userId, page, perPage);
-            // return await this.readPostList()
+            const posts: Post[] = await this.postRepository.findByIds(savedPostIds);
+            return await this.readPostList(posts);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async readRegionPost(regionId: string, start: number, end: number, perPage: number) {
+        try {
+            const posts: Post[] = await this.postRepository.findWithRegionId(regionId, start, end, perPage);
+            return await this.readPostList(posts);
         } catch (e) {
             throw e;
         }

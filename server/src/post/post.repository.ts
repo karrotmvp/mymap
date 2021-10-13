@@ -1,5 +1,5 @@
 import { User } from "src/user/entities/user.entity";
-import { EntityRepository, Repository } from "typeorm";
+import { EntityRepository, LessThan, MoreThan, Repository } from "typeorm";
 import { CreatePostDTO } from "./dto/create-post.dto";
 import { Pin } from "./entities/pin.entity";
 import { Post } from "./entities/post.entity";
@@ -25,6 +25,17 @@ export class PostRepository extends Repository<Post> {
             skip: num * page,
             take: num,
         });
+        return posts;
+    }
+
+    async findWithRegionId(regionId: string, start: number, end: number, perPage: number) {
+        const posts = await this.find({
+            order: { createdAt: 'DESC' },
+            where: (qb) => {
+                qb.where('regionId = :regionId AND postId NOT IN (:end, :start)', { regionId: regionId, start: start, end: end})
+            },
+            take: perPage,
+        })
         return posts;
     }
 }

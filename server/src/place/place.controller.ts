@@ -14,6 +14,7 @@ export class PlaceController {
 
     @Get('/search/:regionId')
     async searchPlace(@Param('regionId') regionId: number, @Query('query') query: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
+        //regionId string 변환하기
         return await this.placeService.searchPlace(query, regionId, page, perPage);
     }
 }

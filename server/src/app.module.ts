@@ -27,6 +27,7 @@ import { PlaceModule } from './place/place.module';
       database: configService.get('database.name'),
       entities: [join(__dirname, '/**/*.entity.js')],
       synchronize: true,
+      // logging: true,
     })
   }),
   UserModule,
