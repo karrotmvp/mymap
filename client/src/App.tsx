@@ -4,8 +4,24 @@ import Around from "./Pages/Around";
 import Mypage from "./Pages/Mypage";
 import Detail from "./Pages/Detail";
 import Write from "./Pages/Write";
+import Mini from "@karrotmarket/mini";
 
 function App() {
+  const mini = new Mini();
+
+  mini.startPreset({
+    preset:
+      "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
+    params: {
+      appId: process.env.REACT_APP_APP_ID as string,
+    },
+    onSuccess: function (result) {
+      if (result && result.code) {
+        console.log(result.code);
+      }
+    },
+  });
+
   return (
     <Router>
       <div className="App">

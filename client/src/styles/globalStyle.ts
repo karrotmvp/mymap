@@ -9,13 +9,16 @@ export const GlobalStyle = createGlobalStyle`
     ::-webkit-scrollbar {
         display: none;
     }
-    html{
+    html {
         font-size: 10px;
         -webkit-text-size-adjust: none;
-        font-family: 'Spoqa Han Sans Neo', 'sans-serif';   
+        font-family: 'Spoqa Han Sans Neo', 'sans-serif';
         font-display: fallback;
         -ms-overflow-style: none;
         scrollbar-width: none;
+    }
+    textarea {
+        font-family: 'Spoqa Han Sans Neo', 'sans-serif';
     }
 
     // naver map

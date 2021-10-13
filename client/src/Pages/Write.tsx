@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import Header from "../Components/Header";
 import {
@@ -14,6 +14,20 @@ const Write = () => {
   const [isSearchOpened, setIsSearchOpened] = useState(false);
   const [isPublic, setIsPublic] = useState<null | boolean>(null);
 
+  // 글자수 제한
+  const [isTextOver, setIsTextOver] = useState(false);
+  const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    // textarea autosize
+    e.target.style.height = "5.2rem";
+    e.target.style.height = e.target.scrollHeight + "px";
+
+    if (e.target.value.length > 30) {
+      setIsTextOver(true);
+    } else {
+      setIsTextOver(false);
+    }
+  };
+
   return (
     <Wrapper>
       <Header title="컬렉션 만들기" />
@@ -22,7 +36,13 @@ const Write = () => {
 
       <div className="subtitle">컬렉션 이름을 정해주세요</div>
       <div className="name-input">
-        <Input />
+        <Input
+          $error={isTextOver}
+          rows={2}
+          maxLength={30}
+          onInput={handleInput}
+          placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
+        />
       </div>
 
       <div className="subtitle">동네 주민들에게 컬렉션을 공개할까요?</div>

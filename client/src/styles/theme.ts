@@ -18,32 +18,6 @@ export const WrapperWithHeader = css`
   box-sizing: border-box;
 `;
 
-export const Button = styled.div`
-  ${flexCenter};
-  background-color: #000;
-  color: #fff;
-  padding: 1.4rem 0;
-  font-size: 1.6rem;
-  border-radius: 1.2rem;
-  box-sizing: border-box;
-  &:focus {
-    outline: none;
-  }
-`;
-
-export const Input = styled.input`
-  width: 100%;
-  padding: 1.5rem 0;
-  padding-left: 1.6rem;
-  border: 0.1rem solid lightgray;
-  border-radius: 1rem;
-  font-size: 1.4rem;
-  box-sizing: border-box;
-  &:focus {
-    border: 0.1rem solid lightgray;
-  }
-`;
-
 const calculateMargin = (
   gap: string,
   direction: "row" | "column" | "column-reverse"
@@ -66,17 +40,45 @@ export const gap = (
 
 export const theme: DefaultTheme = {
   color: {
-    purple: "#8661de",
-    blue: "#00bac7",
-    gray: "#f6f6f6",
-    green: "#07b495",
-    lightGreen: "#99ecdd",
-    darkGray: "#54595d",
-  },
-  boxShadow: {
-    normal: "0 3px 8px 0 rgb(0 0 0 / 10%)",
-    purple: "0 3px 8px 0 #d6c9ff",
-    blue: "0 3px 8px 0 #b3e2e6",
+    black: "#333333",
+    gray7: "#585858",
+    gray6: "#767676",
+    gray5: "#9C9C9C",
+    gray4: "#B4B4B4",
+    gray3: "#CECECE",
+    gray2: "#E5E5E5",
+    gray1: "#F8F9FA",
+    white: "#FFFFFF",
+    orange: "#FF7964",
+    red: "#FC453A",
   },
   flexCenter,
 };
+
+export const Button = styled.div`
+  ${flexCenter};
+  background-color: #000;
+  color: #fff;
+  padding: 1.4rem 0;
+  font-size: 1.6rem;
+  border-radius: 1.2rem;
+  box-sizing: border-box;
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const Input = styled.textarea<{ $error?: boolean }>`
+  width: 100%;
+  height: 5rem;
+  padding: 1.5rem 1.6rem;
+  border: 0.1rem solid
+    ${({ $error }) => (!$error ? theme.color.gray3 : theme.color.red)};
+  border-radius: 1rem;
+  font-size: 1.4rem;
+  box-sizing: border-box;
+  &:focus {
+    border: 0.1rem solid
+      ${({ $error }) => (!$error ? theme.color.gray5 : theme.color.red)};
+  }
+`;

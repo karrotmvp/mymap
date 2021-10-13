@@ -4,17 +4,17 @@ import { css } from "styled-components";
 declare module "styled-components" {
   export interface DefaultTheme {
     color: {
-      purple: "#8661de";
-      blue: "#00bac7";
-      gray: "#f6f6f6";
-      green: "#07b495";
-      lightGreen: "#99ecdd";
-      darkGray: "#54595d";
-    };
-    boxShadow: {
-      normal: "0 3px 8px 0 rgb(0 0 0 / 10%)";
-      purple: "0 3px 8px 0 #d6c9ff";
-      blue: "0 3px 8px 0 #b3e2e6";
+      black: "#333333";
+      gray7: "#585858";
+      gray6: "#767676";
+      gray5: "#9C9C9C";
+      gray4: "#B4B4B4";
+      gray3: "#CECECE";
+      gray2: "#E5E5E5";
+      gray1: "#F8F9FA";
+      white: "#FFFFFF";
+      orange: "#FF7964";
+      red: "#FC453A";
     };
     flexCenter: css;
   }

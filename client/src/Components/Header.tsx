@@ -13,7 +13,6 @@ const Wrapper = styled.div`
   ${theme.flexCenter};
   width: 100%;
   height: 7rem;
-  border-bottom: 0.1rem solid lightgray;
   position: fixed;
   z-index: 100;
   left: 0;
