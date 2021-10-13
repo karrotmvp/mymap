@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const DEFAULT_DELAY = 500;
 
-export default <T>(value: T, delay: number = DEFAULT_DELAY) => {
+const useThrottle = <T>(value: T, delay: number = DEFAULT_DELAY) => {
   const [throttledValue, setThrottleValue] = useState(value);
   const [isWaiting, setIsWaiting] = useState(false);
 
@@ -20,3 +20,5 @@ export default <T>(value: T, delay: number = DEFAULT_DELAY) => {
 
   return throttledValue;
 };
+
+export default useThrottle;
