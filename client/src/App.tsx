@@ -1,25 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Main from "./Pages/Main";
+import Around from "./Pages/Around";
+import Mypage from "./Pages/Mypage";
+import Detail from "./Pages/Detail";
+import Write from "./Pages/Write";
+import Mini from "@karrotmarket/mini";
+import { useSetRecoilState } from "recoil";
+import { RegionId } from "./Shared/atom";
 
 function App() {
+  const mini = new Mini();
+  const setRegionId = useSetRecoilState(RegionId);
+
+  mini.startPreset({
+    preset:
+      "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
+    params: {
+      appId: process.env.REACT_APP_APP_ID as string,
+    },
+    onSuccess: function (result) {
+      if (result && result.code) {
+        console.log(result.code);
+
+        const regionId = new URLSearchParams(window.location.search).get(
+          "region_id"
+        );
+        setRegionId(regionId as string);
+      }
+    },
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route exact path="/">
+            <Main />
+          </Route>
+          <Route path="/detail/:id">
+            <Detail />
+          </Route>
+          <Route exact path="/around">
+            <Around />
+          </Route>
+          <Route exact path="/mypage">
+            <Mypage />
+          </Route>
+          <Route exact path="/write">
+            <Write />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
