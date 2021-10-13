@@ -1,14 +1,17 @@
 import styled from "styled-components";
 import MapView from "../Components/MapView";
 import PlaceInfo from "../Components/PlaceInfo";
+import { Button } from "../styles/theme";
 
 const PlaceMapView = () => {
   return (
     <Wrapper>
       <MapView height={"100vh"} />
       <div className="place-info">
+        <div className="photo" />
         <PlaceInfo />
       </div>
+      <AddBtn>장소 추가</AddBtn>
     </Wrapper>
   );
 };
@@ -19,13 +22,32 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
+  .photo {
+    min-width: 10rem;
+    height: 10rem;
+    background-color: lightgray;
+    border-radius: 0.8rem;
+  }
   .place-info {
     position: fixed;
-    bottom: 0;
+    display: flex;
+    left: 0;
+    right: 0;
+    bottom: 9rem;
     background-color: #fff;
-    width: 100%;
-    height: 269px;
+    margin: 0 2rem;
+    box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.15);
+    border-radius: 1.6rem;
+    padding: 1.8rem;
   }
+`;
+
+const AddBtn = styled(Button)`
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 0 2rem;
+  bottom: 3.5rem;
 `;
 
 export default PlaceMapView;

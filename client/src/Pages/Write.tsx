@@ -131,7 +131,6 @@ const SubmitBtn = styled(Button)`
   position: fixed;
   left: 0;
   right: 0;
-  width: auto;
   margin: 0 2rem;
   bottom: 3.5rem;
 `;
