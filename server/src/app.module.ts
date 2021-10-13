@@ -7,7 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
-import { PinModule } from './pin/pin.module';
+import { AuthModule } from './auth/auth.module';
+import { PlaceModule } from './place/place.module';
 
 @Module({
   imports: [
@@ -30,7 +31,9 @@ import { PinModule } from './pin/pin.module';
   }),
   UserModule,
   PostModule,
-  PinModule],
+  AuthModule,
+  PlaceModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
