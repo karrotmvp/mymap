@@ -11,7 +11,7 @@ if [ -z "$EXIST_BLUE" ]; then
     
     sleep 20
 
-    RES_CODE=$(curl -o /dev/null -w "%{http_code}" "localhost:5001")
+    RES_CODE=$(curl -o /dev/null -w "%{http_code}" "localhost:3001")
 
     if [ $RES_CODE -eq 200 ]; then
         docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml down
@@ -26,7 +26,7 @@ else
     
     sleep 20
 
-    RES_CODE=$(curl -o /dev/null -w "%{http_code}" "localhost:5002")
+    RES_CODE=$(curl -o /dev/null -w "%{http_code}" "localhost:3002")
 
     if [ $RES_CODE -eq 200 ]; then
         docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml down
