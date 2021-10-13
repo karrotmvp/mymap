@@ -1,14 +1,18 @@
 import styled from "styled-components";
+import { PlaceType } from "../Shared/type";
+import { gap } from "../styles/theme";
 
-const PlaceInfo = () => {
+const PlaceInfo = ({ place }: { place: PlaceType }) => {
   return (
     <Wrapper>
-      <Tag>식당</Tag>
-      <div className="title">카페 노티드 청담</div>
-      <div className="subinfo">
-        부산광역시 강서구 녹산산단382로14번가길 10~29번지(송정동)
+      <div className="category">
+        {place.category?.map((c) => (
+          <Tag>{c}</Tag>
+        ))}
       </div>
-      <div className="subinfo">09:00 - 22:00 연중무휴2</div>
+
+      <div className="name">{place.name}</div>
+      <div className="address">{place.address}</div>
     </Wrapper>
   );
 };
@@ -18,13 +22,17 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   margin-left: 1.1rem;
-  .title {
+  .category {
+    display: flex;
+    ${gap("0.4rem")}
+  }
+  .name {
     margin-top: 1rem;
     font-size: 1.6rem;
     line-height: 2.3rem;
     font-weight: bold;
   }
-  .subinfo {
+  .address {
     margin-top: 0.7rem;
     color: gray;
     font-size: 1.3rem;
@@ -33,7 +41,7 @@ const Wrapper = styled.div`
 
 const Tag = styled.div`
   font-size: 1.1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1.05rem;
   border-radius: 0.5rem;
   border: 0.1rem solid lightgray;
 `;

@@ -3,6 +3,7 @@ import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import PlaceBox from "../Components/PlaceBox";
 import { gap, WrapperWithHeaderFooter } from "../styles/theme";
+import { dummyPlaces } from "./SearchPlace";
 
 const Around = () => {
   return (
@@ -11,8 +12,8 @@ const Around = () => {
       <Title>{`동네 장소들을 구경해보세요!`}</Title>
       <div className="subtitle">새로운 장소를 발견할지도 몰라요</div>
       <div className="places">
-        {new Array(20).fill(0).map((_, i) => (
-          <PlaceBox key={i} />
+        {dummyPlaces.map((place) => (
+          <PlaceBox key={place.placeId} {...{ place }} />
         ))}
       </div>
       <Footer />

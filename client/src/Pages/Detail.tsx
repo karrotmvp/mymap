@@ -3,6 +3,7 @@ import Header from "../Components/Header";
 import MapView from "../Components/MapView";
 import PlaceCard from "../Components/PlaceCard";
 import { Button, gap, WrapperWithHeader } from "../styles/theme";
+import { dummyPlaces } from "./SearchPlace";
 
 const Detail = () => {
   return (
@@ -20,8 +21,8 @@ const Detail = () => {
         </div>
 
         <div className="cards">
-          {new Array(10).fill(0).map((_, i) => (
-            <PlaceCard key={i} />
+          {dummyPlaces.map((place) => (
+            <PlaceCard key={place.placeId} {...{ place }} />
           ))}
         </div>
       </Contents>

@@ -1,18 +1,26 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import Header from "../Components/Header";
+import useInput from "../Hooks/useInput";
+import { Places } from "../Shared/atom";
 import {
   Button,
   flexCenter,
   gap,
   Input,
+  theme,
   WrapperWithHeader,
 } from "../styles/theme";
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
+  // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
+
+  const titleVal = useInput("");
   const [isPublic, setIsPublic] = useState<null | boolean>(null);
+  const places = useRecoilValue(Places);
 
   // 글자수 제한
   const [isTextOver, setIsTextOver] = useState(false);
@@ -21,12 +29,17 @@ const Write = () => {
     e.target.style.height = "5.2rem";
     e.target.style.height = e.target.scrollHeight + "px";
 
+    titleVal.setValue(e.target.value);
     if (e.target.value.length > 30) {
       setIsTextOver(true);
     } else {
       setIsTextOver(false);
     }
   };
+
+  useEffect(() => {
+    console.log(places);
+  }, [places]);
 
   return (
     <Wrapper>
@@ -65,11 +78,16 @@ const Write = () => {
       <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요</div>
       <div>최대 10개 장소까지 추가할 수 있어요!</div>
 
+      {/* 추가된 장소들 */}
+      {places?.map((place) => (
+        <div className="added-list">{place.name}</div>
+      ))}
+
       <div className="add-button" onClick={() => setIsSearchOpened(true)}>
         장소 추가
       </div>
 
-      {isSearchOpened && <SearchPlace />}
+      {isSearchOpened && <SearchPlace {...{ setIsSearchOpened }} />}
 
       <SubmitBtn>완료</SubmitBtn>
     </Wrapper>
@@ -80,14 +98,24 @@ const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding-left: 2rem;
   padding-right: 2rem;
+  padding-bottom: 11.7rem;
+  overflow-y: scroll;
   .name-input {
+    margin-top: 1.2rem;
+  }
+  .added-list {
+    ${flexCenter};
+    border-radius: 1.2rem;
+    padding: 1.4rem 0;
+    border: 1px solid ${theme.color.orange};
+    font-size: 1.6rem;
     margin-top: 1.2rem;
   }
   .add-button {
     ${flexCenter};
     border-radius: 1.2rem;
     padding: 1.4rem 0;
-    border: 1px solid #acb5bd;
+    border: 1px dashed ${theme.color.orange};
     font-size: 1.6rem;
     margin-top: 1.2rem;
   }

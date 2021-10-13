@@ -5,9 +5,12 @@ import Mypage from "./Pages/Mypage";
 import Detail from "./Pages/Detail";
 import Write from "./Pages/Write";
 import Mini from "@karrotmarket/mini";
+import { useSetRecoilState } from "recoil";
+import { RegionId } from "./Shared/atom";
 
 function App() {
   const mini = new Mini();
+  const setRegionId = useSetRecoilState(RegionId);
 
   mini.startPreset({
     preset:
@@ -18,6 +21,11 @@ function App() {
     onSuccess: function (result) {
       if (result && result.code) {
         console.log(result.code);
+
+        const regionId = new URLSearchParams(window.location.search).get(
+          "region_id"
+        );
+        setRegionId(regionId as string);
       }
     },
   });

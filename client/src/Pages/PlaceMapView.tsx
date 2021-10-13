@@ -1,17 +1,43 @@
+import { Dispatch, SetStateAction } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import MapView from "../Components/MapView";
 import PlaceInfo from "../Components/PlaceInfo";
+import { Places } from "../Shared/atom";
+import { PlaceType } from "../Shared/type";
 import { Button } from "../styles/theme";
 
-const PlaceMapView = () => {
+const PlaceMapView = ({
+  place,
+  setIsSearchOpened,
+}: {
+  place: PlaceType;
+  setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const [places, setPlaces] = useRecoilState(Places);
+
+  const handleAddPlace = (place: PlaceType) => {
+    setPlaces([...places, place]);
+    setIsSearchOpened(false);
+  };
+
   return (
     <Wrapper>
-      <MapView height={"100vh"} />
+      <MapView
+        height={"100vh"}
+        markers={[
+          {
+            placeId: place.placeId,
+            lat: place.coordinate.latitude,
+            lng: place.coordinate.longitude,
+          },
+        ]}
+      />
       <div className="place-info">
         <div className="photo" />
-        <PlaceInfo />
+        <PlaceInfo {...{ place }} />
       </div>
-      <AddBtn>장소 추가</AddBtn>
+      <AddBtn onClick={() => handleAddPlace(place)}>장소 추가</AddBtn>
     </Wrapper>
   );
 };

@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { PlaceType } from "../Shared/type";
 import PlaceInfo from "./PlaceInfo";
 
-const PlaceBox = () => {
+const PlaceBox = ({ place }: { place: PlaceType }) => {
   return (
     <Wrapper>
       <div className="photo" />
-      <PlaceInfo />
+      <PlaceInfo {...{ place }} />
     </Wrapper>
   );
 };

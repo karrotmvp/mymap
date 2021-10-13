@@ -1,10 +1,11 @@
 import styled from "styled-components";
+import { PlaceType } from "../Shared/type";
 import PlaceInfo from "./PlaceInfo";
 
-const PlaceCard = () => {
+const PlaceCard = ({ place }: { place: PlaceType }) => {
   return (
     <Wrapper>
-      <PlaceInfo />
+      <PlaceInfo {...{ place }} />
     </Wrapper>
   );
 };

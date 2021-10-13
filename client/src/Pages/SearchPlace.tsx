@@ -1,11 +1,83 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import SearchList from "../Components/SearchList";
+import { PlaceType } from "../Shared/type";
 import { Input } from "../styles/theme";
 import PlaceMapView from "./PlaceMapView";
 
-const SearchPlace = () => {
+export const dummyPlaces: PlaceType[] = [
+  {
+    placeId: "0",
+    name: "삼성영어청룡어학원",
+    address: "충청남도 천안시 동남구 풍세로 769-28",
+    coordinate: {
+      latitude: 36.7796945602981,
+      longitude: 127.13872042726,
+    },
+    businessHoursFrom: "09:00",
+    businessHoursTo: "21:00",
+    businessHoursExtra: "금요일은 쉽니다.",
+    category: ["음식", "카페/디저트", "카페"],
+    thumbnail: {
+      id: "BP-1203981203981",
+      width: 640,
+      height: 320,
+      url: "http://image-server-domain/path-to-the-image",
+      thumbnail: "http://image-server-domain/path-to-the-thumbnail-image",
+    },
+    images: [
+      {
+        id: "BP-1203981203981",
+        width: 640,
+        height: 320,
+        url: "http://image-server-domain/path-to-the-image",
+        thumbnail: "http://image-server-domain/path-to-the-thumbnail-image",
+      },
+    ],
+  },
+  {
+    placeId: "1",
+    name: "삼성영어청룡어학원",
+    address: "충청남도 천안시 동남구 풍세로 769-28",
+    coordinate: {
+      latitude: 36.7796945602981,
+      longitude: 127.13872042726,
+    },
+    businessHoursFrom: "09:00",
+    businessHoursTo: "21:00",
+    businessHoursExtra: "금요일은 쉽니다.",
+    category: ["음식", "카페/디저트", "카페"],
+    thumbnail: {
+      id: "BP-1203981203981",
+      width: 640,
+      height: 320,
+      url: "http://image-server-domain/path-to-the-image",
+      thumbnail: "http://image-server-domain/path-to-the-thumbnail-image",
+    },
+    images: [
+      {
+        id: "BP-1203981203981",
+        width: 640,
+        height: 320,
+        url: "http://image-server-domain/path-to-the-image",
+        thumbnail: "http://image-server-domain/path-to-the-thumbnail-image",
+      },
+    ],
+  },
+];
+
+const SearchPlace = ({
+  setIsSearchOpened,
+}: {
+  setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
+  const [place, setPlace] = useState<PlaceType | null>(null);
+
+  const handleOpenMap = (place: PlaceType) => {
+    setPlace(place);
+    setIsMapOpened(true);
+  };
 
   return (
     <Wrapper>
@@ -14,13 +86,15 @@ const SearchPlace = () => {
       </div>
 
       <div className="result">관련검색어</div>
-      {new Array(5).fill(0).map((_, i) => (
-        <div key={i} onClick={() => setIsMapOpened(true)}>
-          <SearchList />
+      {dummyPlaces.map((place) => (
+        <div key={place.placeId} onClick={() => handleOpenMap(place)}>
+          <SearchList {...{ place }} />
         </div>
       ))}
 
-      {isMapOpened && <PlaceMapView />}
+      {isMapOpened && place && (
+        <PlaceMapView {...{ place, setIsSearchOpened }} />
+      )}
     </Wrapper>
   );
 };

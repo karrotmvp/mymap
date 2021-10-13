@@ -1,12 +1,11 @@
 import styled from "styled-components";
+import { PlaceType } from "../Shared/type";
 
-const SearchList = () => {
+const SearchList = ({ place }: { place: PlaceType }) => {
   return (
     <Wrapper>
-      <div className="name">폴바셋 교보문고</div>
-      <div className="address">
-        서울특별시 서초구 서초4동 강남대로 465 교보 타워{" "}
-      </div>
+      <div className="name">{place.name}</div>
+      <div className="address">{place.address}</div>
     </Wrapper>
   );
 };
