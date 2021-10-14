@@ -5,12 +5,12 @@ import { Pin } from "./entities/pin.entity";
 @EntityRepository(Pin)
 export class PinRepository extends Repository<Pin> {
     async savePins(pins: CreatePinDTO[]): Promise<Pin[]> {
-        const newPins:Pin[] = [];
-        pins.map(async(pin) => {
+        const promise = pins.map(async(pin) => {
             const newPin = new Pin(pin.review, pin.placeId);
-            newPins.push(newPin);
             await this.save(newPin);
+            return newPin;
         })
+        const newPins:Pin[] = await Promise.all(promise);
         return newPins;
     }
 }
