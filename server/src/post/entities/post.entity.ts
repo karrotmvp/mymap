@@ -14,7 +14,7 @@ export class Post {
     }
 
     @PrimaryGeneratedColumn()
-    private postId: number;
+    postId: number;
 
     @RelationId((post: Post) => post.user)
     userId: number;
@@ -26,7 +26,7 @@ export class Post {
     @Column({ length: 30 })
     private title: string;
 
-    @Column()
+    @Column({ nullable: true })
     private contents: string;
 
     @Column()
@@ -35,7 +35,7 @@ export class Post {
     @Column()
     private share: boolean;
 
-    @OneToMany(() => Pin, pin => pin.post, { cascade: true })
+    @OneToMany(() => Pin, pin => pin.post, { cascade: ["soft-remove"], onDelete: "CASCADE" })
     pins: Pin[];
 
     @UpdateDateColumn()
