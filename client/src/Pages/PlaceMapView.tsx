@@ -24,7 +24,7 @@ const PlaceMapView = ({
   return (
     <Wrapper>
       <MapView
-        height={"100vh"}
+        height="100vh"
         markers={[
           {
             placeId: place.placeId,

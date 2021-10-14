@@ -10,6 +10,7 @@ import {
   gap,
   input,
   theme,
+  Title,
   WrapperWithHeader,
 } from "../styles/theme";
 import SearchPlace from "./SearchPlace";
@@ -198,15 +199,6 @@ const Wrapper = styled.div`
     margin-top: 1.2rem;
     box-sizing: border-box;
   }
-`;
-
-const Title = styled.div`
-  font-weight: bold;
-  font-size: 2.1rem;
-  line-height: 140%;
-  white-space: pre-wrap;
-  margin-top: 2.6rem;
-  letter-spacing: -2%;
 `;
 
 const SelectBtn = styled.div<{ $isSelected: boolean }>`

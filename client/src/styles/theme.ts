@@ -18,6 +18,12 @@ export const WrapperWithHeader = css`
   box-sizing: border-box;
 `;
 
+export const WrapperWithFooter = css`
+  width: 100%;
+  padding-bottom: 8.8rem;
+  box-sizing: border-box;
+`;
+
 const calculateMargin = (
   gap: string,
   direction: "row" | "column" | "column-reverse"
@@ -81,4 +87,13 @@ export const Button = styled.div`
   line-height: 135%;
   box-sizing: border-box;
   background-color: ${theme.color.orange};
+`;
+
+export const Title = styled.div`
+  font-weight: bold;
+  font-size: 2.1rem;
+  line-height: 140%;
+  white-space: pre-wrap;
+  margin-top: 2.6rem;
+  letter-spacing: -2%;
 `;
