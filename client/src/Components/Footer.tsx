@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { theme } from "../styles/theme";
+import { flexCenter, theme } from "../styles/theme";
 
 const Footer = () => {
   const pathname = window.location.pathname;
@@ -21,7 +21,7 @@ const Footer = () => {
 };
 
 const Wrapper = styled.div`
-  ${theme.flexCenter};
+  ${flexCenter};
   width: 100%;
   height: 8.8rem;
   justify-content: space-around;
