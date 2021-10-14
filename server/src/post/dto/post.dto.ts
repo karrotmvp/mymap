@@ -7,6 +7,7 @@ export class PostDTO {
         this.postId = post.getPostId();
         this.user = user;
         this.title = post.getTitle();
+        this.contents = post.getContents();
         this.regionId = post.getRegionId();
         this.share = post.getShare();
         this.pins = detailPins;
@@ -15,6 +16,7 @@ export class PostDTO {
     postId: number;
     user: UserDTO;
     title: string;
+    contents: string;
     regionId: string;
     share: boolean;
     pins: PinDTO[];

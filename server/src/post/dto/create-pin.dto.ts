@@ -1,6 +1,6 @@
 export class CreatePinDTO {
     constructor() {}
 
-    readonly contents: string;
+    readonly review: string;
     readonly placeId: string;
 }

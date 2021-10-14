@@ -12,7 +12,7 @@ export class PlaceRepository {
     ) {}
 
     async findOne(placeId: string) {
-        const uri = this.configService.get('daangn.poiuri') + '/api/mvp/pois/' + placeId;
+        const uri = this.configService.get('daangn.poiuri') + placeId;
         return this.httpService.get(uri).pipe(map(async(res) => {
             const place = new PlaceDTO(res.data);
             return place;
@@ -20,7 +20,7 @@ export class PlaceRepository {
     }
 
     async findWithIds(placeIds: string[]) {
-        const uri = this.configService.get('daangn.poiuri') + '/api/mvp/pois/by-ids';
+        const uri = this.configService.get('daangn.poiuri') + 'by-ids';
         return this.httpService.get(uri, {
             params: {
                 ids: placeIds
@@ -36,7 +36,7 @@ export class PlaceRepository {
     }
 
     async findWithName(query: string, regionId: number, page: number, perPage: number) {
-        const uri = this.configService.get('daangn.poiuri') + '/api/mvp/pois/search';
+        const uri = this.configService.get('daangn.poiuri') + 'search';
         return this.httpService.get(uri, {
             params: {
                 query: query,
@@ -46,7 +46,24 @@ export class PlaceRepository {
             }
         }).pipe(map(async(res) => {
             const places: PlaceDTO[] = [];
-            res.data.map(async(place) => {
+            res.data.items.map(async(place) => {
+                const newPlace = new PlaceDTO(place);
+                places.push(newPlace);
+            })
+            return places;
+        }))
+    }
+
+    async findWithRegion(regionId: number, perPage:number) {
+        const uri = this.configService.get('daangn.poiuri') + 'by-region-id';
+        return this.httpService.get(uri, {
+            params: {
+                regionId: regionId,
+                perPage: perPage,
+            }
+        }).pipe(map(async(res) => {
+            const places: PlaceDTO[] = [];
+            res.data.items.map(async(place) => {
                 const newPlace = new PlaceDTO(place);
                 places.push(newPlace);
             })

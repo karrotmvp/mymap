@@ -28,7 +28,7 @@ export class PostController {
 
     @UseGuards(JwtAuthGuard)
     @Put('/:postId')
-    async updatePost(@Req() req: any, @Body() post: CreatePostDTO) {
+    async updatePost(@Req() req: any, @Body() post) {
 
     }
 

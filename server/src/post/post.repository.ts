@@ -1,5 +1,5 @@
 import { User } from "src/user/entities/user.entity";
-import { EntityRepository, LessThan, MoreThan, Repository } from "typeorm";
+import { EntityRepository, Repository } from "typeorm";
 import { CreatePostDTO } from "./dto/create-post.dto";
 import { Pin } from "./entities/pin.entity";
 import { Post } from "./entities/post.entity";
@@ -7,7 +7,7 @@ import { Post } from "./entities/post.entity";
 @EntityRepository(Post)
 export class PostRepository extends Repository<Post> {
     async savePost(post: CreatePostDTO, user: User, pins: Pin[]) {
-        const newPost = new Post(user, post.title, post.regionId, post.share, pins);
+        const newPost = new Post(user, post.title, post.contents, post.regionId, post.share, pins);
         await this.save(newPost);
     }
 
