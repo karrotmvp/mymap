@@ -4,9 +4,10 @@ import { Pin } from "./pin.entity";
 
 @Entity()
 export class Post {
-    constructor(user: User, title: string, regionId: string, share: boolean, pins: Pin[]) {
+    constructor(user: User, title: string, contents: string , regionId: string, share: boolean, pins: Pin[]) {
         this.user = user;
         this.title = title;
+        this.contents = contents;
         this.regionId = regionId;
         this.share = share;
         this.pins = pins;
@@ -24,6 +25,9 @@ export class Post {
 
     @Column({ length: 30 })
     private title: string;
+
+    @Column()
+    private contents: string;
 
     @Column()
     private regionId: string;
@@ -48,6 +52,9 @@ export class Post {
     }
     public getTitle(): string {
         return this.title;
+    }
+    public getContents(): string {
+        return this.contents
     }
     public getRegionId(): string {
         return this.regionId;

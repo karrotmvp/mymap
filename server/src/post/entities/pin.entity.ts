@@ -3,8 +3,8 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 
 @Entity()
 export class Pin {
-    constructor(contents: string, placeId: string) {
-        this.contents = contents;
+    constructor(review: string, placeId: string) {
+        this.review = review;
         this.placeId = placeId;
     }
 
@@ -16,7 +16,7 @@ export class Pin {
     post: Post;
 
     @Column()
-    private contents: string;
+    private review: string;
     
     @Column()
     private placeId: string;
@@ -30,8 +30,8 @@ export class Pin {
     public getPinId(): number {
         return this.pinId;
     }
-    public getContents(): string {
-        return this.contents;
+    public getReview(): string {
+        return this.review;
     }
     public getPlaceId(): string {
         return this.placeId;

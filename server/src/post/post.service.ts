@@ -70,7 +70,7 @@ export class PostService {
         places.map(async(place: PlaceDTO) => {
             const placeId = place.placeId;
             const index = placeIds.findIndex((ele) => ele === placeId);
-            const detailPin: PinDTO = new PinDTO(pins[index].getContents(), place);
+            const detailPin: PinDTO = new PinDTO(pins[index].getReview(), place);
             detailPins.push(detailPin);
         })
         return detailPins;
