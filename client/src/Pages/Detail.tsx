@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import Header from "../Components/Header";
-import MapView from "../Components/MapView";
 import PlaceCard from "../Components/PlaceCard";
-import { Button, gap, theme, Title, WrapperWithHeader } from "../styles/theme";
+import { gap, theme, Title, WrapperWithHeader } from "../styles/theme";
 import { dummyPlaces } from "./SearchPlace";
 
 const Detail = () => {

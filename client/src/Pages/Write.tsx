@@ -66,7 +66,7 @@ const Write = () => {
     ) {
       setIsSubmittable(true);
     }
-  }, [inputVal.value, textareaVal.value, isShare, places]);
+  }, [inputVal.value, isInputOver, isTextareaOver, isShare, places]);
 
   return (
     <Wrapper>

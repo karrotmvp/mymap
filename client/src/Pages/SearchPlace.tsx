@@ -78,7 +78,7 @@ const SearchPlace = ({
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
-  const regionId = useRecoilValue(RegionId);
+  //   const regionId = useRecoilValue(RegionId);
 
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
@@ -86,20 +86,20 @@ const SearchPlace = ({
   };
 
   const searchVal = useInput("");
-  const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
+  //   const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
 
-  const getSearchItems = async () => {
-    const data = await GET(`api/place/search/6530459d189b`, {
-      query: debouncedSearchVal,
-    });
-    console.log("search", data);
-  };
+  //   const getSearchItems = async () => {
+  //     const data = await GET(`api/place/search/6530459d189b`, {
+  //       query: debouncedSearchVal,
+  //     });
+  //     console.log("search", data);
+  //   };
 
-  console.log(process.env.REACT_APP_ENDPOINT);
-  useEffect(() => {
-    console.log(debouncedSearchVal);
-    getSearchItems();
-  }, [debouncedSearchVal]);
+  //   console.log(process.env.REACT_APP_ENDPOINT);
+  //   useEffect(() => {
+  //     console.log(debouncedSearchVal);
+  //     getSearchItems();
+  //   }, [debouncedSearchVal]);
 
   return (
     <Wrapper>

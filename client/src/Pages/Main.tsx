@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Footer from "../Components/Footer";
-import Header from "../Components/Header";
 import MainSlide from "../Components/MainSlide";
 import MapView from "../Components/MapView";
 import { WrapperWithFooter } from "../styles/theme";

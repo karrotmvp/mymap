@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const DEFAULT_DELAY = 500;
 
-export default <T>(value: T, delay: number = DEFAULT_DELAY) => {
+const useDebounce = <T>(value: T, delay: number = DEFAULT_DELAY) => {
   const [debouncedValue, setDebounceValue] = useState(value);
 
   useEffect(() => {
@@ -16,3 +16,5 @@ export default <T>(value: T, delay: number = DEFAULT_DELAY) => {
 
   return debouncedValue;
 };
+
+export default useDebounce;

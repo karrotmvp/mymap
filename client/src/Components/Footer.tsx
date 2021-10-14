@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { flexCenter, theme } from "../styles/theme";
+import { flexCenter } from "../styles/theme";
 
 const Footer = () => {
   const pathname = window.location.pathname;
