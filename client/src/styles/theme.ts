@@ -57,28 +57,11 @@ export const theme: DefaultTheme = {
 
 export const Button = styled.div`
   ${flexCenter};
-  background-color: #000;
   color: #fff;
-  padding: 1.4rem 0;
+  padding: 1.5rem 0;
   font-size: 1.6rem;
-  border-radius: 1.2rem;
-  box-sizing: border-box;
-  &:focus {
-    outline: none;
-  }
-`;
-
-export const Input = styled.textarea<{ $error?: boolean }>`
-  width: 100%;
-  height: 5rem;
-  padding: 1.5rem 1.6rem;
-  border: 0.1rem solid
-    ${({ $error }) => (!$error ? theme.color.gray3 : theme.color.red)};
   border-radius: 1rem;
-  font-size: 1.4rem;
+  line-height: 135%;
   box-sizing: border-box;
-  &:focus {
-    border: 0.1rem solid
-      ${({ $error }) => (!$error ? theme.color.gray5 : theme.color.red)};
-  }
+  background-color: ${theme.color.orange};
 `;

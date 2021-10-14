@@ -18,7 +18,9 @@ const Wrapper = styled.div`
   left: 0;
   top: 0;
   background-color: #fff;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  line-height: 135%;
+  font-weight: 500;
 `;
 
 export default Header;

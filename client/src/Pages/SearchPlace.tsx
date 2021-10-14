@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import SearchList from "../Components/SearchList";
 import { PlaceType } from "../Shared/type";
-import { Input } from "../styles/theme";
+// import { Input } from "../styles/theme";
 import PlaceMapView from "./PlaceMapView";
 
 export const dummyPlaces: PlaceType[] = [
@@ -82,7 +82,7 @@ const SearchPlace = ({
   return (
     <Wrapper>
       <div className="place-input">
-        <Input />
+        <input />
       </div>
 
       <div className="result">관련검색어</div>

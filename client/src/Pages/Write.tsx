@@ -8,7 +8,6 @@ import {
   Button,
   flexCenter,
   gap,
-  Input,
   theme,
   WrapperWithHeader,
 } from "../styles/theme";
@@ -18,12 +17,12 @@ const Write = () => {
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
-  const titleVal = useInput("");
-  const [isPublic, setIsPublic] = useState<null | boolean>(null);
+  const [isShare, setIsShare] = useState<null | boolean>(null);
   const places = useRecoilValue(Places);
 
-  // 글자수 제한
-  const [isTextOver, setIsTextOver] = useState(false);
+  // input
+  const titleVal = useInput("");
+  const [isInputOver, setIsInputOver] = useState(false);
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     // textarea autosize
     e.target.style.height = "5.2rem";
@@ -31,52 +30,94 @@ const Write = () => {
 
     titleVal.setValue(e.target.value);
     if (e.target.value.length > 30) {
-      setIsTextOver(true);
+      setIsInputOver(true);
     } else {
-      setIsTextOver(false);
+      setIsInputOver(false);
     }
   };
 
+  // textarea
+  const textareaVal = useInput("");
+  const [isTextareaOver, setIsTextareaOver] = useState(false);
+  const handleTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    // textarea autosize
+    e.target.style.height = "15rem";
+    e.target.style.height = e.target.scrollHeight + "px";
+
+    textareaVal.setValue(e.target.value);
+    if (e.target.value.length > 100) {
+      setIsTextareaOver(true);
+    } else {
+      setIsTextareaOver(false);
+    }
+  };
+
+  // 완료
+  const [isSubmittable, setIsSubmittable] = useState(false);
   useEffect(() => {
-    console.log(places);
-  }, [places]);
+    if (
+      titleVal.value &&
+      !isInputOver &&
+      !isTextareaOver &&
+      isShare !== null &&
+      places.length > 0
+    ) {
+      setIsSubmittable(true);
+    }
+  }, [titleVal.value, textareaVal.value, isShare, places]);
 
   return (
     <Wrapper>
       <Header title="컬렉션 만들기" />
       <Title>{`추천하고 싶은
-나만의 장소를 알려주세요`}</Title>
+나만의 장소를 모아봐요`}</Title>
 
-      <div className="subtitle">컬렉션 이름을 정해주세요</div>
+      <div className="subtitle" style={{ marginTop: "3.1rem" }}>
+        리스트 이름을 정해주세요
+      </div>
       <div className="name-input">
         <Input
-          $error={isTextOver}
-          rows={2}
+          $error={isInputOver}
           maxLength={30}
           onInput={handleInput}
           placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
         />
       </div>
 
+      <div className="subtitle">
+        리스트에 대한 설명을 작성해주세요.(선택 사항)
+      </div>
+      <div className="name-input">
+        <Textarea
+          $error={isTextareaOver}
+          rows={2}
+          maxLength={100}
+          onInput={handleTextarea}
+          placeholder="어떤 리스트인지 추가로 설명해 주세요."
+        />
+      </div>
+
       <div className="subtitle">동네 주민들에게 컬렉션을 공개할까요?</div>
-      <div>서비스명은 동네 주민과 공유하는 것을 권장해요?</div>
-      <div className="public-buttons">
+      <div className="explanation">
+        리스트를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
+      </div>
+      <div className="select-buttons">
         <SelectBtn
-          onClick={() => setIsPublic(true)}
-          isSelected={isPublic === true}
+          onClick={() => setIsShare(true)}
+          $isSelected={isShare === true}
         >
           공개하기
         </SelectBtn>
         <SelectBtn
-          onClick={() => setIsPublic(false)}
-          isSelected={isPublic === false}
+          onClick={() => setIsShare(false)}
+          $isSelected={isShare === false}
         >
           나만보기
         </SelectBtn>
       </div>
 
-      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요</div>
-      <div>최대 10개 장소까지 추가할 수 있어요!</div>
+      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요.</div>
+      <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
 
       {/* 추가된 장소들 */}
       {places?.map((place) => (
@@ -89,7 +130,7 @@ const Write = () => {
 
       {isSearchOpened && <SearchPlace {...{ setIsSearchOpened }} />}
 
-      <SubmitBtn>완료</SubmitBtn>
+      <SubmitBtn $disabled={!isSubmittable}>완료</SubmitBtn>
     </Wrapper>
   );
 };
@@ -113,54 +154,115 @@ const Wrapper = styled.div`
   }
   .add-button {
     ${flexCenter};
-    border-radius: 1.2rem;
+    border-radius: 1rem;
     padding: 1.4rem 0;
     border: 1px dashed ${theme.color.orange};
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+    line-height: 135%;
+    font-weight: 500;
     margin-top: 1.2rem;
+    color: ${theme.color.orange};
   }
   .subtitle {
-    font-size: 1.7rem;
-    margin-top: 3.6rem;
-    line-height: 160%;
+    font-size: 1.4rem;
+    line-height: 120%;
+    font-weight: bold;
+    margin-top: 3.4rem;
+    color: ${theme.color.gray7};
   }
-  .public-buttons {
+  .explanation {
+    margin-top: 0.4rem;
+    font-size: 1.4rem;
+    line-height: 160%;
+    color: ${theme.color.gray6};
+  }
+  .select-buttons {
     width: 100%;
     display: flex;
     ${gap("0.8rem")};
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     box-sizing: border-box;
   }
 `;
 
 const Title = styled.div`
   font-weight: bold;
-  font-size: 2.2rem;
-  line-height: 115%;
+  font-size: 2.1rem;
+  line-height: 140%;
   white-space: pre-wrap;
-  margin-top: 2.9rem;
+  margin-top: 2.6rem;
+  letter-spacing: -2%;
 `;
 
-const SelectBtn = styled.div<{ isSelected: boolean }>`
+const SelectBtn = styled.div<{ $isSelected: boolean }>`
   ${flexCenter};
   padding: 1.4rem;
   border: 0.1rem solid
-    ${({ isSelected }) => (isSelected ? "#FFA26E" : "#dde2e5")};
-  background: ${({ isSelected }) => isSelected && "#FFA26E"};
+    ${({ $isSelected }) =>
+      $isSelected ? theme.color.orange : theme.color.gray2};
+  background: ${({ $isSelected }) => $isSelected && "rgba(255, 121, 100, 0.1)"};
   box-sizing: border-box;
   border-radius: 1rem;
   font-size: 1.4rem;
   line-height: 135%;
   width: 100%;
-  color: ${({ isSelected }) => isSelected && "#fff"};
+  font-weight: 500;
+  color: ${({ $isSelected }) =>
+    $isSelected ? theme.color.orange : theme.color.gray7};
 `;
 
-const SubmitBtn = styled(Button)`
+const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
   position: fixed;
   left: 0;
   right: 0;
   margin: 0 2rem;
   bottom: 3.5rem;
+  background-color: ${({ $disabled }) =>
+    $disabled ? theme.color.gray4 : theme.color.orange};
+`;
+
+const Input = styled.textarea<{ $error?: boolean }>`
+  width: 100%;
+  height: 5rem;
+  padding: 1.5rem 1.6rem;
+  border: 0.1rem solid
+    ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  line-height: 160%;
+  color: ${theme.color.gray7};
+  box-sizing: border-box;
+  background-color: ${theme.color.gray1};
+  ::placeholder {
+    color: ${theme.color.gray4};
+  }
+  &:focus {
+    background-color: #fff;
+    border: 0.1rem solid
+      ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
+  }
+`;
+
+const Textarea = styled.textarea<{ $error?: boolean }>`
+  width: 100%;
+  height: 14.8rem;
+  padding: 1.5rem 1.6rem;
+  border: 0.1rem solid
+    ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  line-height: 160%;
+  color: ${theme.color.gray7};
+  box-sizing: border-box;
+  background-color: ${theme.color.gray1};
+  ::placeholder {
+    color: ${theme.color.gray4};
+  }
+  &:focus {
+    background-color: #fff;
+    border: 0.1rem solid
+      ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
+  }
 `;
 
 export default Write;
