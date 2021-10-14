@@ -1,5 +1,5 @@
 import { Post } from "src/post/entities/post.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Pin {
@@ -15,17 +15,20 @@ export class Pin {
     @JoinColumn()
     post: Post;
 
-    @Column()
+    @Column({ nullable: true })
     private review: string;
     
     @Column()
     private placeId: string;
 
     @UpdateDateColumn()
-    private updatedAt: Date;
+    updatedAt: Date;
 
     @CreateDateColumn()
-    private createdAt: Date;
+    createdAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 
     public getPinId(): number {
         return this.pinId;

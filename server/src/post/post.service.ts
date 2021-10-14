@@ -35,7 +35,7 @@ export class PostService {
     }
 
     async readPost(postId: number): Promise<PostDTO> {
-        try {
+        try {//핀 중심값 계산해서 내리기
             const post: Post = await this.postRepository.findWithPostId(postId);
             if (!post) throw new BadRequestException();
             const user: UserDTO = await this.userService.readUserDetail(post.getUser());
@@ -49,11 +49,11 @@ export class PostService {
 
     async readPostList(posts: Post[]): Promise<PostDTO[]> {
         try {
-            const detailPosts: PostDTO[] = [];
-            posts.map(async(post:Post) => {
+            const promise = posts.map(async(post:Post) => {
                 const detailPost:PostDTO = await this.readPost(post.getPostId());
-                detailPosts.push(detailPost);
+                return detailPost;
             })
+            const detailPosts = await Promise.all(promise);
             return detailPosts;
         } catch (e) {
             throw e;
@@ -61,25 +61,27 @@ export class PostService {
     }
 
     private async readPinDetail(pins: Pin[]): Promise<PinDTO[]> {
-        const placeIds:string[] = [];
-        const detailPins: PinDTO[] = [];
-        pins.map(async(pin: Pin) => {
-            placeIds.push(pin.getPlaceId());
+        const promise = pins.map(async(pin: Pin) => {
+            return pin.getPlaceId();
         })
+        const placeIds:string[] = await Promise.all(promise);
         const places: PlaceDTO[] = await this.placeService.readPlaces(placeIds);
-        places.map(async(place: PlaceDTO) => {
+        const detailPromise = places.map(async(place: PlaceDTO) => {
             const placeId = place.placeId;
             const index = placeIds.findIndex((ele) => ele === placeId);
             const detailPin: PinDTO = new PinDTO(pins[index].getReview(), place);
-            detailPins.push(detailPin);
+            return detailPin;
         })
+        const detailPins: PinDTO[] = await Promise.all(detailPromise);
         return detailPins;
     }
 
     async readUserPost(userId: number, page: number, num: number): Promise<PostDTO[]> {
         try {
             const posts: Post[] = await this.postRepository.findWithUserId(userId, page, num);
-            return await this.readPostList(posts);
+            const detailPost = await this.readPostList(posts);
+            console.log(detailPost)
+            return detailPost
         } catch (e) {
             throw e;
         }
@@ -87,9 +89,10 @@ export class PostService {
 
     async deletePost(userId: number, postId: number): Promise<void> {
         try {
-            const post = await this.postRepository.findOne(postId);
+            const post = await this.postRepository.findOne(postId, {relations: ['pins']});
+            console.log(post)
             if (post.userId !== userId) throw new NotAcceptableException();
-            await this.postRepository.softDelete(postId);
+            await this.postRepository.softRemove(post);
         } catch (e) {
             throw e;
         }
