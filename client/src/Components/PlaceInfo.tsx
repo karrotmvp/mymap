@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { PlaceType } from "../Shared/type";
-import { gap } from "../styles/theme";
+import { gap, theme } from "../styles/theme";
 
 const PlaceInfo = ({ place }: { place: PlaceType }) => {
   return (
     <Wrapper>
       <div className="category">
-        {place.category?.map((c) => (
+        {place.category?.slice(0, 2).map((c) => (
           <Tag>{c}</Tag>
         ))}
       </div>
@@ -27,23 +27,27 @@ const Wrapper = styled.div`
     ${gap("0.4rem")}
   }
   .name {
-    margin-top: 1rem;
+    margin-top: 0.9rem;
     font-size: 1.6rem;
     line-height: 2.3rem;
     font-weight: bold;
   }
   .address {
-    margin-top: 0.7rem;
+    margin-top: 0.5rem;
     color: gray;
     font-size: 1.3rem;
+    color: ${theme.color.gray6};
+    letter-spacing: -2%;
+    line-height: 150%;
   }
 `;
 
 const Tag = styled.div`
   font-size: 1.1rem;
   padding: 0.55rem 1.05rem;
-  border-radius: 0.5rem;
-  border: 0.1rem solid lightgray;
+  border-radius: 0.4rem;
+  border: 0.1rem solid ${theme.color.gray3_5};
+  color: ${theme.color.gray7};
 `;
 
 export default PlaceInfo;

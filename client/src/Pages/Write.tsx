@@ -8,6 +8,7 @@ import {
   Button,
   flexCenter,
   gap,
+  input,
   theme,
   WrapperWithHeader,
 } from "../styles/theme";
@@ -21,14 +22,14 @@ const Write = () => {
   const places = useRecoilValue(Places);
 
   // input
-  const titleVal = useInput("");
+  const inputVal = useInput("");
   const [isInputOver, setIsInputOver] = useState(false);
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     // textarea autosize
     e.target.style.height = "5.2rem";
     e.target.style.height = e.target.scrollHeight + "px";
 
-    titleVal.setValue(e.target.value);
+    inputVal.setValue(e.target.value);
     if (e.target.value.length > 30) {
       setIsInputOver(true);
     } else {
@@ -56,7 +57,7 @@ const Write = () => {
   const [isSubmittable, setIsSubmittable] = useState(false);
   useEffect(() => {
     if (
-      titleVal.value &&
+      inputVal.value &&
       !isInputOver &&
       !isTextareaOver &&
       isShare !== null &&
@@ -64,7 +65,7 @@ const Write = () => {
     ) {
       setIsSubmittable(true);
     }
-  }, [titleVal.value, textareaVal.value, isShare, places]);
+  }, [inputVal.value, textareaVal.value, isShare, places]);
 
   return (
     <Wrapper>
@@ -73,7 +74,7 @@ const Write = () => {
 나만의 장소를 모아봐요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
-        리스트 이름을 정해주세요
+        리스트 제목을 입력해 주세요.
       </div>
       <div className="name-input">
         <Input
@@ -121,7 +122,10 @@ const Write = () => {
 
       {/* 추가된 장소들 */}
       {places?.map((place) => (
-        <div className="added-list">{place.name}</div>
+        <div className="added-list">
+          <div className="photo" />
+          {place.name}
+        </div>
       ))}
 
       <div className="add-button" onClick={() => setIsSearchOpened(true)}>
@@ -145,17 +149,28 @@ const Wrapper = styled.div`
     margin-top: 1.2rem;
   }
   .added-list {
-    ${flexCenter};
-    border-radius: 1.2rem;
-    padding: 1.4rem 0;
+    display: flex;
+    align-items: center;
+    border-radius: 1rem;
+    height: 5.2rem;
     border: 1px solid ${theme.color.orange};
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 2.2rem;
     margin-top: 1.2rem;
+    padding: 0 0.6rem;
+    .photo {
+      min-width: 4rem;
+      height: 4rem;
+      border-radius: 0.8rem;
+      background-color: lightgray;
+      margin-right: 1rem;
+    }
   }
   .add-button {
     ${flexCenter};
     border-radius: 1rem;
-    padding: 1.4rem 0;
+    height: 5.2rem;
     border: 1px dashed ${theme.color.orange};
     font-size: 1.4rem;
     line-height: 135%;
@@ -222,20 +237,11 @@ const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
 `;
 
 const Input = styled.textarea<{ $error?: boolean }>`
-  width: 100%;
+  ${input};
   height: 5rem;
-  padding: 1.5rem 1.6rem;
   border: 0.1rem solid
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
-  border-radius: 1rem;
-  font-size: 1.5rem;
-  line-height: 160%;
-  color: ${theme.color.gray7};
-  box-sizing: border-box;
   background-color: ${theme.color.gray1};
-  ::placeholder {
-    color: ${theme.color.gray4};
-  }
   &:focus {
     background-color: #fff;
     border: 0.1rem solid
@@ -244,20 +250,11 @@ const Input = styled.textarea<{ $error?: boolean }>`
 `;
 
 const Textarea = styled.textarea<{ $error?: boolean }>`
-  width: 100%;
+  ${input};
   height: 14.8rem;
-  padding: 1.5rem 1.6rem;
   border: 0.1rem solid
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
-  border-radius: 1rem;
-  font-size: 1.5rem;
-  line-height: 160%;
-  color: ${theme.color.gray7};
-  box-sizing: border-box;
   background-color: ${theme.color.gray1};
-  ::placeholder {
-    color: ${theme.color.gray4};
-  }
   &:focus {
     background-color: #fff;
     border: 0.1rem solid

@@ -45,6 +45,7 @@ export const theme: DefaultTheme = {
     gray6: "#767676",
     gray5: "#9C9C9C",
     gray4: "#B4B4B4",
+    gray3_5: "#C4C4C4",
     gray3: "#CECECE",
     gray2: "#E5E5E5",
     gray1: "#F8F9FA",
@@ -52,8 +53,24 @@ export const theme: DefaultTheme = {
     orange: "#FF7964",
     red: "#FC453A",
   },
-  flexCenter,
 };
+
+export const input = css`
+  width: 100%;
+  padding: 1.5rem 1.6rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  line-height: 160%;
+  box-sizing: border-box;
+  color: ${theme.color.gray7};
+  border: 0.1rem solid ${theme.color.gray3};
+  ::placeholder {
+    color: ${theme.color.gray4};
+  }
+  &:focus {
+    border: 0.1rem solid ${theme.color.gray3};
+  }
+`;
 
 export const Button = styled.div`
   ${flexCenter};

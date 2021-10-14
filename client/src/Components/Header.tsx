@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { theme } from "../styles/theme";
+import { flexCenter, theme } from "../styles/theme";
 
 interface HeaderProps {
   title: string;
@@ -10,7 +10,7 @@ const Header = ({ title }: HeaderProps) => {
 };
 
 const Wrapper = styled.div`
-  ${theme.flexCenter};
+  ${flexCenter};
   width: 100%;
   height: 7rem;
   position: fixed;

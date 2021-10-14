@@ -59,7 +59,7 @@ const Wrapper = styled.div`
     display: flex;
     left: 0;
     right: 0;
-    bottom: 9rem;
+    bottom: 9.7rem;
     background-color: #fff;
     margin: 0 2rem;
     box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.15);
