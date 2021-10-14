@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { flexCenter, theme } from "../styles/theme";
 
 interface HeaderProps {
-  title: string;
+  title?: string;
   isGradient?: boolean;
 }
 
