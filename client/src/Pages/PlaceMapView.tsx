@@ -5,7 +5,7 @@ import MapView from "../Components/MapView";
 import PlaceInfo from "../Components/PlaceInfo";
 import { Places } from "../Shared/atom";
 import { PlaceType } from "../Shared/type";
-import { Button } from "../styles/theme";
+import { Button, theme } from "../styles/theme";
 
 const PlaceMapView = ({
   place,
@@ -60,7 +60,7 @@ const Wrapper = styled.div`
     left: 0;
     right: 0;
     bottom: 9.7rem;
-    background-color: #fff;
+    background-color: ${theme.color.white};
     margin: 0 2rem;
     box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.15);
     border-radius: 1.6rem;

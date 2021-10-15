@@ -80,7 +80,7 @@ export const input = css`
 
 export const Button = styled.div`
   ${flexCenter};
-  color: #fff;
+  color: ${theme.color.white};
   padding: 1.5rem 0;
   font-size: 1.6rem;
   border-radius: 1rem;

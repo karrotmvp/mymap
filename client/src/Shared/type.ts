@@ -1,3 +1,11 @@
+// export interface PostType {
+//   title: string;
+//   contents: string;
+//   regionId: string;
+//   share: boolean;
+
+// }
+
 export interface PlaceType {
   placeId: string;
   name: string;

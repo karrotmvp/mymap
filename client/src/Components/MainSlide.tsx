@@ -60,7 +60,7 @@ const Wrapper = styled.div<{ $isMapShown: boolean }>`
 `;
 
 const Card = styled.div`
-  background-color: #fff;
+  background-color: ${theme.color.white};
   padding-top: 1.1rem;
   padding-left: 2rem;
   box-sizing: border-box;

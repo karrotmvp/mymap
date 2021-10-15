@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Header from "../Components/Header";
 import PlaceCard from "../Components/PlaceCard";
 import { gap, theme, Title, WrapperWithHeader } from "../styles/theme";
-import { dummyPlaces } from "./SearchPlace";
+import { dummyPlaces } from "../utils/dummy";
 
 const Detail = () => {
   return (

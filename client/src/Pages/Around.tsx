@@ -3,7 +3,7 @@ import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import PlaceBox from "../Components/PlaceBox";
 import { gap, WrapperWithHeaderFooter } from "../styles/theme";
-import { dummyPlaces } from "./SearchPlace";
+import { dummyPlaces } from "../utils/dummy";
 
 const Around = () => {
   return (

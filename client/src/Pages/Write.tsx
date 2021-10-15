@@ -235,7 +235,7 @@ const Input = styled.textarea<{ $error?: boolean }>`
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};
   &:focus {
-    background-color: #fff;
+    background-color: ${theme.color.white};
     border: 0.1rem solid
       ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
   }
@@ -248,7 +248,7 @@ const Textarea = styled.textarea<{ $error?: boolean }>`
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};
   &:focus {
-    background-color: #fff;
+    background-color: ${theme.color.white};
     border: 0.1rem solid
       ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
   }

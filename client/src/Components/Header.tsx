@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flexCenter } from "../styles/theme";
+import { flexCenter, theme } from "../styles/theme";
 
 interface HeaderProps {
   title?: string;
@@ -21,7 +21,7 @@ const Wrapper = styled.div<{ $isGradient: boolean }>`
   background: ${({ $isGradient }) =>
     $isGradient
       ? "linear-gradient(180.03deg, #FFFFFF 23.76%, rgba(255, 255, 255, 0) 117.46%)"
-      : "#fff"};
+      : theme.color.white};
   opacity: ${({ $isGradient }) => ($isGradient ? 0.95 : 1)};
   font-size: 1.6rem;
   line-height: 135%;
