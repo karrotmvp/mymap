@@ -75,7 +75,7 @@ const PlaceBoxWrapper = styled.div`
     margin: 0.8rem;
     font-size: 1.3rem;
     color: ${theme.color.gray6};
-    line-height: 130%;
+    line-height: 140%;
   }
 `;
 

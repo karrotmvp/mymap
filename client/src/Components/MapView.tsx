@@ -3,13 +3,7 @@ import { RenderAfterNavermapsLoaded, NaverMap, Marker } from "react-naver-maps";
 interface MapViewProps {
   width?: string;
   height?: string;
-  markers?: MarkerType[];
-}
-
-interface MarkerType {
-  placeId: string;
-  lat: number;
-  lng: number;
+  pins?: Pin[];
 }
 
 declare global {
@@ -18,11 +12,20 @@ declare global {
   }
 }
 
-const MapView = ({ width, height, markers }: MapViewProps) => {
+export interface Pin {
+  id: number;
+  latitude: number;
+  longitude: number;
+}
+
+const MapView = ({ width, height, pins }: MapViewProps) => {
   // const navermaps = window.naver.maps;
 
-  const defaultCenter = markers
-    ? { lat: markers[0].lat, lng: markers[0].lng }
+  const defaultCenter = pins
+    ? {
+        lat: pins[0].latitude,
+        lng: pins[0].longitude,
+      }
     : { lat: 37.3595704, lng: 127.105399 };
 
   return (
@@ -40,10 +43,13 @@ const MapView = ({ width, height, markers }: MapViewProps) => {
         defaultCenter={defaultCenter}
         defaultZoom={16}
       >
-        {markers?.map((marker) => (
+        {pins?.map((pin) => (
           <Marker
-            key={marker.placeId}
-            position={{ lat: marker.lat, lng: marker.lng }}
+            key={pin.id}
+            position={{
+              lat: pin.latitude,
+              lng: pin.longitude,
+            }}
           />
         ))}
       </NaverMap>

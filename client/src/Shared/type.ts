@@ -1,10 +1,22 @@
-// export interface PostType {
-//   title: string;
-//   contents: string;
-//   regionId: string;
-//   share: boolean;
+export interface PostType {
+  postId: number;
+  user: {
+    userId: number;
+    userName: string;
+    profileImageUrl: string;
+  };
+  title: string;
+  contents: string;
+  regionId: string;
+  share: boolean;
+  pins: PinType[];
+}
 
-// }
+export interface PinType {
+  pinId: number;
+  review: string;
+  place: PlaceType;
+}
 
 export interface PlaceType {
   placeId: string;
@@ -22,22 +34,10 @@ export interface PlaceType {
   images: ImageType[];
 }
 
-export interface PostPlaceType {
-  title: string;
-  regionId: string;
-  share: boolean;
-  pins: Pin[];
-}
-
 interface ImageType {
   id: string;
   width: number;
   height: number;
   url: string;
   thumbnail: string;
-}
-
-interface Pin {
-  placeId: string;
-  contents?: string;
 }

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import MapView from "../Components/MapView";
+import MapView, { Pin } from "../Components/MapView";
 import PlaceInfo from "../Components/PlaceInfo";
 import { Places } from "../Shared/atom";
 import { PlaceType } from "../Shared/type";
@@ -21,18 +21,15 @@ const PlaceMapView = ({
     setIsSearchOpened(false);
   };
 
+  const pin: Pin = {
+    id: parseInt(place.placeId),
+    latitude: place.coordinate.latitude,
+    longitude: place.coordinate.longitude,
+  };
+
   return (
     <Wrapper>
-      <MapView
-        height="100vh"
-        markers={[
-          {
-            placeId: place.placeId,
-            lat: place.coordinate.latitude,
-            lng: place.coordinate.longitude,
-          },
-        ]}
-      />
+      <MapView height="100vh" pins={[pin]} />
       <div className="place-info">
         <div className="photo" />
         <PlaceInfo {...{ place }} />
