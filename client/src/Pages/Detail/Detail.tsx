@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import Header from "../Components/Header";
-import PlaceCard from "../Components/PlaceCard";
-import { gap, theme, Title, WrapperWithHeader } from "../styles/theme";
-import { dummyPlaces } from "../utils/dummy";
+import Header from "../../Components/Header";
+import PlaceCard from "../../Components/PlaceCard";
+import { gap, theme, Title, WrapperWithHeader } from "../../styles/theme";
+import { dummyPlaces } from "../../utils/dummy";
 
 const Detail = () => {
   return (
@@ -23,9 +23,6 @@ const Detail = () => {
       </Profile>
 
       <div className="cards">
-        {dummyPlaces.map((place) => (
-          <PlaceCard key={place.placeId} {...{ place }} />
-        ))}
         {dummyPlaces.map((place) => (
           <PlaceCard key={place.placeId} {...{ place }} />
         ))}

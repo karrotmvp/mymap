@@ -1,9 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import Header from "../Components/Header";
-import useInput from "../Hooks/useInput";
-import { Places } from "../Shared/atom";
+import Header from "../../Components/Header";
+import useInput from "../../Hooks/useInput";
+import { Places } from "../../Shared/atom";
 import {
   Button,
   flexCenter,
@@ -12,7 +12,7 @@ import {
   theme,
   Title,
   WrapperWithHeader,
-} from "../styles/theme";
+} from "../../styles/theme";
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {

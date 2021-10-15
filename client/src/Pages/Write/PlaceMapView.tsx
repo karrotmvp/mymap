@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import MapView, { Pin } from "../Components/MapView";
-import PlaceInfo from "../Components/PlaceInfo";
-import { Places } from "../Shared/atom";
-import { PlaceType } from "../Shared/type";
-import { Button, theme } from "../styles/theme";
+import MapView, { Pin } from "../../Components/MapView";
+import PlaceInfo from "../../Components/PlaceInfo";
+import { Places } from "../../Shared/atom";
+import { PlaceType } from "../../Shared/type";
+import { Button, theme } from "../../styles/theme";
 
 const PlaceMapView = ({
   place,

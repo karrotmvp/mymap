@@ -6,12 +6,12 @@ import {
   useState,
 } from "react";
 import styled from "styled-components";
-import SearchList from "../Components/SearchList";
-import useDebounce from "../Hooks/useDebounce";
-import useInput from "../Hooks/useInput";
-import { PlaceType } from "../Shared/type";
-import { flexCenter, input, theme } from "../styles/theme";
-import { GET } from "../utils/axios";
+import SearchList from "../../Components/SearchList";
+import useDebounce from "../../Hooks/useDebounce";
+import useInput from "../../Hooks/useInput";
+import { PlaceType } from "../../Shared/type";
+import { flexCenter, input, theme } from "../../styles/theme";
+import { GET } from "../../utils/axios";
 import PlaceMapView from "./PlaceMapView";
 
 const SearchPlace = ({
