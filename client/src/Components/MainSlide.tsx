@@ -1,24 +1,17 @@
-import { useState } from "react";
 import styled from "styled-components";
 import { flexCenter, theme, Title, WrapperWithFooter } from "../styles/theme";
 import Collection from "./Collection";
 import CreateButton from "./CreateButton";
-import Header from "./Header";
 
-const MainSlide = ({ isMapShown }: { isMapShown: boolean }) => {
-  const [isScrollUp, setIsScrollUp] = useState(false);
-  window.addEventListener("scroll", () => {
-    if (window.innerHeight - window.scrollY < 380) {
-      setIsScrollUp(true);
-    } else {
-      setIsScrollUp(false);
-    }
-  });
-
+const MainSlide = ({
+  isMapShown,
+  isScrollUp,
+}: {
+  isMapShown: boolean;
+  isScrollUp: boolean;
+}) => {
   return (
     <Wrapper $isMapShown={isMapShown}>
-      <Header title="서비스명" isGradient={!isScrollUp} />
-
       <Card>
         {!isScrollUp && (
           <div className="rectangle">

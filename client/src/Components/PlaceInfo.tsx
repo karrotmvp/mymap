@@ -7,7 +7,7 @@ const PlaceInfo = ({ place }: { place: PlaceType }) => {
     <Wrapper>
       <div className="category">
         {place.category?.slice(0, 2).map((c) => (
-          <Tag>{c}</Tag>
+          <Tag key={c}>{c}</Tag>
         ))}
       </div>
 

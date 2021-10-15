@@ -4,6 +4,7 @@ interface MapViewProps {
   width?: string;
   height?: string;
   pins?: Pin[];
+  handleSelectPin?: Function;
 }
 
 declare global {
@@ -18,15 +19,32 @@ export interface Pin {
   longitude: number;
 }
 
-const MapView = ({ width, height, pins }: MapViewProps) => {
-  // const navermaps = window.naver.maps;
-
+const MapView = ({ width, height, pins, handleSelectPin }: MapViewProps) => {
   const defaultCenter = pins
     ? {
         lat: pins[0].latitude,
         lng: pins[0].longitude,
       }
     : { lat: 37.3595704, lng: 127.105399 };
+
+  // 핀 여러개일 때 사용
+  // const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const handleClickMarker = (pin: Pin) => {
+    handleSelectPin && handleSelectPin(pin);
+
+    // 지도 이동
+    // setMapCenter({
+    //   lat: pin.latitude,
+    //   lng: pin.longitude,
+    // });
+    // setTimeout(() => {
+    //   setMapZoom(12);
+    //   setMapCenter({
+    //     lat: loc.snapshotJson.businessAddressJson.posLat,
+    //     lng: loc.snapshotJson.businessAddressJson.posLong,
+    //   });
+    // }, 1000);
+  };
 
   return (
     <RenderAfterNavermapsLoaded
@@ -42,6 +60,8 @@ const MapView = ({ width, height, pins }: MapViewProps) => {
         }}
         defaultCenter={defaultCenter}
         defaultZoom={16}
+        // onZoomChanged={setMapZoom}
+        // onCenterChanged={setMapCenter}
       >
         {pins?.map((pin) => (
           <Marker
@@ -50,6 +70,7 @@ const MapView = ({ width, height, pins }: MapViewProps) => {
               lat: pin.latitude,
               lng: pin.longitude,
             }}
+            onClick={handleSelectPin && (() => handleClickMarker(pin))}
           />
         ))}
       </NaverMap>
