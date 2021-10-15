@@ -1,5 +1,4 @@
 import "styled-components";
-import { css } from "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
@@ -16,6 +15,7 @@ declare module "styled-components" {
       white: "#FFFFFF";
       orange: "#FF7964";
       red: "#FC453A";
+      blue: "#0F6FFF";
     };
   }
 }

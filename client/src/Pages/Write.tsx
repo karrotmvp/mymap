@@ -123,7 +123,7 @@ const Write = () => {
 
       {/* 추가된 장소들 */}
       {places?.map((place) => (
-        <div className="added-list">
+        <div key={place.placeId} className="added-list">
           <div className="photo" />
           {place.name}
         </div>
@@ -135,7 +135,9 @@ const Write = () => {
 
       {isSearchOpened && <SearchPlace {...{ setIsSearchOpened }} />}
 
-      <SubmitBtn $disabled={!isSubmittable}>완료</SubmitBtn>
+      <div className="footer">
+        <SubmitBtn $disabled={!isSubmittable}>완료</SubmitBtn>
+      </div>
     </Wrapper>
   );
 };
@@ -199,6 +201,15 @@ const Wrapper = styled.div`
     margin-top: 1.2rem;
     box-sizing: border-box;
   }
+  .footer {
+    position: fixed;
+    width: 100%;
+    height: 9.7rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: ${theme.color.white};
+  }
 `;
 
 const SelectBtn = styled.div<{ $isSelected: boolean }>`
@@ -219,11 +230,7 @@ const SelectBtn = styled.div<{ $isSelected: boolean }>`
 `;
 
 const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
-  position: fixed;
-  left: 0;
-  right: 0;
-  margin: 0 2rem;
-  bottom: 3.5rem;
+  margin: 1rem 2rem;
   background-color: ${({ $disabled }) =>
     $disabled ? theme.color.gray4 : theme.color.orange};
 `;
@@ -235,7 +242,6 @@ const Input = styled.textarea<{ $error?: boolean }>`
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};
   &:focus {
-    background-color: ${theme.color.white};
     border: 0.1rem solid
       ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
   }
@@ -248,7 +254,6 @@ const Textarea = styled.textarea<{ $error?: boolean }>`
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};
   &:focus {
-    background-color: ${theme.color.white};
     border: 0.1rem solid
       ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
   }

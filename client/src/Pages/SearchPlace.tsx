@@ -1,14 +1,17 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import styled from "styled-components";
 import SearchList from "../Components/SearchList";
 import useDebounce from "../Hooks/useDebounce";
 import useInput from "../Hooks/useInput";
-import { RegionId } from "../Shared/atom";
 import { PlaceType } from "../Shared/type";
-import { input } from "../styles/theme";
+import { flexCenter, input, theme } from "../styles/theme";
 import { GET } from "../utils/axios";
-import { dummyPlaces } from "../utils/dummy";
 import PlaceMapView from "./PlaceMapView";
 
 const SearchPlace = ({
@@ -26,20 +29,22 @@ const SearchPlace = ({
   };
 
   const searchVal = useInput("");
-  //   const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
+  const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
 
-  //   const getSearchItems = async () => {
-  //     const data = await GET(`api/place/search/6530459d189b`, {
-  //       query: debouncedSearchVal,
-  //     });
-  //     console.log("search", data);
-  //   };
+  const [result, setResult] = useState<PlaceType[] | []>([]);
+  const getSearchItems = useCallback(async () => {
+    const data = (await GET(`api/place/search/6530459d189b`, {
+      query: debouncedSearchVal,
+    })) as PlaceType[];
+    console.log("search", data);
+    setResult(data);
+  }, [debouncedSearchVal]);
 
-  //   console.log(process.env.REACT_APP_ENDPOINT);
-  //   useEffect(() => {
-  //     console.log(debouncedSearchVal);
-  //     getSearchItems();
-  //   }, [debouncedSearchVal]);
+  console.log(process.env.REACT_APP_ENDPOINT);
+  useEffect(() => {
+    console.log(debouncedSearchVal);
+    if (debouncedSearchVal.length > 0) getSearchItems();
+  }, [debouncedSearchVal, getSearchItems]);
 
   return (
     <Wrapper>
@@ -51,12 +56,20 @@ const SearchPlace = ({
         />
       </div>
 
-      <div className="result">관련검색어</div>
-      {dummyPlaces.map((place) => (
-        <div key={place.placeId} onClick={() => handleOpenMap(place)}>
-          <SearchList {...{ place }} />
-        </div>
-      ))}
+      {debouncedSearchVal.length > 0 ? (
+        <>
+          <div className="result">관련검색어</div>
+          {result.map((place) => (
+            <div key={place.placeId} onClick={() => handleOpenMap(place)}>
+              {place.address && (
+                <SearchList place={place} searchVal={searchVal.value} />
+              )}
+            </div>
+          ))}
+        </>
+      ) : (
+        <div className="empty">추가할 장소를 검색해주세요.</div>
+      )}
 
       {isMapOpened && place && (
         <PlaceMapView {...{ place, setIsSearchOpened }} />
@@ -83,6 +96,19 @@ const Wrapper = styled.div`
     margin-top: 2.4rem;
     margin-left: 2rem;
     margin-bottom: 1.3rem;
+  }
+  .empty {
+    ${flexCenter};
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    font-weight: 500;
+    font-size: 1.7rem;
+    line-height: 160%;
+    color: ${theme.color.gray3};
   }
 `;
 
