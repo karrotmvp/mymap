@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { More } from "../assets";
 import { flexCenter, theme } from "../styles/theme";
 
 const PlaceBox = ({ name }: { name: string }) => {
@@ -19,9 +20,12 @@ const Collection = () => {
   return (
     <Wrapper>
       <Link to="/detail/1">
-        <div>
-          <div className="title">혼밥하기 좋은 우리 동네 식당</div>
-          <div className="author">짱짱로컬큐레이터님 · 논현동</div>
+        <div className="title-wrapper">
+          <div>
+            <div className="title">혼밥하기 좋은 우리 동네 식당</div>
+            <div className="author">짱짱로컬큐레이터님 · 논현동</div>
+          </div>
+          <More className="more-icon" />
         </div>
         <div className="places">
           {[0, 0, 0, 0].map((_, i) => (
@@ -35,16 +39,24 @@ const Collection = () => {
 
 const Wrapper = styled.div`
   width: 100%;
-  .title {
-    font-size: 1.6rem;
-    line-height: 120%;
-    font-weight: bold;
-  }
-  .author {
-    margin-top: 0.2rem;
-    font-size: 1.4rem;
-    line-height: 150%;
-    color: ${theme.color.gray6};
+  .title-wrapper {
+    ${flexCenter};
+    justify-content: space-between;
+
+    .title {
+      font-size: 1.6rem;
+      line-height: 120%;
+      font-weight: bold;
+    }
+    .author {
+      margin-top: 0.2rem;
+      font-size: 1.4rem;
+      line-height: 150%;
+      color: ${theme.color.gray6};
+    }
+    .more-icon {
+      fill: ${theme.color.gray5};
+    }
   }
 
   .places {

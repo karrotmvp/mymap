@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { Close } from "../../assets";
+import { Close, Plus } from "../../assets";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
 import { Places } from "../../Shared/atom";
@@ -100,6 +100,30 @@ const Write = () => {
         />
       </div>
 
+      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요.</div>
+      <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
+
+      {/* 추가된 장소들 */}
+      {places?.map((place) => (
+        <div key={place.placeId} className="added-list">
+          <div className="photo" />
+          {place.name}
+          <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
+        </div>
+      ))}
+
+      <div className="add-button" onClick={() => setIsSearchOpened(true)}>
+        <Plus className="add-icon" />
+        장소 추가
+      </div>
+
+      {isSearchOpened && (
+        <SearchPlace
+          {...{ setIsSearchOpened }}
+          close={() => setIsSearchOpened(false)}
+        />
+      )}
+
       <div className="subtitle">
         리스트에 대한 설명을 작성해주세요.(선택 사항)
       </div>
@@ -132,31 +156,8 @@ const Write = () => {
         </SelectBtn>
       </div>
 
-      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요.</div>
-      <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
-
-      {/* 추가된 장소들 */}
-      {places?.map((place) => (
-        <div key={place.placeId} className="added-list">
-          <div className="photo" />
-          {place.name}
-          <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
-        </div>
-      ))}
-
-      <div className="add-button" onClick={() => setIsSearchOpened(true)}>
-        장소 추가
-      </div>
-
-      {isSearchOpened && (
-        <SearchPlace
-          {...{ setIsSearchOpened }}
-          close={() => setIsSearchOpened(false)}
-        />
-      )}
-
       <div className="footer">
-        <SubmitBtn $disabled={!isSubmittable}>완료</SubmitBtn>
+        <SubmitBtn $disabled={!isSubmittable}>작성 완료</SubmitBtn>
       </div>
     </Wrapper>
   );
@@ -166,7 +167,7 @@ const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding-left: 2rem;
   padding-right: 2rem;
-  padding-bottom: 11.7rem;
+  padding-bottom: 13.2rem;
   overflow-y: scroll;
   .name-input {
     margin-top: 1.2rem;
@@ -191,19 +192,26 @@ const Wrapper = styled.div`
     }
     .del-btn {
       margin-left: auto;
-      margin-right: 1.9rem;
+      fill: ${theme.color.gray4};
     }
   }
   .add-button {
     ${flexCenter};
+    position: relative;
     border-radius: 1rem;
-    height: 5.2rem;
-    border: 1px dashed ${theme.color.orange};
+    height: 5rem;
+    border: 0.1rem dashed ${theme.color.orange};
     font-size: 1.4rem;
     line-height: 135%;
     font-weight: 500;
     margin-top: 1.2rem;
     color: ${theme.color.orange};
+    .add-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      fill: ${theme.color.orange};
+    }
   }
   .subtitle {
     font-size: 1.4rem;
@@ -228,7 +236,7 @@ const Wrapper = styled.div`
   .footer {
     position: fixed;
     width: 100%;
-    height: 9.7rem;
+    height: 7.4rem;
     left: 0;
     right: 0;
     bottom: 0;

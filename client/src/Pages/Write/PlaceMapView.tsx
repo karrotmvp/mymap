@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
 import PlaceInfo from "../../Components/PlaceInfo";
 import { Places } from "../../Shared/atom";
@@ -34,7 +35,10 @@ const PlaceMapView = ({
         <div className="photo" />
         <PlaceInfo {...{ place }} />
       </div>
-      <AddBtn onClick={() => handleAddPlace(place)}>장소 추가</AddBtn>
+      <AddBtn onClick={() => handleAddPlace(place)}>
+        <Plus className="add-icon" />
+        장소 추가
+      </AddBtn>
     </Wrapper>
   );
 };
@@ -71,6 +75,12 @@ const AddBtn = styled(Button)`
   right: 0;
   margin: 0 2rem;
   bottom: 3.5rem;
+  .add-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    fill: ${theme.color.white};
+  }
 `;
 
 export default PlaceMapView;

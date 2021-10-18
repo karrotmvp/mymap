@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { Refresh } from "../../assets";
 import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
@@ -22,7 +23,9 @@ const Around = () => {
   return (
     <>
       <Wrapper>
-        <Header title="장소 둘러보기" />
+        <Header title="장소 둘러보기">
+          <Refresh className="right-icon" />
+        </Header>
         <Title style={{ color: theme.color.orange }}>{`우리 동네에는
 이런 장소가 있어요!`}</Title>
 

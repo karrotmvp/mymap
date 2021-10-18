@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import styled from "styled-components";
-import { Back } from "../../assets";
+import { Back, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
@@ -53,17 +53,22 @@ const SearchPlace = ({
   return (
     <Wrapper>
       <div className="place-input">
-        <Back onClick={close} />
+        <Back onClick={close} className="search-back" />
         <SearchInput
           value={searchVal.value}
           onChange={searchVal.onChange}
           placeholder="검색어를 입력해주세요"
         />
+        {searchVal.value.length > 0 && (
+          <SearchClose
+            className="search-close"
+            onClick={() => searchVal.setValue("")}
+          />
+        )}
       </div>
 
       {debouncedSearchVal.length > 0 ? (
-        <>
-          <div className="result">관련검색어</div>
+        <div className="result">
           {result.map((place) => (
             <div key={place.placeId} onClick={() => handleOpenMap(place)}>
               {place.address && (
@@ -71,7 +76,7 @@ const SearchPlace = ({
               )}
             </div>
           ))}
-        </>
+        </div>
       ) : (
         <div className="empty">추가할 장소를 검색해주세요.</div>
       )}
@@ -92,16 +97,38 @@ const Wrapper = styled.div`
   height: 100vh;
   background-color: #fff;
   overflow-y: scroll;
+  padding-top: 8rem;
+  box-sizing: border-box;
+  .search-back {
+    position: absolute;
+    left: 1.3rem;
+    fill: ${theme.color.gray4};
+  }
+  .search-close {
+    position: absolute;
+    right: 2rem;
+  }
   .place-input {
-    margin-top: 2rem;
+    position: fixed;
+    width: 100%;
+    height: 8rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: ${theme.color.white};
+    z-index: 100;
     padding: 0 2rem;
+    padding-top: 2rem;
+    box-sizing: border-box;
   }
   .result {
     font-size: 1.4rem;
     line-height: 160%;
-    margin-top: 2.4rem;
-    margin-left: 2rem;
     margin-bottom: 1.3rem;
+    position: relative;
+    & > div:not(:first-child) {
+      border-top: 0.1rem solid lightgray;
+    }
   }
   .empty {
     ${flexCenter};
@@ -121,6 +148,8 @@ const Wrapper = styled.div`
 const SearchInput = styled.input`
   ${input};
   height: 4.8rem;
+  width: 100%;
+  padding-left: 4.4rem;
 `;
 
 export default SearchPlace;

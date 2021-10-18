@@ -30,7 +30,6 @@ const SearchList = ({
 };
 
 const Wrapper = styled.div`
-  border-top: 0.1rem solid lightgray;
   padding: 1.3rem 2rem;
   .name {
     font-weight: 500;

@@ -37,11 +37,40 @@ const Wrapper = styled.div<{ $isGradient: boolean }>`
     line-height: 135%;
     font-weight: bold;
   }
+  .post-title {
+    font-size: 1.6rem;
+    line-height: 135%;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 5.3rem;
+    padding-right: 12.4rem;
+    box-sizing: border-box;
+  }
 
   .left-icon {
     position: absolute;
-    top: 1.8rem;
-    left: 2.1rem;
+    top: 0.1rem;
+    left: 0;
+    fill: ${theme.color.gray7};
+  }
+  .right-icon {
+    position: absolute;
+    top: 0.1rem;
+    right: 0rem;
+    fill: ${theme.color.gray7};
+  }
+  .view-toggle {
+    position: absolute;
+    ${flexCenter};
+    border: 0.1rem solid ${theme.color.gray2};
+    border-radius: 3rem;
+    font-size: 1.3rem;
+    line-height: 135%;
+    padding: 0.5rem 0.8rem;
+    top: 0.7rem;
+    right: 5rem;
   }
 `;
 

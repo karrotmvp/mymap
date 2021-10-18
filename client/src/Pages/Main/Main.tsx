@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
@@ -27,13 +27,16 @@ const Main = () => {
 
   // scroll up
   const [isScrollUp, setIsScrollUp] = useState(false);
-  window.addEventListener("scroll", () => {
-    if (window.innerHeight - window.scrollY < 380) {
-      setIsScrollUp(true);
-    } else {
-      setIsScrollUp(false);
-    }
-  });
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.innerHeight - window.scrollY < 380) {
+        setIsScrollUp(true);
+      } else {
+        setIsScrollUp(false);
+      }
+    });
+    return window.removeEventListener("scroll", () => {});
+  }, []);
 
   return (
     <Wrapper>

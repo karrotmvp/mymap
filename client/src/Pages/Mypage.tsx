@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Collection from "../Components/Collection";
 import CreateButton from "../Components/CreateButton";
@@ -31,18 +31,21 @@ const Tab = () => {
 };
 
 const Mypage = () => {
-  const [isScroll, setIsScroll] = useState(false);
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 100) {
-      setIsScroll(true);
-    } else {
-      setIsScroll(false);
-    }
-  });
+  const [isScrollUp, setIsScrollUp] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 100) setIsScrollUp(true);
+      else setIsScrollUp(false);
+    });
+    return window.removeEventListener("scroll", () => {});
+  }, []);
 
   return (
     <Wrapper>
-      {isScroll && <Header className="header-scroll" title="로컬큐레이터님" />}
+      {isScrollUp && (
+        <Header className="header-scroll" title="로컬큐레이터님" />
+      )}
 
       <Profile>
         <div className="photo" />
@@ -72,8 +75,8 @@ const Wrapper = styled.div`
   .collections {
     margin-left: 2rem;
     padding-bottom: 2rem;
-    & > div {
-      margin-top: 0.1rem;
+    & > div:not(:first-child) {
+      margin-top: 2.9rem;
     }
   }
 `;
