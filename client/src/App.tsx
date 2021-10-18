@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Main from "./Pages/Main";
-import Around from "./Pages/Around";
+import Around from "./Pages/Around/Around";
 import Mypage from "./Pages/Mypage";
 import Detail from "./Pages/Detail/Detail";
 import Write from "./Pages/Write/Write";

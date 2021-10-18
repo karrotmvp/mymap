@@ -39,6 +39,20 @@ const Wrapper = styled.div`
     border-radius: 0.8rem;
     background-color: lightgray;
   }
+  .phone {
+    font-size: 1.3rem;
+    color: ${theme.color.gray6};
+    margin-top: 0.6rem;
+    line-height: 145%;
+    letter-spacing: -2%;
+  }
+  .time {
+    font-size: 1.3rem;
+    color: ${theme.color.gray6};
+    margin-top: 0.4rem;
+    line-height: 145%;
+    letter-spacing: -2%;
+  }
   .recommend {
     font-size: 1.3rem;
     color: ${theme.color.orange};
