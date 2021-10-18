@@ -4,7 +4,7 @@ import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import MainSlide from "../Components/MainSlide";
 import MapView, { Pin } from "../Components/MapView";
-import PinSlider from "../Components/PinSlider";
+import PinSlider from "../Components/PinSlider/PinSlider";
 import { WrapperWithFooter } from "../styles/theme";
 import { dummyPins } from "../utils/dummy";
 
@@ -58,7 +58,7 @@ const Main = () => {
 };
 
 const Wrapper = styled.div`
-  ${WrapperWithFooter};
+  /* ${WrapperWithFooter}; */
 `;
 
 export default Main;

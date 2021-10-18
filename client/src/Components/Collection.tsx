@@ -4,8 +4,8 @@ import { flexCenter, theme } from "../styles/theme";
 
 const PlaceBox = ({ name }: { name: string }) => {
   let _name = name;
-  if (name.length > 14) {
-    _name = name.slice(0, 14) + "...";
+  if (name.length > 19) {
+    _name = name.slice(0, 19) + "...";
   }
   return (
     <PlaceBoxWrapper>
@@ -57,22 +57,17 @@ const Wrapper = styled.div`
 `;
 
 const PlaceBoxWrapper = styled.div`
-  min-width: 12rem;
-  height: 17rem;
-  margin-right: 0.8rem;
-  border: 0.1rem solid ${theme.color.gray3};
-  border-radius: 0.8rem;
+  min-width: 13rem;
+  margin-right: 1rem;
   .photo {
     width: 100%;
-    height: 12rem;
+    height: 13rem;
     background-color: lightgray;
-    border-top-left-radius: 0.6rem;
-    border-top-right-radius: 0.6rem;
+    border-radius: 1rem;
   }
   .place-name {
     ${flexCenter};
-    text-align: center;
-    margin: 0.8rem;
+    margin-top: 0.8rem;
     font-size: 1.3rem;
     color: ${theme.color.gray6};
     line-height: 140%;
