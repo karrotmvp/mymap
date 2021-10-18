@@ -6,11 +6,12 @@ interface HeaderProps {
   title?: string;
   isGradient?: boolean;
   children?: ReactChild;
+  className?: string;
 }
 
-const Header = ({ title, isGradient, children }: HeaderProps) => {
+const Header = ({ title, isGradient, children, className }: HeaderProps) => {
   return (
-    <Wrapper $isGradient={isGradient || false}>
+    <Wrapper {...{ className }} $isGradient={isGradient || false}>
       {title}
       {children}
     </Wrapper>
@@ -20,7 +21,7 @@ const Header = ({ title, isGradient, children }: HeaderProps) => {
 const Wrapper = styled.div<{ $isGradient: boolean }>`
   ${flexCenter};
   width: 100%;
-  height: 7rem;
+  height: 5rem;
   position: fixed;
   z-index: 100;
   left: 0;

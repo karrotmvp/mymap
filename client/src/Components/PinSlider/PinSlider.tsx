@@ -39,13 +39,14 @@ const Wrapper = styled.div`
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 3.5rem;
+  bottom: 1.9rem;
   z-index: 300;
   .flickity-viewport {
     height: auto;
   }
   .carousel-cell {
     margin-right: 0.8rem;
+    padding: 1.6rem 0;
   }
   .place-box {
     padding: 1.5rem 1.3rem;

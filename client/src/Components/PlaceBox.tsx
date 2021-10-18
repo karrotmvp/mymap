@@ -26,6 +26,7 @@ const PlaceBox = ({
 
 const Wrapper = styled.div`
   background-color: ${theme.color.white};
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.15);
   border-radius: 1.2rem;
   padding: 2.2rem 1.8rem;
   width: 32rem;

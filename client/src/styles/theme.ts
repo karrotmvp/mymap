@@ -8,13 +8,13 @@ export const flexCenter = css`
 
 export const WrapperWithHeaderFooter = css`
   width: 100%;
-  padding-top: 7rem;
+  padding-top: 5rem;
   padding-bottom: 8.8rem;
   box-sizing: border-box;
 `;
 export const WrapperWithHeader = css`
   width: 100%;
-  padding-top: 7rem;
+  padding-top: 5rem;
   box-sizing: border-box;
 `;
 
