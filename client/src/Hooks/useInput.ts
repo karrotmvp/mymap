@@ -10,7 +10,7 @@ export type InputType = {
   setValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export default (
+const useInput = (
   defaultValue: string,
   filter?: (text: string) => string
 ): InputType => {
@@ -29,3 +29,5 @@ export default (
 
   return { value, onChange, setValue };
 };
+
+export default useInput;
