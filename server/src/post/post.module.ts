@@ -7,9 +7,10 @@ import { PinRepository } from './pin.repository';
 import { UserModule } from 'src/user/user.module';
 import { PlaceModule } from 'src/place/place.module';
 import { SavedPostRepository } from './savedPost.repository';
+import { RegionModule } from 'src/region/region.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PostRepository, PinRepository, SavedPostRepository]), UserModule, PlaceModule],
+  imports: [TypeOrmModule.forFeature([PostRepository, PinRepository, SavedPostRepository]), UserModule, PlaceModule, RegionModule],
   providers: [PostService],
   controllers: [PostController]
 })

@@ -13,4 +13,14 @@ export class PinRepository extends Repository<Pin> {
         const newPins:Pin[] = await Promise.all(promise);
         return newPins;
     }
+
+    async deletePostPins(postId: number) {
+        const pins = await this.find({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId = :postId', { postId: postId })
+            }
+        })
+        await this.softRemove(pins);
+    }
 }

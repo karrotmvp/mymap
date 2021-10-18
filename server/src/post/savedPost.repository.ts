@@ -13,9 +13,8 @@ export class SavedPostRepository extends Repository<SavedPost> {
             skip: perPage * page,
             take: perPage,
         });
-        const postIds: number[] = [];
-        savedPost.map((post: SavedPost) => {
-            postIds.push(post.getPostId());
+        const postIds: number[] =savedPost.map((post: SavedPost) => {
+            return post.getPostId();
         })
         return postIds;
     }
