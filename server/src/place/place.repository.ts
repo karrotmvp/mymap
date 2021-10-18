@@ -13,23 +13,23 @@ export class PlaceRepository {
 
     async findOne(placeId: string) {
         const uri = this.configService.get('daangn.poiuri') + placeId;
-        return this.httpService.get(uri).pipe(map(async(res) => {
+        return this.httpService.get(uri).pipe(map((res) => {
             const place = new PlaceDTO(res.data);
             return place;
         }))
     }
 
     async findWithIds(placeIds: string[]) {
+        console.log(placeIds)
         const uri = this.configService.get('daangn.poiuri') + 'by-ids';
         return this.httpService.get(uri, {
             params: {
                 ids: placeIds
             }
-        }).pipe(map(async(res) => {
-            const places: PlaceDTO[] = [];
-            res.data.map(async(place) => {
+        }).pipe(map((res) => {
+            const places: PlaceDTO[] = res.data.map((place) => {
                 const newPlace = new PlaceDTO(place);
-                places.push(newPlace);
+                return newPlace;
             })
             return places;
         }))
@@ -44,11 +44,10 @@ export class PlaceRepository {
                 page: page,
                 perPage: perPage
             }
-        }).pipe(map(async(res) => {
-            const places: PlaceDTO[] = [];
-            res.data.items.map(async(place) => {
+        }).pipe(map((res) => {
+            const places: PlaceDTO[] =res.data.items.map(place => {
                 const newPlace = new PlaceDTO(place);
-                places.push(newPlace);
+                return newPlace
             })
             return places;
         }))

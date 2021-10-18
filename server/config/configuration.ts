@@ -15,6 +15,7 @@ export default () => ({
         scope: process.env.SCOPE,
         app_id: process.env.APP_ID,
         app_secret: process.env.APP_SECRET,
+        api_key: process.env.API_KEY,
     },
     jwt: {
         secret: process.env.SECRET

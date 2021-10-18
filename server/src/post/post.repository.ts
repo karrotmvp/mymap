@@ -1,6 +1,7 @@
 import { User } from "src/user/entities/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreatePostDTO } from "./dto/create-post.dto";
+import { UpdatePostDTO } from "./dto/update-post.dto";
 import { Pin } from "./entities/pin.entity";
 import { Post } from "./entities/post.entity";
 
@@ -9,6 +10,12 @@ export class PostRepository extends Repository<Post> {
     async savePost(post: CreatePostDTO, user: User, pins: Pin[]) {
         const newPost = new Post(user, post.title, post.contents, post.regionId, post.share, pins);
         await this.save(newPost);
+    }
+
+    async updatePost(postId: number, post: UpdatePostDTO, pins: Pin[]) {
+        const existPost = await this.findOne(postId, { relations : ['pins'] });
+        existPost.updatePost(post, pins);
+        await this.save(existPost);
     }
 
     async findWithPostId(postId: number) {
@@ -22,17 +29,17 @@ export class PostRepository extends Repository<Post> {
                 qb.where('Post__user.userId = :userId', { userId: userId });
             },
             order: { createdAt: 'DESC' },
-            skip: num * page,
+            skip: num * (page - 1),
             take: num,
         });
         return posts;
     }
 
-    async findWithRegionId(regionId: string, start: number, end: number, perPage: number) {
+    async findWithRegionId(regionId: string[], start: number, end: number, perPage: number) {
         const posts = await this.find({
             order: { createdAt: 'DESC' },
             where: (qb) => {
-                qb.where('regionId = :regionId AND postId NOT IN (:end, :start)', { regionId: regionId, start: start, end: end})
+                qb.where('regionId IN (:...regionId) AND postId NOT IN (:end, :start)', { regionId: regionId, start: start, end: end})
             },
             take: perPage,
         })

@@ -1,9 +1,11 @@
+import { CoordinatesDTO } from "./coordinates.dto";
+
 export class PlaceDTO {
     constructor(place: any) {
         this.placeId = place.id;
         this.name = place.name;
         this.address = place.address;
-        this.coordinate = place.coordinates;
+        this.coordinates = place.coordinates;
         this.businessHoursFrom = place.businessHoursFrom;
         this.businessHoursTo = place.businessHoursTo;
         this.businessHoursExtra = place.businessHoursExtra;
@@ -18,7 +20,7 @@ export class PlaceDTO {
     businessHoursFrom: string;
     businessHoursTo: string;
     businessHoursExtra: string;
-    coordinate: object;
+    coordinates: CoordinatesDTO;
     category: string[];
     thumbnail: object;
     images: object;
