@@ -51,7 +51,7 @@ const Main = () => {
           <Footer />
         </>
       ) : (
-        <PinSlider pins={dummyPins} />
+        <PinSlider pins={dummyPins} isRecommend />
       )}
     </Wrapper>
   );

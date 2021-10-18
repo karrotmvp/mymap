@@ -4,7 +4,13 @@ import { PinType } from "../../Shared/type";
 import PlaceBox from "../PlaceBox";
 import Swiper from "./Swiper";
 
-const PinSlider = ({ pins }: { pins: PinType[] }) => {
+const PinSlider = ({
+  pins,
+  isRecommend = false,
+}: {
+  pins: PinType[];
+  isRecommend?: boolean;
+}) => {
   const [current, setCurrent] = useState(0);
   return (
     <Wrapper>
@@ -14,9 +20,13 @@ const PinSlider = ({ pins }: { pins: PinType[] }) => {
         contents={pins.map((pin) => (
           <div key={pin.pinId} className="carousel-cell">
             <PlaceBox place={pin.place} className="place-box">
-              <div className="recommend">
-                13명의 주민들이 이 장소를 추천했어요!
-              </div>
+              {isRecommend ? (
+                <div className="recommend">
+                  13명의 주민들이 이 장소를 추천했어요!
+                </div>
+              ) : (
+                ""
+              )}
             </PlaceBox>
           </div>
         ))}

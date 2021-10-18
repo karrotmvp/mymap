@@ -1,13 +1,20 @@
+import { ReactChild } from "react";
 import styled from "styled-components";
 import { flexCenter, theme } from "../styles/theme";
 
 interface HeaderProps {
   title?: string;
   isGradient?: boolean;
+  children?: ReactChild;
 }
 
-const Header = ({ title, isGradient }: HeaderProps) => {
-  return <Wrapper $isGradient={isGradient || false}>{title}</Wrapper>;
+const Header = ({ title, isGradient, children }: HeaderProps) => {
+  return (
+    <Wrapper $isGradient={isGradient || false}>
+      {title}
+      {children}
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.div<{ $isGradient: boolean }>`

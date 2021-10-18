@@ -3,39 +3,52 @@ import styled from "styled-components";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard";
 import { gap, theme, Title, WrapperWithHeader } from "../../styles/theme";
-import { dummyPlaces } from "../../utils/dummy";
+import { dummyPins, dummyPlaces } from "../../utils/dummy";
 import DetailMapView from "./DetailMapView";
 
 const Detail = () => {
-  const [isMapOpened, setIsMapOpened] = useState(false);
+  const [viewState, setViewState] = useState<"map" | "list">("list");
+  const handleViewState = () => {
+    if (viewState === "map") setViewState("list");
+    else setViewState("map");
+  };
 
   return (
-    <Wrapper>
-      <Header />
-      <Title>당근마켓 인턴이 먹을 점심 장소 목록 작성 예시랄라랄라</Title>
-      <div className="content">
-        점심에 뭘 먹을지 고민하는 나를 위한 주변 장소 모음! 점심시간이 제일
-        행복해요~
-      </div>
-
-      <Profile>
-        <div className="photo" />
-        <div>
-          <div className="name">레일라님이 추천하는 리스트예요.</div>
-          <div className="date">2021년 06월 14일 · 논현동</div>
+    <>
+      <Header>
+        <div className="view-toggle" onClick={handleViewState}>
+          {viewState === "map" ? "목록" : "지도"}
         </div>
-      </Profile>
+      </Header>
 
-      <div className="cards">
-        {dummyPlaces.map((place) => (
-          <div key={place.placeId} onClick={() => setIsMapOpened(true)}>
-            <PlaceCard {...{ place }} />
+      {viewState === "list" && (
+        <Wrapper>
+          <Title>당근마켓 인턴이 먹을 점심 장소 목록 작성 예시랄라랄라</Title>
+          <div className="content">
+            점심에 뭘 먹을지 고민하는 나를 위한 주변 장소 모음! 점심시간이 제일
+            행복해요~
           </div>
-        ))}
-      </div>
 
-      {isMapOpened && <DetailMapView />}
-    </Wrapper>
+          <Profile>
+            <div className="photo" />
+            <div>
+              <div className="name">레일라님이 추천하는 리스트예요.</div>
+              <div className="date">2021년 06월 14일 · 논현동</div>
+            </div>
+          </Profile>
+
+          <div className="cards">
+            {dummyPlaces.map((place) => (
+              <div key={place.placeId} onClick={handleViewState}>
+                <PlaceCard {...{ place }} />
+              </div>
+            ))}
+          </div>
+        </Wrapper>
+      )}
+
+      {viewState === "map" && <DetailMapView pins={dummyPins} />}
+    </>
   );
 };
 
