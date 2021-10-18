@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Collection from "../Components/Collection";
+import CreateButton from "../Components/CreateButton";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import { gap, theme, WrapperWithHeaderFooter } from "../styles/theme";
@@ -58,6 +59,8 @@ const Mypage = () => {
           <Collection key={i} />
         ))}
       </div>
+
+      <CreateButton />
 
       <Footer />
     </Wrapper>

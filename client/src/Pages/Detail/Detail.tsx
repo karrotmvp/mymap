@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { Back } from "../../assets";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard";
 import { gap, theme, Title, WrapperWithHeader } from "../../styles/theme";
@@ -16,9 +17,12 @@ const Detail = () => {
   return (
     <>
       <Header>
-        <div className="view-toggle" onClick={handleViewState}>
-          {viewState === "map" ? "목록" : "지도"}
-        </div>
+        <>
+          <Back className="left-icon" onClick={() => window.history.back()} />
+          <div className="view-toggle" onClick={handleViewState}>
+            {viewState === "map" ? "목록" : "지도"}
+          </div>
+        </>
       </Header>
 
       {viewState === "list" && (

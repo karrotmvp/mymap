@@ -1,12 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Footer from "../Components/Footer";
-import Header from "../Components/Header";
-import MainSlide from "../Components/MainSlide";
-import MapView, { Pin } from "../Components/MapView";
-import PinSlider from "../Components/PinSlider/PinSlider";
-import { WrapperWithFooter } from "../styles/theme";
-import { dummyPins } from "../utils/dummy";
+import Footer from "../../Components/Footer";
+import Header from "../../Components/Header";
+import MainSlide from "./MainSlide";
+import MapView, { Pin } from "../../Components/MapView";
+import PinSlider from "../../Components/PinSlider/PinSlider";
+import { dummyPins } from "../../utils/dummy";
+import { Back, Close } from "../../assets";
 
 const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -37,7 +37,13 @@ const Main = () => {
 
   return (
     <Wrapper>
-      <Header title="서비스명" isGradient={!isScrollUp} />
+      <Header title={!isPinSelected ? "서비스명" : ""} isGradient={!isScrollUp}>
+        {isPinSelected ? (
+          <Back className="left-icon" onClick={() => setIsPinSelected(false)} />
+        ) : (
+          <Close className="left-icon" />
+        )}
+      </Header>
 
       <div onClick={() => setIsMapShown(true)}>
         <MapView height="100vh" pins={pins} handleSelectPin={handleSelectPin} />
@@ -57,8 +63,6 @@ const Main = () => {
   );
 };
 
-const Wrapper = styled.div`
-  /* ${WrapperWithFooter}; */
-`;
+const Wrapper = styled.div``;
 
 export default Main;

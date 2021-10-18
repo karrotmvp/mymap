@@ -1,9 +1,11 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { Close } from "../../assets";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
 import { Places } from "../../Shared/atom";
+import { PlaceType } from "../../Shared/type";
 import {
   Button,
   flexCenter,
@@ -20,7 +22,17 @@ const Write = () => {
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
   const [isShare, setIsShare] = useState<null | boolean>(null);
-  const places = useRecoilValue(Places);
+  const [places, setPlaces] = useRecoilState(Places);
+
+  // remove place
+  const handleRemovePlace = (place: PlaceType) => {
+    const idx = places.findIndex((p) => p.placeId === place.placeId);
+    const newPlaces = [
+      ...places.slice(0, idx),
+      ...places.slice(idx + 1, places.length),
+    ];
+    setPlaces(newPlaces);
+  };
 
   // input
   const inputVal = useInput("");
@@ -70,7 +82,9 @@ const Write = () => {
 
   return (
     <Wrapper>
-      <Header title="컬렉션 만들기" />
+      <Header title="리스트 만들기">
+        <Close onClick={() => window.history.back()} className="left-icon" />
+      </Header>
       <Title>{`추천하고 싶은
 나만의 장소를 모아봐요`}</Title>
 
@@ -126,6 +140,7 @@ const Write = () => {
         <div key={place.placeId} className="added-list">
           <div className="photo" />
           {place.name}
+          <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
         </div>
       ))}
 
@@ -133,7 +148,12 @@ const Write = () => {
         장소 추가
       </div>
 
-      {isSearchOpened && <SearchPlace {...{ setIsSearchOpened }} />}
+      {isSearchOpened && (
+        <SearchPlace
+          {...{ setIsSearchOpened }}
+          close={() => setIsSearchOpened(false)}
+        />
+      )}
 
       <div className="footer">
         <SubmitBtn $disabled={!isSubmittable}>완료</SubmitBtn>
@@ -156,7 +176,7 @@ const Wrapper = styled.div`
     align-items: center;
     border-radius: 1rem;
     height: 5.2rem;
-    border: 1px solid ${theme.color.orange};
+    border: 1px solid ${theme.color.gray3};
     font-size: 1.5rem;
     font-weight: 500;
     line-height: 2.2rem;
@@ -168,6 +188,10 @@ const Wrapper = styled.div`
       border-radius: 0.8rem;
       background-color: lightgray;
       margin-right: 1rem;
+    }
+    .del-btn {
+      margin-left: auto;
+      margin-right: 1.9rem;
     }
   }
   .add-button {

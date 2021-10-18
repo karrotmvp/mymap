@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import { PlaceType } from "../../Shared/type";
@@ -28,7 +29,7 @@ const Around = () => {
         <div className="contents">
           <div className="places">
             {leftPlaces.map((place) => (
-              <div onClick={() => handleShowMap(place)}>
+              <div key={place.placeId} onClick={() => handleShowMap(place)}>
                 <div className="photo" />
                 <div className="name">{place.name}</div>
               </div>
@@ -36,17 +37,22 @@ const Around = () => {
           </div>
           <div className="places">
             {rightPlaces.map((place) => (
-              <div onClick={() => handleShowMap(place)}>
+              <div key={place.placeId} onClick={() => handleShowMap(place)}>
                 <div className="photo" />
                 <div className="name">{place.name}</div>
               </div>
             ))}
           </div>
         </div>
+
+        {!isMapShown && <CreateButton />}
+
         <Footer />
       </Wrapper>
 
-      {isMapShown && place && <AroundMapView {...{ place }} />}
+      {isMapShown && place && (
+        <AroundMapView {...{ place }} close={() => setIsMapShown(false)} />
+      )}
     </>
   );
 };

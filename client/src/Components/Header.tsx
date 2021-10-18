@@ -12,7 +12,7 @@ interface HeaderProps {
 const Header = ({ title, isGradient, children, className }: HeaderProps) => {
   return (
     <Wrapper {...{ className }} $isGradient={isGradient || false}>
-      {title}
+      <div className="title">{title}</div>
       {children}
     </Wrapper>
   );
@@ -31,9 +31,18 @@ const Wrapper = styled.div<{ $isGradient: boolean }>`
       ? "linear-gradient(180.03deg, #FFFFFF 23.76%, rgba(255, 255, 255, 0) 117.46%)"
       : theme.color.white};
   opacity: ${({ $isGradient }) => ($isGradient ? 0.95 : 1)};
-  font-size: 1.6rem;
-  line-height: 135%;
-  font-weight: bold;
+
+  .title {
+    font-size: 1.6rem;
+    line-height: 135%;
+    font-weight: bold;
+  }
+
+  .left-icon {
+    position: absolute;
+    top: 1.8rem;
+    left: 2.1rem;
+  }
 `;
 
 export default Header;

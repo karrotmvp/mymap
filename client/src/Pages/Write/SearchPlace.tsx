@@ -1,11 +1,13 @@
 import {
   Dispatch,
+  MouseEventHandler,
   SetStateAction,
   useCallback,
   useEffect,
   useState,
 } from "react";
 import styled from "styled-components";
+import { Back } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
@@ -16,8 +18,10 @@ import PlaceMapView from "./PlaceMapView";
 
 const SearchPlace = ({
   setIsSearchOpened,
+  close,
 }: {
   setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
+  close: MouseEventHandler;
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
@@ -49,6 +53,7 @@ const SearchPlace = ({
   return (
     <Wrapper>
       <div className="place-input">
+        <Back onClick={close} />
         <SearchInput
           value={searchVal.value}
           onChange={searchVal.onChange}

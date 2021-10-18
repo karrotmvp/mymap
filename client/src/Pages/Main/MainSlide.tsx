@@ -1,7 +1,12 @@
 import styled from "styled-components";
-import { flexCenter, theme, Title, WrapperWithFooter } from "../styles/theme";
-import Collection from "./Collection";
-import CreateButton from "./CreateButton";
+import {
+  flexCenter,
+  theme,
+  Title,
+  WrapperWithFooter,
+} from "../../styles/theme";
+import Collection from "../../Components/Collection";
+import CreateButton from "../../Components/CreateButton";
 
 const MainSlide = ({
   isMapShown,

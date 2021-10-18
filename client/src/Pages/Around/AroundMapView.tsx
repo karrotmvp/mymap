@@ -1,11 +1,19 @@
+import { MouseEventHandler } from "react";
 import styled from "styled-components";
+import { Back } from "../../assets";
 import Header from "../../Components/Header";
 import MapView, { Pin } from "../../Components/MapView";
 import PlaceBox from "../../Components/PlaceBox";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter } from "../../styles/theme";
 
-const AroundMapView = ({ place }: { place: PlaceType }) => {
+const AroundMapView = ({
+  place,
+  close,
+}: {
+  place: PlaceType;
+  close: MouseEventHandler;
+}) => {
   const pin: Pin = {
     id: parseInt(place.placeId),
     latitude: place.coordinate.latitude,
@@ -13,7 +21,9 @@ const AroundMapView = ({ place }: { place: PlaceType }) => {
   };
   return (
     <Wrapper>
-      <Header isGradient />
+      <Header isGradient>
+        <Back className="left-icon" onClick={close} />
+      </Header>
       <MapView height="100vh" pins={[pin]} />
 
       <div className="placebox">
