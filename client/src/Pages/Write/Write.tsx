@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { Close, Plus } from "../../assets";
+import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
 import { Places } from "../../Shared/atom";
@@ -18,6 +19,8 @@ import {
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
+  const isWrite = window.location.pathname.split("/")[1] === "write";
+
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
@@ -80,13 +83,21 @@ const Write = () => {
     }
   }, [inputVal.value, isInputOver, isTextareaOver, isShare, places]);
 
+  // alert
+  const [isAlertOpened, setIsAlertOpened] = useState(false);
+  // close
+  const handleClose = () => {
+    if (isWrite) window.history.back();
+    else setIsAlertOpened(true);
+  };
+
   return (
     <Wrapper>
-      <Header title="리스트 만들기">
-        <Close onClick={() => window.history.back()} className="left-icon" />
+      <Header title={isWrite ? "리스트 만들기" : "리스트 수정"}>
+        <Close onClick={handleClose} className="left-icon" />
       </Header>
-      <Title>{`추천하고 싶은
-나만의 장소를 모아봐요`}</Title>
+      <Title>{`모아보고 싶은
+나만의 장소를 저장해요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
         리스트 제목을 입력해 주세요.
@@ -156,8 +167,22 @@ const Write = () => {
         </SelectBtn>
       </div>
 
+      {/* 삭제 alert */}
+      {isAlertOpened && (
+        <Alert
+          close={() => setIsAlertOpened(false)}
+          title="수정한 내용이 저장되지 않았어요!"
+          sub="수정한 내용을 저장할까요?"
+        >
+          <Button>나가기</Button>
+          <Button>저장하기</Button>
+        </Alert>
+      )}
+
       <div className="footer">
-        <SubmitBtn $disabled={!isSubmittable}>작성 완료</SubmitBtn>
+        <SubmitBtn $disabled={!isSubmittable}>
+          {isWrite ? "작성 완료" : "수정 완료"}
+        </SubmitBtn>
       </div>
     </Wrapper>
   );

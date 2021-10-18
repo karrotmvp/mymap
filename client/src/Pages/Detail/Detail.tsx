@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Back, Delete, Edit, List, Map, More2 } from "../../assets";
+import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard";
 import {
   Button,
-  flexCenter,
   gap,
   theme,
   Title,
@@ -15,6 +16,8 @@ import { dummyPins, dummyPlaces } from "../../utils/dummy";
 import DetailMapView from "./DetailMapView";
 
 const Detail = () => {
+  const postId = window.location.pathname.split("detail/")[1];
+
   const [viewState, setViewState] = useState<"map" | "list">("list");
   const handleViewState = () => {
     if (viewState === "map") setViewState("list");
@@ -41,7 +44,7 @@ const Detail = () => {
   };
 
   return (
-    <Container>
+    <>
       <Header>
         <>
           <Back className="left-icon" onClick={() => window.history.back()} />
@@ -89,11 +92,11 @@ const Detail = () => {
         <Modal>
           <div className="background" onClick={() => setIsMoreOpened(false)} />
           <div className="modal">
-            <div>
+            <Link to={`/edit/${postId}`} className="button">
               <Edit />
               편집하기
-            </div>
-            <div onClick={handleDelete}>
+            </Link>
+            <div onClick={handleDelete} className="button">
               <Delete className="delete-icon" />
               삭제하기
             </div>
@@ -103,40 +106,21 @@ const Detail = () => {
 
       {/* 삭제 alert */}
       {isAlertOpened && (
-        <Alert onClick={() => setIsAlertOpened(false)}>
-          <div className="background" />
-          <div className="alert">
-            <div className="alert-wrapper" onClick={(e) => e.stopPropagation()}>
-              <div className="title">저장해놓은 리스트를 삭제하시겠어요?</div>
-              <div className="sub">삭제한 리스트는 다시 볼 수 없어요.</div>
-              <div className="buttons">
-                <Button>취소</Button>
-                <Button>삭제</Button>
-              </div>
-            </div>
-          </div>
+        <Alert
+          close={() => setIsAlertOpened(false)}
+          title="저장해놓은 리스트를 삭제하시겠어요?"
+          sub="삭제한 리스트는 다시 볼 수 없어요."
+        >
+          <Button>취소</Button>
+          <Button>삭제</Button>
         </Alert>
       )}
 
       {/* 지도뷰 */}
       {viewState === "map" && <DetailMapView pins={dummyPins} />}
-    </Container>
+    </>
   );
 };
-
-const Container = styled.div`
-  .background {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: #000;
-    opacity: 0.5;
-    z-index: 100;
-  }
-`;
 
 const Wrapper = styled.div`
   ${WrapperWithHeader};
@@ -199,63 +183,18 @@ const Modal = styled.div`
     border-top-right-radius: 2.4rem;
     z-index: 100;
     padding: 2.6rem 0.9rem;
-    & > div {
-      display: flex;
-      align-items: center;
+    .button {
       font-size: 1.6rem;
       color: ${theme.color.gray7};
       line-height: 135%;
+      display: flex;
+      align-items: center;
+
       &:last-child {
         margin-top: 0.8rem;
         color: ${theme.color.red};
         .delete-icon {
           fill: ${theme.color.red};
-        }
-      }
-    }
-  }
-`;
-
-const Alert = styled.div`
-  .alert {
-    ${flexCenter};
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 100;
-    padding: 2rem;
-    box-sizing: border-box;
-    .alert-wrapper {
-      width: 100%;
-      padding: 2rem 2.4rem;
-      border-radius: 1.6rem;
-      background-color: ${theme.color.white};
-      .title {
-        font-size: 1.6rem;
-        font-weight: bold;
-        line-height: 135%;
-      }
-      .sub {
-        font-size: 1.4rem;
-        font-weight: 500;
-        line-height: 135%;
-        color: ${theme.color.gray6};
-        margin-top: 0.2rem;
-      }
-      .buttons {
-        margin-top: 2.3rem;
-        display: flex;
-        ${gap("1rem")};
-        & > div {
-          width: 100%;
-          &:first-child {
-            background-color: ${theme.color.white};
-            color: ${theme.color.gray7};
-            border: 0.1rem solid ${theme.color.gray3};
-          }
         }
       }
     }

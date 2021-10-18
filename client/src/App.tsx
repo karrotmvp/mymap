@@ -48,6 +48,9 @@ function App() {
           <Route exact path="/write">
             <Write />
           </Route>
+          <Route path="/edit/:id">
+            <Write />
+          </Route>
         </Switch>
       </div>
     </Router>

@@ -83,8 +83,9 @@ export const Button = styled.div`
   ${flexCenter};
   color: ${theme.color.white};
   padding: 1.5rem 0;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   border-radius: 1rem;
+  font-weight: 500;
   line-height: 135%;
   box-sizing: border-box;
   background-color: ${theme.color.orange};
