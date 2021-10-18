@@ -1,9 +1,10 @@
+import { CoordinatesDTO } from "src/place/dto/coordinates.dto";
 import { UserDTO } from "src/user/dto/user.dto";
 import { Post } from "../entities/post.entity";
 import { PinDTO } from "./pin.dto";
 
 export class PostDTO {
-    constructor(post: Post, user: UserDTO, detailPins: PinDTO[]) {
+    constructor(post: Post, user: UserDTO, detailPins: PinDTO[], coordinates: CoordinatesDTO) {
         this.postId = post.getPostId();
         this.user = user;
         this.title = post.getTitle();
@@ -11,6 +12,7 @@ export class PostDTO {
         this.regionId = post.getRegionId();
         this.share = post.getShare();
         this.pins = detailPins;
+        this.coordinates = coordinates
     }
 
     postId: number;
@@ -19,5 +21,6 @@ export class PostDTO {
     contents: string;
     regionId: string;
     share: boolean;
+    coordinates: CoordinatesDTO
     pins: PinDTO[];
 }
