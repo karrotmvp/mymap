@@ -86,6 +86,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #fff;
+  overflow-y: scroll;
   .place-input {
     margin-top: 2rem;
     padding: 0 2rem;

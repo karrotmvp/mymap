@@ -46,7 +46,7 @@ const Mypage = () => {
 
       <div className="collections">
         {new Array(20).fill(0).map((_, i) => (
-          <Collection />
+          <Collection key={i} />
         ))}
       </div>
 

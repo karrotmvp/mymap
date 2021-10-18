@@ -1,10 +1,14 @@
+import { useState } from "react";
 import styled from "styled-components";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard";
 import { gap, theme, Title, WrapperWithHeader } from "../../styles/theme";
 import { dummyPlaces } from "../../utils/dummy";
+import DetailMapView from "./DetailMapView";
 
 const Detail = () => {
+  const [isMapOpened, setIsMapOpened] = useState(false);
+
   return (
     <Wrapper>
       <Header />
@@ -24,12 +28,13 @@ const Detail = () => {
 
       <div className="cards">
         {dummyPlaces.map((place) => (
-          <PlaceCard key={place.placeId} {...{ place }} />
-        ))}
-        {dummyPlaces.map((place) => (
-          <PlaceCard key={place.placeId} {...{ place }} />
+          <div key={place.placeId} onClick={() => setIsMapOpened(true)}>
+            <PlaceCard {...{ place }} />
+          </div>
         ))}
       </div>
+
+      {isMapOpened && <DetailMapView />}
     </Wrapper>
   );
 };
