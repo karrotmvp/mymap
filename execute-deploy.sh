@@ -6,6 +6,8 @@ cd ..
 
 cp -rf /home/ubuntu/.env /home/ubuntu/deploy/mymap/server
 cp -rf /home/ubuntu/regionId.json /home/ubuntu/deploy/mymap/server
+mkdir -p /home/ubuntu/deploy/mymap/client/build/.well-known/acme-challenge
+
 aws ecr get-login --no-include-email --region ap-northeast-2 > ./ecr-login
 chmod +x ./ecr-login
 ./ecr-login
