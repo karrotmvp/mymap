@@ -1,4 +1,4 @@
-import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { lastValueFrom } from 'rxjs';
 import { AuthService } from 'src/auth/auth.service';
@@ -15,7 +15,7 @@ export class UserController {
     ) {}
 
     @UseGuards(DaangnAuthGuard)
-    @Post('login')
+    @Get('login')
     async login(@Req() req: any, @Res({ passthrough: true }) res: Response) {
         const user$ = req.user;
         const user: CreateUserDTO = await lastValueFrom(user$);
@@ -23,7 +23,7 @@ export class UserController {
         const userInfo: UserDTO = new UserDTO(user.getUserId(), user.getUserName(), user.getProfileImageUrl());
         this.logger.debug(user);
         this.logger.debug(token);
-        res.cookie('w_auth', token, { sameSite: "none", secure: true });//setCookie
+        res.cookie('w_auth', token);//setCookie
         return userInfo;
         // res.status(302).redirect('/submit');
     }
