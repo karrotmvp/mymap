@@ -1,8 +1,8 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { JWTStrategy } from 'src/auth/jwt.strategy';
 import { MyLogger } from 'src/logger/logger.service';
 import { CreatePostDTO } from './dto/create-post.dto';
+import { PostDTO } from './dto/post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { PostService } from './post.service';
 
@@ -36,10 +36,14 @@ export class PostController {
         return await this.postService.readSavedPost(req.user.userId, page, perPage);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('/:postId')
-    async readPost(@Param('postId') postId: number) {
-        this.logger.debug('postId : ', postId);
-        return await this.postService.readPost(postId);//savedPost 정보 추가하기
+    async readPost(@Req() req: any, @Param('postId') postId: number) {
+        this.logger.debug('userId : ', req.user.userId, 'postId : ', postId);
+        const saved: boolean = await this.postService.checkSaved(req.user.userId, postId);
+        const post: PostDTO = await this.postService.readPost(postId);//savedPost 정보 추가하기
+        post.setSaved(saved);
+        return post;
     }
 
     @UseGuards(JwtAuthGuard)

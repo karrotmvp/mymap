@@ -2,14 +2,16 @@ import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
 import { UpdatePostDTO } from "../dto/update-post.dto";
 import { Pin } from "./pin.entity";
+import { SavedPost } from "./savedPost.entity";
 
 @Entity()
 export class Post {
-    constructor(user: User, title: string, contents: string , regionId: string, share: boolean, pins: Pin[]) {
+    constructor(user: User, title: string, contents: string , regionId: string, regionName: string, share: boolean, pins: Pin[]) {
         this.user = user;
         this.title = title;
         this.contents = contents;
         this.regionId = regionId;
+        this.regionName = regionName;
         this.share = share;
         this.pins = pins;
     }
@@ -34,10 +36,16 @@ export class Post {
     private regionId: string;
 
     @Column()
+    private regionName: string;
+
+    @Column()
     private share: boolean;
 
     @OneToMany(() => Pin, pin => pin.post, { cascade:true })
     pins: Pin[];
+
+    // @OneToMany(() => SavedPost, savedPost => savedPost.post, { cascade: true })
+    // savedPosts: SavedPost[];
 
     @UpdateDateColumn()
     updatedAt: Date;
@@ -59,6 +67,9 @@ export class Post {
     }
     public getRegionId(): string {
         return this.regionId;
+    }
+    public getRegionName(): string {
+        return this.regionName;
     }
     public getShare(): boolean {
         return this.share

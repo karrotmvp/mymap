@@ -26,4 +26,15 @@ export class RegionRepository {
             return regionIds;
         }))
     }
+
+    async findRegionName(regionId: string) {
+        const uri = this.configService.get('daangn.oapiuri') + 'regions/' + regionId;
+        return this.httpService.get(uri, {
+            headers: {
+                'X-Api-Key': this.configService.get('daangn.api_key')
+            }
+        }).pipe(map((res) => {
+            return res.data.data.region.name;
+        }))
+    }
 }

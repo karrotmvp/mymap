@@ -7,8 +7,8 @@ import { Post } from "./entities/post.entity";
 
 @EntityRepository(Post)
 export class PostRepository extends Repository<Post> {
-    async savePost(post: CreatePostDTO, user: User, pins: Pin[]) {
-        const newPost = new Post(user, post.title, post.contents, post.regionId, post.share, pins);
+    async savePost(post: CreatePostDTO, regionName: string, user: User, pins: Pin[]) {
+        const newPost = new Post(user, post.title, post.contents, post.regionId, regionName, post.share, pins);
         return await this.save(newPost);
     }
 
