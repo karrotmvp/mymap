@@ -7,13 +7,16 @@ import {
 } from "../../styles/theme";
 import Collection from "../../Components/Collection";
 import CreateButton from "../../Components/CreateButton";
+import { PostType } from "../../Shared/type";
 
 const MainSlide = ({
   isMapShown,
   isScrollUp,
+  posts,
 }: {
   isMapShown: boolean;
   isScrollUp: boolean;
+  posts: PostType[];
 }) => {
   return (
     <Wrapper $isMapShown={isMapShown}>
@@ -29,8 +32,8 @@ const MainSlide = ({
 추천 장소를 구경해보세요`}</Title>
 
           <div className="collections">
-            {[0, 0, 0, 0, 0, 0, 0].map((_, i) => (
-              <Collection key={i} />
+            {posts.map((post, i) => (
+              <Collection key={i} {...post} />
             ))}
           </div>
         </div>

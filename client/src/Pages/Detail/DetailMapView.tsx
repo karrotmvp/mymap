@@ -7,8 +7,8 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
   const _pins: Pin[] = pins.map((pin) => {
     return {
       id: pin.pinId,
-      latitude: pin.place.coordinate.latitude,
-      longitude: pin.place.coordinate.longitude,
+      latitude: pin.place.coordinates.latitude,
+      longitude: pin.place.coordinates.longitude,
     };
   });
 

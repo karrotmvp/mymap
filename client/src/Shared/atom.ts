@@ -8,10 +8,13 @@ export const Places = atom<PlaceType[]>({
 
 export const RegionId = atom({
   key: "region_id",
-  default: "",
+  default: "6530459d189b",
 });
 
 export const MyInfo = atom<MyInfoType | {}>({
   key: "my_info",
-  default: {},
+  default: {
+    id: 1,
+    userName: "team1test",
+  },
 });

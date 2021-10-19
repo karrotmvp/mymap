@@ -57,11 +57,11 @@ const Mypage = () => {
 
       <Tab />
 
-      <div className="collections">
+      {/* <div className="collections">
         {new Array(20).fill(0).map((_, i) => (
           <Collection key={i} />
         ))}
-      </div>
+      </div> */}
 
       <CreateButton />
 

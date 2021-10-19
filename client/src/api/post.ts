@@ -1,5 +1,5 @@
 import { Pin } from "../Components/MapView";
-import { PostType } from "../Shared/type";
+import { FeedType, PostType } from "../Shared/type";
 import { DELETE, GET, POST, PUT } from "../utils/axios";
 
 // 리스트 상세
@@ -40,10 +40,10 @@ interface GetFeedPostsParams {
   perPage?: number;
 }
 export const getFeedPosts = async (
-  regionId: number,
+  regionId: string,
   params: GetFeedPostsParams = {}
 ) => {
-  return await GET(`api/post/feed/${regionId}`, params);
+  return (await GET(`api/post/feed/${regionId}`, params)) as FeedType;
 };
 
 // 리스트 저장

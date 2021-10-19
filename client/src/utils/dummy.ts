@@ -8,7 +8,7 @@ export const dummyPins: PinType[] = [
       placeId: "0",
       name: "삼성영어청룡어학원",
       address: "충청남도 천안시 동남구 풍세로 769-28",
-      coordinate: {
+      coordinates: {
         latitude: 36.78,
         longitude: 127.139,
       },
@@ -41,7 +41,7 @@ export const dummyPins: PinType[] = [
       placeId: "1",
       name: "삼성영어청룡어학원",
       address: "충청남도 천안시 동남구 풍세로 769-28",
-      coordinate: {
+      coordinates: {
         latitude: 36.7796945602981,
         longitude: 127.13872042726,
       },
@@ -90,7 +90,7 @@ export const dummyPlaces: PlaceType[] = [
     placeId: "0",
     name: "삼성영어청룡어학원",
     address: "충청남도 천안시 동남구 풍세로 769-28",
-    coordinate: {
+    coordinates: {
       latitude: 36.78,
       longitude: 127.139,
     },
@@ -119,7 +119,7 @@ export const dummyPlaces: PlaceType[] = [
     placeId: "1",
     name: "삼성영어청룡어학원",
     address: "충청남도 천안시 동남구 풍세로 769-28",
-    coordinate: {
+    coordinates: {
       latitude: 36.779694560298,
       longitude: 127.1387204272,
     },
