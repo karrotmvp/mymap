@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd ./server
+cd /home/ubuntu/deploy/mymap/server
 npm install
-cd ..
+cd /home/ubuntu/deploy/mymap
 
 cp -rf /home/ubuntu/.env /home/ubuntu/deploy/mymap/server
 cp -rf /home/ubuntu/regionId.json /home/ubuntu/deploy/mymap/server
