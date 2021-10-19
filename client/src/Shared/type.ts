@@ -12,6 +12,11 @@ export interface PostType {
   pins: PinType[];
 }
 
+export interface MyInfoType {
+  userId: number;
+  userName: string;
+}
+
 export interface PinType {
   pinId: number;
   review: string;

@@ -6,11 +6,23 @@ import Detail from "./Pages/Detail/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useSetRecoilState } from "recoil";
-import { RegionId } from "./Shared/atom";
+import { MyInfo, RegionId } from "./Shared/atom";
+import { useCallback } from "react";
+import { postLogin } from "./api/user";
 
 function App() {
   const mini = new Mini();
   const setRegionId = useSetRecoilState(RegionId);
+
+  // 로그인 및 내 정보 저장
+  const setMyInfo = useSetRecoilState(MyInfo);
+  const getMyInfo = useCallback(
+    async (code: string) => {
+      const data = await postLogin(code);
+      setMyInfo(data);
+    },
+    [setMyInfo]
+  );
 
   mini.startPreset({
     preset:
@@ -23,7 +35,8 @@ function App() {
         const regionId = new URLSearchParams(window.location.search).get(
           "region_id"
         );
-        console.log(result.code, regionId);
+
+        getMyInfo(result.code);
         setRegionId(regionId as string);
       }
     },

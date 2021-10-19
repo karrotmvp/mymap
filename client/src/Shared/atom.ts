@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { PlaceType } from "./type";
+import { MyInfoType, PlaceType } from "./type";
 
 export const Places = atom<PlaceType[]>({
   key: "places",
@@ -9,4 +9,9 @@ export const Places = atom<PlaceType[]>({
 export const RegionId = atom({
   key: "region_id",
   default: "",
+});
+
+export const MyInfo = atom<MyInfoType | {}>({
+  key: "my_info",
+  default: {},
 });
