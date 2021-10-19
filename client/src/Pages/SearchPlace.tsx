@@ -1,8 +1,13 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import SearchList from "../Components/SearchList";
+import useDebounce from "../Hooks/useDebounce";
+import useInput from "../Hooks/useInput";
+import { RegionId } from "../Shared/atom";
 import { PlaceType } from "../Shared/type";
-import { Input } from "../styles/theme";
+import { input } from "../styles/theme";
+import { GET } from "../utils/axios";
 import PlaceMapView from "./PlaceMapView";
 
 export const dummyPlaces: PlaceType[] = [
@@ -73,16 +78,37 @@ const SearchPlace = ({
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
+  const regionId = useRecoilValue(RegionId);
 
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
     setIsMapOpened(true);
   };
 
+  const searchVal = useInput("");
+  const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
+
+  const getSearchItems = async () => {
+    const data = await GET(`api/place/search/6530459d189b`, {
+      query: debouncedSearchVal,
+    });
+    console.log("search", data);
+  };
+
+  console.log(process.env.REACT_APP_ENDPOINT);
+  useEffect(() => {
+    console.log(debouncedSearchVal);
+    getSearchItems();
+  }, [debouncedSearchVal]);
+
   return (
     <Wrapper>
       <div className="place-input">
-        <Input />
+        <SearchInput
+          value={searchVal.value}
+          onChange={searchVal.onChange}
+          placeholder="검색어를 입력해주세요"
+        />
       </div>
 
       <div className="result">관련검색어</div>
@@ -118,6 +144,11 @@ const Wrapper = styled.div`
     margin-left: 2rem;
     margin-bottom: 1.3rem;
   }
+`;
+
+const SearchInput = styled.input`
+  ${input};
+  height: 4.8rem;
 `;
 
 export default SearchPlace;

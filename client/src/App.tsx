@@ -20,11 +20,10 @@ function App() {
     },
     onSuccess: function (result) {
       if (result && result.code) {
-        console.log(result.code);
-
         const regionId = new URLSearchParams(window.location.search).get(
           "region_id"
         );
+        console.log(result.code, regionId);
         setRegionId(regionId as string);
       }
     },

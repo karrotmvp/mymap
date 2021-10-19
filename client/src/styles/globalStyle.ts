@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import "./reset.scss";
+import { theme } from "./theme";
 
 export const GlobalStyle = createGlobalStyle`
     :focus {
@@ -16,6 +17,7 @@ export const GlobalStyle = createGlobalStyle`
         font-display: fallback;
         -ms-overflow-style: none;
         scrollbar-width: none;
+        color: ${theme.color.black};
     }
     textarea {
         font-family: 'Spoqa Han Sans Neo', 'sans-serif';
