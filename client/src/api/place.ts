@@ -15,11 +15,18 @@ export const getSearch = async (regionId: string, params: GetSearchParams) => {
 interface GetAroundPlaceParams {
   page?: number;
   perPage?: number;
-  paginator?: number;
+  paginator?: string;
+}
+interface GetAroundPlacesResponse {
+  places: PlaceType[];
+  paginator: string;
 }
 export const getAroundPlaces = async (
   regionId: string,
   params: GetAroundPlaceParams
 ) => {
-  return (await GET(`api/place/region/${regionId}`, params)) as PlaceType[];
+  return (await GET(
+    `api/place/region/${regionId}`,
+    params
+  )) as GetAroundPlacesResponse;
 };
