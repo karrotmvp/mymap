@@ -9,7 +9,7 @@ import { Post } from "./entities/post.entity";
 export class PostRepository extends Repository<Post> {
     async savePost(post: CreatePostDTO, user: User, pins: Pin[]) {
         const newPost = new Post(user, post.title, post.contents, post.regionId, post.share, pins);
-        await this.save(newPost);
+        return await this.save(newPost);
     }
 
     async updatePost(postId: number, post: UpdatePostDTO, pins: Pin[]) {

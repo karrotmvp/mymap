@@ -35,4 +35,7 @@ export class SavedPost {
     public getPostId(): number {
         return this.postId;
     }
+    public getUser(): User {
+        return this.user;
+    }
 }
