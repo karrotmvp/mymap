@@ -23,7 +23,7 @@ export class UserController {
         const userInfo: UserDTO = new UserDTO(user.getUserId(), user.getUserName(), user.getProfileImageUrl());
         this.logger.debug(user);
         this.logger.debug(token);
-        res.cookie('w_auth', token, { sameSite: false, secure: true });//setCookie
+        res.cookie('w_auth', token, { sameSite: "none", secure: true });//setCookie
         return userInfo;
         // res.status(302).redirect('/submit');
     }
