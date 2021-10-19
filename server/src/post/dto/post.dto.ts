@@ -10,6 +10,7 @@ export class PostDTO {
         this.title = post.getTitle();
         this.contents = post.getContents();
         this.regionId = post.getRegionId();
+        this.regionName = post.getRegionName();
         this.share = post.getShare();
         this.pins = detailPins;
         this.coordinates = coordinates
@@ -20,7 +21,13 @@ export class PostDTO {
     title: string;
     contents: string;
     regionId: string;
+    regionName: string;
     share: boolean;
     coordinates: CoordinatesDTO
     pins: PinDTO[];
+    saved: boolean;
+
+    public setSaved(saved: boolean) {
+        this.saved = saved;
+    }
 }
