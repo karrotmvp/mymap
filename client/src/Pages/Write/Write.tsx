@@ -1,11 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { postPost } from "../../api/post";
 import { Close, Plus } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
-import { Places } from "../../Shared/atom";
+import { Places, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -89,6 +90,23 @@ const Write = () => {
   const handleClose = () => {
     if (isWrite) window.history.back();
     else setIsAlertOpened(true);
+  };
+
+  const regionId = useRecoilValue(RegionId);
+  const handleSubmit = async () => {
+    const data = await postPost({
+      title: inputVal.value,
+      contents: textareaVal.value,
+      regionId,
+      share: isShare as boolean,
+      pins: places.map((place) => {
+        return {
+          latitude: place.coordinates.latitude,
+          longitude: place.coordinates.longitude,
+        };
+      }),
+    });
+    if (data.postId) window.location.href = `/detail/${data.postId}`;
   };
 
   return (
@@ -180,7 +198,12 @@ const Write = () => {
       )}
 
       <div className="footer">
-        <SubmitBtn $disabled={!isSubmittable}>
+        <SubmitBtn
+          onClick={() => {
+            isSubmittable && handleSubmit();
+          }}
+          $disabled={!isSubmittable}
+        >
           {isWrite ? "작성 완료" : "수정 완료"}
         </SubmitBtn>
       </div>
