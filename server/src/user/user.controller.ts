@@ -20,10 +20,9 @@ export class UserController {
         const user$ = req.user;
         const user: CreateUserDTO = await lastValueFrom(user$);
         const token = await this.authService.generateToken(user);
-        const userInfo: UserDTO = new UserDTO(user.getUserId(), user.getUserName(), user.getProfileImageUrl());
+        const userInfo: UserDTO = new UserDTO(user.getUserId(), user.getUserName(), user.getProfileImageUrl(), token);
         this.logger.debug(user);
         this.logger.debug(token);
-        res.cookie('w_auth', token);//setCookie
         return userInfo;
         // res.status(302).redirect('/submit');
     }
