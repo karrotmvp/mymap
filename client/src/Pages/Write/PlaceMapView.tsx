@@ -1,11 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import MapView from "../Components/MapView";
-import PlaceInfo from "../Components/PlaceInfo";
-import { Places } from "../Shared/atom";
-import { PlaceType } from "../Shared/type";
-import { Button } from "../styles/theme";
+import { Plus } from "../../assets";
+import MapView, { Pin } from "../../Components/MapView";
+import PlaceInfo from "../../Components/PlaceInfo";
+import { Places } from "../../Shared/atom";
+import { PlaceType } from "../../Shared/type";
+import { Button, theme } from "../../styles/theme";
 
 const PlaceMapView = ({
   place,
@@ -21,23 +22,23 @@ const PlaceMapView = ({
     setIsSearchOpened(false);
   };
 
+  const pin: Pin = {
+    id: parseInt(place.placeId),
+    latitude: place.coordinate.latitude,
+    longitude: place.coordinate.longitude,
+  };
+
   return (
     <Wrapper>
-      <MapView
-        height="100vh"
-        markers={[
-          {
-            placeId: place.placeId,
-            lat: place.coordinate.latitude,
-            lng: place.coordinate.longitude,
-          },
-        ]}
-      />
+      <MapView height="100vh" pins={[pin]} />
       <div className="place-info">
         <div className="photo" />
         <PlaceInfo {...{ place }} />
       </div>
-      <AddBtn onClick={() => handleAddPlace(place)}>장소 추가</AddBtn>
+      <AddBtn onClick={() => handleAddPlace(place)}>
+        <Plus className="add-icon" />
+        장소 추가
+      </AddBtn>
     </Wrapper>
   );
 };
@@ -60,7 +61,7 @@ const Wrapper = styled.div`
     left: 0;
     right: 0;
     bottom: 9.7rem;
-    background-color: #fff;
+    background-color: ${theme.color.white};
     margin: 0 2rem;
     box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.15);
     border-radius: 1.6rem;
@@ -74,6 +75,12 @@ const AddBtn = styled(Button)`
   right: 0;
   margin: 0 2rem;
   bottom: 3.5rem;
+  .add-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    fill: ${theme.color.white};
+  }
 `;
 
 export default PlaceMapView;

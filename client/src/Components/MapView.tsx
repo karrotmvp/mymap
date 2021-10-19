@@ -3,13 +3,8 @@ import { RenderAfterNavermapsLoaded, NaverMap, Marker } from "react-naver-maps";
 interface MapViewProps {
   width?: string;
   height?: string;
-  markers?: MarkerType[];
-}
-
-interface MarkerType {
-  placeId: string;
-  lat: number;
-  lng: number;
+  pins?: Pin[];
+  handleSelectPin?: Function;
 }
 
 declare global {
@@ -18,12 +13,38 @@ declare global {
   }
 }
 
-const MapView = ({ width, height, markers }: MapViewProps) => {
-  // const navermaps = window.naver.maps;
+export interface Pin {
+  id: number;
+  latitude: number;
+  longitude: number;
+}
 
-  const defaultCenter = markers
-    ? { lat: markers[0].lat, lng: markers[0].lng }
+const MapView = ({ width, height, pins, handleSelectPin }: MapViewProps) => {
+  const defaultCenter = pins
+    ? {
+        lat: pins[0].latitude,
+        lng: pins[0].longitude,
+      }
     : { lat: 37.3595704, lng: 127.105399 };
+
+  // 핀 여러개일 때 사용
+  // const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const handleClickMarker = (pin: Pin) => {
+    handleSelectPin && handleSelectPin(pin);
+
+    // 지도 이동
+    // setMapCenter({
+    //   lat: pin.latitude,
+    //   lng: pin.longitude,
+    // });
+    // setTimeout(() => {
+    //   setMapZoom(12);
+    //   setMapCenter({
+    //     lat: loc.snapshotJson.businessAddressJson.posLat,
+    //     lng: loc.snapshotJson.businessAddressJson.posLong,
+    //   });
+    // }, 1000);
+  };
 
   return (
     <RenderAfterNavermapsLoaded
@@ -39,11 +60,17 @@ const MapView = ({ width, height, markers }: MapViewProps) => {
         }}
         defaultCenter={defaultCenter}
         defaultZoom={16}
+        // onZoomChanged={setMapZoom}
+        // onCenterChanged={setMapCenter}
       >
-        {markers?.map((marker) => (
+        {pins?.map((pin) => (
           <Marker
-            key={marker.placeId}
-            position={{ lat: marker.lat, lng: marker.lng }}
+            key={pin.id}
+            position={{
+              lat: pin.latitude,
+              lng: pin.longitude,
+            }}
+            onClick={handleSelectPin && (() => handleClickMarker(pin))}
           />
         ))}
       </NaverMap>

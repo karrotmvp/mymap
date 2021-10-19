@@ -19,5 +19,11 @@ export default () => ({
     },
     jwt: {
         secret: process.env.SECRET
+    },
+    log: {
+        debug: process.env.DEBUG
+    },
+    mixpanel: {
+        token: process.env.MIXPANEL_TOKEN,
     }
 })

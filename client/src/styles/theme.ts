@@ -8,13 +8,13 @@ export const flexCenter = css`
 
 export const WrapperWithHeaderFooter = css`
   width: 100%;
-  padding-top: 7rem;
+  padding-top: 5rem;
   padding-bottom: 8.8rem;
   box-sizing: border-box;
 `;
 export const WrapperWithHeader = css`
   width: 100%;
-  padding-top: 7rem;
+  padding-top: 5rem;
   box-sizing: border-box;
 `;
 
@@ -58,6 +58,7 @@ export const theme: DefaultTheme = {
     white: "#FFFFFF",
     orange: "#FF7964",
     red: "#FC453A",
+    blue: "#0F6FFF",
   },
 };
 
@@ -80,10 +81,11 @@ export const input = css`
 
 export const Button = styled.div`
   ${flexCenter};
-  color: #fff;
+  color: ${theme.color.white};
   padding: 1.5rem 0;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   border-radius: 1rem;
+  font-weight: 500;
   line-height: 135%;
   box-sizing: border-box;
   background-color: ${theme.color.orange};

@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { More } from "../assets";
 import { flexCenter, theme } from "../styles/theme";
 
 const PlaceBox = ({ name }: { name: string }) => {
   let _name = name;
-  if (name.length > 14) {
-    _name = name.slice(0, 14) + "...";
+  if (name.length > 19) {
+    _name = name.slice(0, 19) + "...";
   }
   return (
     <PlaceBoxWrapper>
@@ -19,9 +20,12 @@ const Collection = () => {
   return (
     <Wrapper>
       <Link to="/detail/1">
-        <div>
-          <div className="title">혼밥하기 좋은 우리 동네 식당</div>
-          <div className="author">짱짱로컬큐레이터님 · 논현동</div>
+        <div className="title-wrapper">
+          <div>
+            <div className="title">혼밥하기 좋은 우리 동네 식당</div>
+            <div className="author">짱짱로컬큐레이터님 · 논현동</div>
+          </div>
+          <More className="more-icon" />
         </div>
         <div className="places">
           {[0, 0, 0, 0].map((_, i) => (
@@ -35,16 +39,24 @@ const Collection = () => {
 
 const Wrapper = styled.div`
   width: 100%;
-  .title {
-    font-size: 1.6rem;
-    line-height: 120%;
-    font-weight: bold;
-  }
-  .author {
-    margin-top: 0.2rem;
-    font-size: 1.4rem;
-    line-height: 150%;
-    color: ${theme.color.gray6};
+  .title-wrapper {
+    ${flexCenter};
+    justify-content: space-between;
+
+    .title {
+      font-size: 1.6rem;
+      line-height: 120%;
+      font-weight: bold;
+    }
+    .author {
+      margin-top: 0.2rem;
+      font-size: 1.4rem;
+      line-height: 150%;
+      color: ${theme.color.gray6};
+    }
+    .more-icon {
+      fill: ${theme.color.gray5};
+    }
   }
 
   .places {
@@ -57,25 +69,20 @@ const Wrapper = styled.div`
 `;
 
 const PlaceBoxWrapper = styled.div`
-  min-width: 12rem;
-  height: 17rem;
-  margin-right: 0.8rem;
-  border: 0.1rem solid ${theme.color.gray3};
-  border-radius: 0.8rem;
+  min-width: 13rem;
+  margin-right: 1rem;
   .photo {
     width: 100%;
-    height: 12rem;
+    height: 13rem;
     background-color: lightgray;
-    border-top-left-radius: 0.6rem;
-    border-top-right-radius: 0.6rem;
+    border-radius: 1rem;
   }
   .place-name {
     ${flexCenter};
-    text-align: center;
-    margin: 0.8rem;
+    margin-top: 0.8rem;
     font-size: 1.3rem;
     color: ${theme.color.gray6};
-    line-height: 130%;
+    line-height: 140%;
   }
 `;
 

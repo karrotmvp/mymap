@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Main from "./Pages/Main";
-import Around from "./Pages/Around";
+import Main from "./Pages/Main/Main";
+import Around from "./Pages/Around/Around";
 import Mypage from "./Pages/Mypage";
-import Detail from "./Pages/Detail";
-import Write from "./Pages/Write";
+import Detail from "./Pages/Detail/Detail";
+import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useSetRecoilState } from "recoil";
 import { RegionId } from "./Shared/atom";
@@ -46,6 +46,9 @@ function App() {
             <Mypage />
           </Route>
           <Route exact path="/write">
+            <Write />
+          </Route>
+          <Route path="/edit/:id">
             <Write />
           </Route>
         </Switch>
