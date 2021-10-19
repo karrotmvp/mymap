@@ -39,7 +39,7 @@ export class PostRepository extends Repository<Post> {
         const posts = await this.find({
             order: { createdAt: 'DESC' },
             where: (qb) => {
-                qb.where('regionId IN (:...regionId) AND postId NOT IN (:end, :start)', { regionId: regionId, start: start, end: end})
+                qb.where('regionId IN (:...regionId) AND (postId < :end OR postId > :start)', { regionId: regionId, start: start, end: end})
             },
             take: perPage,
         })
