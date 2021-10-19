@@ -16,15 +16,15 @@ const Main = () => {
   const regionId = useRecoilValue(RegionId);
   const [feedPosts, setFeedPosts] = useState<FeedType | null>(null);
 
-  const getFeed = useCallback(async () => {
+  const getFeedPostsCallback = useCallback(async () => {
     const data = await getFeedPosts(regionId);
     console.log(data);
     setFeedPosts(data);
   }, [regionId]);
 
   useEffect(() => {
-    getFeed();
-  }, [getFeed]);
+    getFeedPostsCallback();
+  }, [getFeedPostsCallback]);
 
   const [pins, setPins] = useState<PinType[] | []>([]);
   const [feedPins, setfeedPins] = useState<Pin[] | []>([]);

@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { getPost } from "../../api/post";
 import { Back, Delete, Edit, List, Map, More2 } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard";
+import { PostType } from "../../Shared/type";
 import {
   Button,
   gap,
@@ -12,11 +14,20 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
-import { dummyPins, dummyPlaces } from "../../utils/dummy";
 import DetailMapView from "./DetailMapView";
 
 const Detail = () => {
-  const postId = window.location.pathname.split("detail/")[1];
+  const postId = parseInt(window.location.pathname.split("detail/")[1]);
+
+  const [post, setPost] = useState<PostType | null>();
+  const getPostCallback = useCallback(async () => {
+    const data = await getPost(postId);
+    setPost(data);
+  }, [postId]);
+
+  useEffect(() => {
+    getPostCallback();
+  }, [getPostCallback]);
 
   const [viewState, setViewState] = useState<"map" | "list">("list");
   const handleViewState = () => {
@@ -49,9 +60,7 @@ const Detail = () => {
         <>
           <Back className="left-icon" onClick={() => window.history.back()} />
           {(isScrollUp || viewState === "map") && (
-            <div className="post-title">
-              당근마켓 인턴이 먹을 점심 장소 목록 작성 예시랄라랄라
-            </div>
+            <div className="post-title">{post?.title}</div>
           )}
           <div className="view-toggle" onClick={handleViewState}>
             {viewState === "map" ? <List /> : <Map />}
@@ -63,11 +72,8 @@ const Detail = () => {
 
       {viewState === "list" && (
         <Wrapper>
-          <Title>당근마켓 인턴이 먹을 점심 장소 목록 작성 예시랄라랄라</Title>
-          <div className="content">
-            점심에 뭘 먹을지 고민하는 나를 위한 주변 장소 모음! 점심시간이 제일
-            행복해요~
-          </div>
+          <Title>{post?.title}</Title>
+          <div className="content">{post?.contents}</div>
 
           <Profile>
             <div className="photo" />
@@ -78,9 +84,9 @@ const Detail = () => {
           </Profile>
 
           <div className="cards">
-            {dummyPlaces.map((place) => (
-              <div key={place.placeId} onClick={handleViewState}>
-                <PlaceCard {...{ place }} />
+            {post?.pins.map((pin) => (
+              <div key={pin.pinId} onClick={handleViewState}>
+                <PlaceCard place={pin.place} />
               </div>
             ))}
           </div>
@@ -117,7 +123,7 @@ const Detail = () => {
       )}
 
       {/* 지도뷰 */}
-      {viewState === "map" && <DetailMapView pins={dummyPins} />}
+      {viewState === "map" && <DetailMapView pins={post!.pins} />}
     </>
   );
 };

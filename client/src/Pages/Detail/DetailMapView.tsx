@@ -14,17 +14,12 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
 
   return (
     <Wrapper>
-      <MapView height="100vh" {...{ _pins }} />
+      <MapView height="100vh" pins={_pins} />
       <PinSlider {...{ pins }} />
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
-  /* position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 500; */
-`;
+const Wrapper = styled.div``;
 
 export default DetailMapView;

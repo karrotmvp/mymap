@@ -18,10 +18,9 @@ const PlaceBox = ({ name }: { name: string }) => {
 };
 
 const Collection = (post: PostType) => {
-  console.log(post);
   return (
     <Wrapper>
-      <Link to="/detail/1">
+      <Link to={`/detail/${post.postId}`}>
         <div className="title-wrapper">
           <div>
             <div className="title">{post.title}</div>
