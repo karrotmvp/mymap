@@ -48,6 +48,7 @@ jobs:
           REACT_APP_NAVER_MAPS_CLIENT_ID: ${{ secrets.REACT_APP_NAVER_MAPS_CLIENT_ID }}
           REACT_APP_APP_ID: ${{ secrets.REACT_APP_APP_ID }}
           REACT_APP_ENDPOINT: ${{ secrets.REACT_APP_ENDPOINT }}
+        working-directory: ${{ env.client-directory }}
 
       - name: Run client build
         run: yarn build
