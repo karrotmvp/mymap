@@ -1,9 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import Header from "../Components/Header";
-import useInput from "../Hooks/useInput";
-import { Places } from "../Shared/atom";
+import { Close, Plus } from "../../assets";
+import Alert from "../../Components/Alert";
+import Header from "../../Components/Header";
+import useInput from "../../Hooks/useInput";
+import { Places } from "../../Shared/atom";
+import { PlaceType } from "../../Shared/type";
 import {
   Button,
   flexCenter,
@@ -12,15 +15,27 @@ import {
   theme,
   Title,
   WrapperWithHeader,
-} from "../styles/theme";
+} from "../../styles/theme";
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
+  const isWrite = window.location.pathname.split("/")[1] === "write";
+
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
   const [isShare, setIsShare] = useState<null | boolean>(null);
-  const places = useRecoilValue(Places);
+  const [places, setPlaces] = useRecoilState(Places);
+
+  // remove place
+  const handleRemovePlace = (place: PlaceType) => {
+    const idx = places.findIndex((p) => p.placeId === place.placeId);
+    const newPlaces = [
+      ...places.slice(0, idx),
+      ...places.slice(idx + 1, places.length),
+    ];
+    setPlaces(newPlaces);
+  };
 
   // input
   const inputVal = useInput("");
@@ -66,13 +81,23 @@ const Write = () => {
     ) {
       setIsSubmittable(true);
     }
-  }, [inputVal.value, textareaVal.value, isShare, places]);
+  }, [inputVal.value, isInputOver, isTextareaOver, isShare, places]);
+
+  // alert
+  const [isAlertOpened, setIsAlertOpened] = useState(false);
+  // close
+  const handleClose = () => {
+    if (isWrite) window.history.back();
+    else setIsAlertOpened(true);
+  };
 
   return (
     <Wrapper>
-      <Header title="컬렉션 만들기" />
-      <Title>{`추천하고 싶은
-나만의 장소를 모아봐요`}</Title>
+      <Header title={isWrite ? "리스트 만들기" : "리스트 수정"}>
+        <Close onClick={handleClose} className="left-icon" />
+      </Header>
+      <Title>{`모아보고 싶은
+나만의 장소를 저장해요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
         리스트 제목을 입력해 주세요.
@@ -85,6 +110,30 @@ const Write = () => {
           placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
         />
       </div>
+
+      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요.</div>
+      <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
+
+      {/* 추가된 장소들 */}
+      {places?.map((place) => (
+        <div key={place.placeId} className="added-list">
+          <div className="photo" />
+          {place.name}
+          <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
+        </div>
+      ))}
+
+      <div className="add-button" onClick={() => setIsSearchOpened(true)}>
+        <Plus className="add-icon" />
+        장소 추가
+      </div>
+
+      {isSearchOpened && (
+        <SearchPlace
+          {...{ setIsSearchOpened }}
+          close={() => setIsSearchOpened(false)}
+        />
+      )}
 
       <div className="subtitle">
         리스트에 대한 설명을 작성해주세요.(선택 사항)
@@ -118,24 +167,23 @@ const Write = () => {
         </SelectBtn>
       </div>
 
-      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요.</div>
-      <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
+      {/* 삭제 alert */}
+      {isAlertOpened && (
+        <Alert
+          close={() => setIsAlertOpened(false)}
+          title="수정한 내용이 저장되지 않았어요!"
+          sub="수정한 내용을 저장할까요?"
+        >
+          <Button onClick={() => window.history.back()}>나가기</Button>
+          <Button>저장하기</Button>
+        </Alert>
+      )}
 
-      {/* 추가된 장소들 */}
-      {places?.map((place) => (
-        <div className="added-list">
-          <div className="photo" />
-          {place.name}
-        </div>
-      ))}
-
-      <div className="add-button" onClick={() => setIsSearchOpened(true)}>
-        장소 추가
+      <div className="footer">
+        <SubmitBtn $disabled={!isSubmittable}>
+          {isWrite ? "작성 완료" : "수정 완료"}
+        </SubmitBtn>
       </div>
-
-      {isSearchOpened && <SearchPlace {...{ setIsSearchOpened }} />}
-
-      <SubmitBtn $disabled={!isSubmittable}>완료</SubmitBtn>
     </Wrapper>
   );
 };
@@ -144,7 +192,7 @@ const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding-left: 2rem;
   padding-right: 2rem;
-  padding-bottom: 11.7rem;
+  padding-bottom: 13.2rem;
   overflow-y: scroll;
   .name-input {
     margin-top: 1.2rem;
@@ -154,7 +202,7 @@ const Wrapper = styled.div`
     align-items: center;
     border-radius: 1rem;
     height: 5.2rem;
-    border: 1px solid ${theme.color.orange};
+    border: 1px solid ${theme.color.gray3};
     font-size: 1.5rem;
     font-weight: 500;
     line-height: 2.2rem;
@@ -167,17 +215,28 @@ const Wrapper = styled.div`
       background-color: lightgray;
       margin-right: 1rem;
     }
+    .del-btn {
+      margin-left: auto;
+      fill: ${theme.color.gray4};
+    }
   }
   .add-button {
     ${flexCenter};
+    position: relative;
     border-radius: 1rem;
-    height: 5.2rem;
-    border: 1px dashed ${theme.color.orange};
+    height: 5rem;
+    border: 0.1rem dashed ${theme.color.orange};
     font-size: 1.4rem;
     line-height: 135%;
     font-weight: 500;
     margin-top: 1.2rem;
     color: ${theme.color.orange};
+    .add-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      fill: ${theme.color.orange};
+    }
   }
   .subtitle {
     font-size: 1.4rem;
@@ -199,6 +258,15 @@ const Wrapper = styled.div`
     margin-top: 1.2rem;
     box-sizing: border-box;
   }
+  .footer {
+    position: fixed;
+    width: 100%;
+    height: 7.4rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: ${theme.color.white};
+  }
 `;
 
 const SelectBtn = styled.div<{ $isSelected: boolean }>`
@@ -219,11 +287,7 @@ const SelectBtn = styled.div<{ $isSelected: boolean }>`
 `;
 
 const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
-  position: fixed;
-  left: 0;
-  right: 0;
-  margin: 0 2rem;
-  bottom: 3.5rem;
+  margin: 1rem 2rem;
   background-color: ${({ $disabled }) =>
     $disabled ? theme.color.gray4 : theme.color.orange};
 `;
@@ -235,7 +299,6 @@ const Input = styled.textarea<{ $error?: boolean }>`
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};
   &:focus {
-    background-color: #fff;
     border: 0.1rem solid
       ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
   }
@@ -248,7 +311,6 @@ const Textarea = styled.textarea<{ $error?: boolean }>`
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};
   &:focus {
-    background-color: #fff;
     border: 0.1rem solid
       ${({ $error }) => (!$error ? theme.color.gray4 : theme.color.red)};
   }

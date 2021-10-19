@@ -30,7 +30,7 @@ const Wrapper = styled.div`
   z-index: 100;
   left: 0;
   bottom: 0;
-  background-color: #fff;
+  background-color: ${theme.color.white};
 `;
 
 const FooterLink = styled(Link)<{ $isClicked: boolean }>`
