@@ -18,4 +18,14 @@ export class SavedPostRepository extends Repository<SavedPost> {
         })
         return postIds;
     }
+
+    async findWithPostId(userId: number, postId: number): Promise<SavedPost> {
+        const savedPost = await this.findOne({
+            relations: ['user', 'post'],
+            where: (qb) => {
+                qb.where('SavedPost__user.userId = :userId AND SavedPost__post.postId = :postId', { userId: userId, postId: postId })
+            }
+        })
+        return savedPost;
+    }
 }

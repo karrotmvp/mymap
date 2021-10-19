@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotAcceptableException, Put, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotAcceptableException, NotFoundException, Put, UnauthorizedException } from '@nestjs/common';
 import { MixpanelProvider } from 'src/logger/mixpanel.provider';
 import { CoordinatesDTO } from 'src/place/dto/coordinates.dto';
 import { PlaceDTO } from 'src/place/dto/place.dto';
@@ -35,7 +35,7 @@ export class PostService {
         try {
             const user: User = await this.userService.readUser(userId);
             const pins: Pin[] = await this.pinRepository.savePins(post.pins);
-            await this.postRepository.savePost(post, user, pins);
+            const newPost: Post = await this.postRepository.savePost(post, user, pins);
             this.mixPanel.mixpanel.people.set_once(userId.toString(), 'first_post_created', (new Date().toISOString()))
             this.mixPanel.mixpanel.people.increment(userId.toString(), 'postNum');
             this.mixPanel.mixpanel.track('createPost', {
@@ -43,6 +43,7 @@ export class PostService {
                 pinNum: post.pins.length,
                 share: post.share
             });
+            return newPost;
         } catch (e) {
             throw e;
         }
@@ -136,8 +137,10 @@ export class PostService {
 
     async savePost(userId: number, postId: number): Promise<void> {
         try {
+            const existSave = await this.savedPostRepository.findWithPostId(userId, postId);
+            if (existSave) throw new BadRequestException();
             const post = await this.postRepository.findOne(postId);
-            if (!post) throw new BadRequestException();
+            if (!post) throw new NotFoundException();
             const user = await this.userService.readUser(userId);
             const saved = new SavedPost(post, user);
             await this.savedPostRepository.save(saved);
@@ -162,6 +165,16 @@ export class PostService {
             const regions: string[] = await this.regionService.readNeighborRegion(regionId);
             const posts: Post[] = await this.postRepository.findWithRegionId(regions, start, end, perPage);
             return await this.readPostList(posts);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async deleteSavedPost(userId: number, postId: number) {
+        try {
+            const savedPost: SavedPost = await this.savedPostRepository.findWithPostId(userId, postId);
+            if (!savedPost) throw new NotFoundException();
+            await this.savedPostRepository.softRemove(savedPost);
         } catch (e) {
             throw e;
         }
