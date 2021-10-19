@@ -11,10 +11,10 @@ export const RegionId = atom({
   default: "6530459d189b",
 });
 
-export const MyInfo = atom<MyInfoType | {}>({
+export const MyInfo = atom<MyInfoType>({
   key: "my_info",
   default: {
-    id: 1,
+    userId: 1,
     userName: "team1test",
   },
 });

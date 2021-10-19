@@ -16,6 +16,9 @@ const fetchWrap = async ({
       baseURL: process.env.REACT_APP_ENDPOINT,
       withCredentials: true,
       params,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     };
     const { data } =
       (method === "get" && (await axios.get(url, config))) ||

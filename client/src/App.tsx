@@ -19,7 +19,11 @@ function App() {
   const getMyInfo = useCallback(
     async (code: string) => {
       const data = await getLogin(code);
-      setMyInfo(data);
+      setMyInfo({
+        userId: data.userId,
+        userName: data.userName,
+      });
+      localStorage.setItem("token", data.token);
     },
     [setMyInfo]
   );

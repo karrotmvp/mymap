@@ -57,10 +57,10 @@ interface PaginationParams {
   perPage?: number;
 }
 export const getSavedPosts = async (params: PaginationParams = {}) => {
-  return await GET("api/post/savedPost", params);
+  return (await GET("api/post/savedPost", params)) as FeedType;
 };
 
 // 내가 쓴 리스트
 export const getMyPosts = async (params: PaginationParams = {}) => {
-  return (await GET("api/post/mypost", params)) as PostType[];
+  return (await GET("api/post/mypost", params)) as FeedType;
 };

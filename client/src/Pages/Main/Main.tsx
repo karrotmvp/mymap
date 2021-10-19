@@ -22,12 +22,11 @@ const Main = () => {
   const [endIdx, setEndIdx] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const handleNext = () => {
-    console.log("asdf");
     setStartIdx(feedPosts[0]?.postId);
     setEndIdx(feedPosts[feedPosts.length - 1]?.postId);
   };
   useEffect(() => {
-    const getFeed = async () => {
+    const fetchFeedPosts = async () => {
       const data = (
         await getFeedPosts(regionId, {
           start: startIdx,
@@ -40,7 +39,7 @@ const Main = () => {
       }
       setFeedPosts([...feedPosts, ...data]);
     };
-    getFeed();
+    fetchFeedPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startIdx, endIdx, regionId]);
 
@@ -111,7 +110,6 @@ const Main = () => {
               dataLength={feedPosts.length}
               next={handleNext}
               style={{ fontSize: 0 }}
-              // inverse={true} //
               hasMore={hasMore}
               loader={<div />}
             >

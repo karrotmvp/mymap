@@ -1,16 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
-import { getMyPosts } from "../api/post";
+import { getMyPosts, getSavedPosts } from "../api/post";
 import Collection from "../Components/Collection";
 import CreateButton from "../Components/CreateButton";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import { PostType } from "../Shared/type";
 import { gap, theme, WrapperWithHeaderFooter } from "../styles/theme";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useRecoilValue } from "recoil";
+import { MyInfo } from "../Shared/atom";
 
-const Tab = () => {
-  const [selectedTab, setSelectedTab] = useState("my");
-  const handleSelectedTab = (tab: string) => {
+const Tab = ({
+  selectedTab,
+  setSelectedTab,
+}: {
+  selectedTab: "my" | "others";
+  setSelectedTab: Dispatch<SetStateAction<"my" | "others">>;
+}) => {
+  const handleSelectedTab = (tab: "my" | "others") => {
     setSelectedTab(tab);
   };
 
@@ -33,17 +42,54 @@ const Tab = () => {
 };
 
 const Mypage = () => {
+  const [selectedTab, setSelectedTab] = useState<"my" | "others">("my");
   const [isScrollUp, setIsScrollUp] = useState(false);
 
-  const [posts, setPosts] = useState<PostType[] | []>([]);
-  const getMyPostsCallback = useCallback(async () => {
-    const data = await getMyPosts();
-    setPosts(data);
-  }, []);
-
+  // 내 리스트
+  const [myPosts, setMyPosts] = useState<PostType[] | []>([]);
+  const [myPostsHasMore, setMyPostsHasMore] = useState(true);
+  const [myPostPage, setMyPostPage] = useState(1);
+  const handleMyPostNext = () => {
+    setMyPostPage(myPostPage + 1);
+  };
   useEffect(() => {
-    getMyPostsCallback();
-  }, [getMyPostsCallback]);
+    const fetchMyPosts = async () => {
+      const data = (
+        await getMyPosts({
+          page: myPostPage,
+        })
+      ).posts;
+      if (data.length < 1) {
+        setMyPostsHasMore(false);
+        return;
+      }
+      setMyPosts([...myPosts, ...data]);
+    };
+    fetchMyPosts();
+  }, [myPostPage]);
+
+  // 저장한 리스트
+  const [savedPosts, setSavedPosts] = useState<PostType[] | []>([]);
+  const [savedPostsHasMore, setSavedPostsHasMore] = useState(true);
+  const [savedPostPage, setSavedPostPage] = useState(1);
+  const handleSavedPostNext = () => {
+    setSavedPostPage(savedPostPage + 1);
+  };
+  useEffect(() => {
+    const fetchSavedPosts = async () => {
+      const data = (
+        await getSavedPosts({
+          page: savedPostPage,
+        })
+      ).posts;
+      if (data.length < 1) {
+        setSavedPostsHasMore(false);
+        return;
+      }
+      setSavedPosts([...savedPosts, ...data]);
+    };
+    fetchSavedPosts();
+  }, [savedPostPage]);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -52,6 +98,8 @@ const Mypage = () => {
     });
     return window.removeEventListener("scroll", () => {});
   }, []);
+
+  const myInfo = useRecoilValue(MyInfo);
 
   return (
     <Wrapper>
@@ -62,17 +110,39 @@ const Mypage = () => {
       <Profile>
         <div className="photo" />
         <div className="user">
-          <div className="name">로컬큐레이터님</div>
+          <div className="name">{myInfo.userName}</div>
           <div className="place">논현동</div>
         </div>
       </Profile>
 
-      <Tab />
+      <Tab {...{ selectedTab, setSelectedTab }} />
 
       <div className="collections">
-        {posts?.map((post, i) => (
-          <Collection key={i} {...post} />
-        ))}
+        {selectedTab === "my" ? (
+          <InfiniteScroll
+            dataLength={myPosts.length}
+            next={handleMyPostNext}
+            style={{ fontSize: 0 }}
+            hasMore={myPostsHasMore}
+            loader={<div />}
+          >
+            {myPosts?.map((post, i) => (
+              <Collection key={i} {...post} />
+            ))}
+          </InfiniteScroll>
+        ) : (
+          <InfiniteScroll
+            dataLength={savedPosts.length}
+            next={handleSavedPostNext}
+            style={{ fontSize: 0 }}
+            hasMore={savedPostsHasMore}
+            loader={<div />}
+          >
+            {savedPosts?.map((post, i) => (
+              <Collection key={i} {...post} />
+            ))}
+          </InfiniteScroll>
+        )}
       </div>
 
       <CreateButton />
