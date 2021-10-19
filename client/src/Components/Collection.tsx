@@ -29,8 +29,8 @@ const Collection = (post: PostType) => {
           <More className="more-icon" />
         </div>
         <div className="places">
-          {post.pins.map((pin, i) => (
-            <PlaceBox key={i} name={pin.place.name} />
+          {post.pins.map((pin) => (
+            <PlaceBox key={pin.pinId} name={pin.place.name} />
           ))}
         </div>
       </Link>

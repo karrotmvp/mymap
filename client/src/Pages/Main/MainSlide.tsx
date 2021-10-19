@@ -32,8 +32,8 @@ const MainSlide = ({
 추천 장소를 구경해보세요`}</Title>
 
           <div className="collections">
-            {posts.map((post, i) => (
-              <Collection key={i} {...post} />
+            {posts.map((post) => (
+              <Collection key={post.postId} {...post} />
             ))}
           </div>
         </div>
@@ -65,7 +65,8 @@ const Card = styled.div`
   padding-top: 1.1rem;
   padding-left: 2rem;
   box-sizing: border-box;
-  border-radius: 2rem;
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
   box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.15);
   .content {
     top: 0;
