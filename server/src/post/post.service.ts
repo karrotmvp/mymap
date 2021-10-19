@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotAcceptableException, Put, UnauthorizedException } from '@nestjs/common';
+import { MixpanelProvider } from 'src/logger/mixpanel.provider';
 import { CoordinatesDTO } from 'src/place/dto/coordinates.dto';
 import { PlaceDTO } from 'src/place/dto/place.dto';
 import { PlaceService } from 'src/place/place.service';
@@ -27,6 +28,7 @@ export class PostService {
         private readonly placeService: PlaceService,
         private readonly savedPostRepository: SavedPostRepository,
         private readonly regionService: RegionService,
+        private readonly mixPanel: MixpanelProvider
     ) {}
 
     async createPost(userId: number, post: CreatePostDTO) {
@@ -34,6 +36,13 @@ export class PostService {
             const user: User = await this.userService.readUser(userId);
             const pins: Pin[] = await this.pinRepository.savePins(post.pins);
             await this.postRepository.savePost(post, user, pins);
+            this.mixPanel.mixpanel.people.set_once(userId.toString(), 'first_post_created', (new Date().toISOString()))
+            this.mixPanel.mixpanel.people.increment(userId.toString(), 'postNum');
+            this.mixPanel.mixpanel.track('createPost', {
+                regionId: post.regionId,
+                pinNum: post.pins.length,
+                share: post.share
+            });
         } catch (e) {
             throw e;
         }
@@ -42,6 +51,7 @@ export class PostService {
     async updatePost(userId: number, postId: number, post: UpdatePostDTO) {
         try {
             const existPost = await this.postRepository.findOne(postId, { relations: ['user'] })
+            if (!existPost) throw new BadRequestException();
             if (existPost.getUser().getUserId() !== userId) throw new NotAcceptableException();
             await this.pinRepository.deletePostPins(postId);
             const pins: Pin[] = await this.pinRepository.savePins(post.pins);
@@ -116,7 +126,8 @@ export class PostService {
     async deletePost(userId: number, postId: number): Promise<void> {
         try {
             const post = await this.postRepository.findOne(postId, {relations: ['pins']});
-            if (post.userId !== userId) throw new NotAcceptableException();
+            if (!post) throw new BadRequestException();
+            if (post.getUser().getUserId() !== userId) throw new NotAcceptableException();
             await this.postRepository.softRemove(post);
         } catch (e) {
             throw e;
@@ -126,6 +137,7 @@ export class PostService {
     async savePost(userId: number, postId: number): Promise<void> {
         try {
             const post = await this.postRepository.findOne(postId);
+            if (!post) throw new BadRequestException();
             const user = await this.userService.readUser(userId);
             const saved = new SavedPost(post, user);
             await this.savedPostRepository.save(saved);
@@ -136,7 +148,8 @@ export class PostService {
 
     async readSavedPost(userId: number, page: number, perPage: number): Promise<FeedDTO> {
         try {
-            const savedPostIds: number[] = await this.savedPostRepository.findWithUserId(userId, page, perPage);
+            const user: User = await this.userService.readUser(userId);
+            const savedPostIds: number[] = await this.savedPostRepository.findWithUserId(user.getUserId(), page, perPage);
             const posts: Post[] = await this.postRepository.findByIds(savedPostIds);
             return await this.readPostList(posts);
         } catch (e) {

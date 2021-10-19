@@ -1,7 +1,7 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { map } from "rxjs";
+import { catchError, map } from "rxjs";
 import { PlaceDTO } from "./dto/place.dto";
 
 @Injectable()
@@ -13,26 +13,32 @@ export class PlaceRepository {
 
     async findOne(placeId: string) {
         const uri = this.configService.get('daangn.poiuri') + placeId;
-        return this.httpService.get(uri).pipe(map((res) => {
+        return this.httpService.get(uri).pipe(
+            map((res) => {
             const place = new PlaceDTO(res.data);
             return place;
+        }), catchError(e => {
+            throw new BadRequestException();
         }))
     }
 
     async findWithIds(placeIds: string[]) {
-        console.log(placeIds)
         const uri = this.configService.get('daangn.poiuri') + 'by-ids';
         return this.httpService.get(uri, {
             params: {
                 ids: placeIds
             }
-        }).pipe(map((res) => {
+        }).pipe(
+            map((res) => {
             const places: PlaceDTO[] = res.data.map((place) => {
                 const newPlace = new PlaceDTO(place);
                 return newPlace;
             })
             return places;
+        }), catchError(e => {
+            throw new BadRequestException();
         }))
+
     }
 
     async findWithName(query: string, regionId: number, page: number, perPage: number) {
@@ -44,29 +50,49 @@ export class PlaceRepository {
                 page: page,
                 perPage: perPage
             }
-        }).pipe(map((res) => {
-            const places: PlaceDTO[] =res.data.items.map(place => {
+        }).pipe(
+            map((res) => {
+            const places: PlaceDTO[] = res.data.items.map(place => {
                 const newPlace = new PlaceDTO(place);
                 return newPlace
             })
             return places;
+        }), catchError(e => {
+            throw new BadRequestException();
         }))
     }
 
-    async findWithRegion(regionId: number, perPage:number) {
+    async findWithRegion(paginator: string, page:number) {
         const uri = this.configService.get('daangn.poiuri') + 'by-region-id';
         return this.httpService.get(uri, {
             params: {
-                regionId: regionId,
-                perPage: perPage,
+                paginator: paginator,
+                page: page,
             }
-        }).pipe(map(async(res) => {
-            const places: PlaceDTO[] = [];
-            res.data.items.map(async(place) => {
+        }).pipe(
+            map((res) => {
+            const places: PlaceDTO[] = res.data.items.map((place) => {
                 const newPlace = new PlaceDTO(place);
-                places.push(newPlace);
+                return newPlace;
             })
             return places;
+        }), catchError(e => {
+            throw new BadRequestException();
+        }))
+    }
+
+    async getPaginator(regionId: number, perPage: number) {
+        const uri = this.configService.get('daangn.poiuri') + 'by-region-id/paginator'
+        return this.httpService.get(uri, {
+            params: {
+                regionId: regionId,
+                perPage: perPage
+            }
+        }).pipe(
+            map((res) => {
+                return res.data.paginator;
+        }), catchError(e => {
+            throw new BadRequestException();
         }))
     }
 }

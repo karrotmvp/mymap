@@ -17,13 +17,13 @@ export class User {
     private token: string;
 
     @UpdateDateColumn()
-    private updatedAt: Date;
+    updatedAt: Date;
 
     @CreateDateColumn()
-    private createdAt: Date;
+    createdAt: Date;
 
     @DeleteDateColumn()
-    private deletedAt: Date;
+    deletedAt: Date;
 
 
     //Getter

@@ -10,6 +10,7 @@ import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
 import { PlaceModule } from './place/place.module';
 import { RegionModule } from './region/region.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RegionModule } from './region/region.module';
   AuthModule,
   PlaceModule,
   RegionModule,
+  LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
