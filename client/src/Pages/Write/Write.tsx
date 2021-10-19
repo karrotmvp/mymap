@@ -174,7 +174,7 @@ const Write = () => {
           title="수정한 내용이 저장되지 않았어요!"
           sub="수정한 내용을 저장할까요?"
         >
-          <Button>나가기</Button>
+          <Button onClick={() => window.history.back()}>나가기</Button>
           <Button>저장하기</Button>
         </Alert>
       )}

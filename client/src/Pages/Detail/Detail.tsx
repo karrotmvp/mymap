@@ -94,7 +94,7 @@ const Detail = () => {
           <div className="modal">
             <Link to={`/edit/${postId}`} className="button">
               <Edit />
-              편집하기
+              수정하기
             </Link>
             <div onClick={handleDelete} className="button">
               <Delete className="delete-icon" />
@@ -111,7 +111,7 @@ const Detail = () => {
           title="저장해놓은 리스트를 삭제하시겠어요?"
           sub="삭제한 리스트는 다시 볼 수 없어요."
         >
-          <Button>취소</Button>
+          <Button onClick={() => setIsAlertOpened(false)}>취소</Button>
           <Button>삭제</Button>
         </Alert>
       )}

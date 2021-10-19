@@ -40,7 +40,7 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   bottom: 1.9rem;
-  z-index: 300;
+  z-index: 50;
   .flickity-viewport {
     height: auto;
   }
