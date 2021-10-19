@@ -35,7 +35,8 @@ export class PostService {
         try {
             const user: User = await this.userService.readUser(userId);
             const pins: Pin[] = await this.pinRepository.savePins(post.pins);
-            const newPost: Post = await this.postRepository.savePost(post, user, pins);
+            const regionName: string = await this.regionService.readRegionName(post.regionId);
+            const newPost: Post = await this.postRepository.savePost(post, regionName, user, pins);
             this.mixPanel.mixpanel.people.set_once(userId.toString(), 'first_post_created', (new Date().toISOString()))
             this.mixPanel.mixpanel.people.increment(userId.toString(), 'postNum');
             this.mixPanel.mixpanel.track('createPost', {
@@ -175,6 +176,15 @@ export class PostService {
             const savedPost: SavedPost = await this.savedPostRepository.findWithPostId(userId, postId);
             if (!savedPost) throw new NotFoundException();
             await this.savedPostRepository.softRemove(savedPost);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async checkSaved(userId: number, postId: number) {
+        try {
+            const savedPost = await this.savedPostRepository.findWithPostId(userId, postId);
+            return savedPost ? true : false;
         } catch (e) {
             throw e;
         }

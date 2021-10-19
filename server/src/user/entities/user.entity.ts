@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { SavedPost } from "src/post/entities/savedPost.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -9,6 +10,9 @@ export class User {
 
     @PrimaryGeneratedColumn()
     private userId: number;
+
+    // @OneToMany(() => SavedPost, savedPost => savedPost.user, { cascade: true })
+    // savedPosts: SavedPost[];
 
     @Column({ unique: true })
     private uniqueId: string;
