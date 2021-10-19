@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { lastValueFrom } from 'rxjs';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { last, lastValueFrom } from 'rxjs';
 import { PlaceDTO } from './dto/place.dto';
 import { PlaceRepository } from './place.repository';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { RegionPlaceDTO } from './dto/regionPlace.dto';
 
 @Injectable()
 export class PlaceService {
@@ -15,6 +16,7 @@ export class PlaceService {
         const jsonFile = readFileSync(join(process.cwd(), 'regionId.json'), 'utf-8');
         const regionJson = JSON.parse(jsonFile);
         const regionNum = regionJson[regionId];
+        if (!regionNum) throw new BadRequestException();
         return regionNum;
     }
 
@@ -37,10 +39,16 @@ export class PlaceService {
         return places;
     }
 
-    async readRegionPlaces(regionId: string, perPage: number): Promise<PlaceDTO[]> {
+    async getPaginator(regionId: string, perPage: number): Promise<string> {
         const regionNum = await this.convertId(regionId);
-        const places$ = await this.placeRepository.findWithRegion(regionNum, perPage);
-        const places = await lastValueFrom(places$);
-        return places;
+        const paginator$ = await this.placeRepository.getPaginator(regionNum, perPage);
+        return await lastValueFrom(paginator$);
+    }
+
+    async readRegionPlaces(paginator: string, page: number): Promise<RegionPlaceDTO> {
+        const places$ = await this.placeRepository.findWithRegion(paginator, page);
+        const places: PlaceDTO[] = await lastValueFrom(places$);
+        const regionPlace = new RegionPlaceDTO(places, paginator);
+        return regionPlace;
     }
 }

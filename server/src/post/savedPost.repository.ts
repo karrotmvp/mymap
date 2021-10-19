@@ -10,7 +10,7 @@ export class SavedPostRepository extends Repository<SavedPost> {
                 qb.where('SavedPost__user.userId = :userId', { userId: userId })
             },
             order: { createdAt: 'DESC' },
-            skip: perPage * page,
+            skip: perPage * (page - 1),
             take: perPage,
         });
         const postIds: number[] =savedPost.map((post: SavedPost) => {
