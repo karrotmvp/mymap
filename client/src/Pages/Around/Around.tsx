@@ -53,14 +53,16 @@ const Around = () => {
     const right = places.slice(mid, places.length);
     setLeftPlaces(left);
     setRightPlaces(right);
-    console.log(places, left, right);
   }, [places]);
 
   return (
     <>
       <Wrapper>
         <Header title="장소 둘러보기">
-          <Refresh className="right-icon" />
+          <Refresh
+            onClick={() => window.location.reload()}
+            className="right-icon"
+          />
         </Header>
         <Title style={{ color: theme.color.orange }}>{`우리 동네에는
 이런 장소가 있어요!`}</Title>

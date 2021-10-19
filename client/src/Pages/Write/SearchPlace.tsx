@@ -42,13 +42,10 @@ const SearchPlace = ({
     const data = await getSearch(regionId, {
       query: debouncedSearchVal,
     });
-    console.log("search", data);
     setResult(data);
   }, [debouncedSearchVal, regionId]);
 
-  console.log(process.env.REACT_APP_ENDPOINT);
   useEffect(() => {
-    console.log(debouncedSearchVal);
     if (debouncedSearchVal.length > 0) getSearchItems();
   }, [debouncedSearchVal, getSearchItems]);
 

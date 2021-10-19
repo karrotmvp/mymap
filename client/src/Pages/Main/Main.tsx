@@ -46,7 +46,6 @@ const Main = () => {
   const [pins, setPins] = useState<PinType[] | []>([]);
   const [feedPins, setfeedPins] = useState<Pin[] | []>([]);
   useEffect(() => {
-    console.log("feedPosts", feedPosts);
     const _pins: PinType[] = [];
     feedPosts?.forEach((post) => {
       _pins.push(...post.pins);
