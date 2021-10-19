@@ -61,6 +61,6 @@ export const getSavedPosts = async (params: PaginationParams = {}) => {
 };
 
 // 내가 쓴 리스트
-export const getMyPost = async (params: PaginationParams = {}) => {
-  return await GET("api/post/mypost", params);
+export const getMyPosts = async (params: PaginationParams = {}) => {
+  return (await GET("api/post/mypost", params)) as PostType[];
 };

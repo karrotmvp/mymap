@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 const fetchWrap = async ({
   method,
@@ -12,7 +12,7 @@ const fetchWrap = async ({
   body?: {};
 }) => {
   try {
-    const config = {
+    const config: AxiosRequestConfig = {
       baseURL: process.env.REACT_APP_ENDPOINT,
       withCredentials: true,
       params,

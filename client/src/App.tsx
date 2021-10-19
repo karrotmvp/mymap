@@ -8,7 +8,7 @@ import Mini from "@karrotmarket/mini";
 import { useSetRecoilState } from "recoil";
 import { MyInfo, RegionId } from "./Shared/atom";
 import { useCallback } from "react";
-import { postLogin } from "./api/user";
+import { getLogin } from "./api/user";
 
 function App() {
   const mini = new Mini();
@@ -18,7 +18,7 @@ function App() {
   const setMyInfo = useSetRecoilState(MyInfo);
   const getMyInfo = useCallback(
     async (code: string) => {
-      const data = await postLogin(code);
+      const data = await getLogin(code);
       setMyInfo(data);
     },
     [setMyInfo]

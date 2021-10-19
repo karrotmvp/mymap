@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { getMyPosts } from "../api/post";
 import Collection from "../Components/Collection";
 import CreateButton from "../Components/CreateButton";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
+import { PostType } from "../Shared/type";
 import { gap, theme, WrapperWithHeaderFooter } from "../styles/theme";
 
 const Tab = () => {
@@ -33,6 +35,16 @@ const Tab = () => {
 const Mypage = () => {
   const [isScrollUp, setIsScrollUp] = useState(false);
 
+  const [posts, setPosts] = useState<PostType[] | []>([]);
+  const getMyPostsCallback = useCallback(async () => {
+    const data = await getMyPosts();
+    setPosts(data);
+  }, []);
+
+  useEffect(() => {
+    getMyPostsCallback();
+  }, [getMyPostsCallback]);
+
   useEffect(() => {
     window.addEventListener("scroll", () => {
       if (window.scrollY > 100) setIsScrollUp(true);
@@ -57,11 +69,11 @@ const Mypage = () => {
 
       <Tab />
 
-      {/* <div className="collections">
-        {new Array(20).fill(0).map((_, i) => (
-          <Collection key={i} />
+      <div className="collections">
+        {posts?.map((post, i) => (
+          <Collection key={i} {...post} />
         ))}
-      </div> */}
+      </div>
 
       <CreateButton />
 
