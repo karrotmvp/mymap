@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { getPost } from "../../api/post";
-import { Back, Delete, Edit, List, Map, More2 } from "../../assets";
+import { Back, Close, Delete, Edit, List, Map, More2 } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard";
@@ -18,6 +18,8 @@ import DetailMapView from "./DetailMapView";
 
 const Detail = () => {
   const postId = parseInt(window.location.pathname.split("detail/")[1]);
+  const isFinished =
+    (window.location.pathname.split("/")[3] ?? "") === "finish";
 
   const [post, setPost] = useState<PostType | null>();
   const getPostCallback = useCallback(async () => {
@@ -58,7 +60,14 @@ const Detail = () => {
     <>
       <Header>
         <>
-          <Back className="left-icon" onClick={() => window.history.back()} />
+          {isFinished ? (
+            <Close
+              className="left-icon"
+              onClick={() => window.history.go(-3)}
+            />
+          ) : (
+            <Back className="left-icon" onClick={() => window.history.back()} />
+          )}
           {(isScrollUp || viewState === "map") && (
             <div className="post-title">{post?.title}</div>
           )}

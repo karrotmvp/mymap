@@ -18,6 +18,7 @@ export const GlobalStyle = createGlobalStyle`
         -ms-overflow-style: none;
         scrollbar-width: none;
         color: ${theme.color.black};
+        background-color: #FFFFFF;
     }
     textarea {
         font-family: 'Spoqa Han Sans Neo', 'sans-serif';

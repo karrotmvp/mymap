@@ -8,23 +8,19 @@ export const getPost = async (postId: number) => {
 };
 
 // 새 리스트 생성
-interface PostPostBody {
+interface PostBody {
   title: string;
   contents: string;
   regionId: string;
   share: boolean;
   pins: Pin[];
 }
-export const postPost = async (body: PostPostBody) => {
+export const postPost = async (body: PostBody) => {
   return (await POST("api/post/", body)) as PostType;
 };
 
 // 리스트 수정
-interface PutPostBody extends PostPostBody {
-  latitude: number;
-  longitude: number;
-}
-export const putPost = async (postId: number, body: PutPostBody) => {
+export const putPost = async (postId: number, body: PostBody) => {
   return await PUT(`api/post/${postId}`, body);
 };
 
