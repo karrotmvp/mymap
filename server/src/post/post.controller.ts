@@ -17,7 +17,7 @@ export class PostController {
     @Post('/')
     async createPost(@Req() req: any, @Body() post: CreatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' post : ', post);
-        await this.postService.createPost(req.user.userId, post);
+        return await this.postService.createPost(req.user.userId, post);
     }
 
     @UseGuards(JwtAuthGuard)

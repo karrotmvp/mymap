@@ -1,5 +1,5 @@
 export class UserDTO {
-    constructor(userId: number, userName: string, profileImageUrl: string, token: string) {
+    constructor(userId: number, userName: string, profileImageUrl: string, token: string, regionName: string) {
         this.userId = userId;
         this.userName = userName;
         this.profileImageUrl = profileImageUrl;
@@ -13,4 +13,6 @@ export class UserDTO {
     private profileImageUrl: string;
 
     private token: string
+
+    private regionName: string
 }
