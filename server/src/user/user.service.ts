@@ -32,6 +32,6 @@ export class UserService {
 
     async readUserDetail(user: User): Promise<UserDTO> {
         //dependency
-        return
+        return new UserDTO(user.getUserId(), null, null, null, null);
     }
 }
