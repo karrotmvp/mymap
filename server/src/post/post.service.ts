@@ -7,6 +7,7 @@ import { RegionService } from 'src/region/region.service';
 import { UserDTO } from 'src/user/dto/user.dto';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { EventEmitter } from 'stream';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
 import { PinDTO } from './dto/pin.dto';
@@ -44,6 +45,11 @@ export class PostService {
                 pinNum: post.pins.length,
                 share: post.share
             });
+
+            
+
+            
+
             return newPost;
         } catch (e) {
             throw e;
