@@ -16,6 +16,9 @@ const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
   const regionId = useRecoilValue(RegionId);
   const [feedPosts, setFeedPosts] = useState<PostType[] | []>([]);
+  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
 
   // infinite scroll
   const [startIdx, setStartIdx] = useState(0);
@@ -27,17 +30,19 @@ const Main = () => {
   };
   useEffect(() => {
     const fetchFeedPosts = async () => {
-      const data = (
-        await getFeedPosts(regionId, {
-          start: startIdx,
-          end: endIdx,
-        })
-      ).posts;
-      if (data.length < 1) {
+      const data = await getFeedPosts(regionId, {
+        start: startIdx,
+        end: endIdx,
+      });
+      if (data.posts.length < 1) {
         setHasMore(false);
         return;
       }
-      setFeedPosts([...feedPosts, ...data]);
+      setFeedPosts([...feedPosts, ...data.posts]);
+      setCenter({
+        lat: data.coordinates.latitude,
+        lng: data.coordinates.longitude,
+      });
     };
     fetchFeedPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,6 +76,16 @@ const Main = () => {
     setIsPinSelected(true);
   };
 
+  // 카드 이동
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    setCenter({
+      lat: pins[current]?.place.coordinates.latitude,
+      lng: pins[current]?.place.coordinates.longitude,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+
   // scroll up
   const [isScrollUp, setIsScrollUp] = useState(false);
   useEffect(() => {
@@ -99,6 +114,7 @@ const Main = () => {
           height="100vh"
           pins={feedPins}
           handleSelectPin={handleSelectPin}
+          center={center!}
         />
       </div>
 
@@ -118,7 +134,7 @@ const Main = () => {
           <Footer />
         </>
       ) : (
-        <PinSlider pins={pins} isRecommend />
+        <PinSlider isRecommend {...{ pins, current, setCurrent }} />
       )}
     </Wrapper>
   );

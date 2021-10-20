@@ -157,7 +157,7 @@ const Wrapper = styled.div`
   .collections {
     margin-left: 2rem;
     padding-bottom: 2rem;
-    & > div:not(:first-child) {
+    & > div > div > div:not(:first-child) {
       margin-top: 2.9rem;
     }
   }

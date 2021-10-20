@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { RenderAfterNavermapsLoaded, NaverMap, Marker } from "react-naver-maps";
 
 interface MapViewProps {
@@ -6,6 +6,10 @@ interface MapViewProps {
   height?: string;
   pins?: Pin[];
   handleSelectPin?: Function;
+  center?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 declare global {
@@ -21,28 +25,43 @@ export interface Pin {
   longitude: number;
 }
 
-const MapView = ({ width, height, pins, handleSelectPin }: MapViewProps) => {
-  const ReturnMap = useCallback(() => {
-    const defaultCenter = pins
-      ? {
-          lat: pins[0]?.latitude,
-          lng: pins[0]?.longitude,
-        }
-      : { lat: 37.3595704, lng: 127.105399 };
+const MapView = ({
+  width,
+  height,
+  pins,
+  handleSelectPin,
+  center,
+}: MapViewProps) => {
+  const defaultMapCenter = useMemo(() => {
+    return (
+      center ??
+      (pins
+        ? {
+            lat: pins[0]?.latitude,
+            lng: pins[0]?.longitude,
+          }
+        : { lat: 37.3595704, lng: 127.105399 })
+    );
+  }, [center, pins]);
 
-    // 핀 여러개일 때 사용
-    // const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [mapCenter, setMapCenter] = useState(defaultMapCenter);
+
+  useEffect(() => {
+    setMapCenter(defaultMapCenter);
+  }, [defaultMapCenter]);
+
+  const ReturnMap = useCallback(() => {
     const handleClickMarker = (pin: Pin) => {
       handleSelectPin && handleSelectPin(pin);
 
       // 지도 이동
-      // setMapCenter({
-      //   lat: pin.latitude,
-      //   lng: pin.longitude,
-      // });
+      setMapCenter({
+        lat: pin.latitude,
+        lng: pin.longitude,
+      });
       // setTimeout(() => {
       //   setMapZoom(12);
-      //   setMapCenter({
+      //   setdefaultMapCenter({
       //     lat: loc.snapshotJson.businessAddressJson.posLat,
       //     lng: loc.snapshotJson.businessAddressJson.posLong,
       //   });
@@ -53,18 +72,19 @@ const MapView = ({ width, height, pins, handleSelectPin }: MapViewProps) => {
       <RenderAfterNavermapsLoaded
         ncpClientId={process.env.REACT_APP_NAVER_MAPS_CLIENT_ID}
         error={<p>Maps Load Error</p>}
-        loading={<p>Maps Loading...</p>}
+        loading={<div />}
       >
         <NaverMap
           mapDivId={"maps-getting-started-uncontrolled"} // default: react-naver-map
           style={{
             width: width ?? "100%",
             height: height ?? "230px",
+            transition: "0.3s",
           }}
-          defaultCenter={defaultCenter}
-          defaultZoom={16}
+          defaultZoom={15}
           // onZoomChanged={setMapZoom}
-          // onCenterChanged={setMapCenter}
+          center={mapCenter}
+          // onCenterChanged={}
         >
           {pins?.map((pin) => (
             <Marker
@@ -73,13 +93,13 @@ const MapView = ({ width, height, pins, handleSelectPin }: MapViewProps) => {
                 lat: pin.latitude,
                 lng: pin.longitude,
               }}
-              onClick={handleSelectPin && (() => handleClickMarker(pin))}
+              onClick={() => handleClickMarker(pin)}
             />
           ))}
         </NaverMap>
       </RenderAfterNavermapsLoaded>
     );
-  }, [pins, handleSelectPin, height, width]);
+  }, [pins, handleSelectPin, height, width, mapCenter]);
 
   return <ReturnMap />;
 };

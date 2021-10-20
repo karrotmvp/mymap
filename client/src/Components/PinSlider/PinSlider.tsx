@@ -1,17 +1,21 @@
-import { useState } from "react";
 import styled from "styled-components";
 import { PinType } from "../../Shared/type";
 import PlaceBox from "../PlaceBox";
 import Swiper from "./Swiper";
 
+interface PinSliderProps {
+  pins: PinType[];
+  isRecommend?: boolean;
+  current: number;
+  setCurrent: (index: number) => void;
+}
+
 const PinSlider = ({
   pins,
   isRecommend = false,
-}: {
-  pins: PinType[];
-  isRecommend?: boolean;
-}) => {
-  const [current, setCurrent] = useState(0);
+  current,
+  setCurrent,
+}: PinSliderProps) => {
   return (
     <Wrapper>
       <Swiper
