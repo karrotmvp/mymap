@@ -12,6 +12,19 @@ export interface PostType {
   pins: PinType[];
 }
 
+export interface FeedType {
+  posts: PostType[];
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
+export interface MyInfoType {
+  userId: number;
+  userName: string;
+}
+
 export interface PinType {
   pinId: number;
   review: string;
@@ -22,7 +35,7 @@ export interface PlaceType {
   placeId: string;
   name: string;
   address: string;
-  coordinate: {
+  coordinates: {
     latitude: number;
     longitude: number;
   };

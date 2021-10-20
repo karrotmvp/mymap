@@ -1,18 +1,19 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { getAroundPlaces } from "../../api/place";
 import { Refresh } from "../../assets";
 import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
+import { RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { gap, theme, Title, WrapperWithHeaderFooter } from "../../styles/theme";
-import { dummyPlaces } from "../../utils/dummy";
 import AroundMapView from "./AroundMapView";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Around = () => {
-  const leftPlaces = dummyPlaces.slice(0, dummyPlaces.length / 2);
-  const rightPlaces = dummyPlaces.slice(leftPlaces.length, dummyPlaces.length);
-
   const [isMapShown, setIsMapShown] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
   const handleShowMap = (place: PlaceType) => {
@@ -20,33 +21,78 @@ const Around = () => {
     setPlace(place);
   };
 
+  const regionId = useRecoilValue(RegionId);
+  const [places, setPlaces] = useState<PlaceType[] | []>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [paginator, setPaginator] = useState("");
+  const [page, setPage] = useState(1);
+  const handleNext = () => {
+    setPage(page + 1);
+  };
+  useEffect(() => {
+    const fetchAroundPlaces = async () => {
+      const data = await getAroundPlaces(regionId, {
+        page,
+        paginator: paginator ?? null,
+      });
+      if (data.places.length < 1) {
+        setHasMore(false);
+        return;
+      }
+      setPlaces([...places, ...data.places]);
+      setPaginator(data.paginator);
+    };
+    fetchAroundPlaces();
+  }, [page]);
+
+  const [leftPlaces, setLeftPlaces] = useState<PlaceType[] | []>([]);
+  const [rightPlaces, setRightPlaces] = useState<PlaceType[] | []>([]);
+  useEffect(() => {
+    const mid = Math.floor(places.length / 2);
+    const left = places.slice(0, mid);
+    const right = places.slice(mid, places.length);
+    setLeftPlaces(left);
+    setRightPlaces(right);
+  }, [places]);
+
   return (
     <>
       <Wrapper>
         <Header title="장소 둘러보기">
-          <Refresh className="right-icon" />
+          <Refresh
+            onClick={() => window.location.reload()}
+            className="right-icon"
+          />
         </Header>
         <Title style={{ color: theme.color.orange }}>{`우리 동네에는
 이런 장소가 있어요!`}</Title>
 
-        <div className="contents">
-          <div className="places">
-            {leftPlaces.map((place) => (
-              <div key={place.placeId} onClick={() => handleShowMap(place)}>
-                <div className="photo" />
-                <div className="name">{place.name}</div>
-              </div>
-            ))}
+        <InfiniteScroll
+          dataLength={places.length}
+          next={handleNext}
+          style={{ fontSize: 0 }}
+          hasMore={hasMore}
+          loader={<div />}
+        >
+          <div className="contents">
+            <div className="places">
+              {leftPlaces.map((place) => (
+                <div key={place.placeId} onClick={() => handleShowMap(place)}>
+                  <div className="photo" />
+                  <div className="name">{place.name}</div>
+                </div>
+              ))}
+            </div>
+            <div className="places">
+              {rightPlaces.map((place) => (
+                <div key={place.placeId} onClick={() => handleShowMap(place)}>
+                  <div className="photo" />
+                  <div className="name">{place.name}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="places">
-            {rightPlaces.map((place) => (
-              <div key={place.placeId} onClick={() => handleShowMap(place)}>
-                <div className="photo" />
-                <div className="name">{place.name}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        </InfiniteScroll>
 
         {!isMapShown && <CreateButton />}
 

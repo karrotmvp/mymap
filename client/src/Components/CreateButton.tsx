@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Plus } from "../assets";
+import { Write } from "../assets";
 import { flexCenter, theme } from "../styles/theme";
 
 const CreateButton = () => {
   return (
     <Link to="/write">
       <Wrapper>
-        <Plus className="plus-icon" />
+        <Write />
       </Wrapper>
     </Link>
   );
@@ -24,9 +24,6 @@ const Wrapper = styled.div`
   border-radius: 50%;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
   z-index: 500;
-  .plus-icon {
-    fill: ${theme.color.white};
-  }
 `;
 
 export default CreateButton;

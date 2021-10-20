@@ -16,7 +16,7 @@ const useThrottle = <T>(value: T, delay: number = DEFAULT_DELAY) => {
       setThrottleValue(value);
       setIsWaiting(true);
     }
-  }, [value]);
+  }, [value, delay, isWaiting]);
 
   return throttledValue;
 };

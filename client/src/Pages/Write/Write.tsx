@@ -1,11 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { getPost, postPost, putPost } from "../../api/post";
 import { Close, Plus } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
-import { Places } from "../../Shared/atom";
+import { Places, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -69,6 +70,24 @@ const Write = () => {
     }
   };
 
+  // 수정
+  const postId = isWrite
+    ? null
+    : parseInt(window.location.pathname.split("/")[2]);
+  useEffect(() => {
+    if (!isWrite) {
+      const fetchPost = async () => {
+        const data = await getPost(postId!);
+        inputVal.setValue(data.title);
+        textareaVal.setValue(data.contents);
+        setIsShare(data.share);
+        setPlaces(data.pins.map((pin) => pin.place));
+      };
+      fetchPost();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // 완료
   const [isSubmittable, setIsSubmittable] = useState(false);
   useEffect(() => {
@@ -91,6 +110,30 @@ const Write = () => {
     else setIsAlertOpened(true);
   };
 
+  const regionId = useRecoilValue(RegionId);
+  const handleSubmit = async () => {
+    const body = {
+      title: inputVal.value,
+      contents: textareaVal.value,
+      regionId,
+      share: isShare as boolean,
+      pins: places.map((place) => {
+        return {
+          placeId: place.placeId,
+          latitude: place.coordinates.latitude,
+          longitude: place.coordinates.longitude,
+        };
+      }),
+    };
+    if (isWrite) {
+      const data = await postPost(body);
+      if (data.postId) window.location.href = `/detail/${data.postId}/finish`;
+    } else {
+      await putPost(postId!, body);
+      window.location.href = `/detail/${postId}/finish`;
+    }
+  };
+
   return (
     <Wrapper>
       <Header title={isWrite ? "리스트 만들기" : "리스트 수정"}>
@@ -108,6 +151,7 @@ const Write = () => {
           maxLength={30}
           onInput={handleInput}
           placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
+          value={inputVal.value}
         />
       </div>
 
@@ -145,6 +189,7 @@ const Write = () => {
           maxLength={100}
           onInput={handleTextarea}
           placeholder="어떤 리스트인지 추가로 설명해 주세요."
+          value={textareaVal.value}
         />
       </div>
 
@@ -180,7 +225,12 @@ const Write = () => {
       )}
 
       <div className="footer">
-        <SubmitBtn $disabled={!isSubmittable}>
+        <SubmitBtn
+          onClick={() => {
+            isSubmittable && handleSubmit();
+          }}
+          $disabled={!isSubmittable}
+        >
           {isWrite ? "작성 완료" : "수정 완료"}
         </SubmitBtn>
       </div>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { More } from "../assets";
+import { PostType } from "../Shared/type";
 import { flexCenter, theme } from "../styles/theme";
 
 const PlaceBox = ({ name }: { name: string }) => {
@@ -16,20 +17,20 @@ const PlaceBox = ({ name }: { name: string }) => {
   );
 };
 
-const Collection = () => {
+const Collection = (post: PostType) => {
   return (
     <Wrapper>
-      <Link to="/detail/1">
+      <Link to={`/detail/${post.postId}`}>
         <div className="title-wrapper">
           <div>
-            <div className="title">혼밥하기 좋은 우리 동네 식당</div>
+            <div className="title">{post.title}</div>
             <div className="author">짱짱로컬큐레이터님 · 논현동</div>
           </div>
           <More className="more-icon" />
         </div>
         <div className="places">
-          {[0, 0, 0, 0].map((_, i) => (
-            <PlaceBox key={i} name="민씨다이닝카페민씨다이닝카페아아dkdkdk" />
+          {post.pins.map((pin) => (
+            <PlaceBox key={pin.pinId} name={pin.place.name} />
           ))}
         </div>
       </Link>
