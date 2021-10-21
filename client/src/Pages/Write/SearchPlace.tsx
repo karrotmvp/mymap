@@ -35,19 +35,19 @@ const SearchPlace = ({
   };
 
   const searchVal = useInput("");
-  const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
+  // const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
 
   const [result, setResult] = useState<PlaceType[] | []>([]);
-  const getSearchItems = useCallback(async () => {
-    const data = await getSearch(regionId, {
-      query: debouncedSearchVal,
-    });
-    setResult(data);
-  }, [debouncedSearchVal, regionId]);
+  // const getSearchItems = useCallback(async () => {
+  //   const data = await getSearch(regionId, {
+  //     query: debouncedSearchVal,
+  //   });
+  //   setResult(data);
+  // }, [debouncedSearchVal, regionId]);
 
-  useEffect(() => {
-    if (debouncedSearchVal.length > 0) getSearchItems();
-  }, [debouncedSearchVal, getSearchItems]);
+  // useEffect(() => {
+  //   if (debouncedSearchVal.length > 0) getSearchItems();
+  // }, [debouncedSearchVal, getSearchItems]);
 
   return (
     <Wrapper>
@@ -66,7 +66,7 @@ const SearchPlace = ({
         )}
       </div>
 
-      {debouncedSearchVal.length > 0 ? (
+      {/* {debouncedSearchVal.length > 0 ? (
         <div className="result">
           {result.map((place) => (
             <div key={place.placeId} onClick={() => handleOpenMap(place)}>
@@ -78,7 +78,7 @@ const SearchPlace = ({
         </div>
       ) : (
         <div className="empty">추가할 장소를 검색해주세요.</div>
-      )}
+      )} */}
 
       {isMapOpened && place && (
         <PlaceMapView {...{ place, setIsSearchOpened }} />

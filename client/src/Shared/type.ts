@@ -8,8 +8,11 @@ export interface PostType {
   title: string;
   contents: string;
   regionId: string;
+  regionName: string;
   share: boolean;
   pins: PinType[];
+  createdAt: string;
+  saved: boolean;
 }
 
 export interface FeedType {
