@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Dispatch,
   MouseEventHandler,
@@ -6,14 +7,18 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRecoilValue } from "recoil";
+import {
+  useRecoilStateLoadable,
+  useRecoilValue,
+  useResetRecoilState,
+} from "recoil";
 import styled from "styled-components";
 import { getSearch } from "../../api/place";
 import { Back, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
-import { RegionId } from "../../Shared/atom";
+import { RegionId, searchAtom } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
@@ -35,19 +40,30 @@ const SearchPlace = ({
   };
 
   const searchVal = useInput("");
-  // const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
 
-  const [result, setResult] = useState<PlaceType[] | []>([]);
-  // const getSearchItems = useCallback(async () => {
-  //   const data = await getSearch(regionId, {
-  //     query: debouncedSearchVal,
-  //   });
-  //   setResult(data);
-  // }, [debouncedSearchVal, regionId]);
+  const [result, setResult] = useRecoilStateLoadable(
+    searchAtom({ regionId, val: searchVal.value })
+  );
+  const resetResult = useResetRecoilState(
+    searchAtom({ regionId, val: searchVal.value })
+  );
 
-  // useEffect(() => {
-  //   if (debouncedSearchVal.length > 0) getSearchItems();
-  // }, [debouncedSearchVal, getSearchItems]);
+  // 검색어 초기화
+  useEffect(() => {
+    resetResult();
+  }, []);
+  const getSearchItems = useCallback(async () => {
+    const data = await getSearch(regionId, {
+      query: searchVal.value,
+    });
+    setResult(data);
+  }, [searchVal.value, regionId]);
+
+  // 검색 디바운스
+  const debouncedSearchVal = useDebounce(getSearchItems, 200);
+  useEffect(() => {
+    if (searchVal.value.length > 0) debouncedSearchVal();
+  }, [searchVal.value]);
 
   return (
     <Wrapper>
@@ -66,9 +82,9 @@ const SearchPlace = ({
         )}
       </div>
 
-      {/* {debouncedSearchVal.length > 0 ? (
+      {searchVal.value.length > 0 && result.state === "hasValue" ? (
         <div className="result">
-          {result.map((place) => (
+          {result.contents.map((place) => (
             <div key={place.placeId} onClick={() => handleOpenMap(place)}>
               {place.address && (
                 <SearchList place={place} searchVal={searchVal.value} />
@@ -78,7 +94,7 @@ const SearchPlace = ({
         </div>
       ) : (
         <div className="empty">추가할 장소를 검색해주세요.</div>
-      )} */}
+      )}
 
       {isMapOpened && place && (
         <PlaceMapView {...{ place, setIsSearchOpened }} />
