@@ -52,7 +52,6 @@ const MapView = ({
 
   const handleClickMarker = (pin: Pin) => {
     handleSelectPin && handleSelectPin(pin);
-
     // 지도 이동
     setMapCenter({
       lat: pin.latitude,
@@ -91,6 +90,11 @@ const MapView = ({
               lng: pin.longitude,
             }}
             onClick={() => handleClickMarker(pin)}
+            icon={
+              mapCenter.lat === pin.latitude && mapCenter.lng === pin.longitude
+                ? "/map_pin_active.png"
+                : "/map_pin_inactive.png"
+            }
           />
         ))}
       </NaverMap>
