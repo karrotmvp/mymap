@@ -14,7 +14,7 @@ import {
 } from "recoil";
 import styled from "styled-components";
 import { getSearch } from "../../api/place";
-import { Back, SearchClose } from "../../assets";
+import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
@@ -82,16 +82,20 @@ const SearchPlace = ({
         )}
       </div>
 
-      {searchVal.value.length > 0 && result.state === "hasValue" ? (
-        <div className="result">
-          {result.contents.map((place) => (
-            <div key={place.placeId} onClick={() => handleOpenMap(place)}>
-              {place.address && (
-                <SearchList place={place} searchVal={searchVal.value} />
-              )}
-            </div>
-          ))}
-        </div>
+      {result.state === "hasValue" && searchVal.value.length > 0 ? (
+        result.contents.length > 0 ? (
+          <div className="result">
+            {result.contents.map((place) => (
+              <div key={place.placeId} onClick={() => handleOpenMap(place)}>
+                {place.address && (
+                  <SearchList place={place} searchVal={searchVal.value} />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <NoSearchView value={searchVal.value} />
+        )
       ) : (
         <div className="empty">추가할 장소를 검색해주세요.</div>
       )}
@@ -100,6 +104,18 @@ const SearchPlace = ({
         <PlaceMapView {...{ place, setIsSearchOpened }} />
       )}
     </Wrapper>
+  );
+};
+
+const NoSearchView = ({ value }: { value: string }) => {
+  return (
+    <div className="no-search">
+      <NoSearch />
+      <div>
+        <span>{value}</span>의 검색 결과가 없어요
+      </div>
+      <div>검색어를 다시 확인해주세요!</div>
+    </div>
   );
 };
 
@@ -157,6 +173,24 @@ const Wrapper = styled.div`
     font-size: 1.7rem;
     line-height: 160%;
     color: ${theme.color.gray3};
+  }
+
+  .no-search {
+    ${flexCenter};
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    & > div {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 160%;
+      color: ${theme.color.gray6};
+      & > span {
+        color: ${theme.color.orange};
+      }
+    }
   }
 `;
 
