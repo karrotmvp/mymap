@@ -6,6 +6,6 @@ services:
     volumes:
       - /home/ubuntu/deploy/mymap:/deploy/mymap
     ports:
-      - "5001:5000"
+      - "5001:3000"
     environment:
       - "WORKER=true"
