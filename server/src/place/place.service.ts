@@ -1,15 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { last, lastValueFrom } from 'rxjs';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
+import { lastValueFrom } from 'rxjs';
 import { PlaceDTO } from './dto/place.dto';
 import { PlaceRepository } from './place.repository';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { RegionPlaceDTO } from './dto/regionPlace.dto';
+import { PostService } from 'src/post/post.service';
 
 @Injectable()
 export class PlaceService {
     constructor(
-        private readonly placeRepository: PlaceRepository
+        private readonly placeRepository: PlaceRepository,
+        @Inject(forwardRef(() => PostService))
+        private readonly postService: PostService
     ) {}
 
     private async convertId(regionId: string): Promise<number> {
@@ -23,12 +26,16 @@ export class PlaceService {
     async readPlace(placeId: string): Promise<PlaceDTO> {
         const place$ = await this.placeRepository.findOne(placeId);
         const place = await lastValueFrom(place$);
+        place.saved = await this.postService.countSavedPlaces(place.placeId);
         return place;
     }
 
     async readPlaces(placeIds: string[]): Promise<PlaceDTO[]> {
         const places$ = await this.placeRepository.findWithIds(placeIds);
         const places = await lastValueFrom(places$);
+        places.map(async(place) => {
+            place.saved = await this.postService.countSavedPlaces(place.placeId);
+        })
         return places;
     }
 
@@ -48,6 +55,9 @@ export class PlaceService {
     async readRegionPlaces(paginator: string, page: number): Promise<RegionPlaceDTO> {
         const places$ = await this.placeRepository.findWithRegion(paginator, page);
         const places: PlaceDTO[] = await lastValueFrom(places$);
+        places.map(async(place) => {
+            place.saved = await this.postService.countSavedPlaces(place.placeId);
+        })
         const regionPlace = new RegionPlaceDTO(places, paginator);
         return regionPlace;
     }

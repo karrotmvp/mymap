@@ -11,6 +11,12 @@ import { AuthModule } from './auth/auth.module';
 import { PlaceModule } from './place/place.module';
 import { RegionModule } from './region/region.module';
 import { LoggerModule } from './logger/logger.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BullModule } from '@nestjs/bull';
+import { EventModule } from './event/event.module';
+import { ToolsModule } from './tools/tools.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { SentryInterceptor } from './sentry.interceptor';
 
 @Module({
   imports: [
@@ -38,8 +44,26 @@ import { LoggerModule } from './logger/logger.module';
   PlaceModule,
   RegionModule,
   LoggerModule,
+  EventEmitterModule.forRoot({
+    delimiter: '.',
+  }),
+  BullModule.forRootAsync({
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: (configService: ConfigService) => ({
+      redis: {
+        host: configService.get('redis.host'),
+        port: configService.get('redis.port')
+      }
+    })
+  }),
+  EventModule,
+  ToolsModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: APP_INTERCEPTOR,
+    useClass: SentryInterceptor,
+  }],
 })
 export class AppModule {}

@@ -1,11 +1,12 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-daangn"
-import { map } from "rxjs";
+import { catchError, map } from "rxjs";
 import { CreateUserDTO } from "src/user/dto/create-user.dto";
 import { UserService } from "src/user/user.service";
+import * as Sentry from "@sentry/minimal"
 
 @Injectable()
 export class DaangnStrategy extends PassportStrategy(Strategy) {
@@ -23,14 +24,18 @@ export class DaangnStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(token: string) {
-        try {
-            const uri = this.configService.get('daangn.openapiuri') + '/api/v1/users/me';
-            return this.httpService.get(uri, { headers : { Authorization: 'Bearer ' + token }}).pipe(map(async(res) => {
-                const user = new CreateUserDTO(res.data.data, token);
+        const uri = this.configService.get('daangn.openapiuri') + '/api/v1/users/me';
+        return this.httpService.get(uri, { headers : { Authorization: 'Bearer ' + token }}).pipe(
+            map(async(res) => {
+                const response = res.data?.data
+                if (!response) throw new BadRequestException();
+                const user = new CreateUserDTO(response, token);
                 return await this.userService.login(user);
-            }));
-        } catch (e) {
-            throw e;
-        }
+            }),
+            catchError((err) => {
+                Sentry.captureException(err);
+                throw new BadRequestException();
+            })
+        );
     }
 }

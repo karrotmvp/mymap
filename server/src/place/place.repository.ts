@@ -15,11 +15,13 @@ export class PlaceRepository {
         const uri = this.configService.get('daangn.poiuri') + placeId;
         return this.httpService.get(uri).pipe(
             map((res) => {
-            const place = new PlaceDTO(res.data);
-            return place;
-        }), catchError(e => {
-            throw new BadRequestException();
-        }))
+                const place = new PlaceDTO(res.data);
+                return place;
+            }), 
+            catchError(e => {
+                throw new BadRequestException();
+            })
+        )
     }
 
     async findWithIds(placeIds: string[]) {
@@ -30,14 +32,16 @@ export class PlaceRepository {
             }
         }).pipe(
             map((res) => {
-            const places: PlaceDTO[] = res.data.map((place) => {
-                const newPlace = new PlaceDTO(place);
-                return newPlace;
+                const places: PlaceDTO[] = res.data.map((place) => {
+                    const newPlace = new PlaceDTO(place);
+                    return newPlace;
+                })
+                return places;
+            }),
+            catchError(e => {
+                throw new BadRequestException();
             })
-            return places;
-        }), catchError(e => {
-            throw new BadRequestException();
-        }))
+        )
 
     }
 
@@ -52,14 +56,16 @@ export class PlaceRepository {
             }
         }).pipe(
             map((res) => {
-            const places: PlaceDTO[] = res.data.items.map(place => {
-                const newPlace = new PlaceDTO(place);
-                return newPlace
+                const places: PlaceDTO[] = res.data.items.map(place => {
+                    const newPlace = new PlaceDTO(place);
+                    return newPlace
+                })
+                return places;
+            }), 
+            catchError(e => {
+                throw new BadRequestException();
             })
-            return places;
-        }), catchError(e => {
-            throw new BadRequestException();
-        }))
+        )
     }
 
     async findWithRegion(paginator: string, page:number) {
@@ -71,14 +77,16 @@ export class PlaceRepository {
             }
         }).pipe(
             map((res) => {
-            const places: PlaceDTO[] = res.data.items.map((place) => {
-                const newPlace = new PlaceDTO(place);
-                return newPlace;
+                const places: PlaceDTO[] = res.data.items.map((place) => {
+                    const newPlace = new PlaceDTO(place);
+                    return newPlace;
+                })
+                return places;
+            }), 
+            catchError(e => {
+                throw new BadRequestException();
             })
-            return places;
-        }), catchError(e => {
-            throw new BadRequestException();
-        }))
+        )
     }
 
     async getPaginator(regionId: number, perPage: number) {
@@ -91,8 +99,10 @@ export class PlaceRepository {
         }).pipe(
             map((res) => {
                 return res.data.paginator;
-        }), catchError(e => {
-            throw new BadRequestException();
-        }))
+            }), 
+            catchError(e => {
+                throw new BadRequestException();
+            })
+        )
     }
 }

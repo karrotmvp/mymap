@@ -2,6 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { LoggerModule } from 'src/logger/logger.module';
 import { UserModule } from 'src/user/user.module';
 import { AuthService } from './auth.service';
 import { DaangnStrategy } from './daangn.strategy';
@@ -19,6 +20,7 @@ import { JWTStrategy } from './jwt.strategy';
     timeout: 5000,
   }),
   ConfigModule,
+  LoggerModule,
   forwardRef(() => UserModule)],
   providers: [AuthService, JWTStrategy, DaangnStrategy],
   exports: [AuthService]

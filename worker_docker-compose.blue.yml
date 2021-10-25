@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  mymap:
+    image: 757005647945.dkr.ecr.ap-northeast-2.amazonaws.com/mymapdeploy:tagname
+    volumes:
+      - /home/ubuntu/deploy/mymap:/deploy/mymap
+    ports:
+      - "5001:5000"
+    environment:
+      - "WORKER=true"
