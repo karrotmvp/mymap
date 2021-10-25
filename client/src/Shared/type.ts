@@ -26,6 +26,7 @@ export interface FeedType {
 export interface MyInfoType {
   userId: number;
   userName: string;
+  regionName: string;
 }
 
 export interface PinType {

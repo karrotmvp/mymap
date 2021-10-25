@@ -18,6 +18,7 @@ export const MyInfo = atom<MyInfoType>({
   default: {
     userId: 1,
     userName: "team1test",
+    regionName: "역삼 1동",
   },
 });
 

@@ -11,6 +11,7 @@ import { useCallback } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import ClosePage from "./Pages/ClosePage";
 
 dayjs.locale("ko");
 
@@ -26,6 +27,7 @@ function App() {
       setMyInfo({
         userId: data.userId,
         userName: data.userName,
+        regionName: data.regionName,
       });
       localStorage.setItem("token", data.token);
     },
@@ -56,6 +58,9 @@ function App() {
         <Switch>
           <Route exact path="/">
             <Main />
+          </Route>
+          <Route exact path="/401">
+            <ClosePage />
           </Route>
           <Route path="/detail/:id">
             <Detail />

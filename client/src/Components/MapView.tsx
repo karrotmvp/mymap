@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import { RenderAfterNavermapsLoaded, NaverMap, Marker } from "react-naver-maps";
 
 interface MapViewProps {
@@ -30,33 +29,32 @@ const MapView = ({
   height,
   pins,
   handleSelectPin,
-  center,
+  center = { lat: 37.3595704, lng: 127.105399 },
 }: MapViewProps) => {
-  const defaultMapCenter = useMemo(() => {
-    return (
-      center ??
-      (pins
-        ? {
-            lat: pins[0]?.latitude,
-            lng: pins[0]?.longitude,
-          }
-        : { lat: 37.3595704, lng: 127.105399 })
-    );
-  }, [center, pins]);
+  // const defaultMapCenter = useMemo(() => {
+  //   return (
+  //     center ??
+  //     (pins && {
+  //       lat: pins[0]?.latitude,
+  //       lng: pins[0]?.longitude,
+  //     })
+  //   );
+  // }, [center, pins]);
 
-  const [mapCenter, setMapCenter] = useState(defaultMapCenter);
+  // const [mapCenter, setMapCenter] = useState(defaultMapCenter);
 
-  useEffect(() => {
-    setMapCenter(defaultMapCenter);
-  }, [defaultMapCenter]);
+  // useEffect(() => {
+  //   setMapCenter(defaultMapCenter);
+  // }, [defaultMapCenter]);
 
-  const handleClickMarker = (pin: Pin) => {
-    handleSelectPin && handleSelectPin(pin);
+  const handleClickMarker = (pin: Pin, idx: number) => {
+    handleSelectPin && handleSelectPin(pin, idx);
     // 지도 이동
-    setMapCenter({
-      lat: pin.latitude,
-      lng: pin.longitude,
-    });
+    // setCenter &&
+    //   setCenter({
+    //     lat: pin.latitude,
+    //     lng: pin.longitude,
+    //   });
     // setTimeout(() => {
     //   setMapZoom(12);
     //   setdefaultMapCenter({
@@ -80,18 +78,18 @@ const MapView = ({
           transition: "0.3s",
         }}
         defaultZoom={13}
-        center={mapCenter}
+        center={center}
       >
-        {pins?.map((pin) => (
+        {pins?.map((pin, i) => (
           <Marker
             key={pin.id}
             position={{
               lat: pin.latitude,
               lng: pin.longitude,
             }}
-            onClick={() => handleClickMarker(pin)}
+            onClick={() => handleClickMarker(pin, i)}
             icon={
-              mapCenter.lat === pin.latitude && mapCenter.lng === pin.longitude
+              center.lat === pin.latitude && center.lng === pin.longitude
                 ? "/map_pin_active.png"
                 : "/map_pin_inactive.png"
             }
