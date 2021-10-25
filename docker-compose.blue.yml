@@ -1,9 +1,14 @@
-version: '2'
+version: "2"
 
 services:
   mymap:
-     image: 757005647945.dkr.ecr.ap-northeast-2.amazonaws.com/mymapdeploy:tagname
-     volumes:
-          - /home/ubuntu/deploy/mymap:/deploy/mymap
-     ports:
-          - "3001:3000"
+    image: 757005647945.dkr.ecr.ap-northeast-2.amazonaws.com/mymapdeploy:tagname
+    volumes:
+      - /home/ubuntu/deploy/mymap:/deploy/mymap
+    ports:
+      - "3001:3000"
+
+networks:
+  default:
+    external:
+      name: internal
