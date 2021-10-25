@@ -15,4 +15,11 @@ export class UserDTO {
     private token: string
 
     private regionName: string
+
+    public getUserId() {
+        return this.userId;
+    }
+    public getUserName() {
+        return this.userName;
+    }
 }

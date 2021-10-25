@@ -1,7 +1,7 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { map } from "rxjs";
+import { catchError, map } from "rxjs";
 
 @Injectable()
 export class RegionRepository {
@@ -19,12 +19,19 @@ export class RegionRepository {
             params: {
                 range: 'MY'
             }
-        }).pipe(map((res) => {
-            const regionIds: string[] = res.data.data.region.neighborRegions.map((region) => {
-                return region.id
+        }).pipe(
+            map((res) => {
+                const response = res.data?.data?.region
+                if (!response) throw new BadRequestException();
+                const regionIds: string[] = response.neighborRegions.map((region) => {
+                    return region.id
+                })
+                return regionIds;
+            }), 
+            catchError((err) => {
+                throw new BadRequestException();
             })
-            return regionIds;
-        }))
+        )
     }
 
     async findRegionName(regionId: string) {
@@ -33,8 +40,15 @@ export class RegionRepository {
             headers: {
                 'X-Api-Key': this.configService.get('daangn.api_key')
             }
-        }).pipe(map((res) => {
-            return res.data.data.region.name;
-        }))
+        }).pipe(
+            map((res) => {
+                const response = res.data?.data?.region
+                if (!response) throw new BadRequestException();
+                return response.name;
+            }), 
+            catchError((err) => {
+                throw new BadRequestException();
+            })
+        )
     }
 }

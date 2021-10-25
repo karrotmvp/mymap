@@ -25,5 +25,9 @@ export default () => ({
     },
     mixpanel: {
         token: process.env.MIXPANEL_TOKEN,
+    },
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT
     }
 })

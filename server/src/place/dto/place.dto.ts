@@ -24,4 +24,5 @@ export class PlaceDTO {
     category: string[];
     thumbnail: object;
     images: object;
+    saved: number;
 }

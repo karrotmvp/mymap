@@ -11,4 +11,6 @@ aws ecr get-login --no-include-email --region ap-northeast-2 > ./ecr-login
 chmod +x ./ecr-login
 ./ecr-login
 
+./redis.sh > ./redis.log
 ./deploy.sh > ./deploy-log.log
+./deploy_worker.sh > ./deploy-worker-log.log
