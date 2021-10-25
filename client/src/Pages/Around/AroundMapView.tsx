@@ -16,8 +16,8 @@ const AroundMapView = ({
 }) => {
   const pin: Pin = {
     id: parseInt(place.placeId),
-    latitude: place.coordinate.latitude,
-    longitude: place.coordinate.longitude,
+    latitude: place.coordinates.latitude,
+    longitude: place.coordinates.longitude,
   };
   return (
     <Wrapper>

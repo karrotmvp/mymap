@@ -1,6 +1,14 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { flexCenter, theme } from "../styles/theme";
+import { theme } from "../styles/theme";
+import {
+  Around,
+  AroundActive,
+  Home,
+  HomeActive,
+  Mypage,
+  MypageActive,
+} from "../assets";
 
 const Footer = () => {
   const pathname = window.location.pathname;
@@ -8,20 +16,23 @@ const Footer = () => {
   return (
     <Wrapper>
       <FooterLink to="/" $isClicked={pathname === "/"}>
-        피드
+        {pathname === "/" ? <HomeActive /> : <Home />}
+        <div>동네 리스트</div>
       </FooterLink>
       <FooterLink to="/around" $isClicked={pathname === "/around"}>
-        둘러보기
+        {pathname === "/around" ? <AroundActive /> : <Around />}
+        <div>장소 둘러보기</div>
       </FooterLink>
       <FooterLink to="/mypage" $isClicked={pathname === "/mypage"}>
-        마이페이지
+        {pathname === "/mypage" ? <MypageActive /> : <Mypage />}
+        <div>나의 리스트</div>
       </FooterLink>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  ${flexCenter};
+  display: flex;
   width: 100%;
   height: 8.8rem;
   justify-content: space-around;
@@ -34,7 +45,14 @@ const Wrapper = styled.div`
 `;
 
 const FooterLink = styled(Link)<{ $isClicked: boolean }>`
-  opacity: ${({ $isClicked }) => ($isClicked ? 1 : 0.2)};
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 150%;
+  & > div {
+    color: ${({ $isClicked }) =>
+      $isClicked ? theme.color.orange : theme.color.gray5};
+  }
 `;
 
 export default Footer;

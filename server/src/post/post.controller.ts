@@ -41,7 +41,7 @@ export class PostController {
     async readPost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, 'postId : ', postId);
         const saved: boolean = await this.postService.checkSaved(req.user.userId, postId);
-        const post: PostDTO = await this.postService.readPost(postId);//savedPost 정보 추가하기
+        const post: PostDTO = await this.postService.readPostDetail(postId);//savedPost 정보 추가하기
         post.setSaved(saved);
         return post;
     }

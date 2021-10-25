@@ -23,4 +23,11 @@ export class PinRepository extends Repository<Pin> {
         })
         await this.softRemove(pins);
     }
+
+    async countPinsWithPlaceId(placeId: string) {
+        const num = await this.count({
+            where: { placeId: placeId }
+        })
+        return num;
+    }
 }

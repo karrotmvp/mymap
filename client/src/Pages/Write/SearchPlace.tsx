@@ -6,14 +6,16 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { getSearch } from "../../api/place";
 import { Back, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
+import { RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
-import { GET } from "../../utils/axios";
 import PlaceMapView from "./PlaceMapView";
 
 const SearchPlace = ({
@@ -25,7 +27,7 @@ const SearchPlace = ({
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
-  //   const regionId = useRecoilValue(RegionId);
+  const regionId = useRecoilValue(RegionId);
 
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
@@ -37,16 +39,13 @@ const SearchPlace = ({
 
   const [result, setResult] = useState<PlaceType[] | []>([]);
   const getSearchItems = useCallback(async () => {
-    const data = (await GET(`api/place/search/6530459d189b`, {
+    const data = await getSearch(regionId, {
       query: debouncedSearchVal,
-    })) as PlaceType[];
-    console.log("search", data);
+    });
     setResult(data);
-  }, [debouncedSearchVal]);
+  }, [debouncedSearchVal, regionId]);
 
-  console.log(process.env.REACT_APP_ENDPOINT);
   useEffect(() => {
-    console.log(debouncedSearchVal);
     if (debouncedSearchVal.length > 0) getSearchItems();
   }, [debouncedSearchVal, getSearchItems]);
 
