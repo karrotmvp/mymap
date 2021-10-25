@@ -16,9 +16,10 @@ const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
   const regionId = useRecoilValue(RegionId);
   const [feedPosts, setFeedPosts] = useState<PostType[] | []>([]);
-  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(
-    null
-  );
+  const [center, setCenter] = useState<{ lat: number; lng: number }>({
+    lat: 37.3595704,
+    lng: 127.105399,
+  });
 
   // infinite scroll
   const [startIdx, setStartIdx] = useState(0);
@@ -72,8 +73,14 @@ const Main = () => {
 
   // 핀 선택
   const [isPinSelected, setIsPinSelected] = useState(false);
-  const handleSelectPin = (pin: Pin) => {
+  const handleSelectPin = (pin: Pin, idx: number) => {
     setIsPinSelected(true);
+    setCenter &&
+      setCenter({
+        lat: pin.latitude,
+        lng: pin.longitude,
+      });
+    setCurrent(idx);
   };
 
   // 카드 이동
@@ -134,7 +141,7 @@ const Main = () => {
           <Footer />
         </>
       ) : (
-        <PinSlider isRecommend {...{ pins, current, setCurrent }} />
+        <PinSlider isRecommend {...{ pins, current, setCurrent, setCenter }} />
       )}
     </Wrapper>
   );

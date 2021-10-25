@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { PinType } from "../../Shared/type";
 import PlaceBox from "../PlaceBox";
@@ -8,6 +9,7 @@ interface PinSliderProps {
   isRecommend?: boolean;
   current: number;
   setCurrent: (index: number) => void;
+  setCenter: Dispatch<SetStateAction<{ lat: number; lng: number }>>;
 }
 
 const PinSlider = ({
@@ -15,12 +17,20 @@ const PinSlider = ({
   isRecommend = false,
   current,
   setCurrent,
+  setCenter,
 }: PinSliderProps) => {
+  const handleChangle = (index: number) => {
+    setCurrent(index);
+    setCenter({
+      lat: pins[index].place.coordinates.latitude,
+      lng: pins[index].place.coordinates.longitude,
+    });
+  };
   return (
     <Wrapper>
       <Swiper
         current={current}
-        onChange={setCurrent}
+        onChange={(i) => handleChangle(i)}
         contents={pins.map((pin) => (
           <div key={pin.pinId} className="carousel-cell">
             <PlaceBox place={pin.place} className="place-box">

@@ -47,6 +47,11 @@ export const postSavedPost = async (postId: number) => {
   return await POST(`api/post/savedPost/${postId}`);
 };
 
+// 리스트 저장 취소
+export const deleteSavedPost = async (postId: number) => {
+  return await DELETE(`api/post/savedPost/${postId}`);
+};
+
 // 저장한 리스트 가져오기
 interface PaginationParams {
   page?: number;

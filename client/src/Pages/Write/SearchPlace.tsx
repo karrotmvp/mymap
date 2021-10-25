@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Dispatch,
   MouseEventHandler,
@@ -6,14 +7,18 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRecoilValue } from "recoil";
+import {
+  useRecoilStateLoadable,
+  useRecoilValue,
+  useResetRecoilState,
+} from "recoil";
 import styled from "styled-components";
 import { getSearch } from "../../api/place";
-import { Back, SearchClose } from "../../assets";
+import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
-import { RegionId } from "../../Shared/atom";
+import { RegionId, searchAtom } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
@@ -35,19 +40,30 @@ const SearchPlace = ({
   };
 
   const searchVal = useInput("");
-  const debouncedSearchVal = useDebounce<string>(searchVal.value, 200);
 
-  const [result, setResult] = useState<PlaceType[] | []>([]);
+  const [result, setResult] = useRecoilStateLoadable(
+    searchAtom({ regionId, val: searchVal.value })
+  );
+  const resetResult = useResetRecoilState(
+    searchAtom({ regionId, val: searchVal.value })
+  );
+
+  // 검색어 초기화
+  useEffect(() => {
+    resetResult();
+  }, []);
   const getSearchItems = useCallback(async () => {
     const data = await getSearch(regionId, {
-      query: debouncedSearchVal,
+      query: searchVal.value,
     });
     setResult(data);
-  }, [debouncedSearchVal, regionId]);
+  }, [searchVal.value, regionId]);
 
+  // 검색 디바운스
+  const debouncedSearchVal = useDebounce(getSearchItems, 200);
   useEffect(() => {
-    if (debouncedSearchVal.length > 0) getSearchItems();
-  }, [debouncedSearchVal, getSearchItems]);
+    if (searchVal.value.length > 0) debouncedSearchVal();
+  }, [searchVal.value]);
 
   return (
     <Wrapper>
@@ -66,16 +82,20 @@ const SearchPlace = ({
         )}
       </div>
 
-      {debouncedSearchVal.length > 0 ? (
-        <div className="result">
-          {result.map((place) => (
-            <div key={place.placeId} onClick={() => handleOpenMap(place)}>
-              {place.address && (
-                <SearchList place={place} searchVal={searchVal.value} />
-              )}
-            </div>
-          ))}
-        </div>
+      {result.state === "hasValue" && searchVal.value.length > 0 ? (
+        result.contents.length > 0 ? (
+          <div className="result">
+            {result.contents.map((place) => (
+              <div key={place.placeId} onClick={() => handleOpenMap(place)}>
+                {place.address && (
+                  <SearchList place={place} searchVal={searchVal.value} />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <NoSearchView value={searchVal.value} />
+        )
       ) : (
         <div className="empty">추가할 장소를 검색해주세요.</div>
       )}
@@ -84,6 +104,18 @@ const SearchPlace = ({
         <PlaceMapView {...{ place, setIsSearchOpened }} />
       )}
     </Wrapper>
+  );
+};
+
+const NoSearchView = ({ value }: { value: string }) => {
+  return (
+    <div className="no-search">
+      <NoSearch />
+      <div>
+        <span>{value}</span>의 검색 결과가 없어요
+      </div>
+      <div>검색어를 다시 확인해주세요!</div>
+    </div>
   );
 };
 
@@ -141,6 +173,24 @@ const Wrapper = styled.div`
     font-size: 1.7rem;
     line-height: 160%;
     color: ${theme.color.gray3};
+  }
+
+  .no-search {
+    ${flexCenter};
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    & > div {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 160%;
+      color: ${theme.color.gray6};
+      & > span {
+        color: ${theme.color.orange};
+      }
+    }
   }
 `;
 

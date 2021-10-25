@@ -29,6 +29,8 @@ const fetchWrap = async ({
     return data;
   } catch (error) {
     console.log(error);
+    localStorage.removeItem("token");
+    window.location.href = "/401";
   }
 };
 
