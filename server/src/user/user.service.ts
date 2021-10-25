@@ -40,7 +40,7 @@ export class UserService {
                 map((res) => {
                     const response = res.data?.data?.user
                     if (!response) throw new BadRequestException();
-                    return new UserDTO(userId, response.nickname, null, null, null)
+                    return new UserDTO(userId, response.nickname, response.profileImageUrl, null, null)
                 }),
                 catchError((err) => {
                     throw new BadRequestException();

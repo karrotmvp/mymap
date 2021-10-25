@@ -29,6 +29,10 @@ export class MixpanelProcessor {
             postNum: postNum
         })
         this._mixpanel.people.set_once(user.getUserId().toString(), '$created', (new Date().toISOString()));
+        this._mixpanel.track('login', {
+            userName: user.getUserName(),
+            userId: user.getUserId()
+        })
     }
 
     @Process('post_created')

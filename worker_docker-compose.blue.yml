@@ -9,3 +9,8 @@ services:
       - "5001:3000"
     environment:
       - "WORKER=true"
+
+networks:
+  default:
+    external:
+      name: internal
