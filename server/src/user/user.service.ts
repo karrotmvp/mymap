@@ -13,14 +13,12 @@ import { UserRepository } from './user.repository';
 export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
-        private readonly eventEmitter: EventEmitter2,
         private readonly httpService: HttpService,
         private readonly configService: ConfigService
         ) {}
 
     async login(user: CreateUserDTO):Promise<CreateUserDTO> {
         const savedUser: CreateUserDTO = await this.userRepository.saveUser(user);
-        this.eventEmitter.emit('user.created', new Event(user.getUserId()))
         return savedUser;
     }
 
@@ -31,7 +29,6 @@ export class UserService {
     async readUserDetail(userId: number): Promise<UserDTO> {
         const user = await this.readUser(userId);
         const uniqueId = user.getUniqueId();
-        console.log(uniqueId)
         const uri = this.configService.get('daangn.oapiuri') + 'users/' + uniqueId;
         const userDetail$ = this.httpService.get(uri, {
             headers: {

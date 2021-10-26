@@ -6,12 +6,21 @@ import * as Sentry from '@sentry/node'
 import { SentryInterceptor } from './sentry.interceptor';
 import { MyLogger } from './logger/logger.service';
 import { ConfigService } from '@nestjs/config';
+import * as Tracing from '@sentry/tracing'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   Sentry.init({
-    dsn: process.env.SENTRY_DSN
+    dsn: process.env.SENTRY_DSN,
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true }),
+      new Tracing.Integrations.Express({})
+    ],
+    tracesSampleRate: 1.0,
   });
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
+  app.use(Sentry.Handlers.errorHandler());
   app.useGlobalInterceptors(new SentryInterceptor(new MyLogger(new ConfigService)));
   app.use(cookieParser());
   app.enableCors({

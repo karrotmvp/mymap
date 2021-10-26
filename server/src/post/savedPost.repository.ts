@@ -28,4 +28,14 @@ export class SavedPostRepository extends Repository<SavedPost> {
         })
         return savedPost;
     }
+
+    async countSavedNum(postId: number): Promise<number> {
+        const savedNum: number = await this.count({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('SavedPost__post.postId = :postId', { postId: postId })
+            }
+        })
+        return savedNum;
+    }
 }

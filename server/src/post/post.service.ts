@@ -37,7 +37,6 @@ export class PostService {
         const pins: Pin[] = await this.pinRepository.savePins(post.pins);
         const regionName: string = await this.regionService.readRegionName(post.regionId);
         const newPost: Post = await this.postRepository.savePost(post, regionName, user, pins);
-        this.eventEmitter.emit('post.created', new Event(newPost.getPostId()));
         return newPost;
     }
 
@@ -56,7 +55,8 @@ export class PostService {
         if (!post) throw new BadRequestException();
         const user: UserDTO = await this.userService.readUserDetail(post.getUser().getUserId());
         const detailPins: PinDTO[] = await this.readPinDetail(post.pins, coordinate);
-        const detailPost: PostDTO = new PostDTO(post, user, detailPins, coordinate);
+        const savedNum: number = await this.savedPostRepository.countSavedNum(postId);
+        const detailPost: PostDTO = new PostDTO(post, user, detailPins, coordinate, savedNum);
         return detailPost;
     }
 
@@ -115,6 +115,7 @@ export class PostService {
         const user = await this.userService.readUser(userId);
         const saved = new SavedPost(post, user);
         await this.savedPostRepository.save(saved);
+        this.eventEmitter.emit('post.saved', new Event(postId, userId));
     }
 
     async readSavedPost(userId: number, page: number, perPage: number): Promise<FeedDTO> {
@@ -159,6 +160,10 @@ export class PostService {
 
     async countSavedPlaces(placeId: string): Promise<number> {
         return await this.pinRepository.countPinsWithPlaceId(placeId);
+    }
+
+    async readDeletedPost(postId: number): Promise<Post> {
+        return await this.postRepository.findOne(postId, { withDeleted: true });
     }
 
 }
