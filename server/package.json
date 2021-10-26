@@ -32,6 +32,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/typeorm": "^8.0.2",
     "@sentry/node": "^6.13.3",
+    "@sentry/tracing": "^6.13.3",
     "@slack/client": "^5.0.2",
     "@types/passport-jwt": "^3.0.6",
     "axios": "^0.22.0",

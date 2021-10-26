@@ -21,4 +21,41 @@ export class EventPubSub {
     async handlePostCreatedEvent(event: Event) {
         await this.mixpanelQueue.add('post_created', event);
     }
+    @OnEvent('post.saved')
+    async handlePostSavedEvent(event: Event) {
+        await this.mixpanelQueue.add('post_saved', event);
+    }
+    @OnEvent('post.readed')
+    async handlePostReadedEvent(event: Event) {
+        await this.mixpanelQueue.add('post_readed', event);
+    }
+    @OnEvent('post.listed')
+    async handlePostListedEvent(event: Event) {
+        await this.mixpanelQueue.add('post_listed', event);
+    }
+    @OnEvent('post.unsaved')
+    async handlePostUnsavedEvent(event: Event) {
+        await this.mixpanelQueue.add('post_unsaved', event);
+    }
+    @OnEvent('post.deleted')
+    async handlePostDeletedEvent(event: Event) {
+        await this.mixpanelQueue.add('post_deleted', event);
+    }
+    @OnEvent('post.updated')
+    async handlePostUpdatedEvent(event: Event) {
+        await this.mixpanelQueue.add('post_updated', event);
+    }
+    @OnEvent('post.savelisted')
+    async handlePostSaveListedEvent(event: Event) {
+        await this.mixpanelQueue.add('post_savelisted', event);
+    }
+    @OnEvent('post.mylisted')
+    async handlePostMyListed(event: Event) {
+        await this.mixpanelQueue.add('post_mylisted', event);
+    }
+    //place
+    @OnEvent('place.listed')
+    async handlePlaceListed(event: Event) {
+        await this.mixpanelQueue.add('place_listed', event);
+    }
 }

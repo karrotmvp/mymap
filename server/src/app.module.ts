@@ -53,8 +53,8 @@ import { SentryInterceptor } from './sentry.interceptor';
     useFactory: (configService: ConfigService) => ({
       redis: {
         host: configService.get('redis.host'),
-        port: configService.get('redis.port')
-      }
+        port: configService.get('redis.port'),
+      },
     })
   }),
   EventModule,
