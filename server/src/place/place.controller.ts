@@ -1,4 +1,6 @@
 import { BadRequestException, Controller, Get, Param, Query } from '@nestjs/common';
+import { EventEmitter2 } from 'eventemitter2';
+import { Event } from 'src/event/event';
 import { MyLogger } from 'src/logger/logger.service';
 import { PlaceService } from './place.service';
 
@@ -6,7 +8,8 @@ import { PlaceService } from './place.service';
 export class PlaceController {
     constructor(
         private readonly placeService: PlaceService,
-        private readonly logger: MyLogger
+        private readonly logger: MyLogger,
+        private readonly eventEmitter: EventEmitter2
     ) {}
 
     @Get('/:placeId')
@@ -28,6 +31,7 @@ export class PlaceController {
         if (!regionId && !paginator) throw new BadRequestException();
         if (page < 1 || perPage < 1) throw new BadRequestException();
         if (!paginator) paginator = await this.placeService.getPaginator(regionId, perPage);
+        this.eventEmitter.emit('place.listed', new Event(null, regionId));
         return await this.placeService.readRegionPlaces(paginator, page);
     }
 }

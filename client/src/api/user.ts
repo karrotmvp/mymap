@@ -5,8 +5,9 @@ import { GET } from "../utils/axios";
 interface LoginBody extends MyInfoType {
   token: string;
 }
-export const getLogin = async (code: string) => {
+export const getLogin = async (code: string, regionId: string) => {
   return (await GET("api/user/login", {
     code,
+    regionId,
   })) as LoginBody;
 };

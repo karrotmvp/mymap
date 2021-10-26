@@ -2,13 +2,18 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Main from "./Pages/Main/Main";
 import Around from "./Pages/Around/Around";
 import Mypage from "./Pages/Mypage";
-import Detail from "./Pages/Detail/Detail";
+import Detail from "./Pages/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useSetRecoilState } from "recoil";
 import { MyInfo, RegionId } from "./Shared/atom";
 import { useCallback } from "react";
 import { getLogin } from "./api/user";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import ClosePage from "./Pages/ClosePage";
+
+dayjs.locale("ko");
 
 function App() {
   const mini = new Mini();
@@ -17,11 +22,12 @@ function App() {
   // 로그인 및 내 정보 저장
   const setMyInfo = useSetRecoilState(MyInfo);
   const getMyInfo = useCallback(
-    async (code: string) => {
-      const data = await getLogin(code);
+    async (code: string, regionId: string) => {
+      const data = await getLogin(code, regionId);
       setMyInfo({
         userId: data.userId,
         userName: data.userName,
+        regionName: data.regionName,
       });
       localStorage.setItem("token", data.token);
     },
@@ -40,7 +46,7 @@ function App() {
           "region_id"
         );
 
-        getMyInfo(result.code);
+        getMyInfo(result.code, regionId as string);
         setRegionId(regionId as string);
       }
     },
@@ -52,6 +58,9 @@ function App() {
         <Switch>
           <Route exact path="/">
             <Main />
+          </Route>
+          <Route exact path="/401">
+            <ClosePage />
           </Route>
           <Route path="/detail/:id">
             <Detail />

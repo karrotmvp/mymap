@@ -17,3 +17,7 @@ export { ReactComponent as Around } from "./lookaround_inactive.svg";
 export { ReactComponent as AroundActive } from "./lookaround_active.svg";
 export { ReactComponent as Mypage } from "./mypage_inactive.svg";
 export { ReactComponent as MypageActive } from "./mypage_active.svg";
+export { ReactComponent as Save } from "./save_inactive.svg";
+export { ReactComponent as SaveActive } from "./save_active.svg";
+export { ReactComponent as NoSearch } from "./no_search.svg";
+export { ReactComponent as LogoInactive } from "./logo_inactive.svg";

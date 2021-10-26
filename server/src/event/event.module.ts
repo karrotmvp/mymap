@@ -4,7 +4,7 @@ import { EventPubSub } from './event-pub-sub';
 
 @Module({
     imports: [BullModule.registerQueue(
-        { name: 'mixpanel'}, )],
+        { name: 'mixpanel' }, )],
     providers: [EventPubSub]
 })
 export class EventModule {

@@ -1,5 +1,7 @@
-import { atom } from "recoil";
-import { MyInfoType, PlaceType } from "./type";
+import { atom, atomFamily, selectorFamily } from "recoil";
+import { getSearch } from "../api/place";
+import { getPost } from "../api/post";
+import { MyInfoType, PlaceType, PostType } from "./type";
 
 export const Places = atom<PlaceType[]>({
   key: "places",
@@ -16,5 +18,25 @@ export const MyInfo = atom<MyInfoType>({
   default: {
     userId: 1,
     userName: "team1test",
+    regionName: "역삼 1동",
   },
+});
+
+export const postDetailAtom = atomFamily({
+  key: "postDetailAtom",
+  default: selectorFamily<PostType, number>({
+    key: "postDetailAtom/selector",
+    get: (id) => () => getPost(id),
+  }),
+});
+
+export const searchAtom = atomFamily({
+  key: "searchAtom",
+  default: selectorFamily<PlaceType[], { regionId: string; val: string }>({
+    key: "searchAtom/selector",
+    get:
+      ({ regionId, val }) =>
+      () =>
+        getSearch(regionId, { query: val }),
+  }),
 });

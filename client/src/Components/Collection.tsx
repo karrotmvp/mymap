@@ -24,7 +24,9 @@ const Collection = (post: PostType) => {
         <div className="title-wrapper">
           <div>
             <div className="title">{post.title}</div>
-            <div className="author">짱짱로컬큐레이터님 · 논현동</div>
+            <div className="author">
+              {post.user.userName} · {post.regionName}
+            </div>
           </div>
           <More className="more-icon" />
         </div>
