@@ -46,7 +46,7 @@ export interface PlaceType {
   businessHoursFrom: string | null;
   businessHoursTo: string | null;
   businessHoursExtra: string | null;
-  category: string[] | null;
+  category: string[];
   thumbnail: ImageType | null;
   images: ImageType[];
 }

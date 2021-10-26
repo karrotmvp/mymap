@@ -203,7 +203,7 @@ const TabWrapper = styled.div`
   box-sizing: border-box;
   ${gap("0.5rem")}
   position: sticky;
-  top: 5rem;
+  top: 4.9rem;
   background-color: #fff;
 `;
 

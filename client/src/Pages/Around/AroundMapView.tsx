@@ -21,7 +21,7 @@ const AroundMapView = ({
   };
   return (
     <Wrapper>
-      <Header isGradient>
+      <Header isTransparent>
         <Back className="left-icon" onClick={close} />
       </Header>
       <MapView height="100vh" pins={[pin]} />

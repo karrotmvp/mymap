@@ -108,7 +108,7 @@ const Main = () => {
 
   return (
     <Wrapper>
-      <Header title={!isPinSelected ? "서비스명" : ""} isGradient={!isScrollUp}>
+      <Header isTransparent={!isScrollUp}>
         {isPinSelected ? (
           <Back className="left-icon" onClick={() => setIsPinSelected(false)} />
         ) : (
