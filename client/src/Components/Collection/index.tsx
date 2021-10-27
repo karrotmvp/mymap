@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { More } from "../assets";
-import { PostType } from "../Shared/type";
-import { flexCenter, theme } from "../styles/theme";
+import { More } from "../../assets";
+import { PostType } from "../../Shared/type";
+import { flexCenter, theme } from "../../styles/theme";
+import SaveButton from "./SaveButton";
 
 const PlaceBox = ({ name, category }: { name: string; category: string[] }) => {
   return (
@@ -14,6 +16,9 @@ const PlaceBox = ({ name, category }: { name: string; category: string[] }) => {
 };
 
 const Collection = (post: PostType) => {
+  const [isSaved, setIsSaved] = useState<boolean>(post.saved);
+  const [savedNum, setSavedNum] = useState<number>(post.savedNum);
+
   return (
     <Wrapper>
       <Link to={`/detail/${post.postId}`}>
@@ -31,7 +36,12 @@ const Collection = (post: PostType) => {
             <PlaceBox key={pin.pinId} {...pin.place} />
           ))}
         </div>
-        <div className="saved-info">13명 주민이 이 리스트를 저장했어요</div>
+        <SaveFooter>
+          <div className="saved-info">
+            {savedNum > 0 && `${savedNum}명 주민이 이 리스트를 저장했어요`}
+          </div>
+          <SaveButton {...{ isSaved, post, setIsSaved }} />
+        </SaveFooter>
       </Link>
     </Wrapper>
   );
@@ -58,7 +68,7 @@ const Wrapper = styled.div`
       color: ${theme.color.gray6};
     }
     .more-icon {
-      fill: ${theme.color.gray5};
+      fill: ${theme.color.gray6};
     }
   }
 
@@ -69,9 +79,18 @@ const Wrapper = styled.div`
     overflow-y: hidden;
     margin-top: 1.6rem;
   }
+`;
 
+const SaveFooter = styled.div`
+  ${flexCenter};
+  justify-content: space-between;
+  margin-top: 1.2rem;
+  padding-right: 4rem;
   .saved-info {
     color: ${theme.color.gray6};
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 145%;
   }
 `;
 

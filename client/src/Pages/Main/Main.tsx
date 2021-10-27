@@ -4,7 +4,7 @@ import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import MainSlide from "./MainSlide";
 import MapView, { Pin } from "../../Components/MapView";
-import PinSlider from "../../Components/PinSlider/PinSlider";
+import PinSlider from "../../Components/PinSlider";
 import { Back, Close } from "../../assets";
 import { PinType, PostType } from "../../Shared/type";
 import { getFeedPosts } from "../../api/post";

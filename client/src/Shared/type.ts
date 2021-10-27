@@ -9,6 +9,7 @@ export interface PostType {
   contents: string;
   regionId: string;
   regionName: string;
+  savedNum: number;
   share: boolean;
   pins: PinType[];
   createdAt: string;

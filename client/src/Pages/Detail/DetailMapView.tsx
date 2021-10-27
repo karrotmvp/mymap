@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MapView, { Pin } from "../../Components/MapView";
-import PinSlider from "../../Components/PinSlider/PinSlider";
+import PinSlider from "../../Components/PinSlider";
 import { PinType } from "../../Shared/type";
 
 const DetailMapView = ({ pins }: { pins: PinType[] }) => {
