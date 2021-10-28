@@ -1,9 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EventEmitter2 } from 'eventemitter2';
 import { catchError, lastValueFrom, map } from 'rxjs';
-import { Event } from 'src/event/event';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
 import { User } from './entities/user.entity';

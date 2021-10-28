@@ -49,7 +49,7 @@ export class PostService {
         await this.postRepository.updatePost(postId, post, pins);
 }
 
-    async readPostDetail(postId: number): Promise<PostDTO> {
+    async readPostDetail(userId: number, postId: number): Promise<PostDTO> {
         const coordinate: CoordinatesDTO = new CoordinatesDTO();
         const post: Post = await this.postRepository.findWithPostId(postId);
         if (!post) throw new BadRequestException();
@@ -57,13 +57,15 @@ export class PostService {
         const detailPins: PinDTO[] = await this.readPinDetail(post.pins, coordinate);
         const savedNum: number = await this.savedPostRepository.countSavedNum(postId);
         const detailPost: PostDTO = new PostDTO(post, user, detailPins, coordinate, savedNum);
+        const saved = await this.checkSaved(userId, postId);
+        detailPost.setSaved(saved);
         return detailPost;
     }
 
-    async readPostList(posts: Post[]): Promise<FeedDTO> {
+    async readPostList(userId: number, posts: Post[]): Promise<FeedDTO> {
         const coordinates = new CoordinatesDTO();
         const promise = posts.map(async(post:Post) => {
-            const detailPost:PostDTO = await this.readPostDetail(post.getPostId());
+            const detailPost:PostDTO = await this.readPostDetail(userId, post.getPostId());
             coordinates.sumCoordinates(detailPost.coordinates);
             return detailPost;
         })
@@ -96,7 +98,7 @@ export class PostService {
     async readUserPost(userId: number, page: number, num: number): Promise<FeedDTO> {
         const user: User = await this.userService.readUser(userId);
         const posts: Post[] = await this.postRepository.findWithUserId(user.getUserId(), page, num);
-        const detailPost:FeedDTO = await this.readPostList(posts);
+        const detailPost:FeedDTO = await this.readPostList(userId, posts);
         return detailPost
     }
 
@@ -122,13 +124,13 @@ export class PostService {
         const user: User = await this.userService.readUser(userId);
         const savedPostIds: number[] = await this.savedPostRepository.findWithUserId(user.getUserId(), page, perPage);
         const posts: Post[] = await this.postRepository.findByIds(savedPostIds);
-        return await this.readPostList(posts);
+        return await this.readPostList(userId, posts);
     }
 
-    async readRegionPost(regionId: string, start: number, end: number, perPage: number) {
+    async readRegionPost(userId: number, regionId: string, start: number, end: number, perPage: number) {
         const regions: string[] = await this.regionService.readNeighborRegion(regionId);
         const posts: Post[] = await this.postRepository.findWithRegionId(regions, start, end, perPage);
-        return await this.readPostList(posts);
+        return await this.readPostList(userId, posts);
     }
 
     async deleteSavedPost(userId: number, postId: number) {
