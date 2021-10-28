@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { AuthService } from 'src/auth/auth.service';
 import { DaangnAuthGuard } from 'src/auth/daangn.guard';
 import { Event } from 'src/event/event';
+import { MyMapEvent } from 'src/event/event-pub-sub';
 import { MyLogger } from 'src/logger/logger.service';
 import { RegionService } from 'src/region/region.service';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -26,7 +27,7 @@ export class UserController {
         const token = await this.authService.generateToken(user);
         const regionName = await this.regionService.readRegionName(regionId);
         const userInfo: UserDTO = new UserDTO(user.getUserId(), user.getUserName(), user.getProfileImageUrl(), token, regionName);
-        this.eventEmitter.emit('user.created', new Event(user.getUserId(), regionName));
+        this.eventEmitter.emit(MyMapEvent.USER_CREATED, new Event(user.getUserId(), regionName));
         this.logger.debug(user);
         this.logger.debug(token);
         return userInfo;
