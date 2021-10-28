@@ -44,8 +44,8 @@ export class Post {
     @OneToMany(() => Pin, pin => pin.post, { cascade:true })
     pins: Pin[];
 
-    // @OneToMany(() => SavedPost, savedPost => savedPost.post, { cascade: true })
-    // savedPosts: SavedPost[];
+    @OneToMany(() => SavedPost, savedPost => savedPost.post, { cascade: true })
+    savedPosts: SavedPost[];
 
     @UpdateDateColumn()
     updatedAt: Date;

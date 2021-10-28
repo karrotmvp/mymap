@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Q
 import { EventEmitter2 } from 'eventemitter2';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Event } from 'src/event/event';
+import { MyMapEvent } from 'src/event/event-pub-sub';
 import { MyLogger } from 'src/logger/logger.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { PostDTO } from './dto/post.dto';
@@ -28,7 +29,7 @@ export class PostController {
     async readMyPost(@Req() req: any, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
         this.logger.debug('userId : ', req.user.userId, ' page : ', page, ' perPage : ', perPage);
         if (page < 1 || perPage < 1) throw new BadRequestException();
-        this.eventEmitter.emit('post.mylisted', new Event(req.user.userId, null));
+        this.eventEmitter.emit(MyMapEvent.POST_MYLISTED, new Event(req.user.userId, null));
         return await this.postService.readUserPost(req.user.userId, page, perPage);
     }
 
@@ -37,7 +38,7 @@ export class PostController {
     async readSavedPost(@Req() req: any, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
         this.logger.debug('userId : ', req.user.userId, ' page : ', page, ' perPage : ', perPage);
         if (page < 1 || perPage < 1) throw new BadRequestException();
-        this.eventEmitter.emit('post.savelisted', new Event(req.user.userId, null));
+        this.eventEmitter.emit(MyMapEvent.USER_CREATED, new Event(req.user.userId, null))
         return await this.postService.readSavedPost(req.user.userId, page, perPage);
     }
 
@@ -45,10 +46,8 @@ export class PostController {
     @Get('/:postId')
     async readPost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, 'postId : ', postId);
-        const saved: boolean = await this.postService.checkSaved(req.user.userId, postId);
-        const post: PostDTO = await this.postService.readPostDetail(postId);//savedPost 정보 추가하기
-        post.setSaved(saved);
-        this.eventEmitter.emit('post.readed', new Event(postId, req.user.userId));
+        const post: PostDTO = await this.postService.readPostDetail(req.user.userId, postId);//savedPost 정보 추가하기
+        this.eventEmitter.emit(MyMapEvent.POST_READED, new Event(postId, req.user.userId));
         return post;
     }
 
@@ -57,14 +56,14 @@ export class PostController {
     async updatePost(@Req() req: any, @Param('postId') postId:number, @Body() post:UpdatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId, ' post : ', post);
         this.postService.updatePost(req.user.userId, postId, post);
-        this.eventEmitter.emit('post.updated', new Event(postId, req.user.userId));
+        this.eventEmitter.emit(MyMapEvent.POST_UPDATED, new Event(postId, req.user.userId));
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete('/:postId')
     async deletePost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId)
-        this.eventEmitter.emit('post.deleted', new Event(postId, req.user.userId));
+        this.eventEmitter.emit(MyMapEvent.POST_DELETED, new Event(postId, req.user.userId));
         await this.postService.deletePost(req.user.userId, postId);
     }
 
@@ -79,16 +78,17 @@ export class PostController {
     @Delete('/savedPost/:postId')
     async deleteSavedPost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId);
-        this.eventEmitter.emit('post.unsaved', new Event(req.user.userId, postId));
+        this.eventEmitter.emit(MyMapEvent.POST_UNSAVED, new Event(req.user.userId, postId));
         await this.postService.deleteSavedPost(req.user.userId, postId);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('/feed/:regionId')
-    async readRegionPost(@Param('regionId') regionId: string, @Query('start') start: number = 0, @Query('end') end: number = 0, @Query('perPage') perPage: number = 10) {
-        this.logger.debug('regionId : ', regionId, 'start : ', start, 'end : ', end, 'perPage : ', perPage)
+    async readRegionPost(@Req() req: any, @Param('regionId') regionId: string, @Query('start') start: number = 0, @Query('end') end: number = 0, @Query('perPage') perPage: number = 10) {
+        this.logger.debug('userId : ', req.user.userId, 'regionId : ', regionId, 'start : ', start, 'end : ', end, 'perPage : ', perPage)
         if (start < 0 || end < 0 || perPage < 1) throw new BadRequestException();
-        this.eventEmitter.emit('post.listed', new Event(null, regionId));
-        return await this.postService.readRegionPost(regionId, start, end, perPage);
+        this.eventEmitter.emit(MyMapEvent.POST_LISTED, new Event(null, regionId));
+        return await this.postService.readRegionPost(req.user.userId, regionId, start, end, perPage);
     }
 
 }
