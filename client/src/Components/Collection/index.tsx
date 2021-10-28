@@ -1,10 +1,8 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { More } from "../../assets";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
-import SaveButton from "./SaveButton";
+import SaveFooter from "./SaveFooter";
 
 const PlaceBox = ({ name, category }: { name: string; category: string[] }) => {
   return (
@@ -16,33 +14,23 @@ const PlaceBox = ({ name, category }: { name: string; category: string[] }) => {
 };
 
 const Collection = (post: PostType) => {
-  const [isSaved, setIsSaved] = useState<boolean>(post.saved);
-  const [savedNum, setSavedNum] = useState<number>(post.savedNum);
-
   return (
-    <Wrapper>
-      <Link to={`/detail/${post.postId}`}>
-        <div className="title-wrapper">
-          <div>
-            <div className="title">{post.title}</div>
-            <div className="author">
-              {post.user.userName} · {post.regionName}
-            </div>
+    <Wrapper onClick={() => (window.location.href = `/detail/${post.postId}`)}>
+      <div className="title-wrapper">
+        <div>
+          <div className="title">{post.title}</div>
+          <div className="author">
+            {post.user.userName} · {post.regionName}
           </div>
-          <More className="more-icon" />
         </div>
-        <div className="places">
-          {post.pins.map((pin) => (
-            <PlaceBox key={pin.pinId} {...pin.place} />
-          ))}
-        </div>
-        <SaveFooter>
-          <div className="saved-info">
-            {savedNum > 0 && `${savedNum}명 주민이 이 리스트를 저장했어요`}
-          </div>
-          <SaveButton {...{ isSaved, post, setIsSaved }} />
-        </SaveFooter>
-      </Link>
+        <More className="more-icon" />
+      </div>
+      <div className="places">
+        {post.pins.map((pin) => (
+          <PlaceBox key={pin.pinId} {...pin.place} />
+        ))}
+      </div>
+      <SaveFooter {...{ post }} />
     </Wrapper>
   );
 };
@@ -51,6 +39,7 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 3.6rem 0;
   padding-left: 2rem;
+  box-sizing: border-box;
 
   .title-wrapper {
     ${flexCenter};
@@ -78,19 +67,6 @@ const Wrapper = styled.div`
     overflow-x: scroll;
     overflow-y: hidden;
     margin-top: 1.6rem;
-  }
-`;
-
-const SaveFooter = styled.div`
-  ${flexCenter};
-  justify-content: space-between;
-  margin-top: 1.2rem;
-  padding-right: 4rem;
-  .saved-info {
-    color: ${theme.color.gray6};
-    font-size: 1.4rem;
-    font-weight: 500;
-    line-height: 145%;
   }
 `;
 

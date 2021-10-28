@@ -21,7 +21,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-left: 1.1rem;
   .category {
     display: flex;
     ${gap("0.4rem")}

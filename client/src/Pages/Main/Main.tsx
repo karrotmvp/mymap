@@ -141,7 +141,10 @@ const Main = () => {
           <Footer />
         </>
       ) : (
-        <PinSlider isRecommend {...{ pins, current, setCurrent, setCenter }} />
+        <PinSlider
+          placeBoxType="type2"
+          {...{ pins, current, setCurrent, setCenter }}
+        />
       )}
     </Wrapper>
   );

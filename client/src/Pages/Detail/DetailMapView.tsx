@@ -30,7 +30,10 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
   return (
     <Wrapper>
       <MapView height="100vh" pins={_pins} {...{ center, setCenter }} />
-      <PinSlider {...{ pins, current, setCurrent, setCenter }} />
+      <PinSlider
+        placeBoxType="type3"
+        {...{ pins, current, setCurrent, setCenter }}
+      />
     </Wrapper>
   );
 };

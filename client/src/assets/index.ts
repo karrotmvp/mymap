@@ -23,3 +23,5 @@ export { ReactComponent as Save2 } from "./save_inactive2.svg";
 export { ReactComponent as SaveActive2 } from "./save_active2.svg";
 export { ReactComponent as NoSearch } from "./no_search.svg";
 export { ReactComponent as LogoInactive } from "./logo_inactive.svg";
+export { ReactComponent as Call } from "./call.svg";
+export { ReactComponent as Time } from "./time.svg";

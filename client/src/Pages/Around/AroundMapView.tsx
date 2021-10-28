@@ -27,15 +27,7 @@ const AroundMapView = ({
       <MapView height="100vh" pins={[pin]} />
 
       <div className="placebox">
-        <PlaceBox {...{ place }}>
-          <>
-            <div className="phone">010-0000-0000</div>
-            <div className="time">09:00 - 22:00 연중무휴</div>
-            <div className="recommend">
-              13명의 주민들이 이 장소를 추천했어요!
-            </div>
-          </>
-        </PlaceBox>
+        <PlaceBox type="type4" {...{ place }} />
       </div>
     </Wrapper>
   );

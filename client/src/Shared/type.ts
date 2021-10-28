@@ -50,6 +50,7 @@ export interface PlaceType {
   category: string[];
   thumbnail: ImageType | null;
   images: ImageType[];
+  saved: number;
 }
 
 interface ImageType {
