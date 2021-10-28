@@ -18,7 +18,7 @@ import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
-import { RegionId, searchAtom } from "../../Shared/atom";
+import { Places, RegionId, searchAtom } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
@@ -33,6 +33,9 @@ const SearchPlace = ({
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
   const regionId = useRecoilValue(RegionId);
+  const places = useRecoilValue(Places);
+
+  console.log(places);
 
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
@@ -85,13 +88,24 @@ const SearchPlace = ({
       {result.state === "hasValue" && searchVal.value.length > 0 ? (
         result.contents.length > 0 ? (
           <div className="result">
-            {result.contents.map((place) => (
-              <div key={place.placeId} onClick={() => handleOpenMap(place)}>
-                {place.address && (
-                  <SearchList place={place} searchVal={searchVal.value} />
-                )}
-              </div>
-            ))}
+            {result.contents.map((place) => {
+              const isExist = places.find((p) => p.placeId === place.placeId)
+                ? true
+                : false;
+              return (
+                <div
+                  key={place.placeId}
+                  onClick={() => !isExist && handleOpenMap(place)}
+                >
+                  {place.address && (
+                    <SearchList
+                      {...{ isExist, place }}
+                      searchVal={searchVal.value}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <NoSearchView value={searchVal.value} />
@@ -101,7 +115,10 @@ const SearchPlace = ({
       )}
 
       {isMapOpened && place && (
-        <PlaceMapView {...{ place, setIsSearchOpened }} />
+        <PlaceMapView
+          close={() => setIsMapOpened(false)}
+          {...{ place, setIsSearchOpened }}
+        />
       )}
     </Wrapper>
   );

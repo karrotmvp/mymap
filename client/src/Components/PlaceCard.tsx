@@ -40,7 +40,6 @@ const Wrapper = styled.div`
     background: lightgray;
     border-top-left-radius: 0.8rem;
     border-top-right-radius: 0.8rem;
-    object-fit: cover;
   }
   .place-info {
     padding: 1.5rem;

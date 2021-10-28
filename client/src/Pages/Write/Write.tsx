@@ -43,7 +43,7 @@ const Write = () => {
   const [isInputOver, setIsInputOver] = useState(false);
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     // textarea autosize
-    e.target.style.height = "5.2rem";
+    e.target.style.height = "5rem";
     e.target.style.height = e.target.scrollHeight + "px";
 
     inputVal.setValue(e.target.value);
@@ -161,8 +161,14 @@ const Write = () => {
       {/* 추가된 장소들 */}
       {places?.map((place) => (
         <div key={place.placeId} className="added-list">
-          <div className="photo" />
-          {place.name}
+          {place.images.length > 0 && (
+            <img
+              className="photo"
+              alt="thumbnail"
+              src={place.images[0].thumbnail}
+            />
+          )}
+          <div className="">{place.name}</div>
           <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
         </div>
       ))}
@@ -240,6 +246,7 @@ const Write = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeader};
+  padding-top: 7.3rem;
   padding-left: 2rem;
   padding-right: 2rem;
   padding-bottom: 13.2rem;
@@ -344,7 +351,7 @@ const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
 
 const Input = styled.textarea<{ $error?: boolean }>`
   ${input};
-  height: 5rem;
+  height: 5.4rem;
   border: 0.1rem solid
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};
