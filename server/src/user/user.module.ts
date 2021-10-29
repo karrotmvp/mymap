@@ -8,9 +8,10 @@ import { LoggerModule } from 'src/logger/logger.module';
 import { RegionModule } from 'src/region/region.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
+import { PreopenUserRepository } from './preopen-user.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepository]),
+  imports: [TypeOrmModule.forFeature([UserRepository, PreopenUserRepository]),
   forwardRef(() => AuthModule), LoggerModule, RegionModule, HttpModule.register({
     timeout: 5000,
   }), ConfigModule],

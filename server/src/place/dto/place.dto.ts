@@ -4,6 +4,7 @@ export class PlaceDTO {
     constructor(place: any) {
         this.placeId = place.id;
         this.name = place.name;
+        this.phone = place.phone;
         this.address = place.address;
         this.coordinates = place.coordinates;
         this.businessHoursFrom = place.businessHoursFrom;
@@ -16,6 +17,7 @@ export class PlaceDTO {
 
     placeId: string;
     name: string;
+    phone: string;
     address: string;
     businessHoursFrom: string;
     businessHoursTo: string;

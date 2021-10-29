@@ -1,0 +1,11 @@
+{
+	"title": "test",
+	"text": "test",
+	"actions": [{
+		"type": "PRIMARY_BUTTON",
+		"payload": {
+			"text": "abc",
+			"linkUrl": "https://daangn-mymap.com"
+		}
+	}]
+}

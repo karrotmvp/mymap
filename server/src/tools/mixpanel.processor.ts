@@ -9,13 +9,12 @@ import { RegionService } from "src/region/region.service";
 import { UserDTO } from "src/user/dto/user.dto";
 import { UserService } from "src/user/user.service";
 
-@Processor('mixpanel')
-export class MixpanelProcessor {
+@Processor('user')
+export class MixpanelUserProcessor {
     constructor(
         private readonly configService: ConfigService,
         private readonly userService: UserService,
         private readonly postService: PostService,
-        private readonly regionService: RegionService
     ) {
         this._mixpanel = init(configService.get('mixpanel.token'));
     }
@@ -40,6 +39,19 @@ export class MixpanelProcessor {
             regionName: regionName
         })
     }
+
+}
+
+@Processor('post')
+export class MixpanelPostProcessor {
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly postService: PostService,
+        private readonly regionService: RegionService
+    ) {
+        this._mixpanel = init(configService.get('mixpanel.token'));
+    }
+    private _mixpanel: Mixpanel
 
     @Process('post_created')
     async handlePostCreated(job: Job<Event>) {
@@ -142,6 +154,18 @@ export class MixpanelProcessor {
             userId: userId
         })
     }
+}
+
+@Processor('place')
+export class MixpanelPlaceProcessor {
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly regionService: RegionService
+    ) {
+        this._mixpanel = init(configService.get('mixpanel.token'));
+    }
+    private _mixpanel: Mixpanel
+
     @Process('place_listed')
     async handlePlaceListed(job: Job<Event>) {
         const regionId: string = job.data.data;

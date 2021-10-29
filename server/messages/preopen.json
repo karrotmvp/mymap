@@ -1,0 +1,11 @@
+{
+	"title": "preopen",
+	"text": "test",
+	"actions": [{
+		"type": "PRIMARY_BUTTON",
+		"payload": {
+			"text": "abc",
+			"linkUrl": "def"
+		}
+	}]
+}

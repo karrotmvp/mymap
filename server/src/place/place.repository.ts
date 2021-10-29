@@ -68,11 +68,13 @@ export class PlaceRepository {
         )
     }
 
-    async findWithRegion(paginator: string, page:number) {
+    async findWithRegion(regionId: number, seed: string, perPage: number, page:number) {
         const uri = this.configService.get('daangn.poiuri') + 'by-region-id';
         return this.httpService.get(uri, {
             params: {
-                paginator: paginator,
+                regionId: regionId,
+                seed: seed,
+                perPage: perPage,
                 page: page,
             }
         }).pipe(
@@ -84,21 +86,17 @@ export class PlaceRepository {
                 return places;
             }), 
             catchError(e => {
+                console.log(e)
                 throw new BadRequestException();
             })
         )
     }
 
-    async getPaginator(regionId: number, perPage: number) {
-        const uri = this.configService.get('daangn.poiuri') + 'by-region-id/paginator'
-        return this.httpService.get(uri, {
-            params: {
-                regionId: regionId,
-                perPage: perPage
-            }
-        }).pipe(
+    async getSeed() {
+        const uri = this.configService.get('daangn.poiuri') + 'seed'
+        return this.httpService.get(uri).pipe(
             map((res) => {
-                return res.data.paginator;
+                return res.data.seed;
             }), 
             catchError(e => {
                 throw new BadRequestException();
