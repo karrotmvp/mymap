@@ -149,25 +149,22 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   .search-back {
     position: absolute;
-    left: 1.3rem;
-    fill: ${theme.color.gray4};
+    top: 0.4rem;
+    fill: ${theme.color.gray7};
   }
   .search-close {
     position: absolute;
-    right: 2rem;
+    right: 0.7rem;
+    top: 0.4rem;
   }
   .place-input {
     position: fixed;
     width: 100%;
-    height: 8rem;
     top: 0;
     left: 0;
     right: 0;
     background-color: ${theme.color.white};
     z-index: 100;
-    padding: 0 2rem;
-    padding-top: 2rem;
-    box-sizing: border-box;
   }
   .result {
     font-size: 1.4rem;
@@ -213,9 +210,17 @@ const Wrapper = styled.div`
 
 const SearchInput = styled.input`
   ${input};
-  height: 4.8rem;
+  border: none;
+  border-radius: 0;
+  border-bottom: 0.1rem solid ${theme.color.gray2};
+  &:focus {
+    border: none;
+    border-bottom: 0.1rem solid ${theme.color.gray2};
+  }
   width: 100%;
-  padding-left: 4.4rem;
+  padding-left: 4.7rem;
+  box-sizing: border-box;
+  height: 5.6rem;
 `;
 
 export default SearchPlace;

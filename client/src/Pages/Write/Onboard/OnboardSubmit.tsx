@@ -3,8 +3,19 @@ import styled from "styled-components";
 import { Button, flexCenter, gap, theme } from "../../../styles/theme";
 import SubmitFinish from "./SubmitFinish";
 
-const OnboardSubmit = ({ close }: { close: () => void }) => {
+const OnboardSubmit = ({
+  close,
+  handleSubmit,
+}: {
+  close: () => void;
+  handleSubmit: () => Promise<void>;
+}) => {
   const [isFinishOpened, setIsFinishOpened] = useState(false);
+  const onClickFinish = async () => {
+    await handleSubmit();
+    setIsFinishOpened(true);
+  };
+
   return (
     <Wrapper>
       <div className="background" />
@@ -15,7 +26,7 @@ const OnboardSubmit = ({ close }: { close: () => void }) => {
 ‘당장모아'에서 확인할 수 있어요!`}</div>
           <div className="buttons">
             <Button onClick={close}>취소</Button>
-            <Button onClick={() => setIsFinishOpened(true)}>완료</Button>
+            <Button onClick={onClickFinish}>완료</Button>
           </div>
         </div>
       </div>

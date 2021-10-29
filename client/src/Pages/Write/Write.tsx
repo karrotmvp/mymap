@@ -182,6 +182,9 @@ const Write = () => {
           placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
           value={inputVal.value}
         />
+        {isInputOver && (
+          <div className="error">공백을 포함해 최대 30글자로 작성해주세요</div>
+        )}
       </div>
 
       <div className="subtitle">지도에 저장할 장소를 추가해주세요.</div>
@@ -225,6 +228,9 @@ const Write = () => {
           placeholder="어떤 테마 장소들을 모았는지 설명해 주세요."
           value={textareaVal.value}
         />
+        {isTextareaOver && (
+          <div className="error">공백을 포함해 최대 100글자로 작성해주세요</div>
+        )}
       </div>
 
       <div className="subtitle">동네 이웃에게 테마지도를 공개할까요?</div>
@@ -259,7 +265,10 @@ const Write = () => {
 
       {isOnboardOutAlertOpened && <OnboardAlert />}
       {isOnboardSubmitAlertOpened && (
-        <OnboardSubmit close={() => setIsOnboardSubmitAlertOpened(false)} />
+        <OnboardSubmit
+          close={() => setIsOnboardSubmitAlertOpened(false)}
+          {...{ handleSubmit }}
+        />
       )}
 
       <div className="footer">
@@ -283,6 +292,13 @@ const Wrapper = styled.div`
   padding-right: 2rem;
   padding-bottom: 13.2rem;
   overflow-y: scroll;
+  .error {
+    color: ${theme.color.red};
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 160%;
+    padding-top: 0.2rem;
+  }
   .name-input {
     margin-top: 1.2rem;
   }
