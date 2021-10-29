@@ -18,6 +18,8 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
+import OnboardAlert from "./Onboard/OnboardAlert";
+import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
@@ -30,6 +32,10 @@ const Write = () => {
   const { isExact: isWrite } =
     useRouteMatch({
       path: "/write",
+    }) ?? {};
+  const { isExact: isOnboarding } =
+    useRouteMatch({
+      path: "/onboarding/write",
     }) ?? {};
 
   // SearchPlace
@@ -84,7 +90,7 @@ const Write = () => {
   const postId = useParams<{ postId: string }>().postId ?? null;
 
   useEffect(() => {
-    if (!isWrite) {
+    if (!isWrite && !isOnboarding) {
       const fetchPost = async () => {
         const data = await getPost(String(postId));
         inputVal.setValue(data.title);
@@ -111,15 +117,20 @@ const Write = () => {
     }
   }, [inputVal.value, isInputOver, isTextareaOver, isShare, places]);
 
-  // alert
-  const [isAlertOpened, setIsAlertOpened] = useState(false);
+  const [isEditAlertOpened, setIsEditAlertOpened] = useState(false);
+  const [isOnboardOutAlertOpened, setIsOnboardOutAlertOpened] = useState(false);
+  const [isOnboardSubmitAlertOpened, setIsOnboardSubmitAlertOpened] =
+    useState(false);
+
   // close
   const handleClose = () => {
     if (isWrite) window.history.back();
-    else setIsAlertOpened(true);
+    else if (isOnboarding) setIsOnboardOutAlertOpened(true);
+    else setIsEditAlertOpened(true);
   };
 
   const regionId = useRecoilValue(RegionId);
+
   const handleSubmit = async () => {
     const body = {
       title: inputVal.value,
@@ -134,7 +145,7 @@ const Write = () => {
         };
       }),
     };
-    if (isWrite) {
+    if (isWrite || isOnboarding) {
       const data = await postPost(body);
       if (data.postId) {
         history.push(`/detail/${data.postId}/finish`);
@@ -145,9 +156,16 @@ const Write = () => {
     }
   };
 
+  const onClickSubmit = () => {
+    if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
+    else handleSubmit();
+  };
+
   return (
     <Wrapper>
-      <Header title={isWrite ? "테마지도 만들기" : "테마지도 수정"}>
+      <Header
+        title={isWrite || isOnboarding ? "테마지도 만들기" : "테마지도 수정"}
+      >
         <Close onClick={handleClose} className="left-icon" />
       </Header>
       <Title>{`모아보고 싶은
@@ -228,10 +246,9 @@ const Write = () => {
         </SelectBtn>
       </div>
 
-      {/* 삭제 alert */}
-      {isAlertOpened && (
+      {isEditAlertOpened && (
         <Alert
-          close={() => setIsAlertOpened(false)}
+          close={() => setIsEditAlertOpened(false)}
           title="수정한 내용이 저장되지 않았어요!"
           sub="수정한 내용을 저장할까요?"
         >
@@ -240,14 +257,19 @@ const Write = () => {
         </Alert>
       )}
 
+      {isOnboardOutAlertOpened && <OnboardAlert />}
+      {isOnboardSubmitAlertOpened && (
+        <OnboardSubmit close={() => setIsOnboardSubmitAlertOpened(false)} />
+      )}
+
       <div className="footer">
         <SubmitBtn
           onClick={() => {
-            isSubmittable && handleSubmit();
+            isSubmittable && onClickSubmit();
           }}
           $disabled={!isSubmittable}
         >
-          {isWrite ? "작성 완료" : "수정 완료"}
+          {isWrite || isOnboarding ? "작성 완료" : "수정 완료"}
         </SubmitBtn>
       </div>
     </Wrapper>

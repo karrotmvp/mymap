@@ -12,6 +12,7 @@ import { getLogin } from "./api/user";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
+import Onboarding from "./Pages/Onboarding";
 
 dayjs.locale("ko");
 
@@ -73,6 +74,12 @@ function App() {
             <Mypage />
           </Route>
           <Route exact path="/write">
+            <Write />
+          </Route>
+          <Route exact path="/onboarding">
+            <Onboarding />
+          </Route>
+          <Route exact path="/onboarding/write">
             <Write />
           </Route>
           <Route path="/edit/:id">

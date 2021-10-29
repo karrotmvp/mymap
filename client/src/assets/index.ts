@@ -25,3 +25,16 @@ export { ReactComponent as NoSearch } from "./no_search.svg";
 export { ReactComponent as LogoInactive } from "./logo_inactive.svg";
 export { ReactComponent as Call } from "./call.svg";
 export { ReactComponent as Time } from "./time.svg";
+
+// onboarding
+export { ReactComponent as OneOne } from "./onboarding/1-1.svg";
+export { ReactComponent as OneTwo } from "./onboarding/1-2.svg";
+export { ReactComponent as TwoOne } from "./onboarding/2-1.svg";
+export { ReactComponent as TwoTwo } from "./onboarding/2-2.svg";
+export { ReactComponent as ThreeOne } from "./onboarding/3-1.svg";
+export { ReactComponent as ThreeTwo } from "./onboarding/3-2.svg";
+export { ReactComponent as Finish } from "./onboarding/finish.svg";
+export { ReactComponent as Notification } from "./onboarding/notification.svg";
+export { ReactComponent as Carousel1 } from "./onboarding/carousel1.svg";
+export { ReactComponent as Carousel2 } from "./onboarding/carousel2.svg";
+export { ReactComponent as Carousel3 } from "./onboarding/carousel3.svg";
