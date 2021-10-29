@@ -192,7 +192,11 @@ const Write = () => {
 
       {/* 추가된 장소들 */}
       {places?.map((place) => (
-        <div key={place.placeId} className="added-list">
+        <AddedList
+          key={place.placeId}
+          className="added-list"
+          isImgExist={place.images.length > 0}
+        >
           {place.images.length > 0 && (
             <img
               className="photo"
@@ -202,7 +206,7 @@ const Write = () => {
           )}
           <div className="">{place.name}</div>
           <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
-        </div>
+        </AddedList>
       ))}
 
       <div className="add-button" onClick={() => setIsSearchOpened(true)}>
@@ -285,6 +289,32 @@ const Write = () => {
   );
 };
 
+const AddedList = styled.div<{ isImgExist: boolean }>`
+  display: flex;
+  align-items: center;
+  border-radius: 1rem;
+  height: 5.2rem;
+  border: 1px solid ${theme.color.gray3};
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 2.2rem;
+  margin-top: 1.2rem;
+  padding: 0 0.6rem;
+  padding-left: ${({ isImgExist }) => !isImgExist && "1.6rem"};
+
+  .photo {
+    min-width: 4rem;
+    height: 4rem;
+    border-radius: 0.8rem;
+    background-color: lightgray;
+    margin-right: 1rem;
+  }
+  .del-btn {
+    margin-left: auto;
+    fill: ${theme.color.gray4};
+  }
+`;
+
 const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding-top: 7.3rem;
@@ -301,29 +331,6 @@ const Wrapper = styled.div`
   }
   .name-input {
     margin-top: 1.2rem;
-  }
-  .added-list {
-    display: flex;
-    align-items: center;
-    border-radius: 1rem;
-    height: 5.2rem;
-    border: 1px solid ${theme.color.gray3};
-    font-size: 1.5rem;
-    font-weight: 500;
-    line-height: 2.2rem;
-    margin-top: 1.2rem;
-    padding: 0 0.6rem;
-    .photo {
-      min-width: 4rem;
-      height: 4rem;
-      border-radius: 0.8rem;
-      background-color: lightgray;
-      margin-right: 1rem;
-    }
-    .del-btn {
-      margin-left: auto;
-      fill: ${theme.color.gray4};
-    }
   }
   .add-button {
     ${flexCenter};
