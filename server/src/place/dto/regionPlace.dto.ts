@@ -1,11 +1,11 @@
 import { PlaceDTO } from "./place.dto";
 
 export class RegionPlaceDTO {
-    constructor(places: PlaceDTO[], paginator: string) {
+    constructor(places: PlaceDTO[], seed: string) {
         this.places = places;
-        this.paginator = paginator;
+        this.seed = seed;
     }
 
     places: PlaceDTO[];
-    paginator: string;
+    seed: string;
 }

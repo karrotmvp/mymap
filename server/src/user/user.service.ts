@@ -4,7 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
+import { PreopenUser } from './entities/preopen-user.entity';
 import { User } from './entities/user.entity';
+import { PreopenUserRepository } from './preopen-user.repository';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -12,7 +14,8 @@ export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly httpService: HttpService,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private readonly preopenUserReposiotry: PreopenUserRepository
         ) {}
 
     async login(user: CreateUserDTO):Promise<CreateUserDTO> {
@@ -42,5 +45,19 @@ export class UserService {
                 })
             )
         return await lastValueFrom(userDetail$);
+    }
+
+    async createPreopenUser(userId: number, regionId: string) {
+        const user: User = await this.readUser(userId);
+        const preopenUser: PreopenUser = new PreopenUser(user, regionId);
+        this.preopenUserReposiotry.save(preopenUser);
+    }
+
+    async readPreopenUsers() {
+        return await this.preopenUserReposiotry.find({ relations: ['user'] });
+    }
+    async setPreopenUserSended(preopenUserId: number) {
+        const preopenUser: PreopenUser = await this.preopenUserReposiotry.findOne(preopenUserId);
+        return await this.preopenUserReposiotry.softRemove(preopenUser);
     }
 }

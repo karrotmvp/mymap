@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from 'eventemitter2';
 import { Event } from 'src/event/event';
+import { MyMapEvent } from 'src/event/event-pub-sub';
 import { CoordinatesDTO } from 'src/place/dto/coordinates.dto';
 import { PlaceDTO } from 'src/place/dto/place.dto';
 import { PlaceService } from 'src/place/place.service';
@@ -117,7 +118,7 @@ export class PostService {
         const user = await this.userService.readUser(userId);
         const saved = new SavedPost(post, user);
         await this.savedPostRepository.save(saved);
-        this.eventEmitter.emit('post.saved', new Event(postId, userId));
+        this.eventEmitter.emit(MyMapEvent.POST_SAVED, new Event(postId, userId));
     }
 
     async readSavedPost(userId: number, page: number, perPage: number): Promise<FeedDTO> {

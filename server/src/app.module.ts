@@ -17,6 +17,7 @@ import { EventModule } from './event/event.module';
 import { ToolsModule } from './tools/tools.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { SentryInterceptor } from './sentry.interceptor';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -58,7 +59,8 @@ import { SentryInterceptor } from './sentry.interceptor';
     })
   }),
   EventModule,
-  ToolsModule
+  ToolsModule,
+  NotificationModule
   ],
   controllers: [AppController],
   providers: [AppService, {

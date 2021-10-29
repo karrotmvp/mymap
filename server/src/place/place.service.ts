@@ -46,19 +46,21 @@ export class PlaceService {
         return places;
     }
 
-    async getPaginator(regionId: string, perPage: number): Promise<string> {
-        const regionNum = await this.convertId(regionId);
-        const paginator$ = await this.placeRepository.getPaginator(regionNum, perPage);
+    async getSeed(): Promise<string> {
+        const paginator$ = await this.placeRepository.getSeed();
         return await lastValueFrom(paginator$);
     }
 
-    async readRegionPlaces(paginator: string, page: number): Promise<RegionPlaceDTO> {
-        const places$ = await this.placeRepository.findWithRegion(paginator, page);
+    async readRegionPlaces(regionId: string, seed: string, perPage: number, page: number): Promise<RegionPlaceDTO> {
+        const regionNum = await this.convertId(regionId);
+        const places$ = await this.placeRepository.findWithRegion(regionNum, seed, perPage, page);
         const places: PlaceDTO[] = await lastValueFrom(places$);
-        places.map(async(place) => {
+        const promise = places.map(async(place) => {
             place.saved = await this.postService.countSavedPlaces(place.placeId);
+            return place
         })
-        const regionPlace = new RegionPlaceDTO(places, paginator);
+        const newPlaces:PlaceDTO[] = await Promise.all(promise);
+        const regionPlace = new RegionPlaceDTO(newPlaces, seed);
         return regionPlace;
     }
 }

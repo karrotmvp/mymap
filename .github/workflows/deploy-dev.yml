@@ -6,7 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [main]
+    branches: [dev]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -43,10 +43,10 @@ jobs:
         run: yarn build
         working-directory: ${{ env.client-directory }}
         env:
-          REACT_APP_NAVER_MAPS_CLIENT_ID: ${{ secrets.REACT_APP_NAVER_MAPS_CLIENT_ID }}
-          REACT_APP_APP_ID: ${{ secrets.REACT_APP_APP_ID }}
-          REACT_APP_ENDPOINT: ${{ secrets.REACT_APP_ENDPOINT }}
-          REACT_APP_LOGIN: ${{ secrets.REACT_APP_LOGIN }}
+          REACT_APP_NAVER_MAPS_CLIENT_ID: ${{ secrets.DEV_REACT_APP_NAVER_MAPS_CLIENT_ID }}
+          REACT_APP_APP_ID: ${{ secrets.DEV_REACT_APP_APP_ID }}
+          REACT_APP_ENDPOINT: ${{ secrets.DEV_REACT_APP_ENDPOINT }}
+          REACT_APP_LOGIN: ${{ secrets.DEV_REACT_APP_LOGIN }}
 
       - name: Install server dependencies
         run: npm install
@@ -78,7 +78,7 @@ jobs:
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           find ./ -name "*docker-compose.*.yml" -exec perl -pi -e "s/tagname/$IMAGE_TAG/g" {} \;
       - name: S3 Upload
-        run: aws deploy push --application-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy.zip --source .
+        run: aws deploy push --application-name mymap-dev-deploy --description "mymap dev server deploy" --s3-location s3://mymapdeploy/deploy_dev.zip --source .
 
       - name: code deploy
-        run: aws deploy create-deployment --application-name mymap-deploy --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name server --s3-location bucket=mymapdeploy,bundleType=zip,key=deploy.zip
+        run: aws deploy create-deployment --application-name mymap-dev-deploy --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name mymap-dev --s3-location bucket=mymapdeploy,bundleType=zip,key=deploy_dev.zip
