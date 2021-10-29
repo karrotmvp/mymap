@@ -38,7 +38,9 @@ function App() {
 
   mini.startPreset({
     preset:
-      "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
+      process.env.NODE_ENV === "production"
+        ? (process.env.REACT_APP_LOGIN as string)
+        : "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
     params: {
       appId: process.env.REACT_APP_APP_ID as string,
     },
