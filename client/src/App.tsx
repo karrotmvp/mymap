@@ -6,21 +6,23 @@ import Detail from "./Pages/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useSetRecoilState } from "recoil";
-import { MyInfo, RegionId } from "./Shared/atom";
+import { ViewerInfo, RegionId } from "./Shared/atom";
 import { useCallback } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
+import Onboarding from "./Pages/Onboarding";
 
 dayjs.locale("ko");
 
+const mini = new Mini();
+
 function App() {
-  const mini = new Mini();
   const setRegionId = useSetRecoilState(RegionId);
 
   // 로그인 및 내 정보 저장
-  const setMyInfo = useSetRecoilState(MyInfo);
+  const setMyInfo = useSetRecoilState(ViewerInfo);
   const getMyInfo = useCallback(
     async (code: string, regionId: string) => {
       const data = await getLogin(code, regionId);
@@ -36,7 +38,9 @@ function App() {
 
   mini.startPreset({
     preset:
-      "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
+      process.env.NODE_ENV === "production"
+        ? (process.env.REACT_APP_LOGIN as string)
+        : "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
     params: {
       appId: process.env.REACT_APP_APP_ID as string,
     },
@@ -62,7 +66,7 @@ function App() {
           <Route exact path="/401">
             <ClosePage />
           </Route>
-          <Route path="/detail/:id">
+          <Route path="/detail/:postId">
             <Detail />
           </Route>
           <Route exact path="/around">
@@ -72,6 +76,12 @@ function App() {
             <Mypage />
           </Route>
           <Route exact path="/write">
+            <Write />
+          </Route>
+          <Route exact path="/onboarding">
+            <Onboarding />
+          </Route>
+          <Route exact path="/onboarding/write">
             <Write />
           </Route>
           <Route path="/edit/:id">

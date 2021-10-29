@@ -1,4 +1,6 @@
+import Mini from "@karrotmarket/mini";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useHistory, useParams, useRouteMatch } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getPost, postPost, putPost } from "../../api/post";
@@ -17,15 +19,32 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
+import OnboardAlert from "./Onboard/OnboardAlert";
+import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
 
+const mini = new Mini();
+
 const Write = () => {
-  const isWrite = window.location.pathname.split("/")[1] === "write";
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const history = useHistory();
+
+  const { isExact: isWrite } =
+    useRouteMatch({
+      path: "/write",
+    }) ?? {};
+  const { isExact: isOnboarding } =
+    useRouteMatch({
+      path: "/onboarding/write",
+    }) ?? {};
 
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
-  const [isShare, setIsShare] = useState<null | boolean>(null);
+  const [isShare, setIsShare] = useState<boolean>(true);
   const [places, setPlaces] = useRecoilState(Places);
 
   // remove place
@@ -43,7 +62,7 @@ const Write = () => {
   const [isInputOver, setIsInputOver] = useState(false);
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     // textarea autosize
-    e.target.style.height = "5.2rem";
+    e.target.style.height = "5rem";
     e.target.style.height = e.target.scrollHeight + "px";
 
     inputVal.setValue(e.target.value);
@@ -71,13 +90,12 @@ const Write = () => {
   };
 
   // 수정
-  const postId = isWrite
-    ? null
-    : parseInt(window.location.pathname.split("/")[2]);
+  const postId = useParams<{ postId: string }>().postId ?? null;
+
   useEffect(() => {
-    if (!isWrite) {
+    if (!isWrite && !isOnboarding) {
       const fetchPost = async () => {
-        const data = await getPost(postId!);
+        const data = await getPost(String(postId));
         inputVal.setValue(data.title);
         textareaVal.setValue(data.contents);
         setIsShare(data.share);
@@ -102,15 +120,20 @@ const Write = () => {
     }
   }, [inputVal.value, isInputOver, isTextareaOver, isShare, places]);
 
-  // alert
-  const [isAlertOpened, setIsAlertOpened] = useState(false);
+  const [isEditAlertOpened, setIsEditAlertOpened] = useState(false);
+  const [isOnboardOutAlertOpened, setIsOnboardOutAlertOpened] = useState(false);
+  const [isOnboardSubmitAlertOpened, setIsOnboardSubmitAlertOpened] =
+    useState(false);
+
   // close
   const handleClose = () => {
     if (isWrite) window.history.back();
-    else setIsAlertOpened(true);
+    else if (isOnboarding) setIsOnboardOutAlertOpened(true);
+    else setIsEditAlertOpened(true);
   };
 
   const regionId = useRecoilValue(RegionId);
+
   const handleSubmit = async () => {
     const body = {
       title: inputVal.value,
@@ -125,25 +148,35 @@ const Write = () => {
         };
       }),
     };
-    if (isWrite) {
+    if (isWrite || isOnboarding) {
       const data = await postPost(body);
-      if (data.postId) window.location.href = `/detail/${data.postId}/finish`;
+      mini.close();
+      if (data.postId && isWrite) {
+        history.push(`/detail/${data.postId}/finish`);
+      }
     } else {
       await putPost(postId!, body);
-      window.location.href = `/detail/${postId}/finish`;
+      history.push(`/detail/${postId}/finish`);
     }
+  };
+
+  const onClickSubmit = () => {
+    if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
+    else handleSubmit();
   };
 
   return (
     <Wrapper>
-      <Header title={isWrite ? "리스트 만들기" : "리스트 수정"}>
+      <Header
+        title={isWrite || isOnboarding ? "테마지도 만들기" : "테마지도 수정"}
+      >
         <Close onClick={handleClose} className="left-icon" />
       </Header>
       <Title>{`모아보고 싶은
 나만의 장소를 저장해요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
-        리스트 제목을 입력해 주세요.
+        테마지도의 제목을 입력해 주세요.
       </div>
       <div className="name-input">
         <Input
@@ -153,23 +186,35 @@ const Write = () => {
           placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
           value={inputVal.value}
         />
+        {isInputOver && (
+          <div className="error">공백을 포함해 최대 30글자로 작성해주세요</div>
+        )}
       </div>
 
-      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요.</div>
+      <div className="subtitle">지도에 저장할 장소를 추가해주세요.</div>
       <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
 
       {/* 추가된 장소들 */}
       {places?.map((place) => (
-        <div key={place.placeId} className="added-list">
-          <div className="photo" />
-          {place.name}
+        <AddedList
+          key={place.placeId}
+          className="added-list"
+          isImgExist={place.images.length > 0}
+        >
+          {place.images.length > 0 && (
+            <img
+              className="photo"
+              alt="thumbnail"
+              src={place.images[0].thumbnail}
+            />
+          )}
+          <div className="">{place.name}</div>
           <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
-        </div>
+        </AddedList>
       ))}
 
       <div className="add-button" onClick={() => setIsSearchOpened(true)}>
-        <Plus className="add-icon" />
-        장소 추가
+        <Plus className="add-icon" />이 장소 추가하기
       </div>
 
       {isSearchOpened && (
@@ -180,7 +225,7 @@ const Write = () => {
       )}
 
       <div className="subtitle">
-        리스트에 대한 설명을 작성해주세요.(선택 사항)
+        테마지도에 대한 설명을 작성해주세요.<span>(선택)</span>
       </div>
       <div className="name-input">
         <Textarea
@@ -188,14 +233,17 @@ const Write = () => {
           rows={2}
           maxLength={100}
           onInput={handleTextarea}
-          placeholder="어떤 리스트인지 추가로 설명해 주세요."
+          placeholder="어떤 테마 장소들을 모았는지 설명해 주세요."
           value={textareaVal.value}
         />
+        {isTextareaOver && (
+          <div className="error">공백을 포함해 최대 100글자로 작성해주세요</div>
+        )}
       </div>
 
-      <div className="subtitle">동네 주민들에게 컬렉션을 공개할까요?</div>
+      <div className="subtitle">동네 이웃에게 테마지도를 공개할까요?</div>
       <div className="explanation">
-        리스트를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
+        지도를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
       </div>
       <div className="select-buttons">
         <SelectBtn
@@ -212,10 +260,9 @@ const Write = () => {
         </SelectBtn>
       </div>
 
-      {/* 삭제 alert */}
-      {isAlertOpened && (
+      {isEditAlertOpened && (
         <Alert
-          close={() => setIsAlertOpened(false)}
+          close={() => setIsEditAlertOpened(false)}
           title="수정한 내용이 저장되지 않았어요!"
           sub="수정한 내용을 저장할까요?"
         >
@@ -224,51 +271,70 @@ const Write = () => {
         </Alert>
       )}
 
+      {isOnboardOutAlertOpened && <OnboardAlert />}
+      {isOnboardSubmitAlertOpened && (
+        <OnboardSubmit
+          close={() => setIsOnboardSubmitAlertOpened(false)}
+          {...{ handleSubmit }}
+        />
+      )}
+
       <div className="footer">
         <SubmitBtn
           onClick={() => {
-            isSubmittable && handleSubmit();
+            isSubmittable && onClickSubmit();
           }}
           $disabled={!isSubmittable}
         >
-          {isWrite ? "작성 완료" : "수정 완료"}
+          {isWrite || isOnboarding ? "작성 완료" : "수정 완료"}
         </SubmitBtn>
       </div>
     </Wrapper>
   );
 };
 
+const AddedList = styled.div<{ isImgExist: boolean }>`
+  display: flex;
+  align-items: center;
+  border-radius: 1rem;
+  height: 5.2rem;
+  border: 1px solid ${theme.color.gray3};
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 2.2rem;
+  margin-top: 1.2rem;
+  padding: 0 0.6rem;
+  padding-left: ${({ isImgExist }) => !isImgExist && "1.6rem"};
+
+  .photo {
+    min-width: 4rem;
+    height: 4rem;
+    border-radius: 0.8rem;
+    background-color: lightgray;
+    margin-right: 1rem;
+  }
+  .del-btn {
+    margin-left: auto;
+    fill: ${theme.color.gray4};
+  }
+`;
+
 const Wrapper = styled.div`
   ${WrapperWithHeader};
+  padding-top: 7.3rem;
   padding-left: 2rem;
   padding-right: 2rem;
   padding-bottom: 13.2rem;
   overflow-y: scroll;
+  .error {
+    color: ${theme.color.red};
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 160%;
+    padding-top: 0.2rem;
+  }
   .name-input {
     margin-top: 1.2rem;
-  }
-  .added-list {
-    display: flex;
-    align-items: center;
-    border-radius: 1rem;
-    height: 5.2rem;
-    border: 1px solid ${theme.color.gray3};
-    font-size: 1.5rem;
-    font-weight: 500;
-    line-height: 2.2rem;
-    margin-top: 1.2rem;
-    padding: 0 0.6rem;
-    .photo {
-      min-width: 4rem;
-      height: 4rem;
-      border-radius: 0.8rem;
-      background-color: lightgray;
-      margin-right: 1rem;
-    }
-    .del-btn {
-      margin-left: auto;
-      fill: ${theme.color.gray4};
-    }
   }
   .add-button {
     ${flexCenter};
@@ -294,6 +360,11 @@ const Wrapper = styled.div`
     font-weight: bold;
     margin-top: 3.4rem;
     color: ${theme.color.gray7};
+    span {
+      margin-left: 0.3rem;
+      color: ${theme.color.gray5};
+      font-weight: normal;
+    }
   }
   .explanation {
     margin-top: 0.4rem;
@@ -339,12 +410,14 @@ const SelectBtn = styled.div<{ $isSelected: boolean }>`
 const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
   margin: 1rem 2rem;
   background-color: ${({ $disabled }) =>
-    $disabled ? theme.color.gray4 : theme.color.orange};
+    $disabled ? theme.color.gray2 : theme.color.orange};
+  color: ${({ $disabled }) =>
+    $disabled ? theme.color.gray7 : theme.color.white};
 `;
 
 const Input = styled.textarea<{ $error?: boolean }>`
   ${input};
-  height: 5rem;
+  height: 5.4rem;
   border: 0.1rem solid
     ${({ $error }) => (!$error ? theme.color.gray2 : theme.color.red)};
   background-color: ${theme.color.gray1};

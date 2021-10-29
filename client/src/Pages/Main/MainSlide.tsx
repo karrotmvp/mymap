@@ -28,8 +28,8 @@ const MainSlide = ({
         )}
 
         <div className="content">
-          <Title style={{ color: theme.color.orange }}>{`우리 동네 주민들의
-추천 장소를 구경해보세요`}</Title>
+          <Title className="main-title">{`우리 동네 주민들의
+추천 리스트를 구경해보세요`}</Title>
 
           <div className="collections">
             {posts.map((post) => (
@@ -51,25 +51,28 @@ const Wrapper = styled.div<{ $isMapShown: boolean }>`
   left: 0;
   right: 0;
   margin-top: ${({ $isMapShown }) =>
-    $isMapShown ? "calc(100vh - 12.5rem)" : "calc(100vh - 30.8rem)"};
+    $isMapShown ? "calc(100vh - 12.5rem)" : "calc(100vh - 34.9rem)"};
   .collections {
+    margin-top: 0.4rem;
     padding-bottom: 8.6rem;
-    & > div {
-      margin-top: 2.9rem;
+    & > div:not(:first-child) {
+      border-top: 0.6rem solid ${theme.color.gray1_5};
     }
   }
 `;
 
 const Card = styled.div`
   background-color: ${theme.color.white};
-  padding-top: 1.1rem;
-  padding-left: 2rem;
+  padding-top: 4.1rem;
   box-sizing: border-box;
   border-top-left-radius: 2rem;
   border-top-right-radius: 2rem;
   box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.15);
   .content {
     top: 0;
+    .main-title {
+      padding-left: 2rem;
+    }
   }
   .rectangle {
     ${flexCenter};

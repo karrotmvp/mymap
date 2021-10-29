@@ -1,14 +1,11 @@
 export interface PostType {
-  postId: number;
-  user: {
-    userId: number;
-    userName: string;
-    profileImageUrl: string;
-  };
+  postId: string;
+  user: UserType;
   title: string;
   contents: string;
   regionId: string;
   regionName: string;
+  savedNum: number;
   share: boolean;
   pins: PinType[];
   createdAt: string;
@@ -23,14 +20,15 @@ export interface FeedType {
   };
 }
 
-export interface MyInfoType {
-  userId: number;
+export interface UserType {
+  userId: string;
   userName: string;
   regionName: string;
+  profileImageUrl?: string;
 }
 
 export interface PinType {
-  pinId: number;
+  pinId: string;
   review: string;
   place: PlaceType;
 }
@@ -46,9 +44,10 @@ export interface PlaceType {
   businessHoursFrom: string | null;
   businessHoursTo: string | null;
   businessHoursExtra: string | null;
-  category: string[] | null;
+  category: string[];
   thumbnail: ImageType | null;
   images: ImageType[];
+  saved: number;
 }
 
 interface ImageType {

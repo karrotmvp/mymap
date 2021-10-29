@@ -18,7 +18,7 @@ import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
-import { RegionId, searchAtom } from "../../Shared/atom";
+import { Places, RegionId, searchAtom } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
@@ -33,6 +33,9 @@ const SearchPlace = ({
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
   const regionId = useRecoilValue(RegionId);
+  const places = useRecoilValue(Places);
+
+  console.log(places);
 
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
@@ -85,13 +88,24 @@ const SearchPlace = ({
       {result.state === "hasValue" && searchVal.value.length > 0 ? (
         result.contents.length > 0 ? (
           <div className="result">
-            {result.contents.map((place) => (
-              <div key={place.placeId} onClick={() => handleOpenMap(place)}>
-                {place.address && (
-                  <SearchList place={place} searchVal={searchVal.value} />
-                )}
-              </div>
-            ))}
+            {result.contents.map((place) => {
+              const isExist = places.find((p) => p.placeId === place.placeId)
+                ? true
+                : false;
+              return (
+                <div
+                  key={place.placeId}
+                  onClick={() => !isExist && handleOpenMap(place)}
+                >
+                  {place.address && (
+                    <SearchList
+                      {...{ isExist, place }}
+                      searchVal={searchVal.value}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <NoSearchView value={searchVal.value} />
@@ -101,7 +115,10 @@ const SearchPlace = ({
       )}
 
       {isMapOpened && place && (
-        <PlaceMapView {...{ place, setIsSearchOpened }} />
+        <PlaceMapView
+          close={() => setIsMapOpened(false)}
+          {...{ place, setIsSearchOpened }}
+        />
       )}
     </Wrapper>
   );
@@ -132,25 +149,22 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   .search-back {
     position: absolute;
-    left: 1.3rem;
-    fill: ${theme.color.gray4};
+    top: 0.4rem;
+    fill: ${theme.color.gray7};
   }
   .search-close {
     position: absolute;
-    right: 2rem;
+    right: 0.7rem;
+    top: 0.4rem;
   }
   .place-input {
     position: fixed;
     width: 100%;
-    height: 8rem;
     top: 0;
     left: 0;
     right: 0;
     background-color: ${theme.color.white};
     z-index: 100;
-    padding: 0 2rem;
-    padding-top: 2rem;
-    box-sizing: border-box;
   }
   .result {
     font-size: 1.4rem;
@@ -196,9 +210,17 @@ const Wrapper = styled.div`
 
 const SearchInput = styled.input`
   ${input};
-  height: 4.8rem;
+  border: none;
+  border-radius: 0;
+  border-bottom: 0.1rem solid ${theme.color.gray2};
+  &:focus {
+    border: none;
+    border-bottom: 0.1rem solid ${theme.color.gray2};
+  }
   width: 100%;
-  padding-left: 4.4rem;
+  padding-left: 4.7rem;
+  box-sizing: border-box;
+  height: 5.6rem;
 `;
 
 export default SearchPlace;

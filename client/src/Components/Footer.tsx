@@ -17,7 +17,7 @@ const Footer = () => {
     <Wrapper>
       <FooterLink to="/" $isClicked={pathname === "/"}>
         {pathname === "/" ? <HomeActive /> : <Home />}
-        <div>동네 리스트</div>
+        <div>테마지도</div>
       </FooterLink>
       <FooterLink to="/around" $isClicked={pathname === "/around"}>
         {pathname === "/around" ? <AroundActive /> : <Around />}

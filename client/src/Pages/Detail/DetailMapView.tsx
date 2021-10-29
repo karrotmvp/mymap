@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MapView, { Pin } from "../../Components/MapView";
-import PinSlider from "../../Components/PinSlider/PinSlider";
+import PinSlider from "../../Components/PinSlider";
 import { PinType } from "../../Shared/type";
 
 const DetailMapView = ({ pins }: { pins: PinType[] }) => {
@@ -30,7 +30,10 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
   return (
     <Wrapper>
       <MapView height="100vh" pins={_pins} {...{ center, setCenter }} />
-      <PinSlider {...{ pins, current, setCurrent, setCenter }} />
+      <PinSlider
+        placeBoxType="type3"
+        {...{ pins, current, setCurrent, setCenter }}
+      />
     </Wrapper>
   );
 };
