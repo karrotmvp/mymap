@@ -22,8 +22,8 @@ const Main = () => {
   });
 
   // infinite scroll
-  const [startIdx, setStartIdx] = useState(0);
-  const [endIdx, setEndIdx] = useState(0);
+  const [startIdx, setStartIdx] = useState("");
+  const [endIdx, setEndIdx] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const handleNext = () => {
     setStartIdx(feedPosts[0]?.postId);
@@ -35,6 +35,9 @@ const Main = () => {
         start: startIdx,
         end: endIdx,
       });
+      if (!data) {
+        return;
+      }
       if (data.posts.length < 1) {
         setHasMore(false);
         return;

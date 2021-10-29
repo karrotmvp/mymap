@@ -16,7 +16,7 @@ export const RegionId = atom({
 export const MyInfo = atom<MyInfoType>({
   key: "my_info",
   default: {
-    userId: 1,
+    userId: "1",
     userName: "team1test",
     regionName: "역삼 1동",
   },
@@ -24,7 +24,7 @@ export const MyInfo = atom<MyInfoType>({
 
 export const postDetailAtom = atomFamily({
   key: "postDetailAtom",
-  default: selectorFamily<PostType, number>({
+  default: selectorFamily<PostType, string>({
     key: "postDetailAtom/selector",
     get: (id) => () => getPost(id),
   }),

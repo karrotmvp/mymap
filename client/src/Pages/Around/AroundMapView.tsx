@@ -15,7 +15,7 @@ const AroundMapView = ({
   close: MouseEventHandler;
 }) => {
   const pin: Pin = {
-    id: parseInt(place.placeId),
+    id: place.placeId,
     latitude: place.coordinates.latitude,
     longitude: place.coordinates.longitude,
   };

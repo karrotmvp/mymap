@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
+import { useHistory, useParams, useRouteMatch } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getPost, postPost, putPost } from "../../api/post";
@@ -20,7 +21,16 @@ import {
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
-  const isWrite = window.location.pathname.split("/")[1] === "write";
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const history = useHistory();
+
+  const { isExact: isWrite } =
+    useRouteMatch({
+      path: "/write",
+    }) ?? {};
 
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
@@ -71,13 +81,12 @@ const Write = () => {
   };
 
   // 수정
-  const postId = isWrite
-    ? null
-    : parseInt(window.location.pathname.split("/")[2]);
+  const postId = useParams<{ postId: string }>().postId ?? null;
+
   useEffect(() => {
     if (!isWrite) {
       const fetchPost = async () => {
-        const data = await getPost(postId!);
+        const data = await getPost(String(postId));
         inputVal.setValue(data.title);
         textareaVal.setValue(data.contents);
         setIsShare(data.share);
@@ -127,10 +136,12 @@ const Write = () => {
     };
     if (isWrite) {
       const data = await postPost(body);
-      if (data.postId) window.location.href = `/detail/${data.postId}/finish`;
+      if (data.postId) {
+        history.push(`/detail/${data.postId}/finish`);
+      }
     } else {
       await putPost(postId!, body);
-      window.location.href = `/detail/${postId}/finish`;
+      history.push(`/detail/${postId}/finish`);
     }
   };
 

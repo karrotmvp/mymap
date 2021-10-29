@@ -1,7 +1,7 @@
 export interface PostType {
-  postId: number;
+  postId: string;
   user: {
-    userId: number;
+    userId: string;
     userName: string;
     profileImageUrl: string;
   };
@@ -25,13 +25,13 @@ export interface FeedType {
 }
 
 export interface MyInfoType {
-  userId: number;
+  userId: string;
   userName: string;
   regionName: string;
 }
 
 export interface PinType {
-  pinId: number;
+  pinId: string;
   review: string;
   place: PlaceType;
 }

@@ -1,3 +1,4 @@
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import { More } from "../../assets";
 import { PostType } from "../../Shared/type";
@@ -14,8 +15,10 @@ const PlaceBox = ({ name, category }: { name: string; category: string[] }) => {
 };
 
 const Collection = (post: PostType) => {
+  const history = useHistory();
+
   return (
-    <Wrapper onClick={() => (window.location.href = `/detail/${post.postId}`)}>
+    <Wrapper onClick={() => history.push(`/detail/${post.postId}`)}>
       <div className="title-wrapper">
         <div>
           <div className="title">{post.title}</div>

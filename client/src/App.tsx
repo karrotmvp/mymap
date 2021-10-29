@@ -15,8 +15,9 @@ import ClosePage from "./Pages/ClosePage";
 
 dayjs.locale("ko");
 
+const mini = new Mini();
+
 function App() {
-  const mini = new Mini();
   const setRegionId = useSetRecoilState(RegionId);
 
   // 로그인 및 내 정보 저장
@@ -62,7 +63,7 @@ function App() {
           <Route exact path="/401">
             <ClosePage />
           </Route>
-          <Route path="/detail/:id">
+          <Route path="/detail/:postId">
             <Detail />
           </Route>
           <Route exact path="/around">
