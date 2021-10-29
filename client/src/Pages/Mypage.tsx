@@ -155,10 +155,10 @@ const Mypage = () => {
 const Wrapper = styled.div`
   ${WrapperWithHeaderFooter};
   .collections {
-    margin-left: 2rem;
-    padding-bottom: 2rem;
+    margin-top: 0.4rem;
+    padding-bottom: 8.6rem;
     & > div > div > div:not(:first-child) {
-      margin-top: 2.9rem;
+      border-top: 0.6rem solid ${theme.color.gray1_5};
     }
   }
 `;

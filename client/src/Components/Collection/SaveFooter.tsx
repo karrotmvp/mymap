@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save2, SaveActive2 } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
+import { MyInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 
@@ -12,6 +14,7 @@ interface SaveFooterInterface {
 const SaveFooter = ({ post }: SaveFooterInterface) => {
   const [isSaved, setIsSaved] = useState<boolean>(post.saved);
   const [savedNum, setSavedNum] = useState<number>(post.savedNum);
+  const myInfo = useRecoilValue(MyInfo);
 
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);
@@ -36,13 +39,15 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
       <div className="saved-info">
         {savedNum > 0 && `${savedNum}명 주민이 이 리스트를 저장했어요`}
       </div>
-      <div onClick={(e) => e.stopPropagation()}>
-        {isSaved ? (
-          <SaveActive2 onClick={debouncedIsSaved} />
-        ) : (
-          <Save2 onClick={debouncedIsSaved} />
-        )}
-      </div>
+      {post.user.userId !== myInfo.userId && (
+        <div onClick={(e) => e.stopPropagation()}>
+          {isSaved ? (
+            <SaveActive2 onClick={debouncedIsSaved} />
+          ) : (
+            <Save2 onClick={debouncedIsSaved} />
+          )}
+        </div>
+      )}
     </Wrapper>
   );
 };
@@ -51,6 +56,7 @@ const Wrapper = styled.div`
   ${flexCenter};
   justify-content: space-between;
   margin-top: 1.2rem;
+  height: 3.2rem;
   padding-right: 2rem;
   .saved-info {
     color: ${theme.color.gray6};
