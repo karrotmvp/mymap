@@ -19,6 +19,16 @@ export const GlobalStyle = createGlobalStyle`
         scrollbar-width: none;
         color: ${theme.color.black};
         background-color: #FFFFFF;
+        .pin-image {
+            position: absolute;
+            width: 4.2rem;
+            transform: translate(-50%,-100%);
+        }
+        .pin-image-inactive {
+            position: absolute;
+            width: 2.5rem;
+            transform: translate(-50%,-100%);
+        }
     }
     textarea {
         font-family: 'Spoqa Han Sans Neo', 'sans-serif';
