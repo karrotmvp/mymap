@@ -6,7 +6,7 @@ import Detail from "./Pages/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useSetRecoilState } from "recoil";
-import { MyInfo, RegionId } from "./Shared/atom";
+import { ViewerInfo, RegionId } from "./Shared/atom";
 import { useCallback } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
@@ -21,7 +21,7 @@ function App() {
   const setRegionId = useSetRecoilState(RegionId);
 
   // 로그인 및 내 정보 저장
-  const setMyInfo = useSetRecoilState(MyInfo);
+  const setMyInfo = useSetRecoilState(ViewerInfo);
   const getMyInfo = useCallback(
     async (code: string, regionId: string) => {
       const data = await getLogin(code, regionId);

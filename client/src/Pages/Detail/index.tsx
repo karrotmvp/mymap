@@ -17,7 +17,7 @@ import {
 import DetailMapView from "./DetailMapView";
 import dayjs from "dayjs";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
-import { MyInfo, postDetailAtom } from "../../Shared/atom";
+import { ViewerInfo, postDetailAtom } from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
@@ -32,7 +32,7 @@ const Detail = () => {
       path: "/detail/:postId/finish",
     }) ?? {};
 
-  const myInfo = useRecoilValue(MyInfo); // viewer
+  const viewerInfo = useRecoilValue(ViewerInfo);
   const post = useRecoilValueLoadable(postDetailAtom(postId));
 
   const [state, dispatch] = useReducer(reducer, {
@@ -61,7 +61,7 @@ const Detail = () => {
   const onDeleteConfirmClick = async () => {
     await deletePost(postId);
 
-    // 왜?
+    // 다시 이전 페이지로: 2번 건너뛰어야 함
     history.go(-2);
   };
 
@@ -108,7 +108,7 @@ const Detail = () => {
               ))
               .exhaustive()}
           </div>
-          {post.contents.user.userId === myInfo.userId ? (
+          {post.contents.user.userId === viewerInfo.userId ? (
             <More2
               className="right-icon"
               onClick={() => setIsEditModalOpened(true)}

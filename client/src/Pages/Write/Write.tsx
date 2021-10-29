@@ -35,7 +35,7 @@ const Write = () => {
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
-  const [isShare, setIsShare] = useState<null | boolean>(null);
+  const [isShare, setIsShare] = useState<boolean>(true);
   const [places, setPlaces] = useRecoilState(Places);
 
   // remove place
@@ -147,14 +147,14 @@ const Write = () => {
 
   return (
     <Wrapper>
-      <Header title={isWrite ? "리스트 만들기" : "리스트 수정"}>
+      <Header title={isWrite ? "테마지도 만들기" : "테마지도 수정"}>
         <Close onClick={handleClose} className="left-icon" />
       </Header>
       <Title>{`모아보고 싶은
 나만의 장소를 저장해요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
-        리스트 제목을 입력해 주세요.
+        테마지도의 제목을 입력해 주세요.
       </div>
       <div className="name-input">
         <Input
@@ -166,7 +166,7 @@ const Write = () => {
         />
       </div>
 
-      <div className="subtitle">컬렉션에 저장할 장소를 추가해주세요.</div>
+      <div className="subtitle">지도에 저장할 장소를 추가해주세요.</div>
       <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
 
       {/* 추가된 장소들 */}
@@ -185,8 +185,7 @@ const Write = () => {
       ))}
 
       <div className="add-button" onClick={() => setIsSearchOpened(true)}>
-        <Plus className="add-icon" />
-        장소 추가
+        <Plus className="add-icon" />이 장소 추가하기
       </div>
 
       {isSearchOpened && (
@@ -197,7 +196,7 @@ const Write = () => {
       )}
 
       <div className="subtitle">
-        리스트에 대한 설명을 작성해주세요.(선택 사항)
+        테마지도에 대한 설명을 작성해주세요.<span>(선택)</span>
       </div>
       <div className="name-input">
         <Textarea
@@ -205,14 +204,14 @@ const Write = () => {
           rows={2}
           maxLength={100}
           onInput={handleTextarea}
-          placeholder="어떤 리스트인지 추가로 설명해 주세요."
+          placeholder="어떤 테마 장소들을 모았는지 설명해 주세요."
           value={textareaVal.value}
         />
       </div>
 
-      <div className="subtitle">동네 주민들에게 컬렉션을 공개할까요?</div>
+      <div className="subtitle">동네 이웃에게 테마지도를 공개할까요?</div>
       <div className="explanation">
-        리스트를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
+        지도를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
       </div>
       <div className="select-buttons">
         <SelectBtn
@@ -312,6 +311,11 @@ const Wrapper = styled.div`
     font-weight: bold;
     margin-top: 3.4rem;
     color: ${theme.color.gray7};
+    span {
+      margin-left: 0.3rem;
+      color: ${theme.color.gray5};
+      font-weight: normal;
+    }
   }
   .explanation {
     margin-top: 0.4rem;
@@ -357,7 +361,9 @@ const SelectBtn = styled.div<{ $isSelected: boolean }>`
 const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
   margin: 1rem 2rem;
   background-color: ${({ $disabled }) =>
-    $disabled ? theme.color.gray4 : theme.color.orange};
+    $disabled ? theme.color.gray2 : theme.color.orange};
+  color: ${({ $disabled }) =>
+    $disabled ? theme.color.gray7 : theme.color.white};
 `;
 
 const Input = styled.textarea<{ $error?: boolean }>`

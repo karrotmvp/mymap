@@ -1,10 +1,6 @@
 export interface PostType {
   postId: string;
-  user: {
-    userId: string;
-    userName: string;
-    profileImageUrl: string;
-  };
+  user: UserType;
   title: string;
   contents: string;
   regionId: string;
@@ -24,10 +20,11 @@ export interface FeedType {
   };
 }
 
-export interface MyInfoType {
+export interface UserType {
   userId: string;
   userName: string;
   regionName: string;
+  profileImageUrl?: string;
 }
 
 export interface PinType {

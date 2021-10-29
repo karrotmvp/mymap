@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save2, SaveActive2 } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
-import { MyInfo } from "../../Shared/atom";
+import { ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 
@@ -14,7 +14,7 @@ interface SaveFooterInterface {
 const SaveFooter = ({ post }: SaveFooterInterface) => {
   const [isSaved, setIsSaved] = useState<boolean>(post.saved);
   const [savedNum, setSavedNum] = useState<number>(post.savedNum);
-  const myInfo = useRecoilValue(MyInfo);
+  const myInfo = useRecoilValue(ViewerInfo);
 
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);

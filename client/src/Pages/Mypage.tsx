@@ -10,7 +10,7 @@ import { PostType } from "../Shared/type";
 import { gap, theme, WrapperWithHeaderFooter } from "../styles/theme";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRecoilValue } from "recoil";
-import { MyInfo } from "../Shared/atom";
+import { ViewerInfo } from "../Shared/atom";
 
 const Tab = ({
   selectedTab,
@@ -99,7 +99,7 @@ const Mypage = () => {
     return window.removeEventListener("scroll", () => {});
   }, []);
 
-  const myInfo = useRecoilValue(MyInfo);
+  const myInfo = useRecoilValue(ViewerInfo);
 
   return (
     <Wrapper>
