@@ -32,6 +32,7 @@ const OnboardSubmit = ({
       </div>
 
       {isFinishOpened && <SubmitFinish />}
+      <SubmitFinish />
     </Wrapper>
   );
 };

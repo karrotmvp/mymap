@@ -39,14 +39,20 @@ jobs:
         run: yarn
         working-directory: ${{ env.client-directory }}
 
-      - name: Run client build
-        run: yarn build
-        working-directory: ${{ env.client-directory }}
+      - name: Generate Environment Variables File for Production
+        run: |
+          echo "REACT_APP_NAVER_MAPS_CLIENT_ID=$REACT_APP_NAVER_MAPS_CLIENT_ID" >> .env.production
+          echo "REACT_APP_APP_ID=$REACT_APP_APP_ID" >> .env.production
+          echo "REACT_APP_ENDPOINT=$REACT_APP_ENDPOINT" >> .env.production
         env:
           REACT_APP_NAVER_MAPS_CLIENT_ID: ${{ secrets.REACT_APP_NAVER_MAPS_CLIENT_ID }}
           REACT_APP_APP_ID: ${{ secrets.REACT_APP_APP_ID }}
           REACT_APP_ENDPOINT: ${{ secrets.REACT_APP_ENDPOINT }}
-          REACT_APP_LOGIN: ${{ secrets.REACT_APP_LOGIN }}
+        working-directory: ${{ env.client-directory }}
+
+      - name: Run client build
+        run: yarn build
+        working-directory: ${{ env.client-directory }}
 
       - name: Install server dependencies
         run: npm install

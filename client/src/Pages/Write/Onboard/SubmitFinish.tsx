@@ -2,9 +2,9 @@ import Mini from "@karrotmarket/mini";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { postPreopen } from "../../../api/user";
-import { Close, Finish } from "../../../assets";
+import { Close, Finish1, Finish2 } from "../../../assets";
 import { RegionId } from "../../../Shared/atom";
-import { Button, theme } from "../../../styles/theme";
+import { Button, flexCenter, theme } from "../../../styles/theme";
 
 const mini = new Mini();
 
@@ -19,7 +19,10 @@ const SubmitFinish = () => {
   return (
     <Wrapper>
       <Close className="close-btn" />
-      <Finish />
+      <Finish1 />
+      <div className="center">
+        <Finish2 />
+      </div>
       <Button className="button" onClick={onClickButton}>
         오픈 시 알림을 받을래요
       </Button>
@@ -29,15 +32,22 @@ const SubmitFinish = () => {
 
 const Wrapper = styled.div`
   position: fixed;
-  display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  padding: 5rem 0;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
   z-index: 300;
   background-color: ${theme.color.gray1_5};
+  .center {
+    ${flexCenter};
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+  }
   .close-btn {
     position: fixed;
     top: 0;
@@ -45,9 +55,10 @@ const Wrapper = styled.div`
     fill: ${theme.color.gray7};
   }
   .button {
-    margin-left: 2rem;
-    margin-right: 2rem;
-    margin-bottom: 1.4rem;
+    position: fixed;
+    left: 2rem;
+    right: 2rem;
+    bottom: 1.4rem;
   }
 `;
 
