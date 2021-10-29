@@ -1,3 +1,4 @@
+import Mini from "@karrotmarket/mini";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -21,6 +22,8 @@ import {
 import OnboardAlert from "./Onboard/OnboardAlert";
 import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
+
+const mini = new Mini();
 
 const Write = () => {
   useEffect(() => {
@@ -147,7 +150,8 @@ const Write = () => {
     };
     if (isWrite || isOnboarding) {
       const data = await postPost(body);
-      if (data.postId) {
+      mini.close();
+      if (data.postId && isWrite) {
         history.push(`/detail/${data.postId}/finish`);
       }
     } else {

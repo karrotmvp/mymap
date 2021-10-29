@@ -1,11 +1,17 @@
 import Mini from "@karrotmarket/mini";
 import styled from "styled-components";
+import { postNotification } from "../../../api/notification";
 import { Notification } from "../../../assets";
 import { Button, flexCenter, gap, theme } from "../../../styles/theme";
 
 const mini = new Mini();
 
 const OnboardAlert = () => {
+  const onClickButton = async () => {
+    await postNotification();
+    mini.close();
+  };
+
   return (
     <Wrapper>
       <div className="background" />
@@ -18,7 +24,7 @@ const OnboardAlert = () => {
 링크를 알림으로 보내드릴게요.`}</div>
           <div className="buttons">
             <Button onClick={() => mini.close()}>나가기</Button>
-            <Button>알림받기</Button>
+            <Button onClick={onClickButton}>알림받기</Button>
           </div>
         </div>
       </div>

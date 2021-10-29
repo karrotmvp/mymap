@@ -1,13 +1,28 @@
+import Mini from "@karrotmarket/mini";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { postPreopen } from "../../../api/user";
 import { Close, Finish } from "../../../assets";
+import { RegionId } from "../../../Shared/atom";
 import { Button, theme } from "../../../styles/theme";
 
+const mini = new Mini();
+
 const SubmitFinish = () => {
+  const regionId = useRecoilValue(RegionId);
+  console.log(regionId);
+  const onClickButton = async () => {
+    await postPreopen(regionId);
+    mini.close();
+  };
+
   return (
     <Wrapper>
       <Close className="close-btn" />
       <Finish />
-      <Button className="button">오픈 시 알림을 받을래요</Button>
+      <Button className="button" onClick={onClickButton}>
+        오픈 시 알림을 받을래요
+      </Button>
     </Wrapper>
   );
 };
