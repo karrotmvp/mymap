@@ -15,7 +15,7 @@ export class NotificationService {
 
     async createNotification(userId: number, type: string) {
         const user: User = await this.userService.readUser(userId);
-        await this.notificationQueue.add('notification_created', new Notification(user.getUniqueId(), type));
+        this.notificationQueue.add('notification_created', new Notification(user.getUniqueId(), type));
     }
 
     async createPreopenNotification() {
