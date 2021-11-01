@@ -18,7 +18,7 @@ import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
-import { Places, RegionId, searchAtom } from "../../Shared/atom";
+import { RegionId, searchAtom } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
@@ -26,14 +26,17 @@ import PlaceMapView from "./PlaceMapView";
 const SearchPlace = ({
   setIsSearchOpened,
   close,
+  places,
+  setPlaces,
 }: {
   setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
   close: MouseEventHandler;
+  places: PlaceType[];
+  setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
   const regionId = useRecoilValue(RegionId);
-  const places = useRecoilValue(Places);
 
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
@@ -121,7 +124,7 @@ const SearchPlace = ({
       {isMapOpened && place && (
         <PlaceMapView
           close={() => setIsMapOpened(false)}
-          {...{ place, setIsSearchOpened }}
+          {...{ place, setIsSearchOpened, places, setPlaces }}
         />
       )}
     </Wrapper>
