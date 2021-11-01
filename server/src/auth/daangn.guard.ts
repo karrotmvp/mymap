@@ -11,7 +11,7 @@ export class DaangnAuthGuard extends AuthGuard('daangn') {
     handleRequest(err: any, user: any, info: any, context: any, status: any) {
         if (err || !user) {
             Sentry.captureException(err || new UnauthorizedException()); 
-            this.logger.info(err || new UnauthorizedException())
+            // this.logger.info(err || new UnauthorizedException())
             throw err || new UnauthorizedException();
         }
         return user;
