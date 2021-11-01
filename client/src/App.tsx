@@ -56,10 +56,7 @@ function App() {
       if (code) getMyInfo(code, regionId as string);
       else {
         mini.startPreset({
-          preset:
-            process.env.NODE_ENV === "production"
-              ? (process.env.REACT_APP_LOGIN as string)
-              : "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
+          preset: process.env.REACT_APP_LOGIN as string,
           params: {
             appId: process.env.REACT_APP_APP_ID as string,
           },
