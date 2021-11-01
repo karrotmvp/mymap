@@ -1,11 +1,11 @@
 {
-	"title": "test",
-	"text": "test",
+	"title": "반가워요, '당장모아'예요!",
+	"text": "저장하고 싶은 장소가 떠올랐나요? 나만의 테마를 만들어 이웃들과 공유해보세요!",
 	"actions": [{
 		"type": "PRIMARY_BUTTON",
 		"payload": {
-			"text": "abc",
-			"linkUrl": "https://daangn-mymap.com"
+			"text": "장소 저장하러 가기",
+			"linkUrl": "https://live.daangn-mymap.com/onboarding"
 		}
 	}]
 }
