@@ -18,6 +18,7 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 import OnboardAlert from "./Onboard/OnboardAlert";
 import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
@@ -125,8 +126,10 @@ const Write = () => {
   // close
   const handleClose = () => {
     if (isWrite) window.history.back();
-    else if (isOnboarding) setIsOnboardOutAlertOpened(true);
-    else setIsEditAlertOpened(true);
+    else if (isOnboarding) {
+      Mixpanel.track("온보딩 후 글작성에서 나가려함");
+      setIsOnboardOutAlertOpened(true);
+    } else setIsEditAlertOpened(true);
   };
 
   const regionId = useRecoilValue(RegionId);
