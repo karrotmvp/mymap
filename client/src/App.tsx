@@ -16,8 +16,9 @@ import ClosePage from "./Pages/ClosePage";
 import Onboarding from "./Pages/Onboarding";
 import Analytics from "react-router-ga";
 import { Mixpanel } from "./utils/mixpanel";
-import { Main as MainSVG } from "./assets";
+import { MainLogo } from "./assets";
 import styled from "styled-components";
+import { flexCenter } from "./styles/theme";
 
 dayjs.locale("ko");
 
@@ -90,7 +91,9 @@ function App() {
             </Switch>
           ) : (
             <Wrapper>
-              <MainSVG className="main-svg" />
+              <div className="center">
+                <MainLogo />
+              </div>
             </Wrapper>
           )}
         </div>
@@ -103,8 +106,13 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  .main-svg {
+  .center {
+    ${flexCenter};
+    top: 0;
+    left: 0;
+    position: fixed;
     width: 100%;
+    height: 100vh;
   }
 `;
 
