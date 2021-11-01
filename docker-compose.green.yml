@@ -2,7 +2,7 @@ version: "2"
 
 services:
   mymap:
-    image: 757005647945.dkr.ecr.ap-northeast-2.amazonaws.com/mymapdeploy:tagname
+    image: 757005647945.dkr.ecr.ap-northeast-2.amazonaws.com/mymapdeploy:3b491526ea9d4881d9df8a6edf7411e06ea28215
     volumes:
       - /home/ubuntu/deploy/mymap:/deploy/mymap
     ports:
