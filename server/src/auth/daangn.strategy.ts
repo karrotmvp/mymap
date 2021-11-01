@@ -16,7 +16,7 @@ export class DaangnStrategy extends PassportStrategy(Strategy) {
         private readonly userService: UserService
     ) {
         super({
-            env: configService.get('env'),
+            env: configService.get('service_env'),
             scope: configService.get('daangn.scope'),
             app_id: configService.get('daangn.app_id'),
             app_secret: configService.get('daangn.app_secret')
