@@ -1,5 +1,5 @@
 import Mini from "@karrotmarket/mini";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import {
@@ -16,22 +16,33 @@ import {
 } from "../assets";
 import Swiper from "../Components/PinSlider/Swiper";
 import { Button, theme } from "../styles/theme";
+import { Mixpanel } from "../utils/mixpanel";
 
 const mini = new Mini();
 
 const carousel = [
-  { top: <OneOne />, bottom: <OneTwo className="one-two" /> },
-  { top: <TwoOne />, bottom: <TwoTwo /> },
-  { top: <ThreeOne />, bottom: <ThreeTwo /> },
+  { key: "one", top: <OneOne />, bottom: <OneTwo className="one-two" /> },
+  { key: "two", top: <TwoOne />, bottom: <TwoTwo /> },
+  { key: "three", top: <ThreeOne />, bottom: <ThreeTwo /> },
 ];
 
 const Onboarding = () => {
   const [current, setCurrent] = useState(0);
   const history = useHistory();
 
+  useEffect(() => {
+    Mixpanel.track("온보딩 진입");
+  }, []);
+
   return (
     <Wrapper>
-      <Close onClick={() => mini.close()} className="close-btn" />
+      <Close
+        onClick={() => {
+          Mixpanel.track("온보딩에서 이탈");
+          mini.close();
+        }}
+        className="close-btn"
+      />
       {current === 0 ? (
         <Carousel1 />
       ) : current === 1 ? (
@@ -43,14 +54,19 @@ const Onboarding = () => {
         {...current}
         onChange={setCurrent}
         contents={carousel.map((c) => (
-          <div className="container">
+          <div key={c.key} className="container">
             {c.top}
             {c.bottom}
           </div>
         ))}
       />
       <div className="button">
-        <Button onClick={() => history.push("/onboarding/write")}>
+        <Button
+          onClick={() => {
+            Mixpanel.track("온보딩에서 글작성으로 진입");
+            history.push("/onboarding/write");
+          }}
+        >
           나만의 테마지도 만들기
         </Button>
       </div>
