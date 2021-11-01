@@ -1,10 +1,8 @@
 import { Dispatch, MouseEventHandler, SetStateAction } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { Back, Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
 import PlaceBox from "../../Components/PlaceBox";
-import { Places } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { Button, flexCenter, theme } from "../../styles/theme";
 
@@ -12,13 +10,15 @@ const PlaceMapView = ({
   place,
   setIsSearchOpened,
   close,
+  places,
+  setPlaces,
 }: {
   place: PlaceType;
   setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
   close: MouseEventHandler;
+  places: PlaceType[];
+  setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
 }) => {
-  const [places, setPlaces] = useRecoilState(Places);
-
   const handleAddPlace = (place: PlaceType) => {
     setPlaces([...places, place]);
     setIsSearchOpened(false);

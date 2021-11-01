@@ -1,13 +1,13 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getPost, postPost, putPost } from "../../api/post";
 import { Close, Plus } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
-import { Places, RegionId } from "../../Shared/atom";
+import { RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -43,7 +43,7 @@ const Write = () => {
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
   const [isShare, setIsShare] = useState<boolean>(true);
-  const [places, setPlaces] = useRecoilState(Places);
+  const [places, setPlaces] = useState<PlaceType[] | []>([]);
 
   // remove place
   const handleRemovePlace = (place: PlaceType) => {
@@ -214,7 +214,7 @@ const Write = () => {
 
       {isSearchOpened && (
         <SearchPlace
-          {...{ setIsSearchOpened }}
+          {...{ setIsSearchOpened, places, setPlaces }}
           close={() => setIsSearchOpened(false)}
         />
       )}

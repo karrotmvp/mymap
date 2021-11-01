@@ -16,6 +16,7 @@ import ClosePage from "./Pages/ClosePage";
 import Onboarding from "./Pages/Onboarding";
 import Analytics from "react-router-ga";
 import { Mixpanel } from "./utils/mixpanel";
+import { Main as MainSVG } from "./assets";
 
 dayjs.locale("ko");
 
@@ -73,8 +74,8 @@ function App() {
   return (
     <Router>
       <Analytics id="UA-211655411-1" debug>
-        {viewerInfo.userId && (
-          <div className="App">
+        <div className="App">
+          {viewerInfo.userId ? (
             <Switch>
               <Route exact path="/" component={Main} />
               <Route exact path="/401" component={ClosePage} />
@@ -86,8 +87,10 @@ function App() {
               <Route exact path="/onboarding/write" component={Write} />
               <Route path="/edit/:id" component={Write} />
             </Switch>
-          </div>
-        )}
+          ) : (
+            <MainSVG />
+          )}
+        </div>
       </Analytics>
     </Router>
   );

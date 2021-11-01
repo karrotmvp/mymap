@@ -4,11 +4,6 @@ import { getPost } from "../api/post";
 import { getLogin } from "../api/user";
 import { UserType, PlaceType, PostType } from "./type";
 
-export const Places = atom<PlaceType[]>({
-  key: "places",
-  default: [],
-});
-
 export const RegionId = atom({
   key: "region_id",
   default: "6530459d189b",
