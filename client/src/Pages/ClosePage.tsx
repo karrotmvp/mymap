@@ -7,7 +7,6 @@ const mini = new Mini();
 
 const ClosePage = () => {
   const handleClose = () => {
-    console.log("close the app");
     mini.close();
   };
 

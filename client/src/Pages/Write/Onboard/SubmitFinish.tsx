@@ -10,7 +10,7 @@ const mini = new Mini();
 
 const SubmitFinish = () => {
   const regionId = useRecoilValue(RegionId);
-  console.log(regionId);
+
   const onClickButton = async () => {
     await postPreopen(regionId);
     mini.close();

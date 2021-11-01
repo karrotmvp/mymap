@@ -35,8 +35,6 @@ const SearchPlace = ({
   const regionId = useRecoilValue(RegionId);
   const places = useRecoilValue(Places);
 
-  console.log(places);
-
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
     setIsMapOpened(true);

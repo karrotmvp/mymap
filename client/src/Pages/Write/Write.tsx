@@ -152,17 +152,13 @@ const Write = () => {
       const data = await postPost(body);
       mini.close();
       if (data.postId && isWrite) {
-        history.push(`/detail/${data.postId}/finish`);
+        if (isWrite) history.push(`/detail/${data.postId}/finish`);
+        else if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
       }
     } else {
       await putPost(postId!, body);
       history.push(`/detail/${postId}/finish`);
     }
-  };
-
-  const onClickSubmit = () => {
-    if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
-    else handleSubmit();
   };
 
   return (
@@ -282,7 +278,7 @@ const Write = () => {
       <div className="footer">
         <SubmitBtn
           onClick={() => {
-            isSubmittable && onClickSubmit();
+            isSubmittable && handleSubmit();
           }}
           $disabled={!isSubmittable}
         >

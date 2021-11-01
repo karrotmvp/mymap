@@ -1,6 +1,5 @@
 import mixpanel from "mixpanel-browser";
 mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN as string);
-console.log(process.env.REACT_APP_MIXPANEL_TOKEN);
 
 interface Dict {
   [key: string]: any;
