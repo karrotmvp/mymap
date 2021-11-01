@@ -13,6 +13,8 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
 import Onboarding from "./Pages/Onboarding";
+import Analytics from "react-router-ga";
+import { Mixpanel } from "./utils/mixpanel";
 
 dayjs.locale("ko");
 
@@ -32,6 +34,7 @@ function App() {
         regionName: data.regionName,
       });
       localStorage.setItem("token", data.token);
+      Mixpanel.identify(data.userId.toString());
     },
     [setMyInfo]
   );
@@ -58,37 +61,21 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <Switch>
-          <Route exact path="/">
-            <Main />
-          </Route>
-          <Route exact path="/401">
-            <ClosePage />
-          </Route>
-          <Route path="/detail/:postId">
-            <Detail />
-          </Route>
-          <Route exact path="/around">
-            <Around />
-          </Route>
-          <Route exact path="/mypage">
-            <Mypage />
-          </Route>
-          <Route exact path="/write">
-            <Write />
-          </Route>
-          <Route exact path="/onboarding">
-            <Onboarding />
-          </Route>
-          <Route exact path="/onboarding/write">
-            <Write />
-          </Route>
-          <Route path="/edit/:id">
-            <Write />
-          </Route>
-        </Switch>
-      </div>
+      <Analytics id="UA-211655411-1" debug>
+        <div className="App">
+          <Switch>
+            <Route exact path="/" component={Main} />
+            <Route exact path="/401" component={ClosePage} />
+            <Route path="/detail/:postId" component={Detail} />
+            <Route exact path="/around" component={Around} />
+            <Route exact path="/mypage" component={Mypage} />
+            <Route exact path="/write" component={Write} />
+            <Route exact path="/onboarding" component={Onboarding} />
+            <Route exact path="/onboarding/write" component={Write} />
+            <Route path="/edit/:id" component={Write} />
+          </Switch>
+        </div>
+      </Analytics>
     </Router>
   );
 }
