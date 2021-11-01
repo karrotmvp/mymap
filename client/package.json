@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@karrotmarket/mini": "^0.11.3",
+    "@karrotmarket/mini": "^0.12.0",
     "@sentry/react": "^6.13.3",
     "@sentry/tracing": "^6.13.3",
     "@testing-library/jest-dom": "^5.11.4",
