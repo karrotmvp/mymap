@@ -25,6 +25,7 @@ export { ReactComponent as NoSearch } from "./no_search.svg";
 export { ReactComponent as LogoInactive } from "./logo_inactive.svg";
 export { ReactComponent as Call } from "./call.svg";
 export { ReactComponent as Time } from "./time.svg";
+export { ReactComponent as Main } from "./main.svg";
 
 // onboarding
 export { ReactComponent as OneOne } from "./onboarding/1-1.svg";
