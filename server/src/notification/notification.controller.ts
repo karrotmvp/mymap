@@ -1,4 +1,4 @@
-import { Controller, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { NotificationService } from './notification.service';
@@ -10,6 +10,7 @@ export class NotificationController {
     @UseGuards(JwtAuthGuard)
     @Post('/')
     async createNotification(@Req() req: any, @Query('type') type: string) {
+        if (!type) throw new BadRequestException();
         await this.notificationService.createNotification(req.user.userId, type);
     }
 
