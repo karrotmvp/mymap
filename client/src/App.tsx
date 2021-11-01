@@ -17,6 +17,7 @@ import Onboarding from "./Pages/Onboarding";
 import Analytics from "react-router-ga";
 import { Mixpanel } from "./utils/mixpanel";
 import { Main as MainSVG } from "./assets";
+import styled from "styled-components";
 
 dayjs.locale("ko");
 
@@ -88,12 +89,23 @@ function App() {
               <Route path="/edit/:id" component={Write} />
             </Switch>
           ) : (
-            <MainSVG />
+            <Wrapper>
+              <MainSVG className="main-svg" />
+            </Wrapper>
           )}
         </div>
       </Analytics>
     </Router>
   );
 }
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  .main-svg {
+    width: 100%;
+  }
+`;
 
 export default App;
