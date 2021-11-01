@@ -42,7 +42,13 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!preload) {
+    if (process.env.NODE_ENV === "development") {
+      setViewerInfo({
+        userId: "1",
+        userName: "team1test",
+        regionName: "역삼 1동",
+      });
+    } else if (!preload) {
       setRegionId(regionId as string);
       if (code) getMyInfo(code, regionId as string);
       else {

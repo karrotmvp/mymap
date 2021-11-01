@@ -150,7 +150,7 @@ const Write = () => {
     };
     if (isWrite || isOnboarding) {
       const data = await postPost(body);
-      if (data.postId && isWrite) {
+      if (data.postId) {
         if (isWrite) history.push(`/detail/${data.postId}/finish`);
         else if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
       }
