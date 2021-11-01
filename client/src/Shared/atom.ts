@@ -16,9 +16,9 @@ export const RegionId = atom({
 export const ViewerInfo = atom<UserType>({
   key: "my_info",
   default: {
-    userId: "1",
-    userName: "team1test",
-    regionName: "역삼 1동",
+    userId: "",
+    userName: "",
+    regionName: "",
   },
 });
 
