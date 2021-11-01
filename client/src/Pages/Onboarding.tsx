@@ -1,4 +1,3 @@
-import Mini from "@karrotmarket/mini";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
@@ -17,8 +16,7 @@ import {
 import Swiper from "../Components/PinSlider/Swiper";
 import { Button, theme } from "../styles/theme";
 import { Mixpanel } from "../utils/mixpanel";
-
-const mini = new Mini();
+import OnboardAlert from "./Write/Onboard/OnboardAlert";
 
 const carousel = [
   { key: "one", top: <OneOne />, bottom: <OneTwo className="one-two" /> },
@@ -28,6 +26,7 @@ const carousel = [
 
 const Onboarding = () => {
   const [current, setCurrent] = useState(0);
+  const [isOnboardOutAlertOpened, setIsOnboardOutAlertOpened] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -38,8 +37,8 @@ const Onboarding = () => {
     <Wrapper>
       <Close
         onClick={() => {
-          Mixpanel.track("온보딩에서 이탈");
-          mini.close();
+          Mixpanel.track("온보딩에서 나가려함");
+          setIsOnboardOutAlertOpened(true);
         }}
         className="close-btn"
       />
@@ -70,6 +69,8 @@ const Onboarding = () => {
           나만의 테마지도 만들기
         </Button>
       </div>
+
+      {isOnboardOutAlertOpened && <OnboardAlert />}
     </Wrapper>
   );
 };

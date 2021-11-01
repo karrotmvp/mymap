@@ -109,7 +109,13 @@ const SearchPlace = ({
           <NoSearchView value={searchVal.value} />
         )
       ) : (
-        <div className="empty">추가할 장소를 검색해주세요.</div>
+        <div className="empty">
+          <div>저장할 장소의 이름을 검색해보세요</div>
+          <div>
+            {`내 근처에 있는 가게, 사진관, 공원 등
+저장하고 싶은 동네 장소들을 검색하여 찾아볼 수 있어요`}
+          </div>
+        </div>
       )}
 
       {isMapOpened && place && (
@@ -175,16 +181,25 @@ const Wrapper = styled.div`
   }
   .empty {
     ${flexCenter};
+    flex-direction: column;
     width: 100%;
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
-    font-weight: 500;
+    font-weight: 700;
     font-size: 1.7rem;
     line-height: 160%;
-    color: ${theme.color.gray3};
+    color: ${theme.color.gray7};
+    text-align: center;
+    & > div:nth-child(2) {
+      white-space: pre-line;
+      margin-top: 1.6rem;
+      color: ${theme.color.gray6};
+      font-size: 1.3rem;
+      line-height: 170%;
+    }
   }
 
   .no-search {
@@ -211,6 +226,9 @@ const SearchInput = styled.input`
   border: none;
   border-radius: 0;
   border-bottom: 0.1rem solid ${theme.color.gray2};
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 135%;
   &:focus {
     border: none;
     border-bottom: 0.1rem solid ${theme.color.gray2};
