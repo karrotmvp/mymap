@@ -6,21 +6,25 @@ import Detail from "./Pages/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useSetRecoilState } from "recoil";
-import { MyInfo, RegionId } from "./Shared/atom";
+import { ViewerInfo, RegionId } from "./Shared/atom";
 import { useCallback } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
+import Onboarding from "./Pages/Onboarding";
+import Analytics from "react-router-ga";
+import { Mixpanel } from "./utils/mixpanel";
 
 dayjs.locale("ko");
 
+const mini = new Mini();
+
 function App() {
-  const mini = new Mini();
   const setRegionId = useSetRecoilState(RegionId);
 
   // 로그인 및 내 정보 저장
-  const setMyInfo = useSetRecoilState(MyInfo);
+  const setMyInfo = useSetRecoilState(ViewerInfo);
   const getMyInfo = useCallback(
     async (code: string, regionId: string) => {
       const data = await getLogin(code, regionId);
@@ -30,13 +34,16 @@ function App() {
         regionName: data.regionName,
       });
       localStorage.setItem("token", data.token);
+      Mixpanel.identify(data.userId.toString());
     },
     [setMyInfo]
   );
 
   mini.startPreset({
     preset:
-      "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
+      process.env.NODE_ENV === "production"
+        ? (process.env.REACT_APP_LOGIN as string)
+        : "https://mini-assets.kr.karrotmarket.com/presets/common-login/alpha.html",
     params: {
       appId: process.env.REACT_APP_APP_ID as string,
     },
@@ -54,31 +61,21 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <Switch>
-          <Route exact path="/">
-            <Main />
-          </Route>
-          <Route exact path="/401">
-            <ClosePage />
-          </Route>
-          <Route path="/detail/:id">
-            <Detail />
-          </Route>
-          <Route exact path="/around">
-            <Around />
-          </Route>
-          <Route exact path="/mypage">
-            <Mypage />
-          </Route>
-          <Route exact path="/write">
-            <Write />
-          </Route>
-          <Route path="/edit/:id">
-            <Write />
-          </Route>
-        </Switch>
-      </div>
+      <Analytics id="UA-211655411-1" debug>
+        <div className="App">
+          <Switch>
+            <Route exact path="/" component={Main} />
+            <Route exact path="/401" component={ClosePage} />
+            <Route path="/detail/:postId" component={Detail} />
+            <Route exact path="/around" component={Around} />
+            <Route exact path="/mypage" component={Mypage} />
+            <Route exact path="/write" component={Write} />
+            <Route exact path="/onboarding" component={Onboarding} />
+            <Route exact path="/onboarding/write" component={Write} />
+            <Route path="/edit/:id" component={Write} />
+          </Switch>
+        </div>
+      </Analytics>
     </Router>
   );
 }

@@ -54,9 +54,12 @@ export const theme: DefaultTheme = {
     gray3_5: "#C4C4C4",
     gray3: "#CECECE",
     gray2: "#E5E5E5",
+    gray1_5: "#F7F7F7",
     gray1: "#F8F9FA",
     white: "#FFFFFF",
     orange: "#FF7964",
+    orange_light: "#FFF2EF",
+    orange_very_light: "#FFF8F7",
     red: "#FC453A",
     blue: "#0F6FFF",
   },
@@ -92,10 +95,10 @@ export const Button = styled.div`
 `;
 
 export const Title = styled.div`
-  font-weight: bold;
+  font-weight: 500;
   font-size: 2.1rem;
   line-height: 140%;
   white-space: pre-wrap;
-  margin-top: 2.6rem;
   letter-spacing: -2%;
+  color: ${theme.color.gray7};
 `;

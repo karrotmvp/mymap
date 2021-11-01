@@ -4,7 +4,7 @@ import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import MainSlide from "./MainSlide";
 import MapView, { Pin } from "../../Components/MapView";
-import PinSlider from "../../Components/PinSlider/PinSlider";
+import PinSlider from "../../Components/PinSlider";
 import { Back, Close } from "../../assets";
 import { PinType, PostType } from "../../Shared/type";
 import { getFeedPosts } from "../../api/post";
@@ -22,8 +22,8 @@ const Main = () => {
   });
 
   // infinite scroll
-  const [startIdx, setStartIdx] = useState(0);
-  const [endIdx, setEndIdx] = useState(0);
+  const [startIdx, setStartIdx] = useState("");
+  const [endIdx, setEndIdx] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const handleNext = () => {
     setStartIdx(feedPosts[0]?.postId);
@@ -35,6 +35,9 @@ const Main = () => {
         start: startIdx,
         end: endIdx,
       });
+      if (!data) {
+        return;
+      }
       if (data.posts.length < 1) {
         setHasMore(false);
         return;
@@ -108,7 +111,7 @@ const Main = () => {
 
   return (
     <Wrapper>
-      <Header title={!isPinSelected ? "서비스명" : ""} isGradient={!isScrollUp}>
+      <Header isTransparent={!isScrollUp}>
         {isPinSelected ? (
           <Back className="left-icon" onClick={() => setIsPinSelected(false)} />
         ) : (
@@ -141,7 +144,10 @@ const Main = () => {
           <Footer />
         </>
       ) : (
-        <PinSlider isRecommend {...{ pins, current, setCurrent, setCenter }} />
+        <PinSlider
+          placeBoxType="type2"
+          {...{ pins, current, setCurrent, setCenter }}
+        />
       )}
     </Wrapper>
   );

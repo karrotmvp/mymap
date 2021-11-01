@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { deletePost } from "../../api/post";
@@ -17,69 +17,63 @@ import {
 import DetailMapView from "./DetailMapView";
 import dayjs from "dayjs";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
-import { MyInfo, postDetailAtom } from "../../Shared/atom";
-import { useRouteMatch, useHistory } from "react-router";
+import { ViewerInfo, postDetailAtom } from "../../Shared/atom";
+import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
+import { match } from "ts-pattern";
+import { reducer } from "./index.reducer";
 
 const Detail = () => {
-  const postId = parseInt(window.location.pathname.split("detail/")[1]);
-  const match = useRouteMatch({
-    path: "/detail/:id/finish",
-  });
+  const { postId } = useParams<{ postId: string }>();
   const history = useHistory();
 
-  const isFinished = match?.isExact;
-  const myInfo = useRecoilValue(MyInfo);
+  const { isExact: fromWriteForm } =
+    useRouteMatch({
+      path: "/detail/:postId/finish",
+    }) ?? {};
 
+  const viewerInfo = useRecoilValue(ViewerInfo);
   const post = useRecoilValueLoadable(postDetailAtom(postId));
-  // const resetPost = useResetRecoilState(postDetailAtom(postId))
 
-  // post.state === 'hasValue' && post.contents
-  // const getPostCallback = useCallback(async () => {
-  //   const data = await getPost(postId);
-  //   setPost(data);
-  // }, [postId]);
+  const [state, dispatch] = useReducer(reducer, {
+    _t: "list",
+    isScrollUp: false,
+  });
+  const [isEditModalOpened, setIsEditModalOpened] = useState(false);
+  const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
 
-  // useEffect(() => {
-  //   getPostCallback();
-  // }, [getPostCallback]);
-
-  const [viewState, setViewState] = useState<"map" | "list">("list");
-  const handleViewState = () => {
-    if (viewState === "map") setViewState("list");
-    else setViewState("map");
-  };
-
-  const [isScrollUp, setIsScrollUp] = useState(false);
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      // let으로 두고 같으면 안하기
-      // 계산하기
-      if (window.scrollY > 100 && !isScrollUp) setIsScrollUp(true);
-      else setIsScrollUp(false);
-    });
-    return window.removeEventListener("scroll", () => {});
+    const onScroll = () => {
+      dispatch({
+        _t: "scroll",
+        scrollY: window.scrollY,
+      });
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // 편집 / 삭제
-  const [isMoreOpened, setIsMoreOpened] = useState(false);
-  // 삭제 시 alert
-  const [isAlertOpened, setIsAlertOpened] = useState(false);
-  const handleDeleteAlert = () => {
-    setIsMoreOpened(false);
-    setIsAlertOpened(true);
+  const onDeleteClick = () => {
+    setIsEditModalOpened(false);
+    setIsDeleteAlertOpened(true);
   };
-  // 삭제
-  const handleDelete = async () => {
+  const onDeleteConfirmClick = async () => {
     await deletePost(postId);
+
+    // 다시 이전 페이지로: 2번 건너뛰어야 함
     history.go(-2);
   };
 
-  return post.state === "hasValue" ? (
+  if (post.state !== "hasValue") {
+    return null;
+  }
+
+  return (
     <>
       <Header>
         <>
-          {isFinished ? (
+          {fromWriteForm ? (
             <Close
               className="left-icon"
               onClick={() => window.history.go(-3)}
@@ -87,17 +81,37 @@ const Detail = () => {
           ) : (
             <Back className="left-icon" onClick={() => window.history.back()} />
           )}
-          {(isScrollUp || viewState === "map") && (
+          {(state._t === "map" ||
+            (state._t === "list" && state.isScrollUp)) && (
             <div className="post-title">{post.contents.title}</div>
           )}
-          <div className="view-toggle" onClick={handleViewState}>
-            {viewState === "map" ? <List /> : <Map />}
-            {viewState === "map" ? "목록" : "지도"}
+          <div
+            className="view-toggle"
+            onClick={() =>
+              dispatch({
+                _t: "toggle",
+              })
+            }
+          >
+            {match(state._t)
+              .with("map", () => (
+                <>
+                  <List />
+                  목록
+                </>
+              ))
+              .with("list", () => (
+                <>
+                  <Map />
+                  지도
+                </>
+              ))
+              .exhaustive()}
           </div>
-          {post.contents.user.userId === myInfo.userId ? (
+          {post.contents.user.userId === viewerInfo.userId ? (
             <More2
               className="right-icon"
-              onClick={() => setIsMoreOpened(true)}
+              onClick={() => setIsEditModalOpened(true)}
             />
           ) : (
             <SaveButton {...post.contents} />
@@ -105,68 +119,73 @@ const Detail = () => {
         </>
       </Header>
 
-      {viewState === "list" && (
-        <Wrapper>
-          <Title>{post.contents.title}</Title>
-          <div className="content">{post.contents.contents}</div>
+      {match(state._t)
+        .with("list", () => (
+          <Wrapper>
+            <Title>{post.contents.title}</Title>
+            <div className="content">{post.contents.contents}</div>
 
-          <Profile>
-            <div className="photo" />
-            <div>
-              <div className="name">
-                {post.contents.user.userName}님이 추천하는 리스트예요.
+            <Profile>
+              <div className="photo" />
+              <div>
+                <div className="name">
+                  {post.contents.user.userName}님이 추천하는 리스트예요.
+                </div>
+                <div className="date">
+                  {dayjs(post.contents.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
+                  {post.contents.regionName}
+                </div>
               </div>
-              <div className="date">
-                {dayjs(post.contents.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
-                {post.contents.regionName}
-              </div>
+            </Profile>
+
+            <div className="cards">
+              {post.contents.pins.map((pin) => (
+                <div
+                  key={pin.pinId}
+                  onClick={() =>
+                    dispatch({
+                      _t: "toggle",
+                    })
+                  }
+                >
+                  <PlaceCard place={pin.place} />
+                </div>
+              ))}
             </div>
-          </Profile>
+          </Wrapper>
+        ))
+        .with("map", () => <DetailMapView pins={post.contents.pins} />)
+        .exhaustive()}
 
-          <div className="cards">
-            {post.contents.pins.map((pin) => (
-              <div key={pin.pinId} onClick={handleViewState}>
-                <PlaceCard place={pin.place} />
-              </div>
-            ))}
-          </div>
-        </Wrapper>
-      )}
-
-      {/* 편집삭제 모달 */}
-      {isMoreOpened && (
+      {isEditModalOpened && (
         <Modal>
-          <div className="background" onClick={() => setIsMoreOpened(false)} />
+          <div
+            className="background"
+            onClick={() => setIsEditModalOpened(false)}
+          />
           <div className="modal">
             <Link to={`/edit/${postId}`} className="button">
               <Edit />
               수정하기
             </Link>
-            <div onClick={handleDeleteAlert} className="button">
+            <div onClick={onDeleteClick} className="button">
               <Delete className="delete-icon" />
               삭제하기
             </div>
           </div>
         </Modal>
       )}
-
-      {/* 삭제 alert */}
-      {isAlertOpened && (
+      {isDeleteAlertOpened && (
         <Alert
-          close={() => setIsAlertOpened(false)}
+          close={() => setIsDeleteAlertOpened(false)}
           title="저장해놓은 리스트를 삭제하시겠어요?"
           sub="삭제한 리스트는 다시 볼 수 없어요."
         >
-          <Button onClick={() => setIsAlertOpened(false)}>취소</Button>
-          <Button onClick={handleDelete}>삭제</Button>
+          <Button onClick={() => setIsDeleteAlertOpened(false)}>취소</Button>
+          <Button onClick={onDeleteConfirmClick}>삭제</Button>
         </Alert>
       )}
-
-      {/* 지도뷰 */}
-      {viewState === "map" && <DetailMapView pins={post.contents.pins} />}
     </>
-  ) : (
-    <div />
   );
 };
 

@@ -18,7 +18,7 @@ declare global {
 }
 
 export interface Pin {
-  id?: number;
+  id?: string;
   placeId?: string;
   latitude: number;
   longitude: number;
@@ -88,11 +88,12 @@ const MapView = ({
               lng: pin.longitude,
             }}
             onClick={() => handleClickMarker(pin, i)}
-            icon={
-              center.lat === pin.latitude && center.lng === pin.longitude
-                ? "/map_pin_active.png"
-                : "/map_pin_inactive.png"
-            }
+            icon={{
+              content:
+                center.lat === pin.latitude && center.lng === pin.longitude
+                  ? "<img class='pin-image' src='/map_pin_active.png' />"
+                  : "<img class='pin-image-inactive' src='/map_pin_inactive.png' />",
+            }}
           />
         ))}
       </NaverMap>

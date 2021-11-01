@@ -27,12 +27,12 @@ export class PlaceController {
     }
 
     @Get('/region/:regionId')
-    async readRegionPlaces(@Param('regionId') regionId: string, @Query('paginator') paginator: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
-        this.logger.debug('regionId : ', regionId, 'paginator : ', paginator, 'page', page, ' perPage : ', perPage);
-        if (!regionId && !paginator) throw new BadRequestException();
+    async readRegionPlaces(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
+        this.logger.debug('regionId : ', regionId, 'seed : ', seed, 'page', page, ' perPage : ', perPage);
+        if (!regionId) throw new BadRequestException();
         if (page < 1 || perPage < 1) throw new BadRequestException();
-        if (!paginator) paginator = await this.placeService.getPaginator(regionId, perPage);
+        if (!seed) seed = await this.placeService.getSeed();
         this.eventEmitter.emit(MyMapEvent.PLACE_LISTED, new Event(null, regionId));
-        return await this.placeService.readRegionPlaces(paginator, page);
+        return await this.placeService.readRegionPlaces(regionId, seed, perPage, page);
     }
 }

@@ -4,21 +4,21 @@ import { flexCenter, theme } from "../styles/theme";
 
 interface HeaderProps {
   title?: string;
-  isGradient?: boolean;
+  isTransparent?: boolean;
   children?: ReactChild;
   className?: string;
 }
 
-const Header = ({ title, isGradient, children, className }: HeaderProps) => {
+const Header = ({ title, isTransparent, children, className }: HeaderProps) => {
   return (
-    <Wrapper {...{ className }} $isGradient={isGradient || false}>
+    <Wrapper {...{ className }} $isTransparent={isTransparent || false}>
       <div className="title">{title}</div>
       {children}
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div<{ $isGradient: boolean }>`
+const Wrapper = styled.div<{ $isTransparent: boolean }>`
   ${flexCenter};
   width: 100%;
   height: 5rem;
@@ -26,11 +26,8 @@ const Wrapper = styled.div<{ $isGradient: boolean }>`
   z-index: 100;
   left: 0;
   top: 0;
-  background: ${({ $isGradient }) =>
-    $isGradient
-      ? "linear-gradient(180.03deg, #FFFFFF 23.76%, rgba(255, 255, 255, 0) 117.46%)"
-      : theme.color.white};
-  opacity: ${({ $isGradient }) => ($isGradient ? 0.95 : 1)};
+  background: ${({ $isTransparent }) =>
+    $isTransparent ? "none" : theme.color.white};
 
   .title {
     font-size: 1.6rem;

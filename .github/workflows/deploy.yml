@@ -39,20 +39,15 @@ jobs:
         run: yarn
         working-directory: ${{ env.client-directory }}
 
-      - name: Generate Environment Variables File for Production
-        run: |
-          echo "REACT_APP_NAVER_MAPS_CLIENT_ID=$REACT_APP_NAVER_MAPS_CLIENT_ID" >> .env.production
-          echo "REACT_APP_APP_ID=$REACT_APP_APP_ID" >> .env.production
-          echo "REACT_APP_ENDPOINT=$REACT_APP_ENDPOINT" >> .env.production
+      - name: Run client build
+        run: yarn build
+        working-directory: ${{ env.client-directory }}
         env:
           REACT_APP_NAVER_MAPS_CLIENT_ID: ${{ secrets.REACT_APP_NAVER_MAPS_CLIENT_ID }}
           REACT_APP_APP_ID: ${{ secrets.REACT_APP_APP_ID }}
           REACT_APP_ENDPOINT: ${{ secrets.REACT_APP_ENDPOINT }}
-        working-directory: ${{ env.client-directory }}
-
-      - name: Run client build
-        run: yarn build
-        working-directory: ${{ env.client-directory }}
+          REACT_APP_LOGIN: ${{ secrets.REACT_APP_LOGIN }}
+          REACT_APP_MIXPANEL_TOKEN: ${{ secrets.REACT_APP_MIXPANEL_TOKEN }}
 
       - name: Install server dependencies
         run: npm install
@@ -69,20 +64,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Login to ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      # - name: Login to ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: mymapdeploy
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          find ./ -name "*docker-compose.*.yml" -exec perl -pi -e "s/tagname/$IMAGE_TAG/g" {} \;
+      # - name: Build, tag, and push image to ECR
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     ECR_REPOSITORY: mymapdeploy
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      #     find ./ -name "*docker-compose.*.yml" -exec perl -pi -e "s/tagname/$IMAGE_TAG/g" {} \;
       - name: S3 Upload
         run: aws deploy push --application-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy.zip --source .
 
