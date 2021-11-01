@@ -18,7 +18,7 @@ const SubmitFinish = () => {
 
   return (
     <Wrapper>
-      <Close className="close-btn" />
+      <Close onClick={() => mini.close()} className="close-btn" />
       <Finish1 />
       <div className="center">
         <Finish2 />

@@ -199,6 +199,7 @@ const Wrapper = styled.div`
       color: ${theme.color.gray6};
       font-size: 1.3rem;
       line-height: 170%;
+      font-weight: normal;
     }
   }
 
