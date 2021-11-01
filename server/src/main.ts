@@ -23,11 +23,11 @@ async function bootstrap() {
   app.use(Sentry.Handlers.errorHandler());
   app.useGlobalInterceptors(new SentryInterceptor(new MyLogger(new ConfigService)));
   app.use(cookieParser());
-  // app.enableCors({
-  //   origin: true,
-  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  //   credentials: true,
-  // });
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
