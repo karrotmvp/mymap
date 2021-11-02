@@ -93,11 +93,11 @@ const Mypage = () => {
   }, [savedPostPage]);
 
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 100) setIsScrollUp(true);
-      else setIsScrollUp(false);
-    });
-    return window.removeEventListener("scroll", () => {});
+    const onScroll = () => {
+      setIsScrollUp(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const myInfo = useRecoilValue(ViewerInfo);

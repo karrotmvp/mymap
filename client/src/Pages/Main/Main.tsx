@@ -99,14 +99,11 @@ const Main = () => {
   // scroll up
   const [isScrollUp, setIsScrollUp] = useState(false);
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.innerHeight - window.scrollY < 380) {
-        setIsScrollUp(true);
-      } else {
-        setIsScrollUp(false);
-      }
-    });
-    return window.removeEventListener("scroll", () => {});
+    const onScroll = () => {
+      setIsScrollUp(window.innerHeight - window.scrollY < 380);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -137,6 +134,7 @@ const Main = () => {
               style={{ fontSize: 0 }}
               hasMore={hasMore}
               loader={<div />}
+              onScroll={() => console.log("asdf")}
             >
               <MainSlide {...{ isMapShown, isScrollUp }} posts={feedPosts} />
             </InfiniteScroll>

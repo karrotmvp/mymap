@@ -112,7 +112,7 @@ const SearchPlace = ({
               style={{ fontSize: 0 }}
               hasMore={resultHasMore}
               loader={<div />}
-              onScroll={(e) => console.log(e)}
+              onScroll={() => console.log("asdf")}
             >
               {result.map((place) => {
                 const isExist = places.find((p) => p.placeId === place.placeId)
