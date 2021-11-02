@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -48,7 +48,15 @@ export class UserService {
     }
 
     async createPreopenUser(userId: number, regionId: string) {
+        const existPreopen = await this.preopenUserReposiotry.findOne({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('PreopenUser__user.userId = :userId', { userId: userId })
+            }
+        })
+        if (existPreopen) return;
         const user: User = await this.readUser(userId);
+        if (!user) throw new UnauthorizedException();
         const preopenUser: PreopenUser = new PreopenUser(user, regionId);
         this.preopenUserReposiotry.save(preopenUser);
     }
