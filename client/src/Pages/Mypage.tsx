@@ -126,8 +126,8 @@ const Mypage = () => {
             hasMore={myPostsHasMore}
             loader={<div />}
           >
-            {myPosts?.map((post, i) => (
-              <Collection key={i} {...post} />
+            {myPosts?.map((post) => (
+              <Collection key={post.postId} {...post} />
             ))}
           </InfiniteScroll>
         ) : (

@@ -212,7 +212,8 @@ const Write = () => {
       ))}
 
       <div className="add-button" onClick={() => setIsSearchOpened(true)}>
-        <Plus className="add-icon" />이 장소 추가하기
+        <Plus className="add-icon" />
+        장소 추가
       </div>
 
       {isSearchOpened && (
