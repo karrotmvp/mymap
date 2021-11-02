@@ -134,7 +134,6 @@ const Main = () => {
               style={{ fontSize: 0 }}
               hasMore={hasMore}
               loader={<div />}
-              onScroll={() => console.log("asdf")}
             >
               <MainSlide {...{ isMapShown, isScrollUp }} posts={feedPosts} />
             </InfiniteScroll>

@@ -11,6 +11,7 @@ export const GlobalStyle = createGlobalStyle`
         display: none;
     }
     html {
+        height: 100vh;
         font-size: 10px;
         -webkit-text-size-adjust: none;
         font-family: 'Spoqa Han Sans Neo', 'sans-serif';

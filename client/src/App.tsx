@@ -19,6 +19,7 @@ import { Mixpanel } from "./utils/mixpanel";
 import { MainLogo } from "./assets";
 import styled from "styled-components";
 import { flexCenter } from "./styles/theme";
+import SearchPlace from "./Pages/Write/SearchPlace";
 
 dayjs.locale("ko");
 
@@ -84,6 +85,7 @@ function App() {
               <Route exact path="/write" component={Write} />
               <Route exact path="/onboarding" component={Onboarding} />
               <Route exact path="/onboarding/write" component={Write} />
+              <Route exact path="/asdf" component={SearchPlace} />
               <Route path="/edit/:id" component={Write} />
             </Switch>
           ) : (

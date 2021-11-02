@@ -48,17 +48,18 @@ const SearchPlace = ({
 
   // 검색
   const getSearchItems = useCallback(async () => {
-    setResultHasMore(true);
     const data = await getSearch(regionId, {
       query: searchVal.value,
       page: resultPage,
     });
     setResult(data);
-    console.log("getSearchItems", searchVal.value);
   }, [searchVal.value]);
   // 검색 디바운스
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
+
   useEffect(() => {
+    setResultPage(1);
+    setResultHasMore(true);
     if (searchVal.value.length > 0) debouncedSearchVal();
   }, [searchVal.value]);
 
@@ -78,13 +79,8 @@ const SearchPlace = ({
       }
       setResult([...result, ...data]);
     };
-    if (resultPage > 1) fetchResult();
+    fetchResult();
   }, [resultPage]);
-
-  useEffect(() => {
-    console.log(result);
-    console.log(resultHasMore, resultPage);
-  }, [result]);
 
   return (
     <Wrapper>
@@ -105,15 +101,14 @@ const SearchPlace = ({
 
       {searchVal.value.length > 0 ? (
         result.length > 0 ? (
-          <div className="result">
-            <InfiniteScroll
-              dataLength={result.length}
-              next={handleResultNext}
-              style={{ fontSize: 0 }}
-              hasMore={resultHasMore}
-              loader={<div />}
-              onScroll={() => console.log("asdf")}
-            >
+          <InfiniteScroll
+            dataLength={result.length}
+            next={handleResultNext}
+            style={{ fontSize: 0 }}
+            hasMore={resultHasMore}
+            loader={<div />}
+          >
+            <div className="result">
               {result.map((place) => {
                 const isExist = places.find((p) => p.placeId === place.placeId)
                   ? true
@@ -132,8 +127,8 @@ const SearchPlace = ({
                   </div>
                 );
               })}
-            </InfiniteScroll>
-          </div>
+            </div>
+          </InfiniteScroll>
         ) : (
           <NoSearchView value={searchVal.value} />
         )
@@ -196,6 +191,7 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
+  overflow-y: scroll;
   background-color: #fff;
   .result {
     padding-top: 8rem;
@@ -203,9 +199,8 @@ const Wrapper = styled.div`
     font-size: 1.4rem;
     line-height: 160%;
     padding-bottom: 1.3rem;
-    height: 100vh;
     overflow-y: scroll;
-    & > div > div > div:not(:first-child) {
+    & > div:not(:first-child) {
       border-top: 0.1rem solid lightgray;
     }
   }
