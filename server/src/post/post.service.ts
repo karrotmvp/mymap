@@ -38,6 +38,7 @@ export class PostService {
         const pins: Pin[] = await this.pinRepository.savePins(post.pins);
         const regionName: string = await this.regionService.readRegionName(post.regionId);
         const newPost: Post = await this.postRepository.savePost(post, regionName, user, pins);
+        this.eventEmitter.emit(MyMapEvent.POST_CREATED, new Event(newPost.getPostId(), null));
         return newPost;
     }
 
