@@ -212,7 +212,8 @@ const Write = () => {
       ))}
 
       <div className="add-button" onClick={() => setIsSearchOpened(true)}>
-        <Plus className="add-icon" />이 장소 추가하기
+        <Plus className="add-icon" />
+        장소 추가
       </div>
 
       {isSearchOpened && (
@@ -325,7 +326,7 @@ const Wrapper = styled.div`
   padding-left: 2rem;
   padding-right: 2rem;
   padding-bottom: 13.2rem;
-  overflow-y: scroll;
+  overflow: scroll;
   .error {
     color: ${theme.color.red};
     font-weight: 500;

@@ -49,6 +49,7 @@ const Mypage = () => {
   const [myPosts, setMyPosts] = useState<PostType[] | []>([]);
   const [myPostsHasMore, setMyPostsHasMore] = useState(true);
   const [myPostPage, setMyPostPage] = useState(1);
+
   const handleMyPostNext = () => {
     setMyPostPage(myPostPage + 1);
   };
@@ -92,11 +93,11 @@ const Mypage = () => {
   }, [savedPostPage]);
 
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 100) setIsScrollUp(true);
-      else setIsScrollUp(false);
-    });
-    return window.removeEventListener("scroll", () => {});
+    const onScroll = () => {
+      setIsScrollUp(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const myInfo = useRecoilValue(ViewerInfo);
@@ -126,8 +127,8 @@ const Mypage = () => {
             hasMore={myPostsHasMore}
             loader={<div />}
           >
-            {myPosts?.map((post, i) => (
-              <Collection key={i} {...post} />
+            {myPosts?.map((post) => (
+              <Collection key={post.postId} {...post} />
             ))}
           </InfiniteScroll>
         ) : (

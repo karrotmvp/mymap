@@ -10,6 +10,7 @@ const mini = new Mini();
 
 const OnboardAlert = ({ close }: { close: () => void }) => {
   const onClickButton = async () => {
+    Mixpanel.track("온보딩 후 글작성에서 이탈하지만 알림받음");
     await postNotification();
     mini.close();
   };
@@ -17,8 +18,6 @@ const OnboardAlert = ({ close }: { close: () => void }) => {
   const route = useRouteMatch({
     path: "/onboarding",
   });
-
-  console.log();
 
   const handleClose = () => {
     if (route?.isExact) {

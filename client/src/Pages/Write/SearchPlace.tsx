@@ -7,21 +7,18 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  useRecoilStateLoadable,
-  useRecoilValue,
-  useResetRecoilState,
-} from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getSearch } from "../../api/place";
 import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
-import { RegionId, searchAtom } from "../../Shared/atom";
+import { RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const SearchPlace = ({
   setIsSearchOpened,
@@ -45,33 +42,49 @@ const SearchPlace = ({
 
   const searchVal = useInput("");
 
-  const [result, setResult] = useRecoilStateLoadable(
-    searchAtom({ regionId, val: searchVal.value })
-  );
-  const resetResult = useResetRecoilState(
-    searchAtom({ regionId, val: searchVal.value })
-  );
+  const [result, setResult] = useState<PlaceType[] | []>([]);
+  const [resultHasMore, setResultHasMore] = useState(true);
+  const [resultPage, setResultPage] = useState(1);
 
-  // 검색어 초기화
-  useEffect(() => {
-    resetResult();
-  }, []);
+  // 검색
   const getSearchItems = useCallback(async () => {
     const data = await getSearch(regionId, {
       query: searchVal.value,
+      page: resultPage,
     });
     setResult(data);
-  }, [searchVal.value, regionId]);
-
+  }, [searchVal.value]);
   // 검색 디바운스
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
+
   useEffect(() => {
+    setResultPage(1);
+    setResultHasMore(true);
     if (searchVal.value.length > 0) debouncedSearchVal();
   }, [searchVal.value]);
 
+  // 무한 스크롤
+  const handleResultNext = () => {
+    setResultPage(resultPage + 1);
+  };
+  useEffect(() => {
+    const fetchResult = async () => {
+      const data = await getSearch(regionId, {
+        query: searchVal.value,
+        page: resultPage,
+      });
+      if (data.length < 1) {
+        setResultHasMore(false);
+        return;
+      }
+      setResult([...result, ...data]);
+    };
+    fetchResult();
+  }, [resultPage]);
+
   return (
     <Wrapper>
-      <div className="place-input">
+      <PlaceInput>
         <Back onClick={close} className="search-back" />
         <SearchInput
           value={searchVal.value}
@@ -84,30 +97,38 @@ const SearchPlace = ({
             onClick={() => searchVal.setValue("")}
           />
         )}
-      </div>
+      </PlaceInput>
 
-      {result.state === "hasValue" && searchVal.value.length > 0 ? (
-        result.contents.length > 0 ? (
-          <div className="result">
-            {result.contents.map((place) => {
-              const isExist = places.find((p) => p.placeId === place.placeId)
-                ? true
-                : false;
-              return (
-                <div
-                  key={place.placeId}
-                  onClick={() => !isExist && handleOpenMap(place)}
-                >
-                  {place.address && (
-                    <SearchList
-                      {...{ isExist, place }}
-                      searchVal={searchVal.value}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
+      {searchVal.value.length > 0 ? (
+        result.length > 0 ? (
+          <InfiniteScroll
+            dataLength={result.length}
+            next={handleResultNext}
+            style={{ fontSize: 0 }}
+            hasMore={resultHasMore}
+            loader={<div />}
+          >
+            <div className="result">
+              {result.map((place) => {
+                const isExist = places.find((p) => p.placeId === place.placeId)
+                  ? true
+                  : false;
+                return (
+                  <div
+                    key={place.placeId}
+                    onClick={() => !isExist && handleOpenMap(place)}
+                  >
+                    {place.address && (
+                      <SearchList
+                        {...{ isExist, place }}
+                        searchVal={searchVal.value}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </InfiniteScroll>
         ) : (
           <NoSearchView value={searchVal.value} />
         )
@@ -143,17 +164,14 @@ const NoSearchView = ({ value }: { value: string }) => {
   );
 };
 
-const Wrapper = styled.div`
+const PlaceInput = styled.div`
   position: fixed;
-  z-index: 200;
+  width: 100%;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: #fff;
-  overflow-y: scroll;
-  padding-top: 8rem;
-  box-sizing: border-box;
+  right: 0;
+  background-color: ${theme.color.white};
+  z-index: 300;
   .search-back {
     position: absolute;
     top: 0.4rem;
@@ -164,20 +182,24 @@ const Wrapper = styled.div`
     right: 0.7rem;
     top: 0.4rem;
   }
-  .place-input {
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: ${theme.color.white};
-    z-index: 100;
-  }
+`;
+
+const Wrapper = styled.div`
+  position: fixed;
+  z-index: 200;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  background-color: #fff;
   .result {
+    padding-top: 8rem;
+    box-sizing: border-box;
     font-size: 1.4rem;
     line-height: 160%;
-    margin-bottom: 1.3rem;
-    position: relative;
+    padding-bottom: 1.3rem;
+    overflow-y: scroll;
     & > div:not(:first-child) {
       border-top: 0.1rem solid lightgray;
     }
