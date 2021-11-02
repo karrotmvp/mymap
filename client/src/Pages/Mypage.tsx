@@ -123,7 +123,6 @@ const Mypage = () => {
           <InfiniteScroll
             dataLength={myPosts.length}
             next={handleMyPostNext}
-            style={{ fontSize: 0 }}
             hasMore={myPostsHasMore}
             loader={<div />}
           >
@@ -135,7 +134,6 @@ const Mypage = () => {
           <InfiniteScroll
             dataLength={savedPosts.length}
             next={handleSavedPostNext}
-            style={{ fontSize: 0 }}
             hasMore={savedPostsHasMore}
             loader={<div />}
           >

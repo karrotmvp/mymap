@@ -101,14 +101,14 @@ const SearchPlace = ({
 
       {searchVal.value.length > 0 ? (
         result.length > 0 ? (
-          <InfiniteScroll
-            dataLength={result.length}
-            next={handleResultNext}
-            style={{ fontSize: 0 }}
-            hasMore={resultHasMore}
-            loader={<div />}
-          >
-            <div className="result">
+          <div id="search-list" className="result">
+            <InfiniteScroll
+              dataLength={result.length}
+              next={handleResultNext}
+              hasMore={resultHasMore}
+              loader={<div />}
+              scrollableTarget="search-list"
+            >
               {result.map((place) => {
                 const isExist = places.find((p) => p.placeId === place.placeId)
                   ? true
@@ -127,8 +127,8 @@ const SearchPlace = ({
                   </div>
                 );
               })}
-            </div>
-          </InfiniteScroll>
+            </InfiniteScroll>
+          </div>
         ) : (
           <NoSearchView value={searchVal.value} />
         )
@@ -191,7 +191,6 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  overflow-y: scroll;
   background-color: #fff;
   .result {
     padding-top: 8rem;
@@ -199,8 +198,9 @@ const Wrapper = styled.div`
     font-size: 1.4rem;
     line-height: 160%;
     padding-bottom: 1.3rem;
+    height: 100vh;
     overflow-y: scroll;
-    & > div:not(:first-child) {
+    & > div > div > div:not(:first-child) {
       border-top: 0.1rem solid lightgray;
     }
   }

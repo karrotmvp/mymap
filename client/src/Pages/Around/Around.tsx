@@ -70,7 +70,6 @@ const Around = () => {
         <InfiniteScroll
           dataLength={places.length}
           next={handleNext}
-          style={{ fontSize: 0 }}
           hasMore={hasMore}
           loader={<div />}
         >

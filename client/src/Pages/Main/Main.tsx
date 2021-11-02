@@ -131,7 +131,6 @@ const Main = () => {
             <InfiniteScroll
               dataLength={feedPosts.length}
               next={handleNext}
-              style={{ fontSize: 0 }}
               hasMore={hasMore}
               loader={<div />}
             >
