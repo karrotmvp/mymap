@@ -325,7 +325,7 @@ const Wrapper = styled.div`
   padding-left: 2rem;
   padding-right: 2rem;
   padding-bottom: 13.2rem;
-  overflow-y: scroll;
+  overflow: scroll;
   .error {
     color: ${theme.color.red};
     font-weight: 500;
