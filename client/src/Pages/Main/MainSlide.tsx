@@ -50,7 +50,8 @@ const Wrapper = styled.div<{ $isMapShown: boolean }>`
   top: 0;
   left: 0;
   right: 0;
-  margin-top: ${({ $isMapShown }) =>
+  overflow-y: scroll;
+  padding-top: ${({ $isMapShown }) =>
     $isMapShown ? "calc(100vh - 12.5rem)" : "calc(100vh - 34.9rem)"};
   .collections {
     margin-top: 0.4rem;
