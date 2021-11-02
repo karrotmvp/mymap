@@ -37,7 +37,6 @@ const Onboarding = () => {
     <Wrapper>
       <Close
         onClick={() => {
-          Mixpanel.track("온보딩에서 나가려함");
           setIsOnboardOutAlertOpened(true);
         }}
         className="close-btn"
@@ -70,7 +69,9 @@ const Onboarding = () => {
         </Button>
       </div>
 
-      {isOnboardOutAlertOpened && <OnboardAlert />}
+      {isOnboardOutAlertOpened && (
+        <OnboardAlert close={() => setIsOnboardOutAlertOpened(false)} />
+      )}
     </Wrapper>
   );
 };

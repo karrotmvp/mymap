@@ -127,14 +127,17 @@ const Write = () => {
   const handleClose = () => {
     if (isWrite) window.history.back();
     else if (isOnboarding) {
-      Mixpanel.track("온보딩 후 글작성에서 나가려함");
       setIsOnboardOutAlertOpened(true);
-    } else setIsEditAlertOpened(true);
+    } else {
+      setIsEditAlertOpened(true);
+    }
   };
 
   const regionId = useRecoilValue(RegionId);
 
   const handleSubmit = async () => {
+    Mixpanel.track("글작성 완료");
+
     const body = {
       title: inputVal.value,
       contents: textareaVal.value,
@@ -266,7 +269,9 @@ const Write = () => {
         </Alert>
       )}
 
-      {isOnboardOutAlertOpened && <OnboardAlert />}
+      {isOnboardOutAlertOpened && (
+        <OnboardAlert close={() => setIsOnboardOutAlertOpened(false)} />
+      )}
       {isOnboardSubmitAlertOpened && (
         <OnboardSubmit
           close={() => setIsOnboardSubmitAlertOpened(false)}

@@ -5,6 +5,7 @@ import { postPreopen } from "../../../api/user";
 import { Close, Finish1, Finish2 } from "../../../assets";
 import { RegionId } from "../../../Shared/atom";
 import { Button, flexCenter, theme } from "../../../styles/theme";
+import { Mixpanel } from "../../../utils/mixpanel";
 
 const mini = new Mini();
 
@@ -12,6 +13,7 @@ const SubmitFinish = () => {
   const regionId = useRecoilValue(RegionId);
 
   const onClickButton = async () => {
+    Mixpanel.track("글작성 완료 후 알림받기");
     await postPreopen(regionId);
     mini.close();
   };

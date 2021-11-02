@@ -1,29 +1,46 @@
 import Mini from "@karrotmarket/mini";
+import { useRouteMatch } from "react-router";
 import styled from "styled-components";
 import { postNotification } from "../../../api/notification";
 import { Notification } from "../../../assets";
 import { Button, flexCenter, gap, theme } from "../../../styles/theme";
+import { Mixpanel } from "../../../utils/mixpanel";
 
 const mini = new Mini();
 
-const OnboardAlert = () => {
+const OnboardAlert = ({ close }: { close: () => void }) => {
   const onClickButton = async () => {
     await postNotification();
+    mini.close();
+  };
+
+  const route = useRouteMatch({
+    path: "/onboarding",
+  });
+
+  console.log();
+
+  const handleClose = () => {
+    if (route?.isExact) {
+      Mixpanel.track("온보딩에서 이탈");
+    } else {
+      Mixpanel.track("온보딩 후 글작성에서 이탈");
+    }
     mini.close();
   };
 
   return (
     <Wrapper>
       <div className="background" />
-      <div className="alert">
-        <div className="alert-wrapper">
+      <div className="alert" onClick={close}>
+        <div className="alert-wrapper" onClick={(e) => e.stopPropagation()}>
           <div className="title">채팅으로 알림 받기</div>
           <Notification />
           <div className="sub">{`저장할 장소가 떠오르지 않나요?
 언제든 만들 수 있도록
 링크를 알림으로 보내드릴게요.`}</div>
           <div className="buttons">
-            <Button onClick={() => mini.close()}>나가기</Button>
+            <Button onClick={handleClose}>나가기</Button>
             <Button onClick={onClickButton}>알림받기</Button>
           </div>
         </div>
