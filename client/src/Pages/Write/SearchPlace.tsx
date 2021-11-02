@@ -42,24 +42,9 @@ const SearchPlace = ({
 
   const searchVal = useInput("");
 
-  // const [result, setResult] = useRecoilStateLoadable(
-  //   searchAtom({ regionId, val: searchVal.value })
-  // );
-  // const resetResult = useResetRecoilState(
-  //   searchAtom({ regionId, val: searchVal.value })
-  // );
   const [result, setResult] = useState<PlaceType[] | []>([]);
-  const [resultPage, setResultPage] = useState(1);
   const [resultHasMore, setResultHasMore] = useState(true);
-  const handleResultNext = () => {
-    console.log("handleResultNext");
-    setResultPage(resultPage + 1);
-  };
-
-  // 검색어 초기화
-  // useEffect(() => {
-  //   resetResult();
-  // }, []);
+  const [resultPage, setResultPage] = useState(1);
 
   // 검색
   const getSearchItems = useCallback(async () => {
@@ -71,8 +56,16 @@ const SearchPlace = ({
     setResult(data);
     console.log("getSearchItems", searchVal.value);
   }, [searchVal.value]);
+  // 검색 디바운스
+  const debouncedSearchVal = useDebounce(getSearchItems, 200);
+  useEffect(() => {
+    if (searchVal.value.length > 0) debouncedSearchVal();
+  }, [searchVal.value]);
 
   // 무한 스크롤
+  const handleResultNext = () => {
+    setResultPage(resultPage + 1);
+  };
   useEffect(() => {
     const fetchResult = async () => {
       const data = await getSearch(regionId, {
@@ -85,15 +78,13 @@ const SearchPlace = ({
       }
       setResult([...result, ...data]);
     };
-    console.log("fetchResult", searchVal.value);
-    if (searchVal.value.length > 0) fetchResult();
+    if (resultPage > 1) fetchResult();
   }, [resultPage]);
 
-  // 검색 디바운스
-  const debouncedSearchVal = useDebounce(getSearchItems, 200);
   useEffect(() => {
-    if (searchVal.value.length > 0) debouncedSearchVal();
-  }, [searchVal.value]);
+    console.log(result);
+    console.log(resultHasMore, resultPage);
+  }, [result]);
 
   return (
     <Wrapper>
@@ -121,6 +112,7 @@ const SearchPlace = ({
               style={{ fontSize: 0 }}
               hasMore={resultHasMore}
               loader={<div />}
+              onScroll={(e) => console.log(e)}
             >
               {result.map((place) => {
                 const isExist = places.find((p) => p.placeId === place.placeId)
@@ -213,7 +205,7 @@ const Wrapper = styled.div`
     padding-bottom: 1.3rem;
     height: 100vh;
     overflow-y: scroll;
-    & > div:not(:first-child) {
+    & > div > div > div:not(:first-child) {
       border-top: 0.1rem solid lightgray;
     }
   }

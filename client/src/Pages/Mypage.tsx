@@ -49,6 +49,7 @@ const Mypage = () => {
   const [myPosts, setMyPosts] = useState<PostType[] | []>([]);
   const [myPostsHasMore, setMyPostsHasMore] = useState(true);
   const [myPostPage, setMyPostPage] = useState(1);
+
   const handleMyPostNext = () => {
     setMyPostPage(myPostPage + 1);
   };
