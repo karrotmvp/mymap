@@ -7,10 +7,19 @@ import CreateButton from "../Components/CreateButton";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
 import { PostType } from "../Shared/type";
-import { gap, theme, WrapperWithHeaderFooter } from "../styles/theme";
+import {
+  flexCenter,
+  gap,
+  theme,
+  WrapperWithHeaderFooter,
+} from "../styles/theme";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRecoilValue } from "recoil";
 import { ViewerInfo } from "../Shared/atom";
+import { Close, LogoInactive, Thumbnail } from "../assets";
+import Mini from "@karrotmarket/mini";
+
+const mini = new Mini();
 
 const Tab = ({
   selectedTab,
@@ -29,13 +38,13 @@ const Tab = ({
         $isSelected={selectedTab === "my"}
         onClick={() => handleSelectedTab("my")}
       >
-        내 리스트
+        내가 만든 테마
       </TabBtn>
       <TabBtn
         $isSelected={selectedTab === "others"}
         onClick={() => handleSelectedTab("others")}
       >
-        저장한 리스트
+        저장한 테마
       </TabBtn>
     </TabWrapper>
   );
@@ -104,12 +113,18 @@ const Mypage = () => {
 
   return (
     <Wrapper>
-      {isScrollUp && (
+      {isScrollUp ? (
         <Header className="header-scroll" title="로컬큐레이터님" />
+      ) : (
+        <Close className="close-btn" onClick={() => mini.close()} />
       )}
 
       <Profile>
-        <div className="photo" />
+        {myInfo.profileImageUrl ? (
+          <img className="photo" alt="profile" src={myInfo.profileImageUrl} />
+        ) : (
+          <Thumbnail className="photo" />
+        )}
         <div className="user">
           <div className="name">{myInfo.userName}</div>
           <div className="place">논현동</div>
@@ -118,29 +133,43 @@ const Mypage = () => {
 
       <Tab {...{ selectedTab, setSelectedTab }} />
 
-      <div className="collections">
+      <div id="collections">
         {selectedTab === "my" ? (
-          <InfiniteScroll
-            dataLength={myPosts.length}
-            next={handleMyPostNext}
-            hasMore={myPostsHasMore}
-            loader={<div />}
-          >
-            {myPosts?.map((post) => (
-              <Collection key={post.postId} {...post} />
-            ))}
-          </InfiniteScroll>
-        ) : (
+          myPosts.length > 0 ? (
+            <InfiniteScroll
+              dataLength={myPosts.length}
+              next={handleMyPostNext}
+              hasMore={myPostsHasMore}
+              loader={<div />}
+            >
+              {myPosts.map((post) => (
+                <Collection key={post.postId} {...post} />
+              ))}
+            </InfiniteScroll>
+          ) : (
+            <div className="empty">
+              <LogoInactive />
+              <div>{`아직 만든 테마가 없어요.
+나만의 테마를 만들어볼까요?`}</div>
+            </div>
+          )
+        ) : savedPosts.length > 0 ? (
           <InfiniteScroll
             dataLength={savedPosts.length}
             next={handleSavedPostNext}
             hasMore={savedPostsHasMore}
             loader={<div />}
           >
-            {savedPosts?.map((post, i) => (
+            {savedPosts.map((post, i) => (
               <Collection key={i} {...post} />
             ))}
           </InfiniteScroll>
+        ) : (
+          <div className="empty">
+            <LogoInactive />
+            <div>{`아직 저장한 테마가 없어요.
+추천 테마에서 이웃의 테마를 구경해 봐요!`}</div>
+          </div>
         )}
       </div>
 
@@ -153,11 +182,38 @@ const Mypage = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeaderFooter};
-  .collections {
-    margin-top: 0.4rem;
+  #collections {
+    margin-top: -2.5rem;
     padding-bottom: 8.6rem;
     & > div > div > div:not(:first-child) {
       border-top: 0.6rem solid ${theme.color.gray1_5};
+    }
+  }
+  .close-btn {
+    position: absolute;
+    top: 0.1rem;
+    left: 0;
+    fill: ${theme.color.white};
+  }
+  .empty {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100vh;
+    padding-top: 7rem;
+    box-sizing: border-box;
+    ${flexCenter};
+    flex-direction: column;
+    text-align: center;
+    white-space: pre-line;
+    & > div {
+      margin-top: 1.4rem;
+      color: ${theme.color.gray5};
+      line-height: 160%;
+      font-weight: 500;
+      font-size: 1.4rem;
     }
   }
 `;
@@ -179,6 +235,7 @@ const Profile = styled.div`
     height: 5.2rem;
     border-radius: 50%;
     border: 0.3rem solid ${theme.color.white};
+    background-color: ${theme.color.gray4};
   }
   .user {
     margin-left: 1.2rem;
@@ -204,6 +261,7 @@ const TabWrapper = styled.div`
   position: sticky;
   top: 4.9rem;
   background-color: #fff;
+  z-index: 10;
 `;
 
 const TabBtn = styled.div<{ $isSelected: boolean }>`

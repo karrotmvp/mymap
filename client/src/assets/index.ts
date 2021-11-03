@@ -27,6 +27,7 @@ export { ReactComponent as Call } from "./call.svg";
 export { ReactComponent as Time } from "./time.svg";
 export { ReactComponent as Main } from "./main.svg";
 export { ReactComponent as Thumbnail } from "./thumbnail.svg";
+export { ReactComponent as Secret } from "./secret.svg";
 
 export { ReactComponent as Loading1 } from "./loading1.svg";
 export { ReactComponent as Loading2 } from "./loading2.svg";

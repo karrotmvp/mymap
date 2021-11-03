@@ -32,7 +32,8 @@ const Wrapper = styled.div<{ $isTransparent: boolean }>`
   .title {
     font-size: 1.6rem;
     line-height: 135%;
-    font-weight: bold;
+    font-weight: 500;
+    color: ${theme.color.gray7};
   }
   .post-title {
     font-size: 1.6rem;

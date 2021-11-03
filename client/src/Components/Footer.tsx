@@ -25,7 +25,7 @@ const Footer = () => {
       </FooterLink>
       <FooterLink to="/mypage" $isClicked={pathname === "/mypage"}>
         {pathname === "/mypage" ? <MypageActive /> : <Mypage />}
-        <div>나의 리스트</div>
+        <div>나의 테마</div>
       </FooterLink>
     </Wrapper>
   );

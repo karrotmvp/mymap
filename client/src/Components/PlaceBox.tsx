@@ -40,7 +40,7 @@ const PlaceBox = ({
 
           {(type === "type2" || type === "type4") && place.saved > 0 && (
             <div className="recommend">
-              {place.saved}개 리스트에 저장된 장소예요.
+              {place.saved}개 테마에 저장된 장소예요.
             </div>
           )}
         </div>

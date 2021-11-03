@@ -195,8 +195,8 @@ const Detail = () => {
       {isDeleteAlertOpened && (
         <Alert
           close={() => setIsDeleteAlertOpened(false)}
-          title="저장해놓은 리스트를 삭제하시겠어요?"
-          sub="삭제한 리스트는 다시 볼 수 없어요."
+          title="작성한 테마를 삭제하시겠어요?"
+          sub="삭제한 테마는 다시 볼 수 없어요."
         >
           <Button onClick={() => setIsDeleteAlertOpened(false)}>취소</Button>
           <Button onClick={onDeleteConfirmClick}>삭제</Button>
@@ -238,7 +238,7 @@ const Profile = styled.div`
   .photo {
     width: 4rem;
     height: 4rem;
-    background-color: lightgray;
+    background-color: ${theme.color.gray4};
     border-radius: 50%;
   }
   .name {

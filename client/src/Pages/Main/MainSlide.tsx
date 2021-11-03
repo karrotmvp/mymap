@@ -29,8 +29,8 @@ const MainSlide = ({
         )}
 
         <div className="content">
-          <Title className="main-title">{`우리 동네 주민들의
-추천 리스트를 구경해보세요`}</Title>
+          <Title className="main-title">{`우리 동네 이웃들의
+추천 테마를 구경해보세요`}</Title>
 
           <div className="collections">
             {posts.map((post) => (
