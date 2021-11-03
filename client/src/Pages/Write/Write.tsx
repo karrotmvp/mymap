@@ -119,14 +119,16 @@ const Write = () => {
   }, [inputVal.value, isInputOver, isTextareaOver, isShare, places]);
 
   const [isEditAlertOpened, setIsEditAlertOpened] = useState(false);
+  const [isWriteAlertOpened, setIsWriteAlertOpened] = useState(false);
   const [isOnboardOutAlertOpened, setIsOnboardOutAlertOpened] = useState(false);
   const [isOnboardSubmitAlertOpened, setIsOnboardSubmitAlertOpened] =
     useState(false);
 
   // close
   const handleClose = () => {
-    if (isWrite) window.history.back();
-    else if (isOnboarding) {
+    if (isWrite) {
+      setIsWriteAlertOpened(true);
+    } else if (isOnboarding) {
       setIsOnboardOutAlertOpened(true);
     } else {
       setIsEditAlertOpened(true);
@@ -281,6 +283,18 @@ const Write = () => {
           close={() => setIsOnboardSubmitAlertOpened(false)}
           {...{ handleSubmit }}
         />
+      )}
+      {isWriteAlertOpened && (
+        <Alert
+          close={() => setIsWriteAlertOpened(false)}
+          title="다음에 만드시겠어요?"
+          sub="나가면 지금 만들던 테마는 저장되지 않아요."
+        >
+          <Button onClick={() => setIsWriteAlertOpened(false)}>
+            이어서 만들기
+          </Button>
+          <Button onClick={() => window.history.back()}>나가기</Button>
+        </Alert>
       )}
 
       <div className="footer">
