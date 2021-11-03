@@ -102,17 +102,19 @@ const Mypage = () => {
   }, [savedPostPage]);
 
   useEffect(() => {
+    const targetElement = document.querySelector("#mypage-scroll")!;
+
     const onScroll = () => {
-      setIsScrollUp(window.scrollY > 100);
+      setIsScrollUp(targetElement.scrollTop > 100);
     };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    targetElement.addEventListener("scroll", onScroll);
+    return () => targetElement.removeEventListener("scroll", onScroll);
   }, []);
 
   const myInfo = useRecoilValue(ViewerInfo);
 
   return (
-    <Wrapper>
+    <Wrapper id="mypage-scroll">
       {isScrollUp ? (
         <Header className="header-scroll" title="로컬큐레이터님" />
       ) : (
@@ -141,6 +143,7 @@ const Mypage = () => {
               next={handleMyPostNext}
               hasMore={myPostsHasMore}
               loader={<div />}
+              scrollableTarget="mypage-scroll"
             >
               {myPosts.map((post) => (
                 <Collection key={post.postId} {...post} />
@@ -159,6 +162,7 @@ const Mypage = () => {
             next={handleSavedPostNext}
             hasMore={savedPostsHasMore}
             loader={<div />}
+            scrollableTarget="mypage-scroll"
           >
             {savedPosts.map((post, i) => (
               <Collection key={i} {...post} />
@@ -182,6 +186,7 @@ const Mypage = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeaderFooter};
+  overflow-y: scroll;
   #collections {
     margin-top: -2.5rem;
     padding-bottom: 8.6rem;
@@ -259,7 +264,7 @@ const TabWrapper = styled.div`
   box-sizing: border-box;
   ${gap("0.5rem")}
   position: sticky;
-  top: 4.9rem;
+  top: 0;
   background-color: #fff;
   z-index: 10;
 `;

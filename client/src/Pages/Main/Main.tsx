@@ -5,7 +5,7 @@ import Header from "../../Components/Header";
 import MainSlide from "./MainSlide";
 import MapView, { Pin } from "../../Components/MapView";
 import PinSlider from "../../Components/PinSlider";
-import { Back, Close } from "../../assets";
+import { Back, Close, LogoTypo } from "../../assets";
 import { PinType, PostType } from "../../Shared/type";
 import { getFeedPosts } from "../../api/post";
 import { useRecoilValue } from "recoil";
@@ -100,16 +100,19 @@ const Main = () => {
   // scroll up
   const [isScrollUp, setIsScrollUp] = useState(false);
   useEffect(() => {
+    const targetElement = document.querySelector("#main-scroll")!;
+
     const onScroll = () => {
-      setIsScrollUp(window.innerHeight - window.scrollY < 380);
+      setIsScrollUp(window.innerHeight - targetElement.scrollTop < 380);
     };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    targetElement.addEventListener("scroll", onScroll);
+    return () => targetElement.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <Wrapper>
       <Header isTransparent={!isScrollUp}>
+        {isScrollUp ? <LogoTypo /> : <div />}
         {isPinSelected ? (
           <Back className="left-icon" onClick={() => setIsPinSelected(false)} />
         ) : (
