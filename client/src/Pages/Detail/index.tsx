@@ -3,7 +3,16 @@ import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { deletePost } from "../../api/post";
-import { Back, Close, Delete, Edit, List, Map, More2 } from "../../assets";
+import {
+  Back,
+  Close,
+  Delete,
+  Edit,
+  List,
+  Map,
+  More2,
+  Thumbnail,
+} from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard";
@@ -126,7 +135,15 @@ const Detail = () => {
             <div className="content">{post.contents.contents}</div>
 
             <Profile>
-              <div className="photo" />
+              {post.contents.user.profileImageUrl ? (
+                <img
+                  className="photo"
+                  alt="profile"
+                  src={post.contents.user.profileImageUrl}
+                />
+              ) : (
+                <Thumbnail className="photo" />
+              )}
               <div>
                 <div className="name">
                   {post.contents.user.userName}님이 추천하는 리스트예요.
@@ -192,17 +209,17 @@ const Detail = () => {
 const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding: 0 2rem;
-  padding-top: 5.4rem;
+  padding-top: 8rem;
   .content {
     margin-top: 1.4rem;
     font-size: 1.4rem;
-    line-height: 160%;
+    line-height: 150%;
     color: ${theme.color.gray7};
     padding-right: 3rem;
   }
   .cards {
     margin-top: 1.4rem;
-    margin-bottom: 3.5rem;
+    padding-bottom: 3.5rem;
     ${gap("1.4rem", "column")}
   }
 `;
@@ -211,11 +228,9 @@ const Profile = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  margin-top: 1.6rem;
-  padding: 1.5rem;
-  box-sizing: border-box;
-  background: rgba(255, 121, 100, 0.1);
-  border-radius: 1rem;
+  margin-top: 2.8rem;
+  padding: 2.8rem 0 1.8rem 0;
+  border-top: 0.1rem solid ${theme.color.gray2};
 
   & > div:last-child {
     margin-left: 1.2rem;
@@ -233,9 +248,10 @@ const Profile = styled.div`
     line-height: 150%;
   }
   .date {
-    margin-top: 0.3rem;
+    margin-top: 0.2rem;
     font-size: 1.1rem;
     color: ${theme.color.gray6};
+    line-height: 150%;
   }
 `;
 
