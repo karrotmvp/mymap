@@ -14,7 +14,11 @@ const OrangePlaceBox = ({
 }) => {
   return (
     <OrangePlaceBoxWrapper>
-      {category?.length > 0 && <Tag>{category[category.length - 1]}</Tag>}
+      {category?.length > 0 ? (
+        <Tag>{category[category.length - 1]}</Tag>
+      ) : (
+        <Tag>동네 장소</Tag>
+      )}
       <div className="place-name">{name}</div>
     </OrangePlaceBoxWrapper>
   );

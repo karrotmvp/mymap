@@ -9,7 +9,6 @@ import {
   OneOne,
   OneTwo,
   ThreeOne,
-  ThreeTwo,
   TwoOne,
   TwoTwo,
 } from "../assets";
@@ -24,7 +23,7 @@ const carousel = [
   {
     key: "three",
     top: <ThreeOne />,
-    bottom: <img src="/3-2.png" />,
+    bottom: <img src="/3-2.png" alt="onboarding" />,
   },
 ];
 

@@ -22,6 +22,29 @@ const PlaceBox = ({
   return (
     <Wrapper {...{ className, type }}>
       <div className="wrapper">
+        <div>
+          <PlaceInfo {...{ place }} />
+
+          {type === "type4" && (
+            <>
+              <div className="sub-info phone">
+                <Call />
+                <div>{place.phone ?? "아직 정보가 없어요."}</div>
+              </div>
+              <div className="sub-info time">
+                <Time />
+                <div>09:00 - 22:00 연중무휴</div>
+              </div>
+            </>
+          )}
+
+          {(type === "type2" || type === "type4") && place.saved > 0 && (
+            <div className="recommend">
+              {place.saved}개 리스트에 저장된 장소예요.
+            </div>
+          )}
+        </div>
+
         {place.images.length > 0 && (
           <img
             className="photo"
@@ -29,27 +52,7 @@ const PlaceBox = ({
             src={place.images[0].thumbnail}
           />
         )}
-        <PlaceInfo {...{ place }} />
       </div>
-
-      {type === "type4" && (
-        <>
-          <div className="sub-info phone">
-            <Call />
-            <div>010-0000-0000</div>
-          </div>
-          <div className="sub-info time">
-            <Time />
-            <div>09:00 - 22:00 연중무휴</div>
-          </div>
-        </>
-      )}
-
-      {(type === "type2" || type === "type4") && place.saved > 0 && (
-        <div className="recommend">
-          {place.saved}개 리스트에 저장된 장소예요.
-        </div>
-      )}
     </Wrapper>
   );
 };
@@ -65,13 +68,14 @@ const Wrapper = styled.div<{ type: PlaceBoxType }>`
   box-sizing: border-box;
   .wrapper {
     display: flex;
+    align-items: center;
   }
   .photo {
     min-width: 10rem;
     height: 10rem;
     border-radius: 0.8rem;
     background-color: lightgray;
-    margin-right: 1rem;
+    margin-left: 1.2rem;
   }
   .sub-info {
     display: flex;

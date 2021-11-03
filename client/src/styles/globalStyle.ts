@@ -23,6 +23,7 @@ export const GlobalStyle = createGlobalStyle`
             position: absolute;
             width: 4.2rem;
             transform: translate(-50%,-100%);
+            z-index: 900;
         }
         .pin-image-inactive {
             position: absolute;

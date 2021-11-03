@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { PinType } from "../../Shared/type";
-import { flexCenter } from "../../styles/theme";
 import PlaceBox, { PlaceBoxType } from "../PlaceBox";
 import Swiper from "./Swiper";
 
@@ -50,15 +49,15 @@ const Wrapper = styled.div`
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 1.9rem;
+  bottom: 3.2rem;
   z-index: 50;
   .flickity-slider {
-    ${flexCenter};
+    display: flex;
+    align-items: flex-end;
     height: 100%;
   }
   .carousel-cell {
     margin-right: 0.8rem;
-    padding: 1.6rem 0;
   }
   .place-box {
     width: 30.3rem;
