@@ -5,7 +5,7 @@ import { flexCenter, theme } from "../styles/theme";
 interface HeaderProps {
   title?: string;
   isTransparent?: boolean;
-  children?: ReactChild;
+  children?: ReactChild | ReactChild[];
   className?: string;
 }
 

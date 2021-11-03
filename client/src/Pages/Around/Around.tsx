@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getAroundPlaces } from "../../api/place";
-import { Refresh } from "../../assets";
+import { Close, Refresh } from "../../assets";
 import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import { RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
-import { gap, theme, Title, WrapperWithHeaderFooter } from "../../styles/theme";
+import { gap, Title, WrapperWithHeaderFooter } from "../../styles/theme";
 import AroundMapView from "./AroundMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
+import AroundBox from "../../Components/AroundBox";
 
 const Around = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -22,76 +23,92 @@ const Around = () => {
   };
 
   const regionId = useRecoilValue(RegionId);
-  const [places, setPlaces] = useState<PlaceType[] | []>([]);
+  const [leftPlaces, setLeftPlaces] = useState<PlaceType[] | []>([]);
+  const [rightPlaces, setRightPlaces] = useState<PlaceType[] | []>([]);
+
   const [hasMore, setHasMore] = useState(true);
-  const [paginator, setPaginator] = useState("");
+  const [leftPaginator, setLeftPaginator] = useState("");
+  const [rightPaginator, setRightPaginator] = useState("");
   const [page, setPage] = useState(1);
   const handleNext = () => {
     setPage(page + 1);
   };
   useEffect(() => {
-    const fetchAroundPlaces = async () => {
-      const data = await getAroundPlaces(regionId, {
+    const fetchAroundPlacesLeft = async () => {
+      const leftData = await getAroundPlaces(regionId, {
         page,
-        paginator: paginator ?? null,
+        perPage: 20,
+        paginator: leftPaginator ?? null,
       });
-      if (data.places.length < 1) {
+      if (leftData.places.length < 1) {
         setHasMore(false);
         return;
       }
-      setPlaces([...places, ...data.places]);
-      setPaginator(data.paginator);
+      setLeftPlaces([...leftPlaces, ...leftData.places]);
+      setLeftPaginator(leftData.paginator);
     };
-    fetchAroundPlaces();
-  }, [page]);
 
-  const [leftPlaces, setLeftPlaces] = useState<PlaceType[] | []>([]);
-  const [rightPlaces, setRightPlaces] = useState<PlaceType[] | []>([]);
-  useEffect(() => {
-    const mid = Math.floor(places.length / 2);
-    const left = places.slice(0, mid);
-    const right = places.slice(mid, places.length);
-    setLeftPlaces(left);
-    setRightPlaces(right);
-  }, [places]);
+    const fetchAroundPlacesRight = async () => {
+      const rightData = await getAroundPlaces(regionId, {
+        page,
+        perPage: 20,
+        paginator: rightPaginator ?? null,
+      });
+      if (rightData.places.length < 1) {
+        setHasMore(false);
+        return;
+      }
+      setRightPlaces([...rightPlaces, ...rightData.places]);
+      setRightPaginator(rightData.paginator);
+    };
+
+    fetchAroundPlacesLeft();
+    fetchAroundPlacesRight();
+  }, [page]);
 
   return (
     <>
       <Wrapper>
         <Header title="장소 둘러보기">
+          <Close className="left-icon" />
           <Refresh
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              window.location.reload();
+              window.scrollTo(0, 0);
+            }}
             className="right-icon"
           />
         </Header>
-        <Title style={{ color: theme.color.orange }}>{`우리 동네에는
+
+        <div id="around-scroll">
+          <Title>{`우리 동네에는
 이런 장소가 있어요!`}</Title>
 
-        <InfiniteScroll
-          dataLength={places.length}
-          next={handleNext}
-          hasMore={hasMore}
-          loader={<div />}
-        >
-          <div className="contents">
-            <div className="places">
-              {leftPlaces.map((place) => (
-                <div key={place.placeId} onClick={() => handleShowMap(place)}>
-                  <div className="photo" />
-                  <div className="name">{place.name}</div>
-                </div>
-              ))}
+          <InfiniteScroll
+            dataLength={leftPlaces.length + rightPlaces.length}
+            next={handleNext}
+            hasMore={hasMore}
+            loader={<div />}
+            scrollableTarget="around-scroll"
+          >
+            <div className="contents">
+              <div className="places">
+                {leftPlaces.map((place) => (
+                  <div key={place.placeId} onClick={() => handleShowMap(place)}>
+                    <AroundBox {...place} />
+                  </div>
+                ))}
+              </div>
+              <div className="places">
+                {rightPlaces.map((place) => (
+                  <div key={place.placeId} onClick={() => handleShowMap(place)}>
+                    <AroundBox {...place} />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="places">
-              {rightPlaces.map((place) => (
-                <div key={place.placeId} onClick={() => handleShowMap(place)}>
-                  <div className="photo" />
-                  <div className="name">{place.name}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </InfiniteScroll>
+          </InfiniteScroll>
+        </div>
 
         {!isMapShown && <CreateButton />}
 
@@ -109,12 +126,19 @@ const Wrapper = styled.div`
   ${WrapperWithHeaderFooter};
   padding-left: 2rem;
   padding-right: 2rem;
+  #around-scroll {
+    height: 100vh;
+    padding-top: 3rem;
+    box-sizing: border-box;
+    overflow-y: scroll;
+  }
   .contents {
     display: flex;
-    flex: 1;
-    ${gap("0.8rem")};
+    margin-top: 2.3rem;
+    width: 100%;
   }
   .places {
+    width: 50%;
     .photo {
       width: 100%;
       height: 10rem;
@@ -127,9 +151,14 @@ const Wrapper = styled.div`
       letter-spacing: -2%;
       line-height: 140%;
     }
-    flex: 0.5;
+    &:first-child {
+      margin-right: 0.6rem;
+    }
+    &:last-child {
+      margin-left: 0.6rem;
+    }
     margin-top: 1.2rem;
-    ${gap("2rem", "column")};
+    ${gap("1.2rem", "column")};
   }
 `;
 

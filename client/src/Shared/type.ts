@@ -50,7 +50,7 @@ export interface PlaceType {
   saved: number;
 }
 
-interface ImageType {
+export interface ImageType {
   id: string;
   width: number;
   height: number;

@@ -6,9 +6,11 @@ const PlaceInfo = ({ place }: { place: PlaceType }) => {
   return (
     <Wrapper>
       <div className="category">
-        {place.category?.slice(0, 2).map((c) => (
-          <Tag key={c}>{c}</Tag>
-        ))}
+        {place.category?.length > 0 ? (
+          place.category?.slice(0, 2).map((c) => <Tag key={c}>{c}</Tag>)
+        ) : (
+          <Tag>동네 장소</Tag>
+        )}
       </div>
 
       <div className="name">{place.name}</div>
