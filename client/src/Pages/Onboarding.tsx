@@ -21,7 +21,11 @@ import OnboardAlert from "./Write/Onboard/OnboardAlert";
 const carousel = [
   { key: "one", top: <OneOne />, bottom: <OneTwo className="one-two" /> },
   { key: "two", top: <TwoOne />, bottom: <TwoTwo /> },
-  { key: "three", top: <ThreeOne />, bottom: <ThreeTwo /> },
+  {
+    key: "three",
+    top: <ThreeOne />,
+    bottom: <img src="/3-2.png" />,
+  },
 ];
 
 const Onboarding = () => {
@@ -80,6 +84,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  img {
+    width: 100%;
+  }
   .close-btn {
     position: fixed;
     top: 0;
