@@ -183,6 +183,7 @@ const Write = () => {
           onInput={handleInput}
           placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
           value={inputVal.value}
+          onFocus={() => Mixpanel.track("글작성 - 제목 포커스")}
         />
         {isInputOver && (
           <div className="error">공백을 포함해 최대 30글자로 작성해주세요</div>
@@ -234,6 +235,7 @@ const Write = () => {
           onInput={handleTextarea}
           placeholder="어떤 테마 장소들을 모았는지 설명해 주세요."
           value={textareaVal.value}
+          onFocus={() => Mixpanel.track("글작성 - 설명 포커스")}
         />
         {isTextareaOver && (
           <div className="error">공백을 포함해 최대 100글자로 작성해주세요</div>

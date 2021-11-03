@@ -19,6 +19,7 @@ import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const SearchPlace = ({
   setIsSearchOpened,
@@ -45,6 +46,10 @@ const SearchPlace = ({
   const [result, setResult] = useState<PlaceType[] | []>([]);
   const [resultHasMore, setResultHasMore] = useState(true);
   const [resultPage, setResultPage] = useState(1);
+
+  useEffect(() => {
+    Mixpanel.track("글작성 - 장소 검색 진입");
+  }, []);
 
   // 검색
   const getSearchItems = useCallback(async () => {
@@ -90,6 +95,7 @@ const SearchPlace = ({
           value={searchVal.value}
           onChange={searchVal.onChange}
           placeholder="검색어를 입력해주세요"
+          onFocus={() => Mixpanel.track("글작성 - 검색어 포커스")}
         />
         {searchVal.value.length > 0 && (
           <SearchClose
