@@ -33,7 +33,7 @@ const Wrapper = styled.div`
     bottom: 0;
     width: 100%;
     height: 100vh;
-    z-index: 100;
+    z-index: 300;
     padding: 2rem;
     box-sizing: border-box;
     .alert-wrapper {

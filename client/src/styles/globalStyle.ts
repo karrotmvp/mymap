@@ -53,6 +53,6 @@ export const GlobalStyle = createGlobalStyle`
         height: 100vh;
         background-color: #000;
         opacity: 0.5;
-        z-index: 100;
+        z-index: 200;
     } 
 `;

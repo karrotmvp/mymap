@@ -167,6 +167,7 @@ const Write = () => {
     <Wrapper>
       <Header
         title={isWrite || isOnboarding ? "테마지도 만들기" : "테마지도 수정"}
+        className="write-header"
       >
         <Close onClick={handleClose} className="left-icon" />
       </Header>
@@ -174,7 +175,7 @@ const Write = () => {
 나만의 장소를 저장해요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
-        테마지도의 제목을 입력해 주세요.
+        만들고 싶은 테마 이름을 입력해 주세요.
       </div>
       <div className="name-input">
         <Input
@@ -190,7 +191,7 @@ const Write = () => {
         )}
       </div>
 
-      <div className="subtitle">지도에 저장할 장소를 추가해주세요.</div>
+      <div className="subtitle">지도에 저장할 장소를 추가해 주세요.</div>
       <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
 
       {/* 추가된 장소들 */}
@@ -225,7 +226,7 @@ const Write = () => {
       )}
 
       <div className="subtitle">
-        테마지도에 대한 설명을 작성해주세요.<span>(선택)</span>
+        테마에 대한 설명을 작성해 주세요.<span>(선택)</span>
       </div>
       <div className="name-input">
         <Textarea
@@ -233,7 +234,7 @@ const Write = () => {
           rows={2}
           maxLength={100}
           onInput={handleTextarea}
-          placeholder="어떤 테마 장소들을 모았는지 설명해 주세요."
+          placeholder="예) 약속은 없지만, 밖에서 밥을 먹고 싶을 때 자주 찾는 곳들을 모았어요. 혼자 가도 눈치 보이지 않는 식당 모음이에요."
           value={textareaVal.value}
           onFocus={() => Mixpanel.track("글작성 - 설명 포커스")}
         />
@@ -242,9 +243,9 @@ const Write = () => {
         )}
       </div>
 
-      <div className="subtitle">동네 이웃에게 테마지도를 공개할까요?</div>
+      <div className="subtitle">동네 이웃에게 만든 테마를 공개할까요?</div>
       <div className="explanation">
-        지도를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
+        테마를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
       </div>
       <div className="select-buttons">
         <SelectBtn
@@ -289,7 +290,7 @@ const Write = () => {
           }}
           $disabled={!isSubmittable}
         >
-          {isWrite || isOnboarding ? "작성 완료" : "수정 완료"}
+          {isWrite || isOnboarding ? "만들기" : "수정 완료"}
         </SubmitBtn>
       </div>
     </Wrapper>
@@ -329,6 +330,9 @@ const Wrapper = styled.div`
   padding-right: 2rem;
   padding-bottom: 13.2rem;
   overflow: scroll;
+  .write-header {
+    z-index: 0;
+  }
   .error {
     color: ${theme.color.red};
     font-weight: 500;
