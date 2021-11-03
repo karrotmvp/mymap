@@ -11,6 +11,7 @@ import { getFeedPosts } from "../../api/post";
 import { useRecoilValue } from "recoil";
 import { RegionId } from "../../Shared/atom";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { WrapperWithFooter } from "../../styles/theme";
 
 const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -126,19 +127,24 @@ const Main = () => {
       </div>
 
       {!isPinSelected ? (
-        <>
-          <div onClick={() => setIsMapShown(false)}>
+        <div>
+          <MainScroll
+            id="main-scroll"
+            $isMapShown={isMapShown}
+            onClick={() => setIsMapShown(true)}
+          >
             <InfiniteScroll
               dataLength={feedPosts.length}
               next={handleNext}
               hasMore={hasMore}
               loader={<div />}
+              scrollableTarget="main-scroll"
             >
-              <MainSlide {...{ isMapShown, isScrollUp }} posts={feedPosts} />
+              <MainSlide {...{ isScrollUp, setIsMapShown }} posts={feedPosts} />
             </InfiniteScroll>
-          </div>
+          </MainScroll>
           <Footer />
-        </>
+        </div>
       ) : (
         <PinSlider
           placeBoxType="type2"
@@ -150,5 +156,19 @@ const Main = () => {
 };
 
 const Wrapper = styled.div``;
+
+const MainScroll = styled.div<{ $isMapShown: boolean }>`
+  ${WrapperWithFooter};
+  transition: 0.5s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow-y: scroll;
+  margin-top: ${({ $isMapShown }) =>
+    $isMapShown ? "calc(100vh - 12.5rem)" : 0};
+  padding-top: ${({ $isMapShown }) =>
+    $isMapShown ? 0 : "calc(100vh - 34.9rem)"};
+`;
 
 export default Main;
