@@ -55,6 +55,7 @@ export class PostService {
         const coordinate: CoordinatesDTO = new CoordinatesDTO();
         const post: Post = await this.postRepository.findWithPostId(postId);
         if (!post) throw new BadRequestException();
+        if (!post.getShare() && post.getUser().getUserId() !== userId) throw new BadRequestException();
         const user: UserDTO = await this.userService.readUserDetail(post.getUser().getUserId());
         const detailPins: PinDTO[] = await this.readPinDetail(post.pins, coordinate);
         const savedNum: number = await this.savedPostRepository.countSavedNum(postId);
@@ -131,7 +132,7 @@ export class PostService {
 
     async readRegionPost(userId: number, regionId: string, start: number, end: number, perPage: number) {
         const regions: string[] = await this.regionService.readNeighborRegion(regionId);
-        const posts: Post[] = await this.postRepository.findWithRegionId(regions, start, end, perPage);
+        const posts: Post[] = await this.postRepository.findWithRegionId(regions, start, end, perPage, userId);
         return await this.readPostList(userId, posts);
     }
 
