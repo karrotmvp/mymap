@@ -83,12 +83,9 @@ const Detail = () => {
       <Header>
         <>
           {fromWriteForm ? (
-            <Close
-              className="left-icon"
-              onClick={() => window.history.go(-3)}
-            />
+            <Close className="left-icon" onClick={() => history.go(-3)} />
           ) : (
-            <Back className="left-icon" onClick={() => window.history.back()} />
+            <Back className="left-icon" onClick={() => history.goBack()} />
           )}
           {(state._t === "map" ||
             (state._t === "list" && state.isScrollUp)) && (
@@ -264,7 +261,7 @@ const Modal = styled.div`
     background-color: ${theme.color.white};
     border-top-left-radius: 2.4rem;
     border-top-right-radius: 2.4rem;
-    z-index: 100;
+    z-index: 300;
     padding: 2.6rem 0.9rem;
     .button {
       font-size: 1.6rem;
