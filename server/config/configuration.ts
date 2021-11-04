@@ -33,5 +33,8 @@ export default () => ({
     security: {
         apikey1: process.env.APIKEY1,
         apikey2: process.env.APIKEY2
+    },
+    slack: {
+        webhook: process.env.SLACK_WEBHOOK
     }
 })

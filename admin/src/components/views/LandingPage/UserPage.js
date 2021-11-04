@@ -1,15 +1,15 @@
-import axios from 'axios'
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import './post.css'
 import '../../../index.css'
+import './post.css'
 
-function PostPage(props) {
+function UserPage(props) {
 
-    const [Posts, setPosts] = useState([]);
-    const [Page, setPage] = useState(0);
+    const [Users, setUsers] = useState([])
+    const [Page, setPage] = useState(0)
 
     useEffect(() => {
-        axios.get(process.env.REACT_APP_SERVER + 'post/admin', {
+        axios.get(process.env.REACT_APP_SERVER + 'user/admin', {
             headers: {
                 authorization: 'Bearer ' + localStorage.getItem('token')
             },
@@ -18,7 +18,7 @@ function PostPage(props) {
             }
         })
             .then(res => {
-                setPosts(Posts => [...Posts, ...res.data]);
+                setUsers(Users => [...Users, ...res.data]);
             })
             .catch(e => {
                 if (e.response.status === 401) {
@@ -44,32 +44,30 @@ function PostPage(props) {
         }
     })
 
+    
+
     return (
         <div className="container">
             <div className="theme_container">
                 <div className="theme">
-                    <div>테마 아이디</div>
-                    <div>제목</div>
-                    <div>핀 갯수</div>
-                    <div>지역이름(지역아이디)</div>
                     <div>유저 아이디</div>
-                    <div>공개 여부</div>
+                    <div style={{ width: '300px' }}>당근 아이디</div>
+                    <div>만든 테마 갯수</div>
+                    <div>저장한 테마 갯수</div>
                     <div>업데이트</div>
                     <div>생성일</div>
                 </div>
                 {
-                    Posts && Posts.map((post, key) => {
-                        console.log(post)
+                    Users && Users.map((user, key) => {
+                        console.log(user)
                         return (
                             <div className="theme_content" key={key}>
-                                <div>{post.postId}</div>
-                                <div>{post.title}</div>
-                                <div>{post.pins.length}</div>
-                                <div>{post.regionName}({post.regionId})</div>
-                                <div>{post.userId}</div>
-                                <div>{post.share ? "공개" : "비공개"}</div>
-                                <div>{new Date(post.updatedAt).toLocaleString()}</div>
-                                <div>{new Date(post.createdAt).toLocaleString()}</div>
+                                <div>{user.userId}</div>
+                                <div style={{ width: '300px' }}>{user.uniqueId}</div>
+                                <div>{user.posts.length}</div>
+                                <div>{user.savedPosts.length}</div>
+                                <div>{new Date(user.updatedAt).toLocaleString()}</div>
+                                <div>{new Date(user.createdAt).toLocaleString()}</div>
                             </div>
                         )
                     })
@@ -79,4 +77,4 @@ function PostPage(props) {
     )
 }
 
-export default PostPage
+export default UserPage

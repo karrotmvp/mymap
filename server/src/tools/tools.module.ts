@@ -4,6 +4,7 @@ import { PostModule } from 'src/post/post.module';
 import { RegionModule } from 'src/region/region.module';
 import { UserModule } from 'src/user/user.module';
 import { MixpanelPlaceProcessor, MixpanelPostProcessor, MixpanelUserProcessor } from './mixpanel.processor';
+// import { SlackPostProcessor } from './slack.processor';
 
 @Module({
     imports: [ConfigModule, UserModule, PostModule, RegionModule],

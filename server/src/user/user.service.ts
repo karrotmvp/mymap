@@ -72,4 +72,16 @@ export class UserService {
     async readAdmin() {
         return await this.userRepository.findOne({ where: { isAdmin: true } });
     }
+    async checkAdmin(userId: number) {
+        const user: User = await this.userRepository.findOne(userId);
+        if (!user.getIsAdmin()) throw new UnauthorizedException();
+    }
+
+    async readUserList(page: number, perPage: number) {
+        return await this.userRepository.find({
+            relations: ['posts', 'savedPosts'],
+            take: perPage,
+            skip: page * perPage
+        })
+    }
 }
