@@ -30,6 +30,21 @@ export const GlobalStyle = createGlobalStyle`
             width: 2.5rem;
             transform: translate(-50%,-100%);
         }
+        .pin-box {
+            font-weight: 500;
+            font-size: 1.2rem;
+            line-height: 135%;
+            padding: 0.9rem 2.1rem;
+            border-radius: 1.2rem;
+            position: absolute;
+            transform: translate(-50%,-270%);
+            z-index: 900;
+            white-space: nowrap;
+            background: ${theme.color.white};
+            border: 0.1rem solid ${theme.color.orange};
+            box-sizing: border-box;
+            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.22);
+        }
     }
     textarea {
         font-family: 'Spoqa Han Sans Neo', 'sans-serif';

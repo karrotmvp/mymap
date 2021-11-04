@@ -20,6 +20,7 @@ declare global {
 export interface Pin {
   id?: string;
   placeId?: string;
+  name?: string;
   latitude: number;
   longitude: number;
 }
@@ -91,7 +92,9 @@ const MapView = ({
             icon={{
               content:
                 center.lat === pin.latitude && center.lng === pin.longitude
-                  ? "<img class='pin-image' src='/map_pin_active.png' />"
+                  ? pin.name
+                    ? `<div><div class='pin-box'>${pin.name}</div><img class='pin-image' src='/map_pin_active.png' /></div>`
+                    : "<img class='pin-image' src='/map_pin_active.png' />"
                   : "<img class='pin-image-inactive' src='/map_pin_inactive.png' />",
             }}
           />

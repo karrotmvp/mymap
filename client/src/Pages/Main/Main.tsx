@@ -58,18 +58,26 @@ const Main = () => {
   useEffect(() => {
     const _pins: PinType[] = [];
     feedPosts?.forEach((post) => {
-      _pins.push(...post.pins);
+      post.pins.forEach((pin) => {
+        if (!_pins.find((p) => p.place.placeId === pin.place.placeId)) {
+          _pins.push(pin);
+        }
+      });
     });
     setPins(_pins);
 
     const _feedPosts: Pin[] = [];
     feedPosts?.forEach((post) =>
       post.pins.forEach((pin) => {
-        _feedPosts.push({
-          id: pin.pinId,
-          latitude: pin.place.coordinates.latitude,
-          longitude: pin.place.coordinates.longitude,
-        });
+        if (!_feedPosts.find((p) => p.placeId === pin.place.placeId)) {
+          _feedPosts.push({
+            id: pin.pinId,
+            placeId: pin.place.placeId,
+            name: pin.place.name,
+            latitude: pin.place.coordinates.latitude,
+            longitude: pin.place.coordinates.longitude,
+          });
+        }
       })
     );
     setfeedPins(_feedPosts);
