@@ -168,7 +168,7 @@ const Write = () => {
   return (
     <Wrapper>
       <Header
-        title={isWrite || isOnboarding ? "테마지도 만들기" : "테마지도 수정"}
+        title={isWrite || isOnboarding ? "테마 만들기" : "테마 수정"}
         className="write-header"
       >
         <Close onClick={handleClose} className="left-icon" />
@@ -182,7 +182,7 @@ const Write = () => {
       <div className="name-input">
         <Input
           $error={isInputOver}
-          maxLength={30}
+          // maxLength={30}
           onInput={handleInput}
           placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
           value={inputVal.value}
@@ -215,10 +215,12 @@ const Write = () => {
         </AddedList>
       ))}
 
-      <div className="add-button" onClick={() => setIsSearchOpened(true)}>
-        <Plus className="add-icon" />
-        장소 추가
-      </div>
+      {places.length < 10 && (
+        <div className="add-button" onClick={() => setIsSearchOpened(true)}>
+          <Plus className="add-icon" />
+          장소 추가
+        </div>
+      )}
 
       {isSearchOpened && (
         <SearchPlace
@@ -234,7 +236,7 @@ const Write = () => {
         <Textarea
           $error={isTextareaOver}
           rows={2}
-          maxLength={100}
+          // maxLength={100}
           onInput={handleTextarea}
           placeholder="예) 약속은 없지만, 밖에서 밥을 먹고 싶을 때 자주 찾는 곳들을 모았어요. 혼자 가도 눈치 보이지 않는 식당 모음이에요."
           value={textareaVal.value}

@@ -84,7 +84,7 @@ const SearchPlace = ({
       }
       setResult([...result, ...data]);
     };
-    fetchResult();
+    if (searchVal.value.length > 0) fetchResult();
   }, [resultPage]);
 
   return (

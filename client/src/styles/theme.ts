@@ -64,7 +64,7 @@ export const theme: DefaultTheme = {
     orange_light: "#FFF2EF",
     orange_very_light: "#FFF8F7",
     red: "#FC453A",
-    blue: "#0F6FFF",
+    dark_green: "#09C6A1",
   },
 };
 
