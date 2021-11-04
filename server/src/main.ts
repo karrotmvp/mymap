@@ -25,9 +25,9 @@ async function bootstrap() {
   app.use(cookieParser());
   if (process.env.DEV === 'true') {
       app.enableCors({
-      origin: true,
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      credentials: true,
+        origin: true,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        credentials: true,
     });
   }
   app.useGlobalPipes(new ValidationPipe());

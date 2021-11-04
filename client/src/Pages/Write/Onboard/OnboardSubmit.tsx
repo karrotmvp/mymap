@@ -17,22 +17,20 @@ const OnboardSubmit = ({
   };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={close}>
       <div className="background" />
       <div className="alert">
-        <div className="alert-wrapper">
-          <div className="title">작성을 완료하시겠어요?</div>
-          <div className="sub">{`작성이 완료된 테마지도는 11월초 오픈되는 
-‘당장모아'에서 확인할 수 있어요!`}</div>
+        <div className="alert-wrapper" onClick={(e) => e.stopPropagation()}>
+          <div className="title">테마를 다 만드셨나요?</div>
+          <div className="sub">{`만든 테마는 11월 초 ‘당장모아’에서 확인할 수 있어요! 그때까지는 수정이 불가능해요.`}</div>
           <div className="buttons">
-            <Button onClick={close}>취소</Button>
-            <Button onClick={onClickFinish}>완료</Button>
+            <Button onClick={close}>수정할래요</Button>
+            <Button onClick={onClickFinish}>다 만들었어요</Button>
           </div>
         </div>
       </div>
 
       {isFinishOpened && <SubmitFinish />}
-      <SubmitFinish />
     </Wrapper>
   );
 };
@@ -46,7 +44,7 @@ const Wrapper = styled.div`
     bottom: 0;
     width: 100%;
     height: 100vh;
-    z-index: 100;
+    z-index: 300;
     padding: 2rem;
     box-sizing: border-box;
     .alert-wrapper {

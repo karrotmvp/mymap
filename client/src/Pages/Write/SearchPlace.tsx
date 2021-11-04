@@ -19,6 +19,7 @@ import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const SearchPlace = ({
   setIsSearchOpened,
@@ -46,19 +47,24 @@ const SearchPlace = ({
   const [resultHasMore, setResultHasMore] = useState(true);
   const [resultPage, setResultPage] = useState(1);
 
+  useEffect(() => {
+    Mixpanel.track("글작성 - 장소 검색 진입");
+  }, []);
+
   // 검색
   const getSearchItems = useCallback(async () => {
-    setResultHasMore(true);
     const data = await getSearch(regionId, {
       query: searchVal.value,
       page: resultPage,
     });
     setResult(data);
-    console.log("getSearchItems", searchVal.value);
   }, [searchVal.value]);
   // 검색 디바운스
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
+
   useEffect(() => {
+    setResultPage(1);
+    setResultHasMore(true);
     if (searchVal.value.length > 0) debouncedSearchVal();
   }, [searchVal.value]);
 
@@ -78,13 +84,8 @@ const SearchPlace = ({
       }
       setResult([...result, ...data]);
     };
-    if (resultPage > 1) fetchResult();
+    if (searchVal.value.length > 0) fetchResult();
   }, [resultPage]);
-
-  useEffect(() => {
-    console.log(result);
-    console.log(resultHasMore, resultPage);
-  }, [result]);
 
   return (
     <Wrapper>
@@ -94,6 +95,7 @@ const SearchPlace = ({
           value={searchVal.value}
           onChange={searchVal.onChange}
           placeholder="검색어를 입력해주세요"
+          onFocus={() => Mixpanel.track("글작성 - 검색어 포커스")}
         />
         {searchVal.value.length > 0 && (
           <SearchClose
@@ -105,14 +107,13 @@ const SearchPlace = ({
 
       {searchVal.value.length > 0 ? (
         result.length > 0 ? (
-          <div className="result">
+          <div id="search-list" className="result">
             <InfiniteScroll
               dataLength={result.length}
               next={handleResultNext}
-              style={{ fontSize: 0 }}
               hasMore={resultHasMore}
               loader={<div />}
-              onScroll={(e) => console.log(e)}
+              scrollableTarget="search-list"
             >
               {result.map((place) => {
                 const isExist = places.find((p) => p.placeId === place.placeId)

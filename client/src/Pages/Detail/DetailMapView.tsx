@@ -10,6 +10,7 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
       id: pin.pinId,
       latitude: pin.place.coordinates.latitude,
       longitude: pin.place.coordinates.longitude,
+      name: pin.place.name,
     };
   });
 

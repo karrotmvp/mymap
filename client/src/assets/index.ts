@@ -10,7 +10,6 @@ export { ReactComponent as List } from "./list.svg";
 export { ReactComponent as Edit } from "./edit.svg";
 export { ReactComponent as Edit2 } from "./edit_2.svg";
 export { ReactComponent as Delete } from "./delete.svg";
-export { ReactComponent as Write } from "./write.svg";
 export { ReactComponent as Home } from "./home_inactive.svg";
 export { ReactComponent as HomeActive } from "./home_active.svg";
 export { ReactComponent as Around } from "./lookaround_inactive.svg";
@@ -26,7 +25,13 @@ export { ReactComponent as LogoInactive } from "./logo_inactive.svg";
 export { ReactComponent as Call } from "./call.svg";
 export { ReactComponent as Time } from "./time.svg";
 export { ReactComponent as Main } from "./main.svg";
-export { ReactComponent as MainLogo } from "./main_logo.svg";
+export { ReactComponent as Thumbnail } from "./thumbnail.svg";
+export { ReactComponent as Secret } from "./secret.svg";
+export { ReactComponent as LogoTypo } from "./logo_typo.svg";
+export { ReactComponent as CreatePlus } from "./create_plus.svg";
+
+export { ReactComponent as Loading1 } from "./loading1.svg";
+export { ReactComponent as Loading2 } from "./loading2.svg";
 
 // onboarding
 export { ReactComponent as OneOne } from "./onboarding/1-1.svg";

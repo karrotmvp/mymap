@@ -5,6 +5,7 @@ import MapView, { Pin } from "../../Components/MapView";
 import PlaceBox from "../../Components/PlaceBox";
 import { PlaceType } from "../../Shared/type";
 import { Button, flexCenter, theme } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const PlaceMapView = ({
   place,
@@ -20,6 +21,7 @@ const PlaceMapView = ({
   setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
 }) => {
   const handleAddPlace = (place: PlaceType) => {
+    Mixpanel.track("글작성 - 장소 추가");
     setPlaces([...places, place]);
     setIsSearchOpened(false);
   };
@@ -42,8 +44,7 @@ const PlaceMapView = ({
       <div className="place-info">
         <PlaceBox type="type1" {...{ place }} />
         <AddBtn onClick={() => handleAddPlace(place)}>
-          <Plus className="add-icon" />
-          장소 추가
+          <Plus className="add-icon" />이 장소 추가하기
         </AddBtn>
       </div>
     </Wrapper>

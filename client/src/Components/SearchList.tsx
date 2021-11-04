@@ -27,7 +27,9 @@ const SearchList = ({
         <span>{afterWord}</span>
       </div>
       <div className="address">{place.address}</div>
-      {isExist && <div className="exist">이미 리스트에 추가된 장소예요!</div>}
+      {isExist && (
+        <div className="exist">이미 만들고 있는 테마에 추가된 장소예요!</div>
+      )}
     </Wrapper>
   );
 };
@@ -42,7 +44,7 @@ const Wrapper = styled.div<{ isExist: boolean }>`
     line-height: 135%;
     .match {
       color: ${({ isExist }) =>
-        isExist ? theme.color.gray3_5 : theme.color.blue};
+        isExist ? theme.color.gray3_5 : theme.color.dark_green};
     }
   }
   .address {

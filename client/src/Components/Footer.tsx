@@ -17,7 +17,7 @@ const Footer = () => {
     <Wrapper>
       <FooterLink to="/" $isClicked={pathname === "/"}>
         {pathname === "/" ? <HomeActive /> : <Home />}
-        <div>테마지도</div>
+        <div>추천 테마</div>
       </FooterLink>
       <FooterLink to="/around" $isClicked={pathname === "/around"}>
         {pathname === "/around" ? <AroundActive /> : <Around />}
@@ -25,7 +25,7 @@ const Footer = () => {
       </FooterLink>
       <FooterLink to="/mypage" $isClicked={pathname === "/mypage"}>
         {pathname === "/mypage" ? <MypageActive /> : <Mypage />}
-        <div>나의 리스트</div>
+        <div>나의 테마</div>
       </FooterLink>
     </Wrapper>
   );
@@ -34,7 +34,7 @@ const Footer = () => {
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 8.8rem;
+  height: 6.8rem;
   justify-content: space-around;
   box-shadow: 4px 0px 7px rgba(0, 0, 0, 0.13);
   position: fixed;

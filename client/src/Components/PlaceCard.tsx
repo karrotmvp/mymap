@@ -5,6 +5,12 @@ import { theme } from "../styles/theme";
 import PlaceInfo from "./PlaceInfo";
 
 const PlaceCard = ({ place }: { place: PlaceType }) => {
+  let time =
+    place.businessHoursFrom &&
+    place.businessHoursTo &&
+    `${place.businessHoursFrom} - ${place.businessHoursTo}`;
+  if (place.businessHoursExtra) time += ` ${place.businessHoursExtra}`;
+
   return (
     <Wrapper>
       {place.images.length > 0 && (
@@ -18,11 +24,11 @@ const PlaceCard = ({ place }: { place: PlaceType }) => {
         <PlaceInfo {...{ place }} />
         <div className="sub-info phone">
           <Call />
-          <div>010-0000-0000</div>
+          <div>{place.phone ?? "아직 정보가 없어요."}</div>
         </div>
         <div className="sub-info time">
           <Time />
-          <div>09:00 - 22:00 연중무휴</div>
+          <div>{time || "아직 정보가 없어요."}</div>
         </div>
       </div>
     </Wrapper>

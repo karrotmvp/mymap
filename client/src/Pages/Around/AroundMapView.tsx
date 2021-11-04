@@ -24,7 +24,11 @@ const AroundMapView = ({
       <Header isTransparent>
         <Back className="left-icon" onClick={close} />
       </Header>
-      <MapView height="100vh" pins={[pin]} />
+      <MapView
+        height="100vh"
+        pins={[pin]}
+        center={{ lat: pin.latitude, lng: pin.longitude }}
+      />
 
       <div className="placebox">
         <PlaceBox type="type4" {...{ place }} />
@@ -44,7 +48,7 @@ const Wrapper = styled.div`
     width: 100%;
     position: fixed;
     z-index: 300;
-    bottom: 3.5rem;
+    bottom: 2.8rem;
     & > div {
       padding: 1.4rem 1.5rem;
     }

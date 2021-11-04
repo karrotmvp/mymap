@@ -68,4 +68,8 @@ export class UserService {
         const preopenUser: PreopenUser = await this.preopenUserReposiotry.findOne(preopenUserId);
         return await this.preopenUserReposiotry.softRemove(preopenUser);
     }
+
+    async readAdmin() {
+        return await this.userRepository.findOne({ where: { isAdmin: true } });
+    }
 }

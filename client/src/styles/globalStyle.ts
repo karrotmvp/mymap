@@ -23,11 +23,27 @@ export const GlobalStyle = createGlobalStyle`
             position: absolute;
             width: 4.2rem;
             transform: translate(-50%,-100%);
+            z-index: 900;
         }
         .pin-image-inactive {
             position: absolute;
             width: 2.5rem;
             transform: translate(-50%,-100%);
+        }
+        .pin-box {
+            font-weight: 500;
+            font-size: 1.2rem;
+            line-height: 135%;
+            padding: 0.9rem 2.1rem;
+            border-radius: 1.2rem;
+            position: absolute;
+            transform: translate(-50%,-270%);
+            z-index: 900;
+            white-space: nowrap;
+            background: ${theme.color.white};
+            border: 0.1rem solid ${theme.color.orange};
+            box-sizing: border-box;
+            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.22);
         }
     }
     textarea {
@@ -53,6 +69,6 @@ export const GlobalStyle = createGlobalStyle`
         height: 100vh;
         background-color: #000;
         opacity: 0.5;
-        z-index: 100;
+        z-index: 200;
     } 
 `;

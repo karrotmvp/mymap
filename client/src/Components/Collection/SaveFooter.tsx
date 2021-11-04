@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
-import { Save2, SaveActive2 } from "../../assets";
+import { Save2, SaveActive2, Secret } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
 import { ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
-import { flexCenter, theme } from "../../styles/theme";
+import { flexCenter, gap, theme } from "../../styles/theme";
 
 interface SaveFooterInterface {
   post: PostType;
@@ -14,7 +14,7 @@ interface SaveFooterInterface {
 const SaveFooter = ({ post }: SaveFooterInterface) => {
   const [isSaved, setIsSaved] = useState<boolean>(post.saved);
   const [savedNum, setSavedNum] = useState<number>(post.savedNum);
-  const myInfo = useRecoilValue(ViewerInfo);
+  const viewerInfo = useRecoilValue(ViewerInfo);
 
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);
@@ -34,12 +34,23 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
   };
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);
 
+  const isViewer = post.user.userId === viewerInfo.userId;
+
   return (
     <Wrapper>
       <div className="saved-info">
-        {savedNum > 0 && `${savedNum}명 주민이 이 리스트를 저장했어요`}
+        {isViewer &&
+          (post.share ? (
+            savedNum === 0 && "아직 저장한 이웃이 없어요"
+          ) : (
+            <div className="secret">
+              <Secret />
+              <div>나만 볼 수 있는 테마예요</div>
+            </div>
+          ))}
+        {savedNum > 0 && `${savedNum}명 이웃이 이 테마를 저장했어요`}
       </div>
-      {post.user.userId !== myInfo.userId && (
+      {!isViewer && (
         <div onClick={(e) => e.stopPropagation()}>
           {isSaved ? (
             <SaveActive2 onClick={debouncedIsSaved} />
@@ -63,6 +74,10 @@ const Wrapper = styled.div`
     font-size: 1.4rem;
     font-weight: 500;
     line-height: 145%;
+  }
+  .secret {
+    ${flexCenter};
+    ${gap("1.2rem")};
   }
 `;
 

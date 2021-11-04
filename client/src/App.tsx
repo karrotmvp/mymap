@@ -16,9 +16,11 @@ import ClosePage from "./Pages/ClosePage";
 import Onboarding from "./Pages/Onboarding";
 import Analytics from "react-router-ga";
 import { Mixpanel } from "./utils/mixpanel";
-import { MainLogo } from "./assets";
+import { Close, Loading1, Loading2 } from "./assets";
 import styled from "styled-components";
 import { flexCenter } from "./styles/theme";
+import SearchPlace from "./Pages/Write/SearchPlace";
+import Header from "./Components/Header";
 
 dayjs.locale("ko");
 
@@ -84,12 +86,17 @@ function App() {
               <Route exact path="/write" component={Write} />
               <Route exact path="/onboarding" component={Onboarding} />
               <Route exact path="/onboarding/write" component={Write} />
+              <Route exact path="/asdf" component={SearchPlace} />
               <Route path="/edit/:id" component={Write} />
             </Switch>
           ) : (
             <Wrapper>
+              <Header>
+                <Close onClick={() => mini.close()} className="left-icon" />
+              </Header>
+              <Loading1 />
               <div className="center">
-                <MainLogo />
+                <Loading2 />
               </div>
             </Wrapper>
           )}
@@ -103,6 +110,8 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  padding-top: 5rem;
+  box-sizing: border-box;
   .center {
     ${flexCenter};
     top: 0;

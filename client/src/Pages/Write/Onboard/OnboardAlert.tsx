@@ -1,24 +1,29 @@
 import Mini from "@karrotmarket/mini";
 import { useRouteMatch } from "react-router";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { postNotification } from "../../../api/notification";
+import { postPreopen } from "../../../api/user";
 import { Notification } from "../../../assets";
+import { RegionId } from "../../../Shared/atom";
 import { Button, flexCenter, gap, theme } from "../../../styles/theme";
 import { Mixpanel } from "../../../utils/mixpanel";
 
 const mini = new Mini();
 
 const OnboardAlert = ({ close }: { close: () => void }) => {
+  const regionId = useRecoilValue(RegionId);
+
   const onClickButton = async () => {
+    Mixpanel.track("온보딩 후 글작성에서 이탈하지만 알림받음");
     await postNotification();
+    await postPreopen(regionId);
     mini.close();
   };
 
   const route = useRouteMatch({
     path: "/onboarding",
   });
-
-  console.log();
 
   const handleClose = () => {
     if (route?.isExact) {
@@ -30,18 +35,18 @@ const OnboardAlert = ({ close }: { close: () => void }) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={close}>
       <div className="background" />
-      <div className="alert" onClick={close}>
+      <div className="alert">
         <div className="alert-wrapper" onClick={(e) => e.stopPropagation()}>
-          <div className="title">채팅으로 알림 받기</div>
+          <div className="title">다음에 만드시겠어요?</div>
           <Notification />
-          <div className="sub">{`저장할 장소가 떠오르지 않나요?
-언제든 만들 수 있도록
-링크를 알림으로 보내드릴게요.`}</div>
+          <div className="sub">{`저장하고 싶은 장소가 생각날 때
+언제든 테마를 만들 수 있도록
+채팅으로 알려드릴게요.`}</div>
           <div className="buttons">
-            <Button onClick={handleClose}>나가기</Button>
-            <Button onClick={onClickButton}>알림받기</Button>
+            <Button onClick={handleClose}>그냥 나갈게요</Button>
+            <Button onClick={onClickButton}>네, 알려주세요</Button>
           </div>
         </div>
       </div>
@@ -58,7 +63,7 @@ const Wrapper = styled.div`
     bottom: 0;
     width: 100%;
     height: 100vh;
-    z-index: 100;
+    z-index: 300;
     padding: 2rem;
     box-sizing: border-box;
     .alert-wrapper {

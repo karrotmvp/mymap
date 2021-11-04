@@ -5,12 +5,22 @@ import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import SaveFooter from "./SaveFooter";
 
-const PlaceBox = ({ name, category }: { name: string; category: string[] }) => {
+const OrangePlaceBox = ({
+  name,
+  category,
+}: {
+  name: string;
+  category: string[];
+}) => {
   return (
-    <PlaceBoxWrapper>
-      {category?.length > 0 && <Tag>{category[category.length - 1]}</Tag>}
+    <OrangePlaceBoxWrapper>
+      {category?.length > 0 ? (
+        <Tag>{category[category.length - 1]}</Tag>
+      ) : (
+        <Tag>동네 장소</Tag>
+      )}
       <div className="place-name">{name}</div>
-    </PlaceBoxWrapper>
+    </OrangePlaceBoxWrapper>
   );
 };
 
@@ -30,7 +40,7 @@ const Collection = (post: PostType) => {
       </div>
       <div className="places">
         {post.pins.map((pin) => (
-          <PlaceBox key={pin.pinId} {...pin.place} />
+          <OrangePlaceBox key={pin.pinId} {...pin.place} />
         ))}
       </div>
       <SaveFooter {...{ post }} />
@@ -73,7 +83,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const PlaceBoxWrapper = styled.div`
+const OrangePlaceBoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -94,6 +104,11 @@ const PlaceBoxWrapper = styled.div`
     line-height: 150%;
     letter-spacing: -0.2%;
     font-size: 1.5rem;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 `;
 
@@ -104,6 +119,8 @@ const Tag = styled.div`
   border-radius: 0.4rem;
   background-color: ${theme.color.white};
   color: ${theme.color.orange};
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export default Collection;

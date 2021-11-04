@@ -5,12 +5,13 @@ import Header from "../../Components/Header";
 import MainSlide from "./MainSlide";
 import MapView, { Pin } from "../../Components/MapView";
 import PinSlider from "../../Components/PinSlider";
-import { Back, Close } from "../../assets";
+import { Back, Close, LogoTypo } from "../../assets";
 import { PinType, PostType } from "../../Shared/type";
 import { getFeedPosts } from "../../api/post";
 import { useRecoilValue } from "recoil";
 import { RegionId } from "../../Shared/atom";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { WrapperWithFooter } from "../../styles/theme";
 
 const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -57,18 +58,26 @@ const Main = () => {
   useEffect(() => {
     const _pins: PinType[] = [];
     feedPosts?.forEach((post) => {
-      _pins.push(...post.pins);
+      post.pins.forEach((pin) => {
+        if (!_pins.find((p) => p.place.placeId === pin.place.placeId)) {
+          _pins.push(pin);
+        }
+      });
     });
     setPins(_pins);
 
     const _feedPosts: Pin[] = [];
     feedPosts?.forEach((post) =>
       post.pins.forEach((pin) => {
-        _feedPosts.push({
-          id: pin.pinId,
-          latitude: pin.place.coordinates.latitude,
-          longitude: pin.place.coordinates.longitude,
-        });
+        if (!_feedPosts.find((p) => p.placeId === pin.place.placeId)) {
+          _feedPosts.push({
+            id: pin.pinId,
+            placeId: pin.place.placeId,
+            name: pin.place.name,
+            latitude: pin.place.coordinates.latitude,
+            longitude: pin.place.coordinates.longitude,
+          });
+        }
       })
     );
     setfeedPins(_feedPosts);
@@ -99,19 +108,19 @@ const Main = () => {
   // scroll up
   const [isScrollUp, setIsScrollUp] = useState(false);
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.innerHeight - window.scrollY < 380) {
-        setIsScrollUp(true);
-      } else {
-        setIsScrollUp(false);
-      }
-    });
-    return window.removeEventListener("scroll", () => {});
+    const targetElement = document.querySelector("#main-scroll")!;
+
+    const onScroll = () => {
+      setIsScrollUp(window.innerHeight - targetElement.scrollTop < 380);
+    };
+    targetElement.addEventListener("scroll", onScroll);
+    return () => targetElement.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <Wrapper>
       <Header isTransparent={!isScrollUp}>
+        {isScrollUp ? <LogoTypo /> : <div />}
         {isPinSelected ? (
           <Back className="left-icon" onClick={() => setIsPinSelected(false)} />
         ) : (
@@ -129,20 +138,24 @@ const Main = () => {
       </div>
 
       {!isPinSelected ? (
-        <>
-          <div onClick={() => setIsMapShown(false)}>
+        <div>
+          <MainScroll
+            id="main-scroll"
+            $isMapShown={isMapShown}
+            onClick={() => setIsMapShown(true)}
+          >
             <InfiniteScroll
               dataLength={feedPosts.length}
               next={handleNext}
-              style={{ fontSize: 0 }}
               hasMore={hasMore}
               loader={<div />}
+              scrollableTarget="main-scroll"
             >
-              <MainSlide {...{ isMapShown, isScrollUp }} posts={feedPosts} />
+              <MainSlide {...{ isScrollUp, setIsMapShown }} posts={feedPosts} />
             </InfiniteScroll>
-          </div>
+          </MainScroll>
           <Footer />
-        </>
+        </div>
       ) : (
         <PinSlider
           placeBoxType="type2"
@@ -154,5 +167,18 @@ const Main = () => {
 };
 
 const Wrapper = styled.div``;
+
+const MainScroll = styled.div<{ $isMapShown: boolean }>`
+  ${WrapperWithFooter};
+  transition: 0.5s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow-y: scroll;
+  margin-top: ${({ $isMapShown }) =>
+    $isMapShown ? "calc(100vh - 12.5rem)" : 0};
+  padding-top: ${({ $isMapShown }) => ($isMapShown ? 0 : "50vh")};
+`;
 
 export default Main;
