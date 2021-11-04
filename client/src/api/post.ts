@@ -21,7 +21,7 @@ export const postPost = async (body: PostBody) => {
 
 // 리스트 수정
 export const putPost = async (postId: number, body: PostBody) => {
-  return await PUT(`api/post/${postId}`, body);
+  return (await PUT(`api/post/${postId}`, body)) as number;
 };
 
 // 리스트 삭제

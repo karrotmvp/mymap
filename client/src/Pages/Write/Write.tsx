@@ -158,8 +158,8 @@ const Write = () => {
         else if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
       }
     } else {
-      await putPost(postId!, body);
-      history.push(`/detail/${postId}/finish`);
+      const data = await putPost(postId!, body);
+      if (data) history.push(`/detail/${postId}/finish`);
     }
   };
 
