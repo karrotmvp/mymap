@@ -68,7 +68,7 @@ const Onboarding = () => {
             history.push("/onboarding/write");
           }}
         >
-          나만의 테마지도 만들기
+          나만의 테마 만들기
         </Button>
       </div>
 

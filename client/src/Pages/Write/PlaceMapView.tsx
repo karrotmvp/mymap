@@ -44,8 +44,7 @@ const PlaceMapView = ({
       <div className="place-info">
         <PlaceBox type="type1" {...{ place }} />
         <AddBtn onClick={() => handleAddPlace(place)}>
-          <Plus className="add-icon" />
-          장소 추가
+          <Plus className="add-icon" />이 장소 추가하기
         </AddBtn>
       </div>
     </Wrapper>
