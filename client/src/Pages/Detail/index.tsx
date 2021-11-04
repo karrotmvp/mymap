@@ -82,8 +82,8 @@ const Detail = () => {
   const onDeleteConfirmClick = async () => {
     await deletePost(parseInt(postId));
 
-    // 다시 이전 페이지로: 2번 건너뛰어야 함
-    history.go(-2);
+    // 다시 이전 페이지로: 3번 건너뛰어야 함
+    history.go(-3);
   };
 
   if (post.state !== "hasValue") {

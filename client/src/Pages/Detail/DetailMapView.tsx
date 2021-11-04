@@ -19,6 +19,16 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
     lng: pins[0].place.coordinates.longitude,
   });
 
+  // 핀 선택
+  const handleSelectPin = (pin: Pin, idx: number) => {
+    setCenter &&
+      setCenter({
+        lat: pin.latitude,
+        lng: pin.longitude,
+      });
+    setCurrent(idx);
+  };
+
   // 카드 이동
   const [current, setCurrent] = useState(0);
   useEffect(() => {
@@ -30,7 +40,11 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
 
   return (
     <Wrapper>
-      <MapView height="100vh" pins={_pins} {...{ center, setCenter }} />
+      <MapView
+        height="100vh"
+        pins={_pins}
+        {...{ center, setCenter, handleSelectPin }}
+      />
       <PinSlider
         placeBoxType="type3"
         {...{ pins, current, setCurrent, setCenter }}
