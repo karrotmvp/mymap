@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger";
+
 export class UserDTO {
     constructor(userId: number, userName: string, profileImageUrl: string, token: string, regionName: string) {
         this.userId = userId;
@@ -6,14 +8,19 @@ export class UserDTO {
         this.token = token;
     }
 
+    @ApiProperty({ example: 1 })
     private userId: number;
 
+    @ApiProperty({ example: 'team1test' })
     private userName: string;
 
+    @ApiProperty()
     private profileImageUrl: string;
 
+    @ApiProperty()
     private token: string
 
+    @ApiProperty()
     private regionName: string
 
     public getUserId() {
