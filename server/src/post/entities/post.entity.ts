@@ -80,7 +80,7 @@ export class Post {
     public updatePost(post: UpdatePostDTO, pins: Pin[]) {
         this.title = post.title ? post.title : this.title;
         this.contents = post.contents ? post.contents : this.contents;
-        this.share = post.share ? post.share : this.share;
+        this.share = post.share;
         this.pins = pins;
     }
 }

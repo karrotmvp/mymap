@@ -95,8 +95,8 @@ export class PostController {
     @Put('/:postId')
     async updatePost(@Req() req: any, @Param('postId') postId:number, @Body() post:UpdatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId, ' post : ', post);
-        this.postService.updatePost(req.user.userId, postId, post);
         this.eventEmitter.emit(MyMapEvent.POST_UPDATED, new Event(postId, req.user.userId));
+        return this.postService.updatePost(req.user.userId, postId, post);
     }
 
     @UseGuards(JwtAuthGuard)
