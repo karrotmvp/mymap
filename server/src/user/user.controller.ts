@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { EventEmitter2 } from 'eventemitter2';
 import { lastValueFrom } from 'rxjs';
 import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
@@ -14,6 +15,7 @@ import { UserDTO } from './dto/user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
+@ApiTags('api/user')
 @Controller('api/user')
 export class UserController {
     constructor(
@@ -26,7 +28,11 @@ export class UserController {
 
     @UseGuards(DaangnAuthGuard)
     @Get('login')
-    async login(@Req() req: any, @Query('regionId') regionId: string) {
+    @ApiOkResponse({ description: '인증 완료, 토큰 발급', type: UserDTO })
+    @ApiBadRequestResponse({ description: '인증 실패' })
+    @ApiUnauthorizedResponse({ description: '인증 실패' })
+    @ApiQuery({ name: 'code', type: String })
+    async login(@Req() req: any, @Query('regionId') regionId: string): Promise<UserDTO> {
         const user$ = req.user;
         const user: CreateUserDTO = await lastValueFrom(user$);
         const token = await this.authService.generateToken(user);
@@ -40,6 +46,8 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard)
     @Post('preopen')
+    @ApiCreatedResponse({ description: '오픈 알림 등록 완료' })
+    @ApiUnauthorizedResponse({ description: '토큰 만료, 유저 정보 오류' })
     async createPreopenUser(@Req() req: any, @Query('regionId') regionId: string) {
         const userId = req.user.userId;
         await this.userService.createPreopenUser(userId, regionId);

@@ -48,7 +48,7 @@ export class PostService {
         if (existPost.getUser().getUserId() !== userId) throw new NotAcceptableException();
         await this.pinRepository.deletePostPins(postId);
         const pins: Pin[] = await this.pinRepository.savePins(post.pins);
-        await this.postRepository.updatePost(postId, post, pins);
+        return await this.postRepository.updatePost(postId, post, pins);
 }
 
     async readPostDetail(userId: number, postId: number): Promise<PostDTO> {

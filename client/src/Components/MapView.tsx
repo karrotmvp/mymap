@@ -18,7 +18,7 @@ declare global {
 }
 
 export interface Pin {
-  id?: string;
+  id?: string | number;
   placeId?: string;
   name?: string;
   latitude: number;

@@ -16,6 +16,7 @@ export class PostRepository extends Repository<Post> {
         const existPost = await this.findOne(postId, { relations : ['pins'] });
         existPost.updatePost(post, pins);
         await this.save(existPost);
+        return postId;
     }
 
     async findWithPostId(postId: number) {

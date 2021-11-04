@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { CoordinatesDTO } from "src/place/dto/coordinates.dto";
 import { UserDTO } from "src/user/dto/user.dto";
 import { Post } from "../entities/post.entity";
@@ -17,16 +18,27 @@ export class PostDTO {
         this.savedNum = savedNum;
     }
 
+    @ApiProperty({ example: 1 })
     postId: number;
+    @ApiProperty()
     user: UserDTO;
+    @ApiProperty({ example: "테마 테스트" })
     title: string;
+    @ApiProperty({ example: "테마 소개" })
     contents: string;
+    @ApiProperty({ example: "6530459d189b" })
     regionId: string;
+    @ApiProperty({ example: "역삼1동" })
     regionName: string;
+    @ApiProperty({ example: true })
     share: boolean;
+    @ApiProperty()
     coordinates: CoordinatesDTO
+    @ApiProperty({ type: [PinDTO] })
     pins: PinDTO[];
+    @ApiProperty({ example: false })
     saved: boolean;
+    @ApiProperty({ example: 0 })
     savedNum: number;
 
     public setSaved(saved: boolean) {

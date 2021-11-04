@@ -30,7 +30,7 @@ const Collection = (post: PostType) => {
   return (
     <Wrapper onClick={() => history.push(`/detail/${post.postId}`)}>
       <div className="title-wrapper">
-        <div>
+        <div style={{ width: "100%" }}>
           <div className="title">{post.title}</div>
           <div className="author">
             {post.user.userName} · {post.regionName}
@@ -53,15 +53,24 @@ const Wrapper = styled.div`
   padding: 3.6rem 0;
   padding-left: 2rem;
   box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
 
   .title-wrapper {
+    width: 100%;
     ${flexCenter};
     justify-content: space-between;
 
     .title {
+      max-width: 100%;
       font-size: 1.7rem;
       line-height: 120%;
       font-weight: bold;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding-right: 5rem;
+      box-sizing: border-box;
+      overflow: hidden;
     }
     .author {
       margin-top: 0.4rem;
@@ -70,6 +79,8 @@ const Wrapper = styled.div`
       color: ${theme.color.gray6};
     }
     .more-icon {
+      position: absolute;
+      right: 0;
       fill: ${theme.color.gray6};
     }
   }

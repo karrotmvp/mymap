@@ -24,10 +24,6 @@ import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const history = useHistory();
 
   const { isExact: isWrite } =
@@ -88,12 +84,14 @@ const Write = () => {
   };
 
   // 수정
-  const postId = useParams<{ postId: string }>().postId ?? null;
+  const postId = parseInt(useParams<{ postId: string }>().postId) ?? null;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     if (!isWrite && !isOnboarding) {
       const fetchPost = async () => {
-        const data = await getPost(String(postId));
+        const data = await getPost(postId);
         inputVal.setValue(data.title);
         textareaVal.setValue(data.contents);
         setIsShare(data.share);
@@ -160,8 +158,8 @@ const Write = () => {
         else if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
       }
     } else {
-      await putPost(postId!, body);
-      history.push(`/detail/${postId}/finish`);
+      const data = await putPost(postId!, body);
+      if (data) history.push(`/detail/${postId}/finish`);
     }
   };
 

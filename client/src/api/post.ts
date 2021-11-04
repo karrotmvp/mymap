@@ -3,7 +3,7 @@ import { FeedType, PostType } from "../Shared/type";
 import { DELETE, GET, POST, PUT } from "../utils/axios";
 
 // 리스트 상세
-export const getPost = async (postId: string) => {
+export const getPost = async (postId: number) => {
   return (await GET(`api/post/${postId}`)) as PostType;
 };
 
@@ -20,19 +20,19 @@ export const postPost = async (body: PostBody) => {
 };
 
 // 리스트 수정
-export const putPost = async (postId: string, body: PostBody) => {
-  return await PUT(`api/post/${postId}`, body);
+export const putPost = async (postId: number, body: PostBody) => {
+  return (await PUT(`api/post/${postId}`, body)) as number;
 };
 
 // 리스트 삭제
-export const deletePost = async (postId: string) => {
+export const deletePost = async (postId: number) => {
   return await DELETE(`api/post/${postId}`);
 };
 
 // 피드 가져오기
 interface GetFeedPostsParams {
-  start?: string;
-  end?: string;
+  start?: number;
+  end?: number;
   perPage?: number;
 }
 export const getFeedPosts = async (
@@ -43,12 +43,12 @@ export const getFeedPosts = async (
 };
 
 // 리스트 저장
-export const postSavedPost = async (postId: string) => {
+export const postSavedPost = async (postId: number) => {
   return await POST(`api/post/savedPost/${postId}`);
 };
 
 // 리스트 저장 취소
-export const deleteSavedPost = async (postId: string) => {
+export const deleteSavedPost = async (postId: number) => {
   return await DELETE(`api/post/savedPost/${postId}`);
 };
 

@@ -5,7 +5,7 @@ export class CreateUserDTO {
         this.uniqueId = user.user_id;
         this.token = token;
     }
-
+    
     private userName: string;
     
     private profileImageUrl: string;

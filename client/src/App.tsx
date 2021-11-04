@@ -49,7 +49,7 @@ function App() {
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       setViewerInfo({
-        userId: "1",
+        userId: 1,
         userName: "team1test",
         regionName: "역삼 1동",
       });
@@ -87,7 +87,7 @@ function App() {
               <Route exact path="/onboarding" component={Onboarding} />
               <Route exact path="/onboarding/write" component={Write} />
               <Route exact path="/asdf" component={SearchPlace} />
-              <Route path="/edit/:id" component={Write} />
+              <Route path="/edit/:postId" component={Write} />
             </Switch>
           ) : (
             <Wrapper>

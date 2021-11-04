@@ -25,7 +25,11 @@ import {
 } from "../../styles/theme";
 import DetailMapView from "./DetailMapView";
 import dayjs from "dayjs";
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
+import {
+  useRecoilValue,
+  useRecoilValueLoadable,
+  useResetRecoilState,
+} from "recoil";
 import { ViewerInfo, postDetailAtom } from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
@@ -42,7 +46,8 @@ const Detail = () => {
     }) ?? {};
 
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const post = useRecoilValueLoadable(postDetailAtom(postId));
+  const post = useRecoilValueLoadable(postDetailAtom(parseInt(postId)));
+  const resetPost = useResetRecoilState(postDetailAtom(parseInt(postId)));
 
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
@@ -52,26 +57,33 @@ const Detail = () => {
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
 
   useEffect(() => {
+    if (fromWriteForm) {
+      resetPost();
+    }
+  }, []);
+
+  useEffect(() => {
+    const targetElement = document.querySelector("#detail-scroll");
     const onScroll = () => {
       dispatch({
         _t: "scroll",
-        scrollY: window.scrollY,
+        scrollY: targetElement?.scrollTop || 0,
       });
     };
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    targetElement?.addEventListener("scroll", onScroll);
+    return () => targetElement?.removeEventListener("scroll", onScroll);
+  });
 
   const onDeleteClick = () => {
     setIsEditModalOpened(false);
     setIsDeleteAlertOpened(true);
   };
   const onDeleteConfirmClick = async () => {
-    await deletePost(postId);
+    await deletePost(parseInt(postId));
 
-    // 다시 이전 페이지로: 2번 건너뛰어야 함
-    history.go(-2);
+    // 다시 이전 페이지로: 3번 건너뛰어야 함
+    history.go(-3);
   };
 
   if (post.state !== "hasValue") {
@@ -127,7 +139,7 @@ const Detail = () => {
 
       {match(state._t)
         .with("list", () => (
-          <Wrapper>
+          <Wrapper id="detail-scroll">
             <Title>{post.contents.title}</Title>
             <div className="content">{post.contents.contents}</div>
 
@@ -207,6 +219,7 @@ const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding: 0 2rem;
   padding-top: 8rem;
+  overflow-y: scroll;
   .content {
     margin-top: 1.4rem;
     font-size: 1.4rem;
