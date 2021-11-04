@@ -39,7 +39,7 @@ async function bootstrap() {
     SwaggerModule.setup('api/swagger', app, document)
   } else {
     app.enableCors({
-      origin: "admin.daangn-mymap.com",
+      origin: "https://admin.daangn-mymap.com",
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
     })
