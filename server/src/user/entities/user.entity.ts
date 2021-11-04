@@ -44,6 +44,9 @@ export class User {
     public getUniqueId(): string {
         return this.uniqueId;
     }
+    public getIsAdmin(): boolean {
+        return this.isAdmin;
+    }
     public getUpdatedAt(): Date {
         return this.updatedAt;
     }

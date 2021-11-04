@@ -12,7 +12,7 @@ function LoginPage(props) {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        axios.get(process.env.REACT_APP_SERVER + 'user/adminLogin', {
+        axios.get(process.env.REACT_APP_SERVER + 'user/login/admin', {
             headers: {
                 'X-Api-Key': ApiKey
             }

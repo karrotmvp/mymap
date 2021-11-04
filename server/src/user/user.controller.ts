@@ -54,7 +54,7 @@ export class UserController {
     }
 
     @UseGuards(ApiKeyAuthGuard)
-    @Get('adminLogin')
+    @Get('login/admin')
     async adminLogin(@Req() req: any) {
         const user: User = await this.userService.readAdmin();
         const info = {
@@ -66,5 +66,12 @@ export class UserController {
         admin.setUserId(user.getUserId());
         const token = await this.authService.generateToken(admin);
         return token;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('admin')
+    async readUserList(@Req() req: any, @Query('page') page: number = 0, @Query('perPage') perPage: number = 50) {
+        await this.userService.checkAdmin(req.user.userId);
+        return await this.userService.readUserList(page, perPage);
     }
 }

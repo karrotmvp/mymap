@@ -1,5 +1,6 @@
 import { Process, Processor } from "@nestjs/bull";
 import { ConfigService } from "@nestjs/config";
+import { IncomingWebhook } from "@slack/webhook";
 import { Job } from "bull";
 import { init, Mixpanel } from "mixpanel";
 import { Event } from "src/event/event";
@@ -50,8 +51,10 @@ export class MixpanelPostProcessor {
         private readonly regionService: RegionService
     ) {
         this._mixpanel = init(configService.get('mixpanel.token'));
+        this._webhook = new IncomingWebhook(configService.get('slack.webhook'));
     }
     private _mixpanel: Mixpanel
+    private _webhook: IncomingWebhook        //빠른시일 내로 옮기거나 삭제하기
 
     @Process('post_created')
     async handlePostCreated(job: Job<Event>) {
@@ -65,6 +68,23 @@ export class MixpanelPostProcessor {
             regionName: post.getRegionName(),
             pinNum: post.pins.length,
             share: post.getShare()
+        })
+        //빠른시일 내로 옮기거나 삭제하기
+        this._webhook.send({
+            attachments: [
+                {
+                    color: 'good',
+                    text: '새로운 테마가 등록됐어요~!',
+                    fields: [
+                        {
+                            title: post.getTitle(),
+                            value: post.getRegionName() + ' / 공개여부 : ' + post.getShare(),
+                            short: false,
+                        },
+                        ],
+                        ts: Math.floor(new Date().getTime() / 1000).toString(),
+                }
+            ],
         })
     }
     @Process('post_saved')

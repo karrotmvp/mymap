@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import PostPage from './views/LandingPage/PostPage';
+import UserPage from './views/LandingPage/UserPage';
 import LoginPage from './views/LoginPage/loginPage';
 import NavBar from './views/NavBar/NavBar';
 
@@ -11,6 +12,7 @@ function App() {
       <div>
         <Switch>
           <Route exact path="/post" component={PostPage}/>
+          <Route exact path="/user" component={UserPage}/>
           <Route exact path="/login" component={LoginPage}/>
         </Switch>
       </div>
