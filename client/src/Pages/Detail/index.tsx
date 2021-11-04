@@ -42,7 +42,7 @@ const Detail = () => {
     }) ?? {};
 
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const post = useRecoilValueLoadable(postDetailAtom(postId));
+  const post = useRecoilValueLoadable(postDetailAtom(parseInt(postId)));
 
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
@@ -68,7 +68,7 @@ const Detail = () => {
     setIsDeleteAlertOpened(true);
   };
   const onDeleteConfirmClick = async () => {
-    await deletePost(postId);
+    await deletePost(parseInt(postId));
 
     // 다시 이전 페이지로: 2번 건너뛰어야 함
     history.go(-2);

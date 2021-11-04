@@ -11,8 +11,8 @@ const SaveButton = (post: PostType) => {
   const [isSaved, setIsSaved] = useState<boolean | null>(post.saved);
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);
-    if (!isSaved) await postSavedPost(postId);
-    else await deleteSavedPost(postId);
+    if (!isSaved) await postSavedPost(parseInt(postId));
+    else await deleteSavedPost(parseInt(postId));
   };
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);
 

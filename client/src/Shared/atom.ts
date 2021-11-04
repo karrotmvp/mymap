@@ -12,7 +12,7 @@ export const RegionId = atom({
 export const ViewerInfo = atom<UserType>({
   key: "my_info",
   default: {
-    userId: "",
+    userId: 0,
     userName: "",
     regionName: "",
   },
@@ -31,7 +31,7 @@ export const viewerInfoAtom = atomFamily({
 
 export const postDetailAtom = atomFamily({
   key: "postDetailAtom",
-  default: selectorFamily<PostType, string>({
+  default: selectorFamily<PostType, number>({
     key: "postDetailAtom/selector",
     get: (id) => () => getPost(id),
   }),

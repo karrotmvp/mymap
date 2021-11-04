@@ -1,5 +1,5 @@
 export interface PostType {
-  postId: string;
+  postId: number;
   user: UserType;
   title: string;
   contents: string;
@@ -21,14 +21,14 @@ export interface FeedType {
 }
 
 export interface UserType {
-  userId: string;
+  userId: number;
   userName: string;
   regionName: string;
   profileImageUrl?: string;
 }
 
 export interface PinType {
-  pinId: string;
+  pinId: number;
   review: string;
   place: PlaceType;
 }
