@@ -177,7 +177,7 @@ const Mypage = () => {
         )}
       </div>
 
-      <CreateButton />
+      <CreateButton targetId="mypage-scroll" />
 
       <Footer />
     </Wrapper>

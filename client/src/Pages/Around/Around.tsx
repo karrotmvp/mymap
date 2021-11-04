@@ -110,7 +110,7 @@ const Around = () => {
           </InfiniteScroll>
         </div>
 
-        {!isMapShown && <CreateButton />}
+        {!isMapShown && <CreateButton targetId="around-scroll" />}
 
         <Footer />
       </Wrapper>

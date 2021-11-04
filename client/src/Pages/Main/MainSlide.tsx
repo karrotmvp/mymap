@@ -39,7 +39,7 @@ const MainSlide = ({
           </div>
         </div>
       </Card>
-      <CreateButton />
+      <CreateButton targetId="main-scroll" />
     </>
   );
 };
