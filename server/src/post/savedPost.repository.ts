@@ -5,9 +5,9 @@ import { SavedPost } from "./entities/savedPost.entity";
 export class SavedPostRepository extends Repository<SavedPost> {
     async findWithUserId(userId: number, page: number, perPage:number): Promise<number[]> {
         const savedPost = await this.find({
-            relations: ['user'],
+            relations: ['user', 'post'],
             where: (qb) => {
-                qb.where('SavedPost__user.userId = :userId', { userId: userId })
+                qb.where('SavedPost__user.userId = :userId AND SavedPost__post.share = true', { userId: userId })
             },
             order: { createdAt: 'DESC' },
             skip: perPage * (page - 1),
