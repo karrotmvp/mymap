@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { EventEmitter2 } from 'eventemitter2';
 import { lastValueFrom } from 'rxjs';
+import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { DaangnAuthGuard } from 'src/auth/daangn.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -10,6 +11,7 @@ import { MyLogger } from 'src/logger/logger.service';
 import { RegionService } from 'src/region/region.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
+import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @Controller('api/user')
@@ -41,5 +43,20 @@ export class UserController {
     async createPreopenUser(@Req() req: any, @Query('regionId') regionId: string) {
         const userId = req.user.userId;
         await this.userService.createPreopenUser(userId, regionId);
+    }
+
+    @UseGuards(ApiKeyAuthGuard)
+    @Get('adminLogin')
+    async adminLogin(@Req() req: any) {
+        const user: User = await this.userService.readAdmin();
+        const info = {
+            nickname: "admin",
+            profile_image_url: null,
+            user_id: null,
+        }
+        const admin = new CreateUserDTO(info, null)
+        admin.setUserId(user.getUserId());
+        const token = await this.authService.generateToken(admin);
+        return token;
     }
 }

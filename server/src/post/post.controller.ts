@@ -43,6 +43,12 @@ export class PostController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get('/admin')
+    async readPostList(@Query('regionId') regionId: string, @Query('page') page: number = 0, @Query('perPage') perPage: number = 50) {        
+        return await this.postService.readPostListInfo(regionId, page, perPage);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get('/:postId')
     async readPost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, 'postId : ', postId);
@@ -90,5 +96,4 @@ export class PostController {
         this.eventEmitter.emit(MyMapEvent.POST_LISTED, new Event(null, regionId));
         return await this.postService.readRegionPost(req.user.userId, regionId, start, end, perPage);
     }
-
 }

@@ -20,6 +20,7 @@ jobs:
     env:
       client-directory: ./client
       server-directory: ./server
+      admin-directory: ./admin
 
     strategy:
       matrix:
@@ -57,6 +58,16 @@ jobs:
         run: npm run build
         working-directory: ${{ env.server-directory }}
 
+      - name: Install admin dependencies
+        run: yarn
+        working-directory: ${{ env.admin-directory }}
+
+      - name: Run admin build
+        run: yarn build
+        working-directory: ${{ env.admin-directory }}
+        env:
+          REACT_APP_SERVER: ${{ secrets.REACT_APP_SERVER }}
+
       - name: configure AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -78,6 +89,13 @@ jobs:
       #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       #     find ./ -name "*docker-compose.*.yml" -exec perl -pi -e "s/tagname/$IMAGE_TAG/g" {} \;
+      - name: admin upload
+        run: |
+          aws s3 cp \
+            --recursive \
+            build s3://mymap-admin/admin
+        working-directory: ${{ env.admin-directory }}
+
       - name: S3 Upload
         run: aws deploy push --application-name mymap-dev-deploy --description "mymap dev server deploy" --s3-location s3://mymapdeploy/deploy_dev.zip --source .
 

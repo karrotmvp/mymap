@@ -24,6 +24,9 @@ export class User {
     @Column()
     private token: string;
 
+    @Column({ default: false })
+    private isAdmin: boolean;
+
     @UpdateDateColumn()
     updatedAt: Date;
 
