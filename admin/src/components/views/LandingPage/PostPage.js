@@ -20,7 +20,7 @@ function PostPage(props) {
                     props.history.push('/login')
                 }
             })
-    }, [])
+    }, [Posts])
 
     return (
         <div>
