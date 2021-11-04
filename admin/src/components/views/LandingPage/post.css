@@ -1,0 +1,16 @@
+.theme,
+.theme_content {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.theme > div {
+  padding: 10px;
+  width: 200px;
+}
+
+.theme_content > div {
+  padding: 10px;
+  width: 200px;
+}

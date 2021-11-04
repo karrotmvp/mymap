@@ -170,4 +170,15 @@ export class PostService {
         return await this.postRepository.findOne(postId, { withDeleted: true });
     }
 
+    async readPostListInfo(regionId: string, page: number, perPage: number) {
+        const result = await this.postRepository.find({
+            relations: ['user', 'pins'] ,
+            where: regionId ? { regionId: regionId }: {},
+            take: perPage,
+            skip: page * perPage,
+            order: { createdAt: 'DESC' }
+        })
+        return result;
+    }
+
 }
