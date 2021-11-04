@@ -87,7 +87,7 @@ function App() {
               <Route exact path="/onboarding" component={Onboarding} />
               <Route exact path="/onboarding/write" component={Write} />
               <Route exact path="/asdf" component={SearchPlace} />
-              <Route path="/edit/:id" component={Write} />
+              <Route path="/edit/:postId" component={Write} />
             </Switch>
           ) : (
             <Wrapper>

@@ -24,10 +24,6 @@ import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const history = useHistory();
 
   const { isExact: isWrite } =
@@ -91,6 +87,8 @@ const Write = () => {
   const postId = parseInt(useParams<{ postId: string }>().postId) ?? null;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     if (!isWrite && !isOnboarding) {
       const fetchPost = async () => {
         const data = await getPost(postId);

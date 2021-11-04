@@ -45,6 +45,7 @@ export const GlobalStyle = createGlobalStyle`
             box-sizing: border-box;
             box-shadow: 0 0 1rem rgba(0, 0, 0, 0.22);
         }
+
     }
     textarea {
         font-family: 'Spoqa Han Sans Neo', 'sans-serif';

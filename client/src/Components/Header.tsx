@@ -1,5 +1,5 @@
 import { ReactChild } from "react";
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 import { flexCenter, theme } from "../styles/theme";
 
 interface HeaderProps {
@@ -7,11 +7,22 @@ interface HeaderProps {
   isTransparent?: boolean;
   children?: ReactChild | ReactChild[];
   className?: string;
+  style?: CSSProperties;
 }
 
-const Header = ({ title, isTransparent, children, className }: HeaderProps) => {
+const Header = ({
+  title,
+  style,
+  isTransparent,
+  children,
+  className,
+}: HeaderProps) => {
   return (
-    <Wrapper {...{ className }} $isTransparent={isTransparent || false}>
+    <Wrapper
+      {...{ style }}
+      {...{ className }}
+      $isTransparent={isTransparent || false}
+    >
       <div className="title">{title}</div>
       {children}
     </Wrapper>
@@ -36,17 +47,17 @@ const Wrapper = styled.div<{ $isTransparent: boolean }>`
     color: ${theme.color.gray7};
   }
   .post-title {
+    position: absolute;
+    left: 5.3rem;
     font-size: 1.6rem;
     line-height: 135%;
     font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding-left: 5.3rem;
-    padding-right: 12.4rem;
+    right: 12.4rem;
     box-sizing: border-box;
   }
-
   .left-icon {
     position: absolute;
     top: 0.1rem;
