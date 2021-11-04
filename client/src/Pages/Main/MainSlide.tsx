@@ -46,6 +46,7 @@ const MainSlide = ({
 
 const Card = styled.div`
   position: relative;
+  min-height: 50vh;
   background-color: ${theme.color.white};
   padding-top: 4.1rem;
   box-sizing: border-box;

@@ -10,7 +10,7 @@ export const WrapperWithHeaderFooter = css`
   width: 100%;
   height: 100vh;
   padding-top: 5rem;
-  padding-bottom: 8.8rem;
+  padding-bottom: 6.8rem;
   box-sizing: border-box;
 `;
 export const WrapperWithHeader = css`
@@ -23,7 +23,7 @@ export const WrapperWithHeader = css`
 export const WrapperWithFooter = css`
   width: 100%;
   height: 100vh;
-  padding-bottom: 8.8rem;
+  padding-bottom: 6.8rem;
   box-sizing: border-box;
 `;
 

@@ -34,7 +34,7 @@ const Footer = () => {
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 8.8rem;
+  height: 6.8rem;
   justify-content: space-around;
   box-shadow: 4px 0px 7px rgba(0, 0, 0, 0.13);
   position: fixed;
