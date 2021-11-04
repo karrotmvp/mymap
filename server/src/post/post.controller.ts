@@ -5,6 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
 import { MyLogger } from 'src/logger/logger.service';
+import { UserService } from 'src/user/user.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
 import { PostDTO } from './dto/post.dto';
@@ -16,6 +17,7 @@ import { PostService } from './post.service';
 export class PostController {
     constructor(
         private readonly postService: PostService,
+        private readonly userService: UserService,
         private readonly logger: MyLogger,
         private readonly eventEmitter: EventEmitter2
     ) {}
@@ -48,7 +50,8 @@ export class PostController {
 
     @UseGuards(JwtAuthGuard)
     @Get('/admin')
-    async readPostList(@Query('regionId') regionId: string, @Query('page') page: number = 0, @Query('perPage') perPage: number = 50) {        
+    async readPostList(@Req() req: any, @Query('regionId') regionId: string, @Query('page') page: number = 0, @Query('perPage') perPage: number = 20) {
+        await this.userService.checkAdmin(req.user.userId);
         return await this.postService.readPostListInfo(regionId, page, perPage);
     }
 
