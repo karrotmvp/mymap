@@ -13,6 +13,9 @@ import { gap, Title, WrapperWithHeaderFooter } from "../../styles/theme";
 import AroundMapView from "./AroundMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AroundBox from "../../Components/AroundBox";
+import Mini from "@karrotmarket/mini";
+
+const mini = new Mini();
 
 const Around = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -70,7 +73,7 @@ const Around = () => {
     <>
       <Wrapper>
         <Header title="장소 둘러보기">
-          <Close className="left-icon" />
+          <Close className="left-icon" onClick={() => mini.close()} />
           {/* <Refresh
             onClick={() => {
               // history.push("/around");
