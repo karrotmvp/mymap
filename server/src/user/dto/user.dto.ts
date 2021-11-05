@@ -6,6 +6,7 @@ export class UserDTO {
         this.userName = userName;
         this.profileImageUrl = profileImageUrl;
         this.token = token;
+        this.regionName = regionName;
     }
 
     @ApiProperty({ example: 1 })
