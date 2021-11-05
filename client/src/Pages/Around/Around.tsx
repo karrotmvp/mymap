@@ -13,8 +13,10 @@ import { gap, Title, WrapperWithHeaderFooter } from "../../styles/theme";
 import AroundMapView from "./AroundMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AroundBox from "../../Components/AroundBox";
+import { useHistory } from "react-router";
 
 const Around = () => {
+  const history = useHistory();
   const [isMapShown, setIsMapShown] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
   const handleShowMap = (place: PlaceType) => {
@@ -71,13 +73,14 @@ const Around = () => {
       <Wrapper>
         <Header title="장소 둘러보기">
           <Close className="left-icon" />
-          <Refresh
+          {/* <Refresh
             onClick={() => {
+              // history.push("/around");
               window.location.reload();
               window.scrollTo(0, 0);
             }}
             className="right-icon"
-          />
+          /> */}
         </Header>
 
         <div id="around-scroll">
