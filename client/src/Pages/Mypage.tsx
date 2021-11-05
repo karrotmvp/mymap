@@ -129,7 +129,7 @@ const Mypage = () => {
         )}
         <div className="user">
           <div className="name">{myInfo.userName}</div>
-          <div className="place">논현동</div>
+          <div className="place">{myInfo.regionName}</div>
         </div>
       </Profile>
 
