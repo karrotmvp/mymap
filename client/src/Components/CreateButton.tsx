@@ -1,13 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import mixpanel from "mixpanel-browser";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { CreatePlus } from "../assets";
+import { PageBeforeWrite } from "../Shared/atom";
 import { flexCenter, theme } from "../styles/theme";
 
 const CreateButton = ({ targetId }: { targetId: string }) => {
   const [isLong, setIsLong] = useState(true);
+
+  const path = useRouteMatch().path;
+  const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
+
+  useEffect(() => {
+    setPageBeforeWrite(path);
+  }, []);
 
   useEffect(() => {
     let lastScroll = 0;
