@@ -60,7 +60,6 @@ function App() {
         mixpanel.track("기존 유저 로그인");
         getMyInfo(code, regionId as string);
       } else {
-        mixpanel.track("새로운 유저 로그인");
         mini.startPreset({
           preset: process.env.REACT_APP_LOGIN as string,
           params: {
@@ -68,6 +67,7 @@ function App() {
           },
           onSuccess: function (result) {
             if (result && result.code) {
+              mixpanel.track("새로운 유저 로그인");
               getMyInfo(result.code, regionId as string);
             }
           },
