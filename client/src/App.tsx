@@ -21,6 +21,7 @@ import styled from "styled-components";
 import { flexCenter } from "./styles/theme";
 import SearchPlace from "./Pages/Write/SearchPlace";
 import Header from "./Components/Header";
+import mixpanel from "mixpanel-browser";
 
 dayjs.locale("ko");
 
@@ -55,8 +56,11 @@ function App() {
       });
     } else if (!preload) {
       setRegionId(regionId as string);
-      if (code) getMyInfo(code, regionId as string);
-      else {
+      if (code) {
+        mixpanel.track("기존 유저 로그인");
+        getMyInfo(code, regionId as string);
+      } else {
+        mixpanel.track("새로운 유저 로그인");
         mini.startPreset({
           preset: process.env.REACT_APP_LOGIN as string,
           params: {

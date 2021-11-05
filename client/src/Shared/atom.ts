@@ -18,6 +18,11 @@ export const ViewerInfo = atom<UserType>({
   },
 });
 
+export const PageBeforeWrite = atom({
+  key: "page_before_write",
+  default: "/",
+});
+
 export const viewerInfoAtom = atomFamily({
   key: "my_info",
   default: selectorFamily<UserType, { code: string; regionId: string }>({

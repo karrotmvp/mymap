@@ -26,7 +26,7 @@ import {
 import DetailMapView from "./DetailMapView";
 import dayjs from "dayjs";
 import { useRecoilStateLoadable, useRecoilValue } from "recoil";
-import { ViewerInfo, postDetailAtom } from "../../Shared/atom";
+import { ViewerInfo, postDetailAtom, PageBeforeWrite } from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
@@ -53,6 +53,8 @@ const Detail = () => {
   });
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
+
+  const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -84,8 +86,7 @@ const Detail = () => {
   const onDeleteConfirmClick = async () => {
     await deletePost(parseInt(postId));
 
-    // 다시 이전 페이지로: 3번 건너뛰어야 함
-    history.go(-3);
+    history.push(pageBeforeWrite);
   };
 
   if (post.state !== "hasValue") {
@@ -97,7 +98,10 @@ const Detail = () => {
       <Header>
         <>
           {fromWriteForm ? (
-            <Close className="left-icon" onClick={() => history.go(-3)} />
+            <Close
+              className="left-icon"
+              onClick={() => history.push(pageBeforeWrite)}
+            />
           ) : (
             <Back className="left-icon" onClick={() => history.goBack()} />
           )}
