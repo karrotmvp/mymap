@@ -2,7 +2,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { deletePost } from "../../api/post";
+import { deletePost, getPost } from "../../api/post";
 import {
   Back,
   Close,
@@ -25,11 +25,7 @@ import {
 } from "../../styles/theme";
 import DetailMapView from "./DetailMapView";
 import dayjs from "dayjs";
-import {
-  useRecoilValue,
-  useRecoilValueLoadable,
-  useResetRecoilState,
-} from "recoil";
+import { useRecoilStateLoadable, useRecoilValue } from "recoil";
 import { ViewerInfo, postDetailAtom } from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
@@ -46,8 +42,10 @@ const Detail = () => {
     }) ?? {};
 
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const post = useRecoilValueLoadable(postDetailAtom(parseInt(postId)));
-  const resetPost = useResetRecoilState(postDetailAtom(parseInt(postId)));
+  const [post, setPost] = useRecoilStateLoadable(
+    postDetailAtom(parseInt(postId))
+  );
+  // const resetPost = useResetRecoilState(postDetailAtom(parseInt(postId)));
 
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
@@ -57,8 +55,12 @@ const Detail = () => {
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
 
   useEffect(() => {
+    const fetchPost = async () => {
+      const data = await getPost(parseInt(postId));
+      setPost(data);
+    };
     if (fromWriteForm) {
-      resetPost();
+      fetchPost();
     }
   }, []);
 

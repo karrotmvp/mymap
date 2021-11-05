@@ -39,16 +39,20 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
   return (
     <Wrapper>
       <div className="saved-info">
-        {isViewer &&
-          (post.share ? (
+        {isViewer ? (
+          post.share ? (
             savedNum === 0 && "아직 저장한 이웃이 없어요"
           ) : (
             <div className="secret">
               <Secret />
               <div>나만 볼 수 있는 테마예요</div>
             </div>
-          ))}
-        {savedNum > 0 && `${savedNum}명 이웃이 이 테마를 저장했어요`}
+          )
+        ) : savedNum > 0 ? (
+          `${savedNum}명 이웃이 이 테마를 저장했어요`
+        ) : (
+          "가장 먼저 저장해 보세요!"
+        )}
       </div>
       {!isViewer && (
         <div onClick={(e) => e.stopPropagation()}>

@@ -36,7 +36,7 @@ const CreateButton = ({ targetId }: { targetId: string }) => {
 const Wrapper = styled.div<{ isLong: boolean }>`
   ${flexCenter};
   position: fixed;
-  bottom: 10.4rem;
+  bottom: 9rem;
   right: 2rem;
   width: ${({ isLong }) => (isLong ? "13.1rem" : "4.8rem")};
   height: 4.8rem;
