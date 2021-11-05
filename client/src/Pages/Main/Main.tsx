@@ -12,6 +12,9 @@ import { useRecoilValue } from "recoil";
 import { RegionId } from "../../Shared/atom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { WrapperWithFooter } from "../../styles/theme";
+import Mini from "@karrotmarket/mini";
+
+const mini = new Mini();
 
 const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -124,7 +127,7 @@ const Main = () => {
         {isPinSelected ? (
           <Back className="left-icon" onClick={() => setIsPinSelected(false)} />
         ) : (
-          <Close className="left-icon" />
+          <Close className="left-icon" onClick={() => mini.close()} />
         )}
       </Header>
 
