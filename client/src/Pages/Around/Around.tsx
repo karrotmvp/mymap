@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getAroundPlaces } from "../../api/place";
-import { Close, Refresh } from "../../assets";
+import { Close } from "../../assets";
 import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
@@ -71,13 +71,14 @@ const Around = () => {
       <Wrapper>
         <Header title="장소 둘러보기">
           <Close className="left-icon" />
-          <Refresh
+          {/* <Refresh
             onClick={() => {
+              // history.push("/around");
               window.location.reload();
               window.scrollTo(0, 0);
             }}
             className="right-icon"
-          />
+          /> */}
         </Header>
 
         <div id="around-scroll">
