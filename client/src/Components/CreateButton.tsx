@@ -13,12 +13,14 @@ const CreateButton = ({ targetId }: { targetId: string }) => {
     let lastScroll = 0;
     const targetElement = document.querySelector(`#${targetId}`)!;
     const onSrcoll = () => {
-      if (targetElement.scrollTop > lastScroll) {
-        setIsLong(false);
-        lastScroll = targetElement.scrollTop;
-      } else if (targetElement.scrollTop < lastScroll) {
-        setIsLong(true);
-        lastScroll = targetElement.scrollTop;
+      if (targetElement.scrollTop > 0) {
+        if (targetElement.scrollTop > lastScroll) {
+          setIsLong(false);
+          lastScroll = targetElement.scrollTop;
+        } else if (targetElement.scrollTop < lastScroll) {
+          setIsLong(true);
+          lastScroll = targetElement.scrollTop;
+        }
       }
     };
     targetElement.addEventListener("scroll", onSrcoll);
