@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import mixpanel from "mixpanel-browser";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -24,7 +25,7 @@ const CreateButton = ({ targetId }: { targetId: string }) => {
     return () => targetElement.removeEventListener("scroll", onSrcoll);
   }, []);
   return (
-    <Link to="/write">
+    <Link to="/write" onClick={() => mixpanel.track("글작성 버튼 누름")}>
       <Wrapper {...{ isLong }}>
         <CreatePlus />
         {isLong && <div className="text">테마 만들기</div>}
