@@ -72,7 +72,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   margin-top: 1.2rem;
   height: 3.2rem;
-  padding-right: 2rem;
+  padding: 0 2rem;
   .saved-info {
     color: ${theme.color.gray6};
     font-size: 1.4rem;

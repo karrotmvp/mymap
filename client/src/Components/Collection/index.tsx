@@ -2,7 +2,7 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import { More } from "../../assets";
 import { PostType } from "../../Shared/type";
-import { flexCenter, theme } from "../../styles/theme";
+import { flexCenter, gap, theme } from "../../styles/theme";
 import SaveFooter from "./SaveFooter";
 
 const OrangePlaceBox = ({
@@ -51,12 +51,12 @@ const Collection = (post: PostType) => {
 const Wrapper = styled.div`
   width: 100%;
   padding: 3.6rem 0;
-  padding-left: 2rem;
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
 
   .title-wrapper {
+    padding-left: 2rem;
     width: 100%;
     ${flexCenter};
     justify-content: space-between;
@@ -91,6 +91,9 @@ const Wrapper = styled.div`
     overflow-x: scroll;
     overflow-y: hidden;
     margin-top: 1.6rem;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    ${gap("0.8rem")};
   }
 `;
 
@@ -103,7 +106,6 @@ const OrangePlaceBoxWrapper = styled.div`
   max-width: 15rem;
   height: 10rem;
   border-radius: 1rem;
-  margin-right: 0.8rem;
   padding: 1.2rem;
   box-sizing: border-box;
   border: 0.1rem solid ${theme.color.orange_light};
