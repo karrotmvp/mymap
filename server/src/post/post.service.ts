@@ -106,9 +106,9 @@ export class PostService {
     }
 
     async deletePost(userId: number, postId: number): Promise<void> {
-        const post = await this.postRepository.findOne(postId, {relations: ['pins']});
+        const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
         if (!post) throw new BadRequestException();
-        if (post.getUser().getUserId() !== userId) throw new NotAcceptableException();
+        if (!(post.getUser().getUserId() === userId || this.userService.checkAdmin(userId))) throw new NotAcceptableException();
         await this.postRepository.softRemove(post);
     }
 
@@ -180,6 +180,12 @@ export class PostService {
             order: { createdAt: 'DESC' }
         })
         return result;
+    }
+
+    async updatePostShare(postId: number) {
+        const post: Post = await this.postRepository.findOne(postId);
+        post.updateShare();
+        await this.postRepository.save(post);
     }
 
 }

@@ -10,6 +10,7 @@ import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
 import { PostDTO } from './dto/post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
+import { Post as PostEntity } from './entities/post.entity';
 import { PostService } from './post.service';
 
 @ApiTags('api/post')
@@ -99,7 +100,14 @@ export class PostController {
     async updatePost(@Req() req: any, @Param('postId') postId:number, @Body() post:UpdatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId, ' post : ', post);
         this.eventEmitter.emit(MyMapEvent.POST_UPDATED, new Event(postId, req.user.userId));
-        return this.postService.updatePost(req.user.userId, postId, post);
+        return await this.postService.updatePost(req.user.userId, postId, post);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Put('/admin/share/:postId')
+    async updatePostShare(@Req() req: any, @Param('postId') postId: number) {
+        await this.userService.checkAdmin(req.user.userId);
+        await this.postService.updatePostShare(postId);
     }
 
     @UseGuards(JwtAuthGuard)
