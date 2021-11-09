@@ -22,7 +22,6 @@ function LoginPage(props) {
                 props.history.push('/')
             })
             .catch(e => {
-                console.log(e);
                 alert('로그인에 실패했습니다.')
             })
     }
