@@ -78,6 +78,8 @@ const Mypage = () => {
     fetchMyPosts();
   }, [myPostPage]);
 
+  const viewerInfo = useRecoilValue(ViewerInfo);
+
   // 저장한 리스트
   const [savedPosts, setSavedPosts] = useState<PostType[] | []>([]);
   const [savedPostsHasMore, setSavedPostsHasMore] = useState(true);
@@ -111,8 +113,6 @@ const Mypage = () => {
     return () => targetElement.removeEventListener("scroll", onScroll);
   }, []);
 
-  const myInfo = useRecoilValue(ViewerInfo);
-
   return (
     <Wrapper id="mypage-scroll">
       {isScrollUp ? (
@@ -122,14 +122,18 @@ const Mypage = () => {
       )}
 
       <Profile>
-        {myInfo.profileImageUrl ? (
-          <img className="photo" alt="profile" src={myInfo.profileImageUrl} />
+        {viewerInfo.profileImageUrl ? (
+          <img
+            className="photo"
+            alt="profile"
+            src={viewerInfo.profileImageUrl}
+          />
         ) : (
           <Thumbnail className="photo" />
         )}
         <div className="user">
-          <div className="name">{myInfo.userName}</div>
-          <div className="place">{myInfo.regionName}</div>
+          <div className="name">{viewerInfo.userName}</div>
+          <div className="place">{viewerInfo.regionName}</div>
         </div>
       </Profile>
 

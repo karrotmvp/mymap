@@ -42,6 +42,7 @@ function App() {
       userId: data.userId,
       userName: data.userName,
       regionName: data.regionName,
+      profileImageUrl: data.profileImageUrl,
     });
     localStorage.setItem("token", data.token);
     Mixpanel.identify(data.userId.toString());
@@ -53,6 +54,7 @@ function App() {
         userId: 1,
         userName: "team1test",
         regionName: "역삼 1동",
+        profileImageUrl: "",
       });
     } else if (!preload) {
       setRegionId(regionId as string);

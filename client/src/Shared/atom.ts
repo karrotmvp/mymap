@@ -15,6 +15,7 @@ export const ViewerInfo = atom<UserType>({
     userId: 0,
     userName: "",
     regionName: "",
+    profileImageUrl: "",
   },
 });
 
