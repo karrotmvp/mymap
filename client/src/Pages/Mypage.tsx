@@ -114,12 +114,13 @@ const Mypage = () => {
   }, []);
 
   return (
-    <Wrapper id="mypage-scroll">
-      {isScrollUp ? (
-        <Header className="header-scroll" title="로컬큐레이터님" />
-      ) : (
-        <Close className="close-btn" onClick={() => mini.close()} />
+    <Wrapper id="mypage-scroll" {...{ isScrollUp }}>
+      {isScrollUp && (
+        <Header className="header-scroll" title="로컬큐레이터님">
+          <Close className="close-btn" onClick={() => mini.close()} />
+        </Header>
       )}
+      <Close className="close-btn" onClick={() => mini.close()} />
 
       <Profile>
         {viewerInfo.profileImageUrl ? (
@@ -188,9 +189,10 @@ const Mypage = () => {
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ isScrollUp: boolean }>`
   ${WrapperWithHeaderFooter};
   overflow-y: scroll;
+  position: relative;
   #collections {
     margin-top: -2.5rem;
     padding-bottom: 8.6rem;
@@ -202,7 +204,9 @@ const Wrapper = styled.div`
     position: absolute;
     top: 0.1rem;
     left: 0;
-    fill: ${theme.color.white};
+    fill: ${({ theme, isScrollUp }) =>
+      isScrollUp ? theme.color.gray7 : theme.color.white};
+    z-index: 100;
   }
   .empty {
     position: absolute;
@@ -228,6 +232,7 @@ const Wrapper = styled.div`
 `;
 
 const Profile = styled.div`
+  position: relative;
   width: 100%;
   height: 15rem;
   background-color: ${theme.color.orange};
