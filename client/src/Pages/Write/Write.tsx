@@ -135,9 +135,21 @@ const Write = () => {
 
   const regionId = useRecoilValue(RegionId);
 
-  const handleSubmit = async () => {
-    Mixpanel.track("글작성 완료");
+  let submitFlag = false;
 
+  const submitCheck = () => {
+    if (submitFlag) {
+      return submitFlag;
+    } else {
+      submitFlag = true;
+      return false;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (submitCheck()) return;
+
+    Mixpanel.track("글작성 완료");
     const body = {
       title: inputVal.value,
       contents: textareaVal.value,
