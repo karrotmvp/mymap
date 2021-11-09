@@ -16,7 +16,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
                 name: 'MYMAP_SERVICE',
                 transport: Transport.REDIS,
                 options: {
-                    url: 'redis://localhost:6379'
+                    url: 'redis://' + process.env.REDIS_HOST + ':' + process.env.REDIS_PORT
                 }
             }
         ])
