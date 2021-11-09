@@ -47,9 +47,6 @@ export const GlobalStyle = createGlobalStyle`
         }
 
     }
-    textarea {
-        font-family: 'Spoqa Han Sans Neo', 'sans-serif';
-    }
     img {
         object-fit: cover;
     }

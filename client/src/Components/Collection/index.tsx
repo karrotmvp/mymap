@@ -40,7 +40,9 @@ const Collection = (post: PostType) => {
       </div>
       <div className="places">
         {post.pins.map((pin) => (
-          <OrangePlaceBox key={pin.pinId} {...pin.place} />
+          <div className="place">
+            <OrangePlaceBox key={pin.pinId} {...pin.place} />
+          </div>
         ))}
       </div>
       <SaveFooter {...{ post }} />
@@ -91,9 +93,14 @@ const Wrapper = styled.div`
     overflow-x: scroll;
     overflow-y: hidden;
     margin-top: 1.6rem;
-    padding: 0 2rem;
+    padding-left: 2rem;
     box-sizing: border-box;
     ${gap("0.8rem")};
+    .place {
+      &:last-child {
+        padding-right: 2rem;
+      }
+    }
   }
 `;
 
