@@ -6,19 +6,25 @@ import { EventPubSub } from './event-pub-sub';
 import { createBullBoard } from '@bull-board/api'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [
         // BullModule.registerQueue(
         // { name: 'user' }, { name: 'post' }, { name: 'place' } ),
-        ClientsModule.register([
+        ClientsModule.registerAsync([{
+            name: 'MYMAP_SERVICE',
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => (
             {
-                name: 'MYMAP_SERVICE',
                 transport: Transport.REDIS,
                 options: {
-                    url: 'redis://' + process.env.REDIS_HOST + ':' + process.env.REDIS_PORT
+                    host: configService.get('redis.host'),
+                    port: configService.get('redis.port')
                 }
-            }
+            })
+        }
         ])
     ],
     providers: [EventPubSub]
