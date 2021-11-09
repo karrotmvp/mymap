@@ -86,7 +86,6 @@ export class PlaceRepository {
                 return places;
             }), 
             catchError(e => {
-                console.log(e)
                 throw new BadRequestException();
             })
         )

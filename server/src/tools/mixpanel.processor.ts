@@ -1,30 +1,34 @@
-import { Process, Processor } from "@nestjs/bull";
+import { Controller } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { IncomingWebhook } from "@slack/webhook";
-import { Job } from "bull";
+import { EventPattern, Payload } from "@nestjs/microservices";
 import { init, Mixpanel } from "mixpanel";
 import { Event } from "src/event/event";
+import { MyMapEvent } from "src/event/event-pub-sub";
 import { Post } from "src/post/entities/post.entity";
 import { PostService } from "src/post/post.service";
 import { RegionService } from "src/region/region.service";
 import { UserDTO } from "src/user/dto/user.dto";
 import { UserService } from "src/user/user.service";
 
-@Processor('user')
-export class MixpanelUserProcessor {
+// @Processor('user')
+@Controller()
+export class MixpanelProcessor {
     constructor(
         private readonly configService: ConfigService,
         private readonly userService: UserService,
         private readonly postService: PostService,
+        private readonly regionService: RegionService
     ) {
         this._mixpanel = init(configService.get('mixpanel.token'));
     }
     private _mixpanel: Mixpanel
 
-    @Process('user_created')
-    async handleUserCreated(job: Job<Event>) {        
-        const userId: number = job.data._id;
-        const regionName = job.data.data;
+    //user
+    // @Process('user_created')
+    @EventPattern(MyMapEvent.USER_CREATED) 
+    async handleUserCreated(@Payload() job: Event) {
+        const userId: number = job._id;
+        const regionName = job.data;
         const user: UserDTO = await this.userService.readUserDetail(userId);
         const postNum: number = await this.postService.readPostNum(userId);
         this._mixpanel.people.set(user.getUserId().toString(), {
@@ -41,24 +45,11 @@ export class MixpanelUserProcessor {
         })
     }
 
-}
-
-@Processor('post')
-export class MixpanelPostProcessor {
-    constructor(
-        private readonly configService: ConfigService,
-        private readonly postService: PostService,
-        private readonly regionService: RegionService
-    ) {
-        this._mixpanel = init(configService.get('mixpanel.token'));
-        this._webhook = new IncomingWebhook(configService.get('slack.webhook'));
-    }
-    private _mixpanel: Mixpanel
-    private _webhook: IncomingWebhook        //빠른시일 내로 옮기거나 삭제하기
-
-    @Process('post_created')
-    async handlePostCreated(job: Job<Event>) {
-        const postId: number = job.data._id;
+    //post
+    // @Process('post_created')
+    @EventPattern(MyMapEvent.POST_CREATED)
+    async handlePostCreated(@Payload() job: Event) {
+        const postId: number = job._id;
         const post: Post = await this.postService.readPost(postId);
         const userId: string = post.getUser().getUserId().toString();
         this._mixpanel.people.set_once(userId, 'first_post_created', (new Date().toISOString()));
@@ -69,28 +60,11 @@ export class MixpanelPostProcessor {
             pinNum: post.pins.length,
             share: post.getShare()
         })
-        //빠른시일 내로 옮기거나 삭제하기
-        this._webhook.send({
-            attachments: [
-                {
-                    color: 'good',
-                    text: '새로운 테마가 등록됐어요~!',
-                    fields: [
-                        {
-                            title: post.getTitle(),
-                            value: post.getRegionName() + ' / 공개여부 : ' + post.getShare(),
-                            short: false,
-                        },
-                        ],
-                        ts: Math.floor(new Date().getTime() / 1000).toString(),
-                }
-            ],
-        })
     }
-    @Process('post_saved')
-    async handlePostSaved(job: Job<Event>) {
-        const postId: number = job.data._id;
-        const userId: number = job.data.data;
+    @EventPattern(MyMapEvent.POST_SAVED)
+    async handlePostSaved(@Payload() job: Event) {
+        const postId: number = job._id;
+        const userId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
         this._mixpanel.people.increment(userId.toString(), 'savedNum');
         this._mixpanel.people.increment(post.getUser().getUserId().toString(), 'getSavedNum');
@@ -101,10 +75,10 @@ export class MixpanelPostProcessor {
             userId: userId
         })
     }
-    @Process('post_readed')
-    async handlePostReaded(job: Job<Event>) {
-        const postId: number = job.data._id;
-        const userId: number = job.data.data;
+    @EventPattern(MyMapEvent.POST_READED)
+    async handlePostReaded(@Payload() job: Event) {
+        const postId: number = job._id;
+        const userId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
         this._mixpanel.people.increment(userId.toString(), 'readedNum');
         this._mixpanel.people.increment(post.getUser().getUserId().toString(), 'getReadedNum');
@@ -115,19 +89,19 @@ export class MixpanelPostProcessor {
             userId: userId,
         })
     }
-    @Process('post_listed')
-    async handlePostListed(job: Job<Event>) {
-        const regionId: string = job.data.data;
+    @EventPattern(MyMapEvent.POST_LISTED)
+    async handlePostListed(@Payload() job: Event) {
+        const regionId: string = job.data;
         const regionName: string = await this.regionService.readRegionName(regionId);
         this._mixpanel.track('listPost', {
             regionId: regionId,
             regionName: regionName
         })
     }
-    @Process('post_unsaved')
-    async handlePostUnsaved(job: Job<Event>) {
-        const userId: number = job.data._id;
-        const postId: number = job.data.data;
+    @EventPattern(MyMapEvent.POST_UNSAVED)
+    async handlePostUnsaved(@Payload() job: Event) {
+        const userId: number = job._id;
+        const postId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
         this._mixpanel.track('unsavePost', {
             regionId: post.getRegionId(),
@@ -136,10 +110,10 @@ export class MixpanelPostProcessor {
             userId: userId
         })
     }
-    @Process('post_deleted')
-    async handlePostDeleted(job: Job<Event>) {
-        const postId: number = job.data._id;
-        const userId: number = job.data.data;
+    @EventPattern(MyMapEvent.POST_DELETED)
+    async handlePostDeleted(@Payload() job: Event) {
+        const postId: number = job._id;
+        const userId: number = job.data;
         const post: Post = await this.postService.readDeletedPost(postId);
         this._mixpanel.track('deletePost', {
             regionId: post.getRegionId(),
@@ -148,10 +122,10 @@ export class MixpanelPostProcessor {
             userId: userId
         })
     }
-    @Process('post_updated')
-    async handlePostUpdated(job: Job<Event>) {
-        const postId: number = job.data._id;
-        const userId: number = job.data.data;
+    @EventPattern(MyMapEvent.POST_UPDATED)
+    async handlePostUpdated(@Payload() job: Event) {
+        const postId: number = job._id;
+        const userId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
         this._mixpanel.track('updatePost', {
             regionId: post.getRegionId(),
@@ -160,35 +134,25 @@ export class MixpanelPostProcessor {
             userId: userId
         })
     }
-    @Process('post_savelisted')
-    async handlePostSaveListed(job: Job<Event>) {
-        const userId: number = job.data._id;
+    @EventPattern(MyMapEvent.POST_SAVELISTED)
+    async handlePostSaveListed(@Payload() job: Event) {
+        const userId: number = job._id;
         this._mixpanel.track('savelistPost', {
             userId: userId
         })
     }
-    @Process('post_mylisted')
-    async handlePostMyListed(job: Job<Event>) {
-        const userId: number = job.data._id;
+    @EventPattern(MyMapEvent.POST_MYLISTED)
+    async handlePostMyListed(@Payload() job: Event) {
+        const userId: number = job._id;
         this._mixpanel.track('mylistPost', {
             userId: userId
         })
     }
-}
 
-@Processor('place')
-export class MixpanelPlaceProcessor {
-    constructor(
-        private readonly configService: ConfigService,
-        private readonly regionService: RegionService
-    ) {
-        this._mixpanel = init(configService.get('mixpanel.token'));
-    }
-    private _mixpanel: Mixpanel
-
-    @Process('place_listed')
-    async handlePlaceListed(job: Job<Event>) {
-        const regionId: string = job.data.data;
+    //place
+    @EventPattern(MyMapEvent.PLACE_LISTED)
+    async handlePlaceListed(@Payload() job: Event) {
+        const regionId: string = job.data;
         const regionName: string = await this.regionService.readRegionName(regionId);
         this._mixpanel.track('listPlace', {
             regionId: regionId,

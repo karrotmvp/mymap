@@ -5,22 +5,28 @@ import { Queue } from 'bull';
 import { EventPubSub } from './event-pub-sub';
 import { createBullBoard } from '@bull-board/api'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-    imports: [BullModule.registerQueue(
-        { name: 'user' }, { name: 'post' }, { name: 'place' } )],
+    imports: [
+        // BullModule.registerQueue(
+        // { name: 'user' }, { name: 'post' }, { name: 'place' } ),
+        ClientsModule.registerAsync([{
+            name: 'MYMAP_SERVICE',
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => (
+            {
+                transport: Transport.REDIS,
+                options: {
+                    host: configService.get('redis.host'),
+                    port: configService.get('redis.port')
+                }
+            })
+        }
+        ])
+    ],
     providers: [EventPubSub]
 })
-export class EventModule{
-    // @Inject(getQueueToken('noti'))
-    // private readonly queue: Queue
-
-    // configure(consumer: MiddlewareConsumer) {
-    //     const serverAdapter = new ExpressAdapter()
-    //     const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard(
-    //         {   queues: [new BullAdapter(this.queue)], serverAdapter },
-    //     )
-    //     serverAdapter.setBasePath('/api/admin/queues')
-    //     consumer.apply(serverAdapter.getRouter()).forRoutes('/api/admin/queues');
-    // }
-}
+export class EventModule {}
