@@ -59,7 +59,6 @@ function UserPage(props) {
                 </div>
                 {
                     Users && Users.map((user, key) => {
-                        console.log(user)
                         return (
                             <div className="theme_content" key={key}>
                                 <div>{user.userId}</div>

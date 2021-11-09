@@ -1,6 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { ClientKafka, ClientProxy } from '@nestjs/microservices';
 import { Queue } from 'bull';
 import { Event } from './event';
 
@@ -22,57 +23,69 @@ export const MyMapEvent = {
 @Injectable()
 export class EventPubSub {
     constructor(
-        @InjectQueue('user') private userQueue: Queue,
-        @InjectQueue('post') private postQueue: Queue,
-        @InjectQueue('place') private PlaceQueue: Queue,
+        // @InjectQueue('user') private userQueue: Queue,
+        // @InjectQueue('post') private postQueue: Queue,
+        // @InjectQueue('place') private PlaceQueue: Queue,
+        @Inject('MYMAP_SERVICE') private readonly mymapServiceClient: ClientKafka
     ) {}
-
+    
     //user
     @OnEvent(MyMapEvent.USER_CREATED)
     async handleUserCreatedEvent(event: Event) {
-        await this.userQueue.add('user_created', event);
+        this.mymapServiceClient.emit(MyMapEvent.USER_CREATED, JSON.stringify(event));
+        // await this.userQueue.add('user_created', event);
     }
 
     //post
     @OnEvent(MyMapEvent.POST_CREATED)
     async handlePostCreatedEvent(event: Event) {
-        await this.postQueue.add('post_created', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_CREATED, JSON.stringify(event));
+        // await this.postQueue.add('post_created', event);
     }
     @OnEvent(MyMapEvent.POST_SAVED)
     async handlePostSavedEvent(event: Event) {
-        await this.postQueue.add('post_saved', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_SAVED, JSON.stringify(event));
+        // await this.postQueue.add('post_saved', event);
     }
     @OnEvent(MyMapEvent.POST_READED)
     async handlePostReadedEvent(event: Event) {
-        await this.postQueue.add('post_readed', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_READED, JSON.stringify(event));
+        // await this.postQueue.add('post_readed', event);
     }
     @OnEvent(MyMapEvent.POST_LISTED)
     async handlePostListedEvent(event: Event) {
-        await this.postQueue.add('post_listed', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_LISTED, JSON.stringify(event));
+        // await this.postQueue.add('post_listed', event);
     }
     @OnEvent(MyMapEvent.POST_UNSAVED)
     async handlePostUnsavedEvent(event: Event) {
-        await this.postQueue.add('post_unsaved', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_UNSAVED, JSON.stringify(event));
+        // await this.postQueue.add('post_unsaved', event);
     }
     @OnEvent(MyMapEvent.POST_DELETED)
     async handlePostDeletedEvent(event: Event) {
-        await this.postQueue.add('post_deleted', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_DELETED, JSON.stringify(event));
+        // await this.postQueue.add('post_deleted', event);
     }
     @OnEvent(MyMapEvent.POST_UPDATED)
     async handlePostUpdatedEvent(event: Event) {
-        await this.postQueue.add('post_updated', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_UPDATED, JSON.stringify(event));
+        // await this.postQueue.add('post_updated', event);
     }
     @OnEvent(MyMapEvent.POST_SAVELISTED)
     async handlePostSaveListedEvent(event: Event) {
-        await this.postQueue.add('post_savelisted', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_SAVELISTED, JSON.stringify(event));
+        // await this.postQueue.add('post_savelisted', event);
     }
     @OnEvent(MyMapEvent.POST_MYLISTED)
     async handlePostMyListed(event: Event) {
-        await this.postQueue.add('post_mylisted', event);
+        this.mymapServiceClient.emit(MyMapEvent.POST_MYLISTED, JSON.stringify(event));
+        // await this.postQueue.add('post_mylisted', event);
     }
     //place
     @OnEvent(MyMapEvent.PLACE_LISTED)
     async handlePlaceListed(event: Event) {
-        await this.PlaceQueue.add('place_listed', event);
+        this.mymapServiceClient.emit(MyMapEvent.PLACE_LISTED, JSON.stringify(event));
+        // await this.PlaceQueue.add('place_listed', event);
     }
 }
