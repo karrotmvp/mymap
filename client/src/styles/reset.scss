@@ -146,10 +146,14 @@ a {
 input,
 textarea {
   background: none;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
 }
 textarea {
   border: none;
   resize: none;
+  font-family: "Spoqa Han Sans Neo", "sans-serif";
 }
 
 button {
