@@ -14,7 +14,7 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
     };
   });
 
-  const [center, setCenter] = useState({
+  const [center, setCenter] = useState<{ lat: number; lng: number }>({
     lat: pins[0].place.coordinates.latitude,
     lng: pins[0].place.coordinates.longitude,
   });

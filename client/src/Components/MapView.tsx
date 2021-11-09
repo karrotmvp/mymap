@@ -32,37 +32,8 @@ const MapView = ({
   handleSelectPin,
   center = { lat: 37.3595704, lng: 127.105399 },
 }: MapViewProps) => {
-  // const defaultMapCenter = useMemo(() => {
-  //   return (
-  //     center ??
-  //     (pins && {
-  //       lat: pins[0]?.latitude,
-  //       lng: pins[0]?.longitude,
-  //     })
-  //   );
-  // }, [center, pins]);
-
-  // const [mapCenter, setMapCenter] = useState(defaultMapCenter);
-
-  // useEffect(() => {
-  //   setMapCenter(defaultMapCenter);
-  // }, [defaultMapCenter]);
-
   const handleClickMarker = (pin: Pin, idx: number) => {
     handleSelectPin && handleSelectPin(pin, idx);
-    // 지도 이동
-    // setCenter &&
-    //   setCenter({
-    //     lat: pin.latitude,
-    //     lng: pin.longitude,
-    //   });
-    // setTimeout(() => {
-    //   setMapZoom(12);
-    //   setdefaultMapCenter({
-    //     lat: loc.snapshotJson.businessAddressJson.posLat,
-    //     lng: loc.snapshotJson.businessAddressJson.posLong,
-    //   });
-    // }, 1000);
   };
 
   return (

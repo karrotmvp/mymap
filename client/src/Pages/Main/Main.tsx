@@ -90,11 +90,10 @@ const Main = () => {
   const [isPinSelected, setIsPinSelected] = useState(false);
   const handleSelectPin = (pin: Pin, idx: number) => {
     setIsPinSelected(true);
-    setCenter &&
-      setCenter({
-        lat: pin.latitude,
-        lng: pin.longitude,
-      });
+    setCenter({
+      lat: pin.latitude,
+      lng: pin.longitude,
+    });
     setCurrent(idx);
   };
 
@@ -111,21 +110,29 @@ const Main = () => {
   // scroll up
   const [isScrollUp, setIsScrollUp] = useState(false);
   useEffect(() => {
-    const targetElement = document.querySelector("#main-scroll")!;
+    if (!isPinSelected) {
+      const targetElement = document.querySelector("#main-scroll")!;
 
-    const onScroll = () => {
-      setIsScrollUp(window.innerHeight - targetElement.scrollTop < 380);
-    };
-    targetElement.addEventListener("scroll", onScroll);
-    return () => targetElement.removeEventListener("scroll", onScroll);
-  }, []);
+      const onScroll = () => {
+        setIsScrollUp(window.innerHeight - targetElement.scrollTop < 380);
+        setIsMapShown(targetElement.scrollTop <= 0);
+      };
+      targetElement.addEventListener("scroll", onScroll);
+      return () => targetElement.removeEventListener("scroll", onScroll);
+    }
+  }, [isPinSelected]);
+
+  const handleBack = () => {
+    setCenter({ lat: 0, lng: 0 });
+    setIsPinSelected(false);
+  };
 
   return (
     <Wrapper>
       <Header isTransparent={!isScrollUp}>
         {isScrollUp ? <LogoTypo /> : <div />}
         {isPinSelected ? (
-          <Back className="left-icon" onClick={() => setIsPinSelected(false)} />
+          <Back className="left-icon" onClick={handleBack} />
         ) : (
           <Close className="left-icon" onClick={() => mini.close()} />
         )}
