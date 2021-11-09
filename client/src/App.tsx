@@ -96,7 +96,8 @@ function App() {
               <Route path="/edit/:postId" component={Write} />
             </Switch>
           ) : (
-            !preload && (
+            !preload &&
+            !code && (
               <Wrapper onClick={() => mini.close()}>
                 <Header>
                   <Close onClick={() => mini.close()} className="left-icon" />
