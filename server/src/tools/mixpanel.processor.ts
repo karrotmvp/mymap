@@ -26,7 +26,7 @@ export class MixpanelProcessor {
     //user
     // @Process('user_created')
     @EventPattern(MyMapEvent.USER_CREATED) 
-    async handleUserCreated(@Payload('value') job: Event) {
+    async handleUserCreated(@Payload() job: Event) {
         const userId: number = job._id;
         const regionName = job.data;
         const user: UserDTO = await this.userService.readUserDetail(userId);
@@ -48,7 +48,7 @@ export class MixpanelProcessor {
     //post
     // @Process('post_created')
     @EventPattern(MyMapEvent.POST_CREATED)
-    async handlePostCreated(@Payload('value') job: Event) {
+    async handlePostCreated(@Payload() job: Event) {
         const postId: number = job._id;
         const post: Post = await this.postService.readPost(postId);
         const userId: string = post.getUser().getUserId().toString();
@@ -62,7 +62,7 @@ export class MixpanelProcessor {
         })
     }
     @EventPattern(MyMapEvent.POST_SAVED)
-    async handlePostSaved(@Payload('value') job: Event) {
+    async handlePostSaved(@Payload() job: Event) {
         const postId: number = job._id;
         const userId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
@@ -76,7 +76,7 @@ export class MixpanelProcessor {
         })
     }
     @EventPattern(MyMapEvent.POST_READED)
-    async handlePostReaded(@Payload('value') job: Event) {
+    async handlePostReaded(@Payload() job: Event) {
         const postId: number = job._id;
         const userId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
@@ -90,7 +90,7 @@ export class MixpanelProcessor {
         })
     }
     @EventPattern(MyMapEvent.POST_LISTED)
-    async handlePostListed(@Payload('value') job: Event) {
+    async handlePostListed(@Payload() job: Event) {
         const regionId: string = job.data;
         const regionName: string = await this.regionService.readRegionName(regionId);
         this._mixpanel.track('listPost', {
@@ -99,7 +99,7 @@ export class MixpanelProcessor {
         })
     }
     @EventPattern(MyMapEvent.POST_UNSAVED)
-    async handlePostUnsaved(@Payload('value') job: Event) {
+    async handlePostUnsaved(@Payload() job: Event) {
         const userId: number = job._id;
         const postId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
@@ -111,7 +111,7 @@ export class MixpanelProcessor {
         })
     }
     @EventPattern(MyMapEvent.POST_DELETED)
-    async handlePostDeleted(@Payload('value') job: Event) {
+    async handlePostDeleted(@Payload() job: Event) {
         const postId: number = job._id;
         const userId: number = job.data;
         const post: Post = await this.postService.readDeletedPost(postId);
@@ -123,7 +123,7 @@ export class MixpanelProcessor {
         })
     }
     @EventPattern(MyMapEvent.POST_UPDATED)
-    async handlePostUpdated(@Payload('value') job: Event) {
+    async handlePostUpdated(@Payload() job: Event) {
         const postId: number = job._id;
         const userId: number = job.data;
         const post: Post = await this.postService.readPost(postId);
@@ -135,14 +135,14 @@ export class MixpanelProcessor {
         })
     }
     @EventPattern(MyMapEvent.POST_SAVELISTED)
-    async handlePostSaveListed(@Payload('value') job: Event) {
+    async handlePostSaveListed(@Payload() job: Event) {
         const userId: number = job._id;
         this._mixpanel.track('savelistPost', {
             userId: userId
         })
     }
     @EventPattern(MyMapEvent.POST_MYLISTED)
-    async handlePostMyListed(@Payload('value') job: Event) {
+    async handlePostMyListed(@Payload() job: Event) {
         const userId: number = job._id;
         this._mixpanel.track('mylistPost', {
             userId: userId
@@ -151,7 +151,7 @@ export class MixpanelProcessor {
 
     //place
     @EventPattern(MyMapEvent.PLACE_LISTED)
-    async handlePlaceListed(@Payload('value') job: Event) {
+    async handlePlaceListed(@Payload() job: Event) {
         const regionId: string = job.data;
         const regionName: string = await this.regionService.readRegionName(regionId);
         this._mixpanel.track('listPlace', {
