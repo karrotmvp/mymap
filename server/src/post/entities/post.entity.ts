@@ -83,4 +83,7 @@ export class Post {
         this.share = post.share;
         this.pins = pins;
     }
+    public updateShare() {
+        this.share = !this.share;
+    }
 }

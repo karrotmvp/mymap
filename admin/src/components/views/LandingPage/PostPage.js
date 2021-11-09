@@ -44,6 +44,40 @@ function PostPage(props) {
         }
     })
 
+    const shareOnClickHandler = (key, e) => {
+        if(!window.confirm('정말 변경하시겠습니까?')) return ;
+        axios.put(process.env.REACT_APP_SERVER + `post/admin/share/${Posts[key].postId}`,null,{
+            headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+            }})
+            .then((res) => {
+                Posts[key].share = !Posts[key].share
+                const newPosts = Posts;
+                setPosts([])
+                setPosts(newPosts);
+            })
+            .catch(() => {
+                alert('변경에 실패했습니다');
+            })
+    }
+
+    const deleteOnClick = (key, e) => {
+        if(!window.confirm('정말 삭제하시겠습니까?')) return ;
+        axios.delete(process.env.REACT_APP_SERVER + `post/${Posts[key].postId}`, {
+            headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+            }})
+            .then((res) => {
+                Posts.splice(key, 1);
+                const newPosts = Posts;
+                setPosts([])
+                setPosts(newPosts);
+            })
+            .catch(() => {
+                alert('삭제에 실패했습니다');
+            })
+    }
+
     return (
         <div className="container">
             <div className="theme_container">
@@ -56,10 +90,10 @@ function PostPage(props) {
                     <div>공개 여부</div>
                     <div>업데이트</div>
                     <div>생성일</div>
+                    <div>삭제하기</div>
                 </div>
                 {
                     Posts && Posts.map((post, key) => {
-                        console.log(post)
                         return (
                             <div className="theme_content" key={key}>
                                 <div>{post.postId}</div>
@@ -67,9 +101,10 @@ function PostPage(props) {
                                 <div>{post.pins.length}</div>
                                 <div>{post.regionName}({post.regionId})</div>
                                 <div>{post.userId}</div>
-                                <div>{post.share ? "공개" : "비공개"}</div>
+                                <div>{post.share ? "공개" : "비공개"}<button onClick={(e) => shareOnClickHandler(key, e)}>전환하기</button></div>
                                 <div>{new Date(post.updatedAt).toLocaleString()}</div>
                                 <div>{new Date(post.createdAt).toLocaleString()}</div>
+                                <div><button onClick={(e) => deleteOnClick(key, e)}>삭제하기</button></div>
                             </div>
                         )
                     })

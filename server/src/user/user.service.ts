@@ -75,6 +75,7 @@ export class UserService {
     async checkAdmin(userId: number) {
         const user: User = await this.userRepository.findOne(userId);
         if (!user.getIsAdmin()) throw new UnauthorizedException();
+        return true;
     }
 
     async readUserList(page: number, perPage: number) {
