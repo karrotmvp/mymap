@@ -14,15 +14,9 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         ClientsModule.register([
             {
                 name: 'MYMAP_SERVICE',
-                transport: Transport.KAFKA,
+                transport: Transport.REDIS,
                 options: {
-                    client: {
-                        clientId: 'mymap',
-                        brokers: ['localhost:9092'],
-                    },
-                    consumer: {
-                        groupId: 'mymap-consumer'
-                    }
+                    url: 'redis://localhost:6379'
                 }
             }
         ])

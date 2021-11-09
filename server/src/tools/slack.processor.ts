@@ -18,7 +18,7 @@ export class SlackProcessor {
     private _webhook: IncomingWebhook;
 
     @EventPattern(MyMapEvent.POST_CREATED)
-    async handlePostCreated(@Payload('value') job: Event) {
+    async handlePostCreated(@Payload() job: Event) {
         const postId: number = job._id;
         const post: Post = await this.postService.readPost(postId);
         this._webhook.send({

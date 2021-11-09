@@ -13,14 +13,9 @@ import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 async function bootstrap() {
   if (process.env.WORKER === 'true') {
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-      transport: Transport.KAFKA,
+      transport: Transport.REDIS,
       options: {
-        client: {
-          brokers: ['localhost:9092']
-        },
-        consumer: {
-          groupId: 'mymap-consumer'
-        }
+        url: 'redis://localhost:6379'
       }
     })
     await app.listen();
