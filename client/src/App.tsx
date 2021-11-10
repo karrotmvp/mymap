@@ -80,9 +80,9 @@ function App() {
 
   return (
     <Router>
-      <Analytics id="UA-211655411-1" debug>
-        <div className="App">
-          {viewerInfo.userId ? (
+      <div className="App">
+        {viewerInfo.userId ? (
+          <Analytics id="UA-211655411-1" debug>
             <Switch>
               <Route exact path="/" component={Main} />
               <Route exact path="/401" component={ClosePage} />
@@ -95,22 +95,22 @@ function App() {
               <Route exact path="/asdf" component={SearchPlace} />
               <Route path="/edit/:postId" component={Write} />
             </Switch>
-          ) : (
-            !preload &&
-            !code && (
-              <Wrapper onClick={() => mini.close()}>
-                <Header>
-                  <Close onClick={() => mini.close()} className="left-icon" />
-                </Header>
-                <Loading1 />
-                <div className="center">
-                  <Loading2 />
-                </div>
-              </Wrapper>
-            )
-          )}
-        </div>
-      </Analytics>
+          </Analytics>
+        ) : (
+          !preload &&
+          !code && (
+            <Wrapper onClick={() => mini.close()}>
+              <Header>
+                <Close onClick={() => mini.close()} className="left-icon" />
+              </Header>
+              <Loading1 />
+              <div className="center">
+                <Loading2 />
+              </div>
+            </Wrapper>
+          )
+        )}
+      </div>
     </Router>
   );
 }

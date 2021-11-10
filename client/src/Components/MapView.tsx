@@ -49,7 +49,7 @@ const MapView = ({
           height: height ?? "230px",
           transition: "0.3s",
         }}
-        defaultZoom={13}
+        defaultZoom={14}
         center={center}
       >
         {pins?.map((pin, i) => (
