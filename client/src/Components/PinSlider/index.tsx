@@ -30,7 +30,7 @@ const PinSlider = ({
     <Wrapper>
       <Swiper
         current={current}
-        onChange={(i) => handleChangle(i)}
+        onChange={handleChangle}
         contents={pins.map((pin) => (
           <div key={pin.pinId} className="carousel-cell">
             <PlaceBox

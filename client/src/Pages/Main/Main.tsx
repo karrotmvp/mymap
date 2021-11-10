@@ -98,7 +98,7 @@ const Main = () => {
   };
 
   // 카드 이동
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(-1);
   useEffect(() => {
     setCenter({
       lat: pins[current]?.place.coordinates.latitude,
@@ -125,6 +125,7 @@ const Main = () => {
   const handleBack = () => {
     setCenter({ lat: 0, lng: 0 });
     setIsPinSelected(false);
+    setCurrent(-1);
   };
 
   return (
@@ -167,10 +168,12 @@ const Main = () => {
           <Footer />
         </div>
       ) : (
-        <PinSlider
-          placeBoxType="type2"
-          {...{ pins, current, setCurrent, setCenter }}
-        />
+        current > -1 && (
+          <PinSlider
+            placeBoxType="type2"
+            {...{ pins, current, setCurrent, setCenter }}
+          />
+        )
       )}
     </Wrapper>
   );
