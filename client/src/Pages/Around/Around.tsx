@@ -13,9 +13,7 @@ import { gap, Title, WrapperWithHeaderFooter } from "../../styles/theme";
 import AroundMapView from "./AroundMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AroundBox from "../../Components/AroundBox";
-import Mini from "@karrotmarket/mini";
-
-const mini = new Mini();
+import { mini } from "../../App";
 
 const Around = () => {
   const [isMapShown, setIsMapShown] = useState(false);

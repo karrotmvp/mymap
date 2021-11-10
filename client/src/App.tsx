@@ -25,7 +25,7 @@ import mixpanel from "mixpanel-browser";
 
 dayjs.locale("ko");
 
-const mini = new Mini();
+export const mini = new Mini();
 
 const preload = new URLSearchParams(window.location.search).get("preload");
 const regionId = new URLSearchParams(window.location.search).get("region_id");
