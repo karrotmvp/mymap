@@ -16,7 +16,7 @@ import {
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRecoilValue } from "recoil";
 import { ViewerInfo } from "../Shared/atom";
-import { Close, LogoInactive, Thumbnail } from "../assets";
+import { Close, LogoInactive, More, Thumbnail } from "../assets";
 import { mini } from "../App";
 
 const Tab = ({
@@ -136,6 +136,22 @@ const Mypage = () => {
         </div>
       </Profile>
 
+      <div className="all-places">
+        <div className="title-wrapper">
+          <div style={{ width: "100%" }}>
+            <div className="title">나의 모든 장소</div>
+          </div>
+          <More className="more-icon" />
+        </div>
+        <div className="places">
+          {/* {post.pins.map((pin) => (
+          <div key={pin.pinId} className="place">
+            <OrangePlaceBox {...pin.place} />
+          </div>
+        ))} */}
+        </div>
+      </div>
+
       <Tab {...{ selectedTab, setSelectedTab }} />
 
       <div id="collections">
@@ -192,10 +208,56 @@ const Wrapper = styled.div<{ isScrollUp: boolean }>`
   overflow-y: scroll;
   position: relative;
   #collections {
-    margin-top: -2.5rem;
     padding-bottom: 8.6rem;
     & > div > div > div:not(:first-child) {
       border-top: 0.1rem solid ${theme.color.gray1_7};
+    }
+  }
+  .all-places {
+    width: 100%;
+    padding: 3.6rem 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1.6rem solid ${theme.color.gray1_5};
+    .title-wrapper {
+      padding-left: 2rem;
+      width: 100%;
+      ${flexCenter};
+      justify-content: space-between;
+
+      .title {
+        max-width: 100%;
+        font-size: 1.6rem;
+        line-height: 120%;
+        font-weight: bold;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-right: 5rem;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      .more-icon {
+        position: absolute;
+        right: 0;
+        fill: ${theme.color.gray6};
+      }
+    }
+
+    .places {
+      display: flex;
+      width: 100%;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      margin-top: 1.6rem;
+      padding-left: 2rem;
+      box-sizing: border-box;
+      ${gap("0.8rem")};
+      .place {
+        &:last-child {
+          padding-right: 2rem;
+        }
+      }
     }
   }
   .close-btn {
@@ -264,27 +326,28 @@ const Profile = styled.div`
 `;
 
 const TabWrapper = styled.div`
+  ${flexCenter};
   width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 2.5rem 1.6rem;
+  padding: 0 2rem;
+  padding-top: 1.9rem;
   box-sizing: border-box;
   ${gap("0.5rem")}
   position: sticky;
   top: 0;
   background-color: #fff;
   z-index: 10;
+  border-bottom: 0.1rem solid ${theme.color.gray1_7};
 `;
 
 const TabBtn = styled.div<{ $isSelected: boolean }>`
   font-size: 1.5rem;
   line-height: 120%;
-  padding: 1rem 1.2rem;
-  border-radius: 3rem;
+  padding: 1.7rem 2.9rem;
   color: ${({ $isSelected }) =>
-    $isSelected ? theme.color.white : theme.color.gray6};
+    $isSelected ? theme.color.black : theme.color.gray6};
+  border-bottom: ${({ $isSelected }) =>
+    `0.2rem solid ${$isSelected ? theme.color.gray7 : theme.color.white}`};
   font-weight: ${({ $isSelected }) => $isSelected && "bold"};
-  background-color: ${({ $isSelected }) => $isSelected && theme.color.orange};
 `;
 
 export default Mypage;
