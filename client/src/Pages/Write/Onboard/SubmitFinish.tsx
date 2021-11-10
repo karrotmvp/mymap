@@ -1,21 +1,18 @@
 import Mini from "@karrotmarket/mini";
-import { useRecoilValue } from "recoil";
+import { useHistory } from "react-router";
 import styled from "styled-components";
-import { postPreopen } from "../../../api/user";
 import { Close, Finish1, Finish2 } from "../../../assets";
-import { RegionId } from "../../../Shared/atom";
 import { Button, flexCenter, theme } from "../../../styles/theme";
 import { Mixpanel } from "../../../utils/mixpanel";
 
 const mini = new Mini();
 
 const SubmitFinish = () => {
-  const regionId = useRecoilValue(RegionId);
+  const history = useHistory();
 
   const onClickButton = async () => {
-    Mixpanel.track("글작성 완료 후 알림받기");
-    await postPreopen(regionId);
-    mini.close();
+    Mixpanel.track("글작성 완료 후 둘러보기");
+    history.push("/");
   };
 
   return (
@@ -26,7 +23,7 @@ const SubmitFinish = () => {
         <Finish2 />
       </div>
       <Button className="button" onClick={onClickButton}>
-        오픈 시 알림을 받을래요
+        당장모아 둘러보기
       </Button>
     </Wrapper>
   );
