@@ -116,7 +116,7 @@ const Mypage = () => {
   return (
     <Wrapper id="mypage-scroll" {...{ isScrollUp }}>
       {isScrollUp && (
-        <Header className="header-scroll" title="로컬큐레이터님">
+        <Header className="header-scroll" title={`${viewerInfo.userName}님`}>
           <Close className="close-btn" onClick={() => mini.close()} />
         </Header>
       )}
