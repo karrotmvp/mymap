@@ -146,8 +146,10 @@ const Detail = () => {
       {match(state._t)
         .with("list", () => (
           <Wrapper id="detail-scroll">
-            <Title>{post.contents.title}</Title>
-            <div className="content">{post.contents.contents}</div>
+            <div className="post-title">
+              <Title>{post.contents.title}</Title>
+              <div className="content">{post.contents.contents}</div>
+            </div>
 
             <Profile>
               {post.contents.user.profileImageUrl ? (
@@ -180,7 +182,7 @@ const Detail = () => {
                     })
                   }
                 >
-                  <PlaceCard place={pin.place} />
+                  <PlaceCard place={pin.place} type="list" />
                 </div>
               ))}
             </div>
@@ -223,18 +225,30 @@ const Detail = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeader};
-  padding: 0 2rem;
   padding-top: 8rem;
   overflow-y: scroll;
-  .content {
-    margin-top: 1.4rem;
-    font-size: 1.4rem;
-    line-height: 150%;
-    color: ${theme.color.gray7};
-    padding-right: 3rem;
+  .post-title {
+    padding: 0 2rem;
+    border-bottom: 1.6rem solid ${theme.color.gray1_5};
+    padding-bottom: 3rem;
+    .content {
+      margin-top: 1.4rem;
+      font-size: 1.4rem;
+      line-height: 150%;
+      color: ${theme.color.gray7};
+      padding-right: 3rem;
+    }
+    &:after {
+      content: "";
+      width: 100%;
+      height: 1.6rem;
+      background-color: ${theme.color.gray1_5};
+    }
   }
+
   .cards {
-    margin-top: 1.4rem;
+    padding: 0 2rem;
+    margin-top: 1.6rem;
     padding-bottom: 3.5rem;
     ${gap("1.4rem", "column")}
   }
@@ -244,9 +258,8 @@ const Profile = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  margin-top: 2.8rem;
-  padding: 2.8rem 0 1.8rem 0;
-  border-top: 0.1rem solid ${theme.color.gray2};
+  margin-top: 3rem;
+  padding: 0 2rem;
 
   & > div:last-child {
     margin-left: 1.2rem;

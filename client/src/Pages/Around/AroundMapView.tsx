@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Back } from "../../assets";
 import Header from "../../Components/Header";
 import MapView, { Pin } from "../../Components/MapView";
-import PlaceBox from "../../Components/PlaceBox";
+import PlaceBox from "../../Components/PlaceCard";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter } from "../../styles/theme";
 
@@ -31,7 +31,7 @@ const AroundMapView = ({
       />
 
       <div className="placebox">
-        <PlaceBox type="type4" {...{ place }} />
+        <PlaceBox type="map" {...{ place }} />
       </div>
     </Wrapper>
   );

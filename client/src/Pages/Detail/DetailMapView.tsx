@@ -46,7 +46,7 @@ const DetailMapView = ({ pins }: { pins: PinType[] }) => {
         {...{ center, setCenter, handleSelectPin }}
       />
       <PinSlider
-        placeBoxType="type3"
+        placeCardType="map"
         {...{ pins, current, setCurrent, setCenter }}
       />
     </Wrapper>

@@ -2,7 +2,7 @@ import { Dispatch, MouseEventHandler, SetStateAction } from "react";
 import styled from "styled-components";
 import { Back, Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
-import PlaceBox from "../../Components/PlaceBox";
+import PlaceBox from "../../Components/PlaceCard";
 import { PlaceType } from "../../Shared/type";
 import { Button, flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -42,7 +42,7 @@ const PlaceMapView = ({
       <Back onClick={close} className="back-btn" />
 
       <div className="place-info">
-        <PlaceBox type="type1" {...{ place }} />
+        <PlaceBox type="write" {...{ place }} />
         <AddBtn onClick={() => handleAddPlace(place)}>
           <Plus className="add-icon" />이 장소 추가하기
         </AddBtn>

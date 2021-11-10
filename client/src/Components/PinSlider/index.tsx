@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { PinType } from "../../Shared/type";
-import PlaceBox, { PlaceBoxType } from "../PlaceBox";
+import PlaceBox, { PlaceCardType } from "../PlaceCard";
 import Swiper from "./Swiper";
 
 interface PinSliderProps {
@@ -9,7 +9,7 @@ interface PinSliderProps {
   current: number;
   setCurrent: (index: number) => void;
   setCenter: Dispatch<SetStateAction<{ lat: number; lng: number }>>;
-  placeBoxType: PlaceBoxType;
+  placeCardType: PlaceCardType;
 }
 
 const PinSlider = ({
@@ -17,7 +17,7 @@ const PinSlider = ({
   current,
   setCurrent,
   setCenter,
-  placeBoxType,
+  placeCardType,
 }: PinSliderProps) => {
   const handleChangle = (index: number) => {
     setCurrent(index);
@@ -36,7 +36,7 @@ const PinSlider = ({
             <PlaceBox
               place={pin.place}
               className="place-box"
-              type={placeBoxType}
+              type={placeCardType}
             />
           </div>
         ))}

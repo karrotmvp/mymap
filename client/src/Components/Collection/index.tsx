@@ -2,7 +2,7 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import { More } from "../../assets";
 import { PostType } from "../../Shared/type";
-import { flexCenter, gap, theme } from "../../styles/theme";
+import { flexCenter, gap, OrangeTag, theme } from "../../styles/theme";
 import SaveFooter from "./SaveFooter";
 
 const OrangePlaceBox = ({
@@ -15,9 +15,9 @@ const OrangePlaceBox = ({
   return (
     <OrangePlaceBoxWrapper>
       {category?.length > 0 ? (
-        <Tag>{category[category.length - 1]}</Tag>
+        <OrangeTag>{category[category.length - 1]}</OrangeTag>
       ) : (
-        <Tag>동네 장소</Tag>
+        <OrangeTag>동네 장소</OrangeTag>
       )}
       <div className="place-name">{name}</div>
     </OrangePlaceBoxWrapper>
@@ -130,17 +130,6 @@ const OrangePlaceBoxWrapper = styled.div`
     -webkit-line-clamp: 2;
     overflow: hidden;
   }
-`;
-
-const Tag = styled.div`
-  font-size: 1.1rem;
-  font-weight: 500;
-  padding: 0.45rem 1rem;
-  border-radius: 0.4rem;
-  background-color: ${theme.color.white};
-  color: ${theme.color.orange};
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `;
 
 export default Collection;

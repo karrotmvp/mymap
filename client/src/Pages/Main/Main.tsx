@@ -168,7 +168,7 @@ const Main = () => {
       ) : (
         current > -1 && (
           <PinSlider
-            placeBoxType="type2"
+            placeCardType="map"
             {...{ pins, current, setCurrent, setCenter }}
           />
         )
