@@ -195,7 +195,7 @@ const Wrapper = styled.div<{ isScrollUp: boolean }>`
     margin-top: -2.5rem;
     padding-bottom: 8.6rem;
     & > div > div > div:not(:first-child) {
-      border-top: 0.6rem solid ${theme.color.gray1_5};
+      border-top: 0.1rem solid ${theme.color.gray1_7};
     }
   }
   .close-btn {

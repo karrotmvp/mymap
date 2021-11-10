@@ -112,7 +112,7 @@ const Main = () => {
       const targetElement = document.querySelector("#main-scroll")!;
 
       const onScroll = () => {
-        setIsScrollUp(window.innerHeight - targetElement.scrollTop < 380);
+        setIsScrollUp(window.innerHeight - targetElement.scrollTop < 450);
         setIsMapShown(targetElement.scrollTop <= 0);
       };
       targetElement.addEventListener("scroll", onScroll);

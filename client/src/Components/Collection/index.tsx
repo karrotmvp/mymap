@@ -65,7 +65,7 @@ const Wrapper = styled.div`
 
     .title {
       max-width: 100%;
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       line-height: 120%;
       font-weight: bold;
       white-space: nowrap;
