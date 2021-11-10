@@ -19,6 +19,11 @@ export const GlobalStyle = createGlobalStyle`
         scrollbar-width: none;
         color: ${theme.color.black};
         background-color: #FFFFFF;
+        -webkit-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+        
         .pin-image {
             position: absolute;
             width: 4.2rem;

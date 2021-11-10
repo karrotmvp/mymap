@@ -13,8 +13,12 @@ function Swiper({ contents, onChange, current }: SwiperProps) {
   const [ref, setRef] = useState<any>();
 
   useEffect(() => {
-    if (!ref) {
+    if (!ref || current === undefined || current === null) {
       return;
+    }
+
+    if (current !== ref.selectedIndex) {
+      ref.select(current);
     }
 
     const handleFlktyChange = (index: number) => {
@@ -25,23 +29,14 @@ function Swiper({ contents, onChange, current }: SwiperProps) {
     return () => {
       ref.off("change", handleFlktyChange);
     };
-  }, [ref, onChange]);
-
-  useEffect(() => {
-    if (!ref || current === undefined || current === null) {
-      return;
-    }
-
-    if (current !== ref.selectedIndex) {
-      ref.select(current);
-    }
-  }, [ref, current]);
+  }, [ref, onChange, current]);
 
   return (
     <Wrapper>
       <Flickity
         options={{
           prevNextButtons: false,
+          initialIndex: current,
         }}
         flickityRef={(c: SetStateAction<any>) => setRef(c)}
       >
