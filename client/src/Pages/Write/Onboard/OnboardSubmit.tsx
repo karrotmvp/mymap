@@ -22,9 +22,9 @@ const OnboardSubmit = ({
       <div className="alert">
         <div className="alert-wrapper" onClick={(e) => e.stopPropagation()}>
           <div className="title">테마를 다 만드셨나요?</div>
-          <div className="sub">{`만든 테마는 11월 초 ‘당장모아’에서 확인할 수 있어요! 그때까지는 수정이 불가능해요.`}</div>
+          <div className="sub">만든 테마는 ‘당장모아’에서 확인할 수 있어요</div>
           <div className="buttons">
-            <Button onClick={close}>수정할래요</Button>
+            <Button onClick={close}>더 수정할래요</Button>
             <Button onClick={onClickFinish}>다 만들었어요</Button>
           </div>
         </div>
@@ -48,7 +48,7 @@ const Wrapper = styled.div`
     padding: 2rem;
     box-sizing: border-box;
     .alert-wrapper {
-      width: 30rem;
+      width: 32rem;
       flex-direction: column;
       padding: 2rem 2.4rem;
       box-sizing: border-box;
