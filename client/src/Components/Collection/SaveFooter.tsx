@@ -41,7 +41,11 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
       <div className="saved-info">
         {isViewer ? (
           post.share ? (
-            savedNum === 0 && "아직 저장한 이웃이 없어요"
+            savedNum > 0 ? (
+              `${savedNum}명 이웃이 이 테마를 저장했어요`
+            ) : (
+              "아직 저장한 이웃이 없어요"
+            )
           ) : (
             <div className="secret">
               <Secret />
