@@ -17,9 +17,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useRecoilValue } from "recoil";
 import { ViewerInfo } from "../Shared/atom";
 import { Close, LogoInactive, Thumbnail } from "../assets";
-import Mini from "@karrotmarket/mini";
-
-const mini = new Mini();
+import { mini } from "../App";
 
 const Tab = ({
   selectedTab,

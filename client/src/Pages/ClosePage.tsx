@@ -1,9 +1,7 @@
 import styled from "styled-components";
+import { mini } from "../App";
 import { LogoInactive } from "../assets";
 import { Button, flexCenter, gap, theme } from "../styles/theme";
-import Mini from "@karrotmarket/mini";
-
-const mini = new Mini();
 
 const ClosePage = () => {
   const handleClose = () => {

@@ -1,11 +1,9 @@
-import Mini from "@karrotmarket/mini";
+import { mini } from "../../../App";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import { Close, Finish1, Finish2 } from "../../../assets";
 import { Button, flexCenter, theme } from "../../../styles/theme";
 import { Mixpanel } from "../../../utils/mixpanel";
-
-const mini = new Mini();
 
 const SubmitFinish = () => {
   const history = useHistory();

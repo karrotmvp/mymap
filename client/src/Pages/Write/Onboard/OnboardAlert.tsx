@@ -1,4 +1,4 @@
-import Mini from "@karrotmarket/mini";
+import { mini } from "../../../App";
 import { useRouteMatch } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -8,8 +8,6 @@ import { Notification } from "../../../assets";
 import { RegionId } from "../../../Shared/atom";
 import { Button, flexCenter, gap, theme } from "../../../styles/theme";
 import { Mixpanel } from "../../../utils/mixpanel";
-
-const mini = new Mini();
 
 const OnboardAlert = ({ close }: { close: () => void }) => {
   const regionId = useRecoilValue(RegionId);

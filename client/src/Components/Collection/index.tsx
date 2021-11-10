@@ -40,8 +40,8 @@ const Collection = (post: PostType) => {
       </div>
       <div className="places">
         {post.pins.map((pin) => (
-          <div className="place">
-            <OrangePlaceBox key={pin.pinId} {...pin.place} />
+          <div key={pin.pinId} className="place">
+            <OrangePlaceBox {...pin.place} />
           </div>
         ))}
       </div>
