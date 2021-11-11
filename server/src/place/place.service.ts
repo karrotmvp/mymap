@@ -38,11 +38,11 @@ export class PlaceService {
         return place;
     }
 
-    async readPlaces(placeIds: string[]): Promise<PlaceDTO[]> {
+    async readPlaces(placeIds: string[], userId?: number): Promise<PlaceDTO[]> {
         const places$ = await this.placeRepository.findWithIds(placeIds);
         const places = await lastValueFrom(places$);
         places.map(async(place) => {
-            place.saved = await this.postService.countSavedPlaces(place.placeId);
+            place.saved = userId ? await this.postService.countMySavedPlaces(userId, place.placeId) : await this.postService.countSavedPlaces(place.placeId);
         })
         return places;
     }
@@ -76,7 +76,7 @@ export class PlaceService {
         const pins: Pin[] = await this.postService.readPins(userId);
         const places: string[] = pins.map(pin => pin.getPlaceId());
         const placeIds: string[] = [...new Set(places)];
-        return await this.readPlaces(placeIds);
+        return await this.readPlaces(placeIds, userId);
     }
 
     async readRecommendPlacesRandom(regionId: string, seed: number, perPage: number, page: number): Promise<RegionPlaceDTO> {
