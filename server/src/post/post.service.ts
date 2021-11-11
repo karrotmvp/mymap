@@ -9,6 +9,7 @@ import { RegionService } from 'src/region/region.service';
 import { UserDTO } from 'src/user/dto/user.dto';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { CreatePinDTO } from './dto/create-pin.dto';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
 import { PinDTO } from './dto/pin.dto';
@@ -35,7 +36,7 @@ export class PostService {
 
     async createPost(userId: number, post: CreatePostDTO) {
         const user: User = await this.userService.readUser(userId);
-        const pins: Pin[] = await this.pinRepository.savePins(post.pins);
+        const pins: Pin[] = post.pins ? await this.pinRepository.savePins(post.pins) : null;
         const regionName: string = await this.regionService.readRegionName(post.regionId);
         const newPost: Post = await this.postRepository.savePost(post, regionName, user, pins);
         this.eventEmitter.emit(MyMapEvent.POST_CREATED, new Event(newPost.getPostId(), null));
@@ -108,7 +109,7 @@ export class PostService {
     async deletePost(userId: number, postId: number): Promise<void> {
         const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
         if (!post) throw new BadRequestException();
-        if (!(post.getUser().getUserId() === userId || this.userService.checkAdmin(userId))) throw new NotAcceptableException();
+        if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
         await this.postRepository.softRemove(post);
     }
 
@@ -153,6 +154,22 @@ export class PostService {
         return post;
     }
 
+    async readPins(userId: number): Promise<Pin[]> {
+        const posts: Post[] = await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId })
+            }
+        })
+        const postIds: number[] = posts.map(post => post.getPostId());
+        return await this.pinRepository.find({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId IN (:...postId)', { postId: postIds })
+            }
+        })
+    }
+
     async readPostNum(userId: number): Promise<number> {
         const postNum = await this.postRepository.count({
             relations: ['user'],
@@ -182,10 +199,20 @@ export class PostService {
         return result;
     }
 
-    async updatePostShare(postId: number) {
-        const post: Post = await this.postRepository.findOne(postId);
+    async updatePostShare(userId: number, postId: number) {
+        const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
+        if (!post) throw new BadRequestException();
+        if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
         post.updateShare();
         await this.postRepository.save(post);
     }
 
+    async addPin(userId: number, postId: number, pin: CreatePinDTO) {
+        const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
+        if (!post) throw new BadRequestException();
+        if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
+        const newPin: Pin[] = await this.pinRepository.savePins([pin]);
+        post.pushPin(newPin)
+        await this.postRepository.save(post);
+    }
 }

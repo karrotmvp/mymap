@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { PlaceDTO } from "./place.dto";
 
 export class RegionPlaceDTO {
@@ -6,6 +7,9 @@ export class RegionPlaceDTO {
         this.seed = seed;
     }
 
+    @ApiProperty({ type: [PlaceDTO] })
     places: PlaceDTO[];
+    
+    @ApiProperty()
     seed: string;
 }

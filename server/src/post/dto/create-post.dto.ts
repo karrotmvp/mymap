@@ -25,9 +25,10 @@ export class CreatePostDTO {
     @ApiProperty({
         type: [CreatePinDTO]
     })
+    @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })
-    @ArrayMinSize(1)
+    @ArrayMinSize(0)
     @ArrayMaxSize(10)
     @Type(() => CreatePinDTO)
     readonly pins: CreatePinDTO[];

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
+import { CoordinatesDTO } from 'src/place/dto/coordinates.dto';
 import { RegionRepository } from './region.repository';
 
 @Injectable()
@@ -16,6 +17,12 @@ export class RegionService {
         const regionName$ = await this.regionRepository.findRegionName(regionId);
         const regionName = await lastValueFrom(regionName$);
         return regionName;
+    }
+
+    async readRegionId(coordinate: CoordinatesDTO): Promise<string> {
+        const regionId$ = await this.regionRepository.findRegionId(coordinate);
+        const regionId = await lastValueFrom(regionId$);
+        return regionId;
     }
 
 }
