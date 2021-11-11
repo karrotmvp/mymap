@@ -29,7 +29,7 @@ const PinSlider = ({
     });
   };
   return (
-    <Wrapper {...{ style }}>
+    <Wrapper {...{ style }} className="pin-slider">
       <Swiper
         current={current}
         onChange={handleChangle}

@@ -4,7 +4,6 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getAroundPlaces } from "../../api/place";
 import { Close, List, Map } from "../../assets";
-import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import { RegionId } from "../../Shared/atom";
@@ -74,33 +73,24 @@ const Around = () => {
 
         {match(state._t)
           .with("list", () => (
-            <div className="cards">
-              {places.map((place) => (
-                <div key={place.placeId} onClick={dispatch}>
-                  <PlaceCard {...{ place }} type="list" />
-                </div>
-              ))}
-              <CreateButton targetId="around-scroll" />
+            <div id="around-scroll">
+              <Title
+                style={{ fontSize: "1.8rem", lineHeight: "2.52rem" }}
+              >{`우리 동네 장소
+어디까지 알고 있나요?`}</Title>
+              <div className="sub">새로운 장소를 나만의 테마에 저장해요</div>
+
+              <div className="cards">
+                {places.map((place) => (
+                  <div key={place.placeId}>
+                    <PlaceCard {...{ place }} type="list" />
+                  </div>
+                ))}
+              </div>
             </div>
           ))
           .with("map", () => <MapViewwithSlider {...{ places }} />)
           .exhaustive()}
-
-        <div id="around-scroll">
-          <Title
-            style={{ fontSize: "1.8rem", lineHeight: "2.52rem" }}
-          >{`우리 동네 장소 
-어디까지 알고 있나요?`}</Title>
-          <div className="sub">새로운 장소를 나만의 테마에 저장해요</div>
-
-          <div className="cards">
-            {places.map((place) => (
-              <div key={place.placeId}>
-                <PlaceCard {...{ place }} type="list" />
-              </div>
-            ))}
-          </div>
-        </div>
 
         <Footer />
       </Wrapper>
@@ -110,10 +100,15 @@ const Around = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeaderFooter};
-  padding-left: 2rem;
-  padding-right: 2rem;
   overflow-y: scroll;
+  .view-toggle {
+    right: 2rem;
+  }
+  .pin-slider {
+    bottom: 8.4rem;
+  }
   #around-scroll {
+    padding: 0 2rem;
     height: 100vh;
     padding-top: 3rem;
     box-sizing: border-box;
@@ -127,7 +122,7 @@ const Wrapper = styled.div`
   }
   .cards {
     margin-top: 3rem;
-    padding-bottom: 16rem;
+    padding-bottom: 8.4rem;
     ${gap("1.4rem", "column")}
   }
 `;
