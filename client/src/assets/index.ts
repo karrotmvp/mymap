@@ -30,6 +30,7 @@ export { ReactComponent as Secret } from "./secret.svg";
 export { ReactComponent as LogoTypo } from "./logo_typo.svg";
 export { ReactComponent as CreatePlus } from "./create_plus.svg";
 export { ReactComponent as PlaceAdd } from "./place_add.svg";
+export { ReactComponent as Search } from "./search.svg";
 
 export { ReactComponent as Loading1 } from "./loading1.svg";
 export { ReactComponent as Loading2 } from "./loading2.svg";

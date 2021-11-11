@@ -107,7 +107,7 @@ const SearchPlace = ({
 
       {searchVal.value.length > 0 ? (
         result.length > 0 ? (
-          <div id="search-list" className="result">
+          <div id="search-list">
             <InfiniteScroll
               dataLength={result.length}
               next={handleResultNext}
@@ -124,12 +124,10 @@ const SearchPlace = ({
                     key={place.placeId}
                     onClick={() => !isExist && handleOpenMap(place)}
                   >
-                    {place.address && (
-                      <SearchList
-                        {...{ isExist, place }}
-                        searchVal={searchVal.value}
-                      />
-                    )}
+                    <SearchList
+                      {...{ isExist, place }}
+                      searchVal={searchVal.value}
+                    />
                   </div>
                 );
               })}
@@ -187,6 +185,7 @@ const PlaceInput = styled.div`
     position: absolute;
     right: 0.7rem;
     top: 0.4rem;
+    fill: ${theme.color.gray2};
   }
 `;
 
@@ -198,7 +197,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #fff;
-  .result {
+  #search-list {
     padding-top: 8rem;
     box-sizing: border-box;
     font-size: 1.4rem;

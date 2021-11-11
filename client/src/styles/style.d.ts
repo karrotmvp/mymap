@@ -11,8 +11,9 @@ declare module "styled-components" {
       gray3_5: "#C4C4C4";
       gray3: "#CECECE";
       gray2: "#E5E5E5";
-      gray1_5: "#F7F7F7";
+      gray2_5: "#DBDBDB";
       gray1_7: "#F0F0F0";
+      gray1_5: "#F7F7F7";
       gray1: "#F8F9FA";
       white: "#FFFFFF";
       orange: "#FF7964";
