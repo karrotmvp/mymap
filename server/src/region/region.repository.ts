@@ -18,7 +18,7 @@ export class RegionRepository {
                 'X-Api-Key': this.configService.get('daangn.api_key')
             },
             params: {
-                range: 'MY'
+                range: 'ADJACENT'
             }
         }).pipe(
             map((res) => {
