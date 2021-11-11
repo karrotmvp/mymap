@@ -1,15 +1,16 @@
 import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
-import { PinType } from "../../Shared/type";
+import { PlaceType } from "../../Shared/type";
 import PlaceBox, { PlaceCardType } from "../PlaceCard";
 import Swiper from "./Swiper";
 
 interface PinSliderProps {
-  pins: PinType[];
+  pins: PlaceType[];
   current: number;
   setCurrent: (index: number) => void;
   setCenter: Dispatch<SetStateAction<{ lat: number; lng: number }>>;
   placeCardType: PlaceCardType;
+  style?: React.CSSProperties;
 }
 
 const PinSlider = ({
@@ -18,26 +19,23 @@ const PinSlider = ({
   setCurrent,
   setCenter,
   placeCardType,
+  style,
 }: PinSliderProps) => {
   const handleChangle = (index: number) => {
     setCurrent(index);
     setCenter({
-      lat: pins[index].place.coordinates.latitude,
-      lng: pins[index].place.coordinates.longitude,
+      lat: pins[index].coordinates.latitude,
+      lng: pins[index].coordinates.longitude,
     });
   };
   return (
-    <Wrapper>
+    <Wrapper {...{ style }}>
       <Swiper
         current={current}
         onChange={handleChangle}
         contents={pins.map((pin) => (
-          <div key={pin.pinId} className="carousel-cell">
-            <PlaceBox
-              place={pin.place}
-              className="place-box"
-              type={placeCardType}
-            />
+          <div key={pin.placeId} className="carousel-cell">
+            <PlaceBox place={pin} className="place-box" type={placeCardType} />
           </div>
         ))}
       />

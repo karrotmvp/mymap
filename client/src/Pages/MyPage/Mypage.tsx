@@ -1,23 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
-import { getMyPosts, getSavedPosts } from "../api/post";
-import Collection from "../Components/Collection";
-import CreateButton from "../Components/CreateButton";
-import Footer from "../Components/Footer";
-import Header from "../Components/Header";
-import { PostType } from "../Shared/type";
+import { getMyPosts, getSavedPosts } from "../../api/post";
+import Collection from "../../Components/Collection";
+import CreateButton from "../../Components/CreateButton";
+import Footer from "../../Components/Footer";
+import Header from "../../Components/Header";
+import { PlaceType, PostType } from "../../Shared/type";
 import {
   flexCenter,
   gap,
   theme,
   WrapperWithHeaderFooter,
-} from "../styles/theme";
+} from "../../styles/theme";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRecoilValue } from "recoil";
-import { ViewerInfo } from "../Shared/atom";
-import { Close, LogoInactive, More, Thumbnail } from "../assets";
-import { mini } from "../App";
+import { ViewerInfo } from "../../Shared/atom";
+import { Close, LogoInactive, More, Thumbnail } from "../../assets";
+import { mini } from "../../App";
+import { getPlaceSaved } from "../../api/place";
+import OrangePlaceBox from "../../Components/OrangePlaceBox";
+import MyPlaces from "./MyPlaces";
 
 const Tab = ({
   selectedTab,
@@ -51,8 +54,10 @@ const Tab = ({
 const Mypage = () => {
   const [selectedTab, setSelectedTab] = useState<"my" | "others">("my");
   const [isScrollUp, setIsScrollUp] = useState(false);
+  const [isMyPlacesOpened, setIsMyPlacesOpened] = useState(false);
 
   // 내 리스트
+  const [myPlaces, setMyPlaces] = useState<PlaceType[] | []>([]);
   const [myPosts, setMyPosts] = useState<PostType[] | []>([]);
   const [myPostsHasMore, setMyPostsHasMore] = useState(true);
   const [myPostPage, setMyPostPage] = useState(1);
@@ -61,6 +66,10 @@ const Mypage = () => {
     setMyPostPage(myPostPage + 1);
   };
   useEffect(() => {
+    const fetchMyPlaces = async () => {
+      const data = await getPlaceSaved();
+      setMyPlaces(data);
+    };
     const fetchMyPosts = async () => {
       const data = (
         await getMyPosts({
@@ -73,6 +82,7 @@ const Mypage = () => {
       }
       setMyPosts([...myPosts, ...data]);
     };
+    fetchMyPlaces();
     fetchMyPosts();
   }, [myPostPage]);
 
@@ -136,21 +146,25 @@ const Mypage = () => {
         </div>
       </Profile>
 
-      <div className="all-places">
-        <div className="title-wrapper">
-          <div style={{ width: "100%" }}>
-            <div className="title">나의 모든 장소</div>
+      {myPlaces.length > 0 && (
+        <div className="all-places" onClick={() => setIsMyPlacesOpened(true)}>
+          <div className="title-wrapper">
+            <div style={{ width: "100%" }}>
+              <div className="title">
+                내가 저장한 <span>{myPlaces.length}</span>개 장소예요
+              </div>
+            </div>
+            <More className="more-icon" />
           </div>
-          <More className="more-icon" />
-        </div>
-        <div className="places">
-          {/* {post.pins.map((pin) => (
-          <div key={pin.pinId} className="place">
-            <OrangePlaceBox {...pin.place} />
+          <div className="places">
+            {myPlaces.map((place) => (
+              <div key={place.placeId} className="place">
+                <OrangePlaceBox {...place} />
+              </div>
+            ))}
           </div>
-        ))} */}
         </div>
-      </div>
+      )}
 
       <Tab {...{ selectedTab, setSelectedTab }} />
 
@@ -199,6 +213,10 @@ const Mypage = () => {
       <CreateButton targetId="mypage-scroll" />
 
       <Footer />
+
+      {isMyPlacesOpened && (
+        <MyPlaces places={myPlaces} close={() => setIsMyPlacesOpened(false)} />
+      )}
     </Wrapper>
   );
 };
@@ -236,6 +254,9 @@ const Wrapper = styled.div<{ isScrollUp: boolean }>`
         padding-right: 5rem;
         box-sizing: border-box;
         overflow: hidden;
+        span {
+          color: ${theme.color.orange};
+        }
       }
       .more-icon {
         position: absolute;

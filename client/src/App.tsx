@@ -2,8 +2,8 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Main from "./Pages/Main/Main";
 import Around from "./Pages/Around/Around";
-import Mypage from "./Pages/Mypage";
-import Detail from "./Pages/Detail";
+import Mypage from "./Pages/MyPage/Mypage";
+import Detail from "./Pages/Detail/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useRecoilState, useSetRecoilState } from "recoil";

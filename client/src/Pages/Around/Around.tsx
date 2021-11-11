@@ -11,9 +11,8 @@ import { RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { gap, Title, WrapperWithHeaderFooter } from "../../styles/theme";
 import AroundMapView from "./AroundMapView";
-import InfiniteScroll from "react-infinite-scroll-component";
-import AroundBox from "../../Components/AroundBox";
 import { mini } from "../../App";
+import PlaceCard from "../../Components/PlaceCard";
 
 const Around = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -24,92 +23,33 @@ const Around = () => {
   };
 
   const regionId = useRecoilValue(RegionId);
-  const [leftPlaces, setLeftPlaces] = useState<PlaceType[] | []>([]);
-  const [rightPlaces, setRightPlaces] = useState<PlaceType[] | []>([]);
-
-  const [hasMore, setHasMore] = useState(true);
-  const [leftPaginator, setLeftPaginator] = useState("");
-  const [rightPaginator, setRightPaginator] = useState("");
-  const [page, setPage] = useState(1);
-  const handleNext = () => {
-    setPage(page + 1);
-  };
+  const [places, setPlaces] = useState<PlaceType[] | []>([]);
   useEffect(() => {
-    const fetchAroundPlacesLeft = async () => {
-      const leftData = await getAroundPlaces(regionId, {
-        page,
-        perPage: 20,
-        paginator: leftPaginator ?? null,
-      });
-      if (leftData.places.length < 1) {
-        setHasMore(false);
-        return;
-      }
-      setLeftPlaces([...leftPlaces, ...leftData.places]);
-      setLeftPaginator(leftData.paginator);
+    const fetchAroundPlaces = async () => {
+      const data = await getAroundPlaces(regionId);
+      setPlaces([...places, ...data.places]);
     };
-
-    const fetchAroundPlacesRight = async () => {
-      const rightData = await getAroundPlaces(regionId, {
-        page,
-        perPage: 20,
-        paginator: rightPaginator ?? null,
-      });
-      if (rightData.places.length < 1) {
-        setHasMore(false);
-        return;
-      }
-      setRightPlaces([...rightPlaces, ...rightData.places]);
-      setRightPaginator(rightData.paginator);
-    };
-
-    fetchAroundPlacesLeft();
-    fetchAroundPlacesRight();
-  }, [page]);
+    fetchAroundPlaces();
+  }, []);
 
   return (
     <>
       <Wrapper>
         <Header title="장소 둘러보기">
           <Close className="left-icon" onClick={() => mini.close()} />
-          {/* <Refresh
-            onClick={() => {
-              // history.push("/around");
-              window.location.reload();
-              window.scrollTo(0, 0);
-            }}
-            className="right-icon"
-          /> */}
         </Header>
 
         <div id="around-scroll">
           <Title>{`우리 동네에는
 이런 장소가 있어요!`}</Title>
 
-          <InfiniteScroll
-            dataLength={leftPlaces.length + rightPlaces.length}
-            next={handleNext}
-            hasMore={hasMore}
-            loader={<div />}
-            scrollableTarget="around-scroll"
-          >
-            <div className="contents">
-              <div className="places">
-                {leftPlaces.map((place) => (
-                  <div key={place.placeId} onClick={() => handleShowMap(place)}>
-                    <AroundBox {...place} />
-                  </div>
-                ))}
+          <div className="cards">
+            {places.map((place) => (
+              <div key={place.placeId} onClick={() => handleShowMap(place)}>
+                <PlaceCard {...{ place }} type="list" />
               </div>
-              <div className="places">
-                {rightPlaces.map((place) => (
-                  <div key={place.placeId} onClick={() => handleShowMap(place)}>
-                    <AroundBox {...place} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </InfiniteScroll>
+            ))}
+          </div>
         </div>
 
         {!isMapShown && <CreateButton targetId="around-scroll" />}

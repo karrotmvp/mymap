@@ -2,27 +2,9 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import { More } from "../../assets";
 import { PostType } from "../../Shared/type";
-import { flexCenter, gap, OrangeTag, theme } from "../../styles/theme";
+import { flexCenter, gap, theme } from "../../styles/theme";
+import OrangePlaceBox from "../OrangePlaceBox";
 import SaveFooter from "./SaveFooter";
-
-const OrangePlaceBox = ({
-  name,
-  category,
-}: {
-  name: string;
-  category: string[];
-}) => {
-  return (
-    <OrangePlaceBoxWrapper>
-      {category?.length > 0 ? (
-        <OrangeTag>{category[category.length - 1]}</OrangeTag>
-      ) : (
-        <OrangeTag>동네 장소</OrangeTag>
-      )}
-      <div className="place-name">{name}</div>
-    </OrangePlaceBoxWrapper>
-  );
-};
 
 const Collection = (post: PostType) => {
   const history = useHistory();
@@ -101,34 +83,6 @@ const Wrapper = styled.div`
         padding-right: 2rem;
       }
     }
-  }
-`;
-
-const OrangePlaceBoxWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background-color: ${theme.color.orange_very_light};
-  min-width: 15rem;
-  max-width: 15rem;
-  height: 10rem;
-  border-radius: 1rem;
-  padding: 1.2rem;
-  box-sizing: border-box;
-  border: 0.1rem solid ${theme.color.orange_light};
-
-  .place-name {
-    margin-top: 0.8rem;
-    font-weight: 500;
-    color: ${theme.color.gray7};
-    line-height: 150%;
-    letter-spacing: -0.2%;
-    font-size: 1.5rem;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
   }
 `;
 

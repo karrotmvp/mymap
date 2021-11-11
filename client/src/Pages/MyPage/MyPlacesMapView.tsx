@@ -4,22 +4,13 @@ import MapView, { Pin } from "../../Components/MapView";
 import PinSlider from "../../Components/PinSlider";
 import { PlaceType } from "../../Shared/type";
 
-const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
-  const _pins: Pin[] = pins.map((pin) => {
-    return {
-      id: pin.placeId,
-      latitude: pin.coordinates.latitude,
-      longitude: pin.coordinates.longitude,
-      name: pin.name,
-    };
-  });
-
-  const [center, setCenter] = useState<{ lat: number; lng: number }>({
-    lat: pins[0].coordinates.latitude,
-    lng: pins[0].coordinates.longitude,
-  });
-
+const MyPlacesMapView = (places: PlaceType[]) => {
   // 핀 선택
+  const [center, setCenter] = useState<{ lat: number; lng: number }>({
+    lat: places[0].coordinates.latitude,
+    lng: places[0].coordinates.longitude,
+  });
+
   const handleSelectPin = (pin: Pin, idx: number) => {
     setCenter &&
       setCenter({
@@ -33,10 +24,19 @@ const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
   const [current, setCurrent] = useState(0);
   useEffect(() => {
     setCenter({
-      lat: pins[current].coordinates.latitude,
-      lng: pins[current].coordinates.longitude,
+      lat: places[current].coordinates.latitude,
+      lng: places[current].coordinates.longitude,
     });
-  }, [current, pins]);
+  }, [current, places]);
+
+  const _pins: Pin[] = places.map((pin) => {
+    return {
+      id: pin.placeId,
+      latitude: pin.coordinates.latitude,
+      longitude: pin.coordinates.longitude,
+      name: pin.name,
+    };
+  });
 
   return (
     <Wrapper>
@@ -47,7 +47,8 @@ const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
       />
       <PinSlider
         placeCardType="map"
-        {...{ pins, current, setCurrent, setCenter }}
+        pins={places}
+        {...{ current, setCurrent, setCenter }}
       />
     </Wrapper>
   );
@@ -55,4 +56,4 @@ const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
 
 const Wrapper = styled.div``;
 
-export default DetailMapView;
+export default MyPlacesMapView;

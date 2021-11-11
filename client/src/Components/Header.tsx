@@ -1,5 +1,5 @@
 import { ReactChild } from "react";
-import styled, { CSSProperties } from "styled-components";
+import styled from "styled-components";
 import { flexCenter, theme } from "../styles/theme";
 
 interface HeaderProps {
@@ -7,7 +7,7 @@ interface HeaderProps {
   isTransparent?: boolean;
   children?: ReactChild | ReactChild[];
   className?: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 }
 
 const Header = ({

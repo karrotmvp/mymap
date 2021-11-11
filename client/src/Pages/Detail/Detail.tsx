@@ -188,7 +188,9 @@ const Detail = () => {
             </div>
           </Wrapper>
         ))
-        .with("map", () => <DetailMapView pins={post.contents.pins} />)
+        .with("map", () => (
+          <DetailMapView pins={post.contents.pins.map((p) => p.place)} />
+        ))
         .exhaustive()}
 
       {isEditModalOpened && (
@@ -249,7 +251,7 @@ const Wrapper = styled.div`
   .cards {
     padding: 0 2rem;
     margin-top: 1.6rem;
-    padding-bottom: 3.5rem;
+    padding-bottom: 2.8rem;
     ${gap("1.4rem", "column")}
   }
 `;
