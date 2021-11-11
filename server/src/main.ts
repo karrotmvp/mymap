@@ -43,7 +43,7 @@ async function bootstrap() {
       const config = new DocumentBuilder()
       .setTitle('당장모아 OPENAPI')
       .setDescription('당근마켓 MVP인턴십 당장모아 팀의 OPENAPI')
-      .setVersion('1.0')
+      .setVersion('1.1')
       .build();
       const document = SwaggerModule.createDocument(app, config);
       SwaggerModule.setup('api/swagger', app, document)

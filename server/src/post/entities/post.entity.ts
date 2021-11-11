@@ -86,4 +86,7 @@ export class Post {
     public updateShare() {
         this.share = !this.share;
     }
+    public pushPin(pin: Pin[]) {
+        this.pins.push(...pin);
+    }
 }
