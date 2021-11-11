@@ -146,7 +146,6 @@ export class PostService {
     async checkSaved(userId: number, postId: number) {
         const savedPost = await this.savedPostRepository.findWithPostId(userId, postId);
         return savedPost ? true : false;
-        
     }
 
     async readPost(postId: number): Promise<Post> {
@@ -182,6 +181,22 @@ export class PostService {
 
     async countSavedPlaces(placeId: string): Promise<number> {
         return await this.pinRepository.countPinsWithPlaceId(placeId);
+    }
+
+    async countMySavedPlaces(userId: number, placeId: string): Promise<number> {
+        const posts: Post[] = await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId })
+            }
+        })
+        const postIds: number[] = posts.map(post => post.getPostId());
+        return await this.pinRepository.count({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId IN (:...postId) AND placeId = :placeId', { postId: postIds, placeId: placeId })
+            }
+        })
     }
 
     async readDeletedPost(postId: number): Promise<Post> {
