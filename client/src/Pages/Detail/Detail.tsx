@@ -23,7 +23,6 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
-import DetailMapView from "./DetailMapView";
 import dayjs from "dayjs";
 import { useRecoilStateLoadable, useRecoilValue } from "recoil";
 import { ViewerInfo, postDetailAtom, PageBeforeWrite } from "../../Shared/atom";
@@ -31,6 +30,7 @@ import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
+import MapViewwithSlider from "../../Components/MapViewWithSlider";
 
 const Detail = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -189,7 +189,7 @@ const Detail = () => {
           </Wrapper>
         ))
         .with("map", () => (
-          <DetailMapView pins={post.contents.pins.map((p) => p.place)} />
+          <MapViewwithSlider places={post.contents.pins.map((p) => p.place)} />
         ))
         .exhaustive()}
 

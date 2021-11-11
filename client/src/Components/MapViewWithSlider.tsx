@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import MapView, { Pin } from "../../Components/MapView";
-import PinSlider from "../../Components/PinSlider";
-import { PlaceType } from "../../Shared/type";
+import { PlaceType } from "../Shared/type";
+import MapView, { Pin } from "./MapView";
+import PinSlider from "./PinSlider";
 
-const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
-  const _pins: Pin[] = pins.map((pin) => {
+const MapViewwithSlider = ({ places }: { places: PlaceType[] }) => {
+  console.log(places);
+  const _pins: Pin[] = places.map((pin) => {
     return {
       id: pin.placeId,
       latitude: pin.coordinates.latitude,
@@ -15,8 +16,8 @@ const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
   });
 
   const [center, setCenter] = useState<{ lat: number; lng: number }>({
-    lat: pins[0].coordinates.latitude,
-    lng: pins[0].coordinates.longitude,
+    lat: places[0].coordinates.latitude,
+    lng: places[0].coordinates.longitude,
   });
 
   // 핀 선택
@@ -33,10 +34,10 @@ const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
   const [current, setCurrent] = useState(0);
   useEffect(() => {
     setCenter({
-      lat: pins[current].coordinates.latitude,
-      lng: pins[current].coordinates.longitude,
+      lat: places[current].coordinates.latitude,
+      lng: places[current].coordinates.longitude,
     });
-  }, [current, pins]);
+  }, [current, places]);
 
   return (
     <Wrapper>
@@ -47,7 +48,8 @@ const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
       />
       <PinSlider
         placeCardType="map"
-        {...{ pins, current, setCurrent, setCenter }}
+        pins={places}
+        {...{ current, setCurrent, setCenter }}
       />
     </Wrapper>
   );
@@ -55,4 +57,4 @@ const DetailMapView = ({ pins }: { pins: PlaceType[] }) => {
 
 const Wrapper = styled.div``;
 
-export default DetailMapView;
+export default MapViewwithSlider;

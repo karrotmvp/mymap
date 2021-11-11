@@ -1,27 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getAroundPlaces } from "../../api/place";
-import { Close } from "../../assets";
+import { Close, List, Map } from "../../assets";
 import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import { RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
-import { gap, Title, WrapperWithHeaderFooter } from "../../styles/theme";
-import AroundMapView from "./AroundMapView";
+import { gap, theme, Title, WrapperWithHeaderFooter } from "../../styles/theme";
 import { mini } from "../../App";
 import PlaceCard from "../../Components/PlaceCard";
+import { match } from "ts-pattern";
+import MapViewwithSlider from "../../Components/MapViewWithSlider";
 
 const Around = () => {
-  const [isMapShown, setIsMapShown] = useState(false);
-  const [place, setPlace] = useState<PlaceType | null>(null);
-  const handleShowMap = (place: PlaceType) => {
-    setIsMapShown(true);
-    setPlace(place);
-  };
-
   const regionId = useRecoilValue(RegionId);
   const [places, setPlaces] = useState<PlaceType[] | []>([]);
   useEffect(() => {
@@ -32,34 +26,84 @@ const Around = () => {
     fetchAroundPlaces();
   }, []);
 
+  type State =
+    | {
+        _t: "map";
+      }
+    | {
+        _t: "list";
+      };
+  const reducer: React.Reducer<State, void> = (prevState) => {
+    switch (prevState._t) {
+      case "list":
+        return {
+          _t: "map",
+        };
+      case "map":
+        return {
+          _t: "list",
+        };
+    }
+  };
+  const [state, dispatch] = useReducer(reducer, {
+    _t: "list",
+  });
+
   return (
     <>
       <Wrapper>
         <Header title="장소 둘러보기">
           <Close className="left-icon" onClick={() => mini.close()} />
+          <div className="view-toggle" onClick={dispatch}>
+            {match(state._t)
+              .with("map", () => (
+                <>
+                  <List />
+                  목록
+                </>
+              ))
+              .with("list", () => (
+                <>
+                  <Map />
+                  지도
+                </>
+              ))
+              .exhaustive()}
+          </div>
         </Header>
 
+        {match(state._t)
+          .with("list", () => (
+            <div className="cards">
+              {places.map((place) => (
+                <div key={place.placeId} onClick={dispatch}>
+                  <PlaceCard {...{ place }} type="list" />
+                </div>
+              ))}
+              <CreateButton targetId="around-scroll" />
+            </div>
+          ))
+          .with("map", () => <MapViewwithSlider {...{ places }} />)
+          .exhaustive()}
+
         <div id="around-scroll">
-          <Title>{`우리 동네에는
-이런 장소가 있어요!`}</Title>
+          <Title
+            style={{ fontSize: "1.8rem", lineHeight: "2.52rem" }}
+          >{`우리 동네 장소 
+어디까지 알고 있나요?`}</Title>
+          <div className="sub">새로운 장소를 나만의 테마에 저장해요</div>
 
           <div className="cards">
             {places.map((place) => (
-              <div key={place.placeId} onClick={() => handleShowMap(place)}>
+              <div key={place.placeId}>
                 <PlaceCard {...{ place }} type="list" />
               </div>
             ))}
           </div>
         </div>
 
-        {!isMapShown && <CreateButton targetId="around-scroll" />}
-
         <Footer />
       </Wrapper>
-
-      {isMapShown && place && (
-        <AroundMapView {...{ place }} close={() => setIsMapShown(false)} />
-      )}
     </>
   );
 };
@@ -68,39 +112,23 @@ const Wrapper = styled.div`
   ${WrapperWithHeaderFooter};
   padding-left: 2rem;
   padding-right: 2rem;
+  overflow-y: scroll;
   #around-scroll {
     height: 100vh;
     padding-top: 3rem;
     box-sizing: border-box;
-    overflow-y: scroll;
-  }
-  .contents {
-    display: flex;
-    margin-top: 2.3rem;
-    width: 100%;
-  }
-  .places {
-    width: 50%;
-    .photo {
-      width: 100%;
-      height: 10rem;
-      background-color: lightgray;
-      border-radius: 0.8rem;
-    }
-    .name {
-      margin-top: 0.7rem;
-      font-size: 1.4rem;
+    .sub {
+      margin-top: 0.4rem;
+      color: ${theme.color.gray5};
+      font-size: 1.6rem;
+      line-height: 2.24rem;
       letter-spacing: -2%;
-      line-height: 140%;
     }
-    &:first-child {
-      margin-right: 0.6rem;
-    }
-    &:last-child {
-      margin-left: 0.6rem;
-    }
-    margin-top: 1.2rem;
-    ${gap("1.2rem", "column")};
+  }
+  .cards {
+    margin-top: 3rem;
+    padding-bottom: 16rem;
+    ${gap("1.4rem", "column")}
   }
 `;
 

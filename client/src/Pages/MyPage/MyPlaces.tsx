@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { match } from "ts-pattern";
 import { Close, List, Map } from "../../assets";
 import Header from "../../Components/Header";
+import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import PlaceCard from "../../Components/PlaceCard";
 import { PlaceType } from "../../Shared/type";
 import { gap, theme, WrapperWithHeader } from "../../styles/theme";
-import DetailMapView from "../Detail/DetailMapView";
 
 interface MyPlacesProps {
   places: PlaceType[];
@@ -70,7 +70,7 @@ const MyPlaces = ({ places, close }: MyPlacesProps) => {
             ))}
           </div>
         ))
-        .with("map", () => <DetailMapView pins={places} />)
+        .with("map", () => <MapViewwithSlider {...{ places }} />)
         .exhaustive()}
     </Wrapper>
   );
