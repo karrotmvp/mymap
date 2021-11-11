@@ -57,7 +57,7 @@ export class PlaceController {
     @ApiQuery({ name: 'seed', description: '랜덤 세션 유지를 위한 seed, 첫 요청에는 필요없어요. 두 번째 페이지 요청부터 담아서 보내주세요(1~51)' })
     @ApiQuery({ name: 'page', example: 1 })
     @ApiQuery({ name: 'perPage', example: 10 })
-    async readRecommendPlacesRandom(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('perPage') perPage: number, @Query('page') page: number): Promise<RegionPlaceDTO> {
+    async readRecommendPlacesRandom(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('perPage') perPage: number = 10, @Query('page') page: number = 0): Promise<RegionPlaceDTO> {
         if (!seed) seed = (Math.floor(Math.random() * 50) + 1).toString();
         return await this.placeService.readRecommendPlacesRandom(regionId, Number(seed), perPage, page);
     }
