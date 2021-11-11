@@ -36,12 +36,13 @@ export class PostRepository extends Repository<Post> {
         return posts;
     }
 
-    async findWithRegionId(regionId: string[], start: number, end: number, perPage: number, userId: number) {
+    async findWithRegionId(regionId: string[], start: number, end: number, perPage: number) {
         const posts = await this.find({
             relations: ['user'],
             order: { createdAt: 'DESC' },
             where: (qb) => {
-                qb.where('regionId IN (:...regionId) AND (postId < :end OR postId > :start) AND (share = true OR (share = false AND Post__user.userId = :userId))', { regionId: regionId, start: start, end: end, userId: userId})
+                // qb.where('regionId IN (:...regionId) AND (postId < :end OR postId > :start) AND (share = true OR (share = false AND Post__user.userId = :userId))', { regionId: regionId, start: start, end: end, userId: userId})
+                qb.where('regionId IN (:...regionId) AND (postId < :end OR postId > :start) AND share = true', { regionId: regionId, start: start, end: end })
             },
             take: perPage,
         })

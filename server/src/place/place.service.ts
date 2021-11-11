@@ -11,6 +11,7 @@ import { RegionService } from 'src/region/region.service';
 import { RecommendPlace } from './entities/recommendPlace.entity';
 import { RecommendPlaceRepository } from './recommendPlace.repository';
 import { Pin } from 'src/post/entities/pin.entity';
+import { CoordinatesDTO } from './dto/coordinates.dto';
 
 @Injectable()
 export class PlaceService {
@@ -58,18 +59,18 @@ export class PlaceService {
         return await lastValueFrom(paginator$);
     }
 
-    async readRegionPlaces(regionId: string, seed: string, perPage: number, page: number): Promise<RegionPlaceDTO> {
-        const regionNum = await this.convertId(regionId);
-        const places$ = await this.placeRepository.findWithRegion(regionNum, seed, perPage, page);
-        const places: PlaceDTO[] = await lastValueFrom(places$);
-        const promise = places.map(async(place) => {
-            place.saved = await this.postService.countSavedPlaces(place.placeId);
-            return place
-        })
-        const newPlaces:PlaceDTO[] = await Promise.all(promise);
-        const regionPlace = new RegionPlaceDTO(newPlaces, seed);
-        return regionPlace;
-    }
+    // async readRegionPlaces(regionId: string, seed: string, perPage: number, page: number): Promise<RegionPlaceDTO> {
+    //     const regionNum = await this.convertId(regionId);
+    //     const places$ = await this.placeRepository.findWithRegion(regionNum, seed, perPage, page);
+    //     const places: PlaceDTO[] = await lastValueFrom(places$);
+    //     const promise = places.map(async(place) => {
+    //         place.saved = await this.postService.countSavedPlaces(place.placeId);
+    //         return place
+    //     })
+    //     const newPlaces:PlaceDTO[] = await Promise.all(promise);
+    //     const regionPlace = new RegionPlaceDTO(newPlaces, seed);
+    //     return regionPlace;
+    // }
 
     async readSavedPlaces(userId: number): Promise<PlaceDTO[]> {
         const pins: Pin[] = await this.postService.readPins(userId);
@@ -80,9 +81,12 @@ export class PlaceService {
 
     async readRecommendPlacesRandom(regionId: string, seed: number, perPage: number, page: number): Promise<RegionPlaceDTO> {
         const regions = await this.regionService.readNeighborRegion(regionId);
-        const places: string[] = await this.recommendPlaceRepository.findWithRegionId(regions, seed, perPage, page);
-        const PlaceDTOs: PlaceDTO[] = await this.readPlaces(places);
-        const regionPlace = new RegionPlaceDTO(PlaceDTOs, seed.toString());
+        const rec_places: string[] = await this.recommendPlaceRepository.findWithRegionId(regions, seed, perPage, page);
+        const places: PlaceDTO[] = await this.readPlaces(rec_places);
+        const coordinates = new CoordinatesDTO();
+        places.map(place => coordinates.sumCoordinates(place.coordinates));
+        coordinates.avgCoordinates(places.length);
+        const regionPlace = new RegionPlaceDTO(places, seed.toString(), coordinates);
         return regionPlace;
     }
 

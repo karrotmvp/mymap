@@ -42,15 +42,15 @@ export class PlaceController {
         return await this.placeService.readPlace(placeId);
     }
 
-    @Get('/region/:regionId')
-    async readRegionPlaces(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
-        this.logger.debug('regionId : ', regionId, 'seed : ', seed, 'page', page, ' perPage : ', perPage);
-        if (!regionId) throw new BadRequestException();
-        if (page < 1 || perPage < 1) throw new BadRequestException();
-        if (!seed) seed = await this.placeService.getSeed();
-        this.eventEmitter.emit(MyMapEvent.PLACE_LISTED, new Event(null, regionId));
-        return await this.placeService.readRegionPlaces(regionId, seed, perPage, page);
-    }
+    // @Get('/region/:regionId')
+    // async readRegionPlaces(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
+    //     this.logger.debug('regionId : ', regionId, 'seed : ', seed, 'page', page, ' perPage : ', perPage);
+    //     if (!regionId) throw new BadRequestException();
+    //     if (page < 1 || perPage < 1) throw new BadRequestException();
+    //     if (!seed) seed = await this.placeService.getSeed();
+    //     this.eventEmitter.emit(MyMapEvent.PLACE_LISTED, new Event(null, regionId));
+    //     return await this.placeService.readRegionPlaces(regionId, seed, perPage, page);
+    // }
 
     @Get('/recommend/:regionId')
     @ApiOkResponse({ description: '둘러보기 리스트 가져오기 성공', type: [RegionPlaceDTO] })
