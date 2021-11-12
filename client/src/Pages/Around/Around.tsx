@@ -103,7 +103,9 @@ const Around = () => {
       <Wrapper>
         <Header title="장소 둘러보기">
           <Close className="left-icon" onClick={() => mini.close()} />
-          {result.length > 0 ? (
+          {searchVal.value.length > 0 && result.length === 0 ? (
+            <div />
+          ) : (
             <div className="view-toggle" onClick={dispatch}>
               {match(state._t)
                 .with("map", () => (
@@ -120,8 +122,6 @@ const Around = () => {
                 ))
                 .exhaustive()}
             </div>
-          ) : (
-            <div />
           )}
         </Header>
 
@@ -166,7 +166,7 @@ const Around = () => {
                   <NoSearchView value={searchVal.value} />
                 )
               ) : (
-                <div id="around-scroll">
+                <div className="around-scroll">
                   <Title
                     style={{ fontSize: "1.8rem", lineHeight: "2.52rem" }}
                   >{`우리 동네 장소
@@ -213,6 +213,7 @@ const Wrapper = styled.div`
     position: sticky;
     top: 0;
     background-color: #fff;
+    z-index: 100;
     .search-icon {
       position: absolute;
       top: 1.7rem;
@@ -225,10 +226,15 @@ const Wrapper = styled.div`
       fill: ${theme.color.gray2_5};
     }
   }
-  #around-scroll {
+  .around-scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 100vh;
     padding: 0 2rem;
-    padding-top: 3rem;
+    padding-top: 14.7rem;
+    overflow-y: scroll;
     box-sizing: border-box;
     .sub {
       margin-top: 0.4rem;
@@ -237,6 +243,17 @@ const Wrapper = styled.div`
       line-height: 2.24rem;
       letter-spacing: -2%;
     }
+  }
+  #around-search-list {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    padding-top: 11.7rem;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding-bottom: 6.8rem;
   }
   .cards {
     margin-top: 3rem;
