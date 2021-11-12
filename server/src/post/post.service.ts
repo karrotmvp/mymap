@@ -232,12 +232,14 @@ export class PostService {
         await this.postRepository.save(post);
     }
 
-    async readUserPostInfo(userId: number): Promise<Post[]> {
-        return await this.postRepository.find({
+    async readUserPostInfo(userId: number): Promise<PostDTO[]> {
+        const posts: Post[] = await this.postRepository.find({
             relations: ['user'],
             where: (qb) => {
                 qb.where('Post__user.userId = :userId', { userId: userId });
             }
         })
+        const postDto: PostDTO[] = posts.map(post => new PostDTO(post, null, null, null, null))
+        return postDto;
     }
 }

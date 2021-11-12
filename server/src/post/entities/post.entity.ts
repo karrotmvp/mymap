@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
 import { UpdatePostDTO } from "../dto/update-post.dto";
@@ -22,7 +23,7 @@ export class Post {
     @RelationId((post: Post) => post.user)
     userId: number;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, user => user.posts)
     @JoinColumn()
     user: User;
 
@@ -47,12 +48,15 @@ export class Post {
     @OneToMany(() => SavedPost, savedPost => savedPost.post, { cascade: true })
     savedPosts: SavedPost[];
 
+    @ApiProperty()
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @ApiProperty()
     @CreateDateColumn()
     createdAt: Date;
 
+    @ApiProperty()
     @DeleteDateColumn()
     deletedAt: Date;
 
