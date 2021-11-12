@@ -17,31 +17,40 @@ export class Post {
         this.pins = pins;
     }
 
+    @ApiProperty()
     @PrimaryGeneratedColumn()
     postId: number;
 
+    @ApiProperty()
     @RelationId((post: Post) => post.user)
     userId: number;
 
+    @ApiProperty({ type: () => User })
     @ManyToOne(() => User, user => user.posts)
     @JoinColumn()
     user: User;
 
+    @ApiProperty()
     @Column({ length: 30 })
     private title: string;
 
+    @ApiProperty()
     @Column({ nullable: true })
     private contents: string;
 
+    @ApiProperty()
     @Column({ nullable: true })
     private regionId: string;
 
+    @ApiProperty()
     @Column({ nullable: true })
     private regionName: string;
 
+    @ApiProperty()
     @Column()
     private share: boolean;
 
+    @ApiProperty({ type: () => [Pin] })
     @OneToMany(() => Pin, pin => pin.post, { cascade:true })
     pins: Pin[];
 

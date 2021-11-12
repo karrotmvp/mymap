@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Post } from "src/post/entities/post.entity";
 import { SavedPost } from "src/post/entities/savedPost.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -9,6 +10,7 @@ export class User {
         this.token = token;
     }
 
+    @ApiProperty()
     @PrimaryGeneratedColumn()
     private userId: number;
 
@@ -18,21 +20,27 @@ export class User {
     @OneToMany(() => Post, post => post.user, { cascade: true })
     posts: Post[];
 
+    @ApiProperty()
     @Column({ unique: true })
     private uniqueId: string;
 
+    @ApiProperty()
     @Column()
     private token: string;
 
+    @ApiProperty()
     @Column({ default: false })
     private isAdmin: boolean;
 
+    @ApiProperty()
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @ApiProperty()
     @CreateDateColumn()
     createdAt: Date;
 
+    @ApiProperty()
     @DeleteDateColumn()
     deletedAt: Date;
 

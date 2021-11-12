@@ -259,14 +259,14 @@ export class PostService {
         await Promise.all(deleteIds.map(async(deleteId) => await this.deletePinInPost(deleteId, pin)));
     }
 
-    async readUserPostInfo(userId: number): Promise<FeedDTO> {
+    async readUserPostInfo(userId: number): Promise<Post[]> {
         const posts: Post[] = await this.postRepository.find({
-            relations: ['user'],
+            relations: ['user', 'pins'],
             where: (qb) => {
                 qb.where('Post__user.userId = :userId', { userId: userId });
             },
             order: { createdAt: 'DESC' }
         })
-        return await this.readPostList(userId, posts);
+        return posts;
     }
 }
