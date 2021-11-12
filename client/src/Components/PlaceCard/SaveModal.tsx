@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { match } from "ts-pattern";
 import { getMyPostNames, postPost, putPostPin } from "../../api/post";
@@ -12,7 +12,7 @@ import {
   Unselect,
 } from "../../assets";
 import useInput from "../../Hooks/useInput";
-import { PlaceToSave, RegionId } from "../../Shared/atom";
+import { PlaceToSave, RegionId, ToastMessage } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { reducer } from "./index.reducer";
@@ -27,6 +27,7 @@ const SaveModal = () => {
   const [isSubmitable, setIsSubmitable] = useState(false);
   const newThemeValue = useInput("");
   const [placeToSave, setPlaceToSave] = useRecoilState(PlaceToSave);
+  const setToastMessage = useSetRecoilState(ToastMessage);
 
   const regionId = useRecoilValue(RegionId);
 
@@ -71,7 +72,6 @@ const SaveModal = () => {
 
   const handleSubmit = async () => {
     if (isSubmitable) {
-      console.log(state.selected);
       await putPostPin(
         { postId: state.selected },
         { placeId: placeToSave.placeId }
@@ -158,6 +158,11 @@ const SaveModal = () => {
                             _t: "MAKE",
                             isLocked: true,
                           });
+
+                          setToastMessage({
+                            isToastShown: true,
+                            message: "나만 볼 수 있는 테마예요",
+                          });
                         }}
                       />
                     ))
@@ -169,6 +174,11 @@ const SaveModal = () => {
                           dispatch({
                             _t: "MAKE",
                             isLocked: false,
+                          });
+
+                          setToastMessage({
+                            isToastShown: true,
+                            message: "이웃들도 이 테마를 볼 수 있어요",
                           });
                         }}
                       />

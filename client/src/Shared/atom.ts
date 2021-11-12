@@ -32,6 +32,14 @@ export const PageBeforeWrite = atom({
   default: "/",
 });
 
+export const ToastMessage = atom({
+  key: "ToastMessage",
+  default: {
+    isToastShown: false,
+    message: "",
+  },
+});
+
 export const viewerInfoAtom = atomFamily({
   key: "my_info",
   default: selectorFamily<UserType, { code: string; regionId: string }>({

@@ -5,7 +5,6 @@ import MapView, { Pin } from "./MapView";
 import PinSlider from "./PinSlider";
 
 const MapViewwithSlider = ({ places }: { places: PlaceType[] }) => {
-  console.log(places);
   const _pins: Pin[] = places.map((pin) => {
     return {
       id: pin.placeId,

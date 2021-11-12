@@ -7,7 +7,7 @@ import Detail from "./Pages/Detail/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { ViewerInfo, RegionId, PlaceToSave } from "./Shared/atom";
+import { ViewerInfo, RegionId, PlaceToSave, ToastMessage } from "./Shared/atom";
 import { useCallback, useEffect } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
@@ -34,6 +34,9 @@ const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {
   const setRegionId = useSetRecoilState(RegionId);
+
+  const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
+  const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
 
   // 로그인 및 내 정보 저장
   const [viewerInfo, setViewerInfo] = useRecoilState(ViewerInfo);
@@ -79,7 +82,16 @@ function App() {
     }
   }, []);
 
-  const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
+  useEffect(() => {
+    if (toastMessage.isToastShown) {
+      setTimeout(() => {
+        setToastMessage({
+          isToastShown: false,
+          message: "",
+        });
+      }, 1000);
+    }
+  }, [toastMessage.isToastShown]);
 
   return (
     <Router>
@@ -99,6 +111,12 @@ function App() {
               <Route path="/edit/:postId" component={Write} />
             </Switch>
             {isSaveModalOpened && <SaveModal />}
+            {toastMessage.isToastShown && (
+              <Toast>
+                <div />
+                <div>{toastMessage.message}</div>
+              </Toast>
+            )}
           </Analytics>
         ) : (
           !preload &&
@@ -132,6 +150,35 @@ const Wrapper = styled.div`
     position: fixed;
     width: 100%;
     height: 100vh;
+  }
+`;
+
+const Toast = styled.div`
+  position: fixed;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 2rem;
+  bottom: 2.8rem;
+  z-index: 1000;
+
+  & > div:nth-child(1) {
+    width: 100%;
+    background-color: #000;
+    opacity: 0.7;
+    border-radius: 0.8rem;
+    height: 4.4rem;
+  }
+  & > div:nth-child(2) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    width: 100%;
+    ${flexCenter};
+    height: 4.4rem;
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 135%;
   }
 `;
 
