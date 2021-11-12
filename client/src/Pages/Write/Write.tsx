@@ -234,7 +234,7 @@ const Write = () => {
         </div>
       )}
 
-      {(isSearchOpened || pageBeforeWrite) && (
+      {(isSearchOpened || pageBeforeWrite === "emptyTheme") && (
         <SearchPlace
           {...{ setIsSearchOpened, places, setPlaces }}
           close={() => setIsSearchOpened(false)}
