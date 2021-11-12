@@ -33,7 +33,7 @@ export class PostController {
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
     async readMyPost(@Req() req: any, @Query('page') page: number, @Query('perPage') perPage: number): Promise<FeedDTO> {
         this.logger.debug('userId : ', req.user.userId, ' page : ', page, ' perPage : ', perPage);
-        if (!page && !perPage) return new FeedDTO(await this.postService.readUserPostInfo(req.user.userId), null);
+        if (!page && !perPage) return await this.postService.readUserPostInfo(req.user.userId);
         if (page < 1 || perPage < 1) throw new BadRequestException();
         this.eventEmitter.emit(MyMapEvent.POST_MYLISTED, new Event(req.user.userId, null));
         return await this.postService.readUserPost(req.user.userId, page, perPage);
@@ -99,16 +99,16 @@ export class PostController {
         return await this.postService.savePost(req.user.userId, postId);
     }
 
-    // @UseGuards(JwtAuthGuard)
-    // @Put('/pin')
-    // @ApiOkResponse({ description: '핀 추가 성공' })
-    // @ApiQuery({ name: 'postId', example: '[1, 2, 3]', description: '핀 추가할 테마 Id' })
-    // @ApiBody({ type: CreatePinDTO })
-    // @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    // async handlePin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO) {
-    //     // await this.postService.handlePin(req.user.userId, postIds, pin);
-    //     await this.postService.handlePin(1, postIds, pin);
-    // }
+    @UseGuards(JwtAuthGuard)
+    @Put('/pin')
+    @ApiOkResponse({ description: '핀 추가 성공' })
+    @ApiQuery({ name: 'postId', example: '[1, 2, 3]', description: '핀 추가할 테마 Id' })
+    @ApiBody({ type: CreatePinDTO })
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    async handlePin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO) {
+        // await this.postService.handlePin(req.user.userId, postIds, pin);
+        await this.postService.handlePin(1, postIds, pin);
+    }
 
     @UseGuards(JwtAuthGuard)
     @Put('/:postId')

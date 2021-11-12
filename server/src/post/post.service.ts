@@ -223,34 +223,50 @@ export class PostService {
         await this.postRepository.save(post);
     }
 
-    // private async savePinInPost(postId: number, )
+    private async savePinInPost(postId: number, pin: CreatePinDTO) {
+        const newPin: Pin[] = await this.pinRepository.savePins([pin]);
+        const post = await this.postRepository.findOne(postId, { relations: ['pins'] })
+        post.pins.push(...newPin)
+        await this.postRepository.save(post);
+    }
 
-    // async handlePin(userId: number, postIds: number[], pin: CreatePinDTO) {
-    //     const pins: Pin[] = await this.pinRepository.find({
-    //         relations: ['post'],
-    //         where: { placeId: pin.placeId }
-    //     })
-    //     const includePinPosts: number[] = pins.map(pin => pin.post.getPostId());
-    //     const posts: Post[] = await this.postRepository.find({
-    //         relations: ['user', 'pins'],
-    //         where: (qb) => {
-    //             qb.where('Post__user.userId = :userId AND postId IN (:...postIds)', { userId: userId, postIds: includePinPosts })
-    //         }
-    //     })
-    //     const existIds: number[] = posts.map(post => post.getPostId());
-    //     const saveIds: number[] = postIds.filter(x => !existIds.includes(x));
-    //     const deleteIds: number[] = existIds.filter(x => !postIds.includes(x));
+    private async deletePinInPost(postId: number, pin: CreatePinDTO) {
+        const deletePin: Pin[] = await this.pinRepository.find({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId = :postId AND placeId = :placeId', { postId: postId, placeId: pin.placeId })
+            }
+        })
+        await this.pinRepository.softRemove(deletePin);
+    }
 
-    // }
-
-    async readUserPostInfo(userId: number): Promise<PostDTO[]> {
+    async handlePin(userId: number, postIds: number[], pin: CreatePinDTO) {
+        const pins: Pin[] = await this.pinRepository.find({
+            relations: ['post'],
+            where: { placeId: pin.placeId }
+        })
+        const includePinPosts: number[] = pins.map(pin => pin.post.getPostId());
         const posts: Post[] = await this.postRepository.find({
             relations: ['user', 'pins'],
             where: (qb) => {
-                qb.where('Post__user.userId = :userId', { userId: userId });
+                qb.where('Post__user.userId = :userId AND postId IN (:...postIds)', { userId: userId, postIds: includePinPosts })
             }
         })
-        const postDto: PostDTO[] = posts.map(post => new PostDTO(post, null, null, null, null))
-        return postDto;
+        const existIds: number[] = posts.map(post => post.getPostId());
+        const saveIds: number[] = postIds.filter(x => !existIds.includes(x));
+        const deleteIds: number[] = existIds.filter(x => !postIds.includes(x));
+        await Promise.all(saveIds.map(async(saveId) => await this.savePinInPost(saveId, pin)));
+        await Promise.all(deleteIds.map(async(deleteId) => await this.deletePinInPost(deleteId, pin)));
+    }
+
+    async readUserPostInfo(userId: number): Promise<FeedDTO> {
+        const posts: Post[] = await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId });
+            },
+            order: { createdAt: 'DESC' }
+        })
+        return await this.readPostList(userId, posts);
     }
 }
