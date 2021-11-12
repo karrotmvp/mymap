@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Dispatch,
-  MouseEventHandler,
   SetStateAction,
   useCallback,
   useEffect,
@@ -14,12 +13,13 @@ import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
-import { RegionId } from "../../Shared/atom";
+import { PageBeforeWrite, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, input, theme } from "../../styles/theme";
 import PlaceMapView from "./PlaceMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Mixpanel } from "../../utils/mixpanel";
+import { useHistory } from "react-router";
 
 const SearchPlace = ({
   setIsSearchOpened,
@@ -28,13 +28,15 @@ const SearchPlace = ({
   setPlaces,
 }: {
   setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
-  close: MouseEventHandler;
+  close: Function;
   places: PlaceType[];
   setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
   const regionId = useRecoilValue(RegionId);
+  const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
+  const history = useHistory();
 
   const handleOpenMap = (place: PlaceType) => {
     setPlace(place);
@@ -90,7 +92,12 @@ const SearchPlace = ({
   return (
     <Wrapper>
       <PlaceInput>
-        <Back onClick={close} className="search-back" />
+        <Back
+          className="search-back"
+          onClick={() =>
+            pageBeforeWrite === "emptyTheme" ? history.push("/mypage") : close()
+          }
+        />
         <SearchInput
           value={searchVal.value}
           onChange={searchVal.onChange}
@@ -107,7 +114,7 @@ const SearchPlace = ({
 
       {searchVal.value.length > 0 ? (
         result.length > 0 ? (
-          <div id="search-list" className="result">
+          <div id="search-list">
             <InfiniteScroll
               dataLength={result.length}
               next={handleResultNext}
@@ -124,12 +131,10 @@ const SearchPlace = ({
                     key={place.placeId}
                     onClick={() => !isExist && handleOpenMap(place)}
                   >
-                    {place.address && (
-                      <SearchList
-                        {...{ isExist, place }}
-                        searchVal={searchVal.value}
-                      />
-                    )}
+                    <SearchList
+                      {...{ isExist, place }}
+                      searchVal={searchVal.value}
+                    />
                   </div>
                 );
               })}
@@ -187,6 +192,7 @@ const PlaceInput = styled.div`
     position: absolute;
     right: 0.7rem;
     top: 0.4rem;
+    fill: ${theme.color.gray2};
   }
 `;
 
@@ -198,7 +204,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #fff;
-  .result {
+  #search-list {
     padding-top: 8rem;
     box-sizing: border-box;
     font-size: 1.4rem;

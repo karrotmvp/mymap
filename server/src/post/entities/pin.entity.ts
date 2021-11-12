@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Post } from "src/post/entities/post.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -8,6 +9,7 @@ export class Pin {
         this.placeId = placeId;
     }
 
+    @ApiProperty()
     @PrimaryGeneratedColumn()
     private pinId: number;
 
@@ -15,18 +17,23 @@ export class Pin {
     @JoinColumn()
     post: Post;
 
+    @ApiProperty()
     @Column({ nullable: true })
     private review: string;
     
+    @ApiProperty()
     @Column()
     private placeId: string;
 
+    @ApiProperty()
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @ApiProperty()
     @CreateDateColumn()
     createdAt: Date;
 
+    @ApiProperty()
     @DeleteDateColumn()
     deletedAt: Date;
 

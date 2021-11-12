@@ -12,21 +12,19 @@ export const getSearch = async (regionId: string, params: GetSearchParams) => {
 };
 
 // 둘러보기
-interface GetAroundPlaceParams {
-  page?: number;
-  perPage?: number;
-  paginator?: string;
-}
-interface GetAroundPlacesResponse {
-  places: PlaceType[];
-  paginator: string;
-}
-export const getAroundPlaces = async (
-  regionId: string,
-  params: GetAroundPlaceParams
-) => {
-  return (await GET(
-    `api/place/region/${regionId}`,
-    params
-  )) as GetAroundPlacesResponse;
+export const getAroundPlaces = async (regionId: string) => {
+  return (await GET(`api/place/recommend/${regionId}`, {
+    perPage: 30,
+  })) as {
+    places: PlaceType[];
+    coordinates: {
+      latitude: number;
+      longitude: number;
+    };
+  };
+};
+
+// 내 모든 장소
+export const getPlaceSaved = async () => {
+  return (await GET("api/place/saved")) as PlaceType[];
 };

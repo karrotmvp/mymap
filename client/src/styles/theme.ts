@@ -19,7 +19,6 @@ export const WrapperWithHeader = css`
   padding-top: 5rem;
   box-sizing: border-box;
 `;
-
 export const WrapperWithFooter = css`
   width: 100%;
   height: 100vh;
@@ -57,12 +56,15 @@ export const theme: DefaultTheme = {
     gray3_5: "#C4C4C4",
     gray3: "#CECECE",
     gray2: "#E5E5E5",
+    gray2_5: "#DBDBDB",
+    gray1_7: "#F0F0F0",
     gray1_5: "#F7F7F7",
     gray1: "#F8F9FA",
     white: "#FFFFFF",
     orange: "#FF7964",
     orange_light: "#FFF2EF",
     orange_very_light: "#FFF8F7",
+    orange_medium: "#FFBCB1",
     red: "#FC453A",
     dark_green: "#09C6A1",
   },
@@ -104,4 +106,26 @@ export const Title = styled.div`
   white-space: pre-wrap;
   letter-spacing: -2%;
   color: ${theme.color.gray7};
+`;
+
+export const GrayTag = styled.div`
+  font-size: 1.1rem;
+  font-weight: 400;
+  padding: 0.45rem 1rem;
+  border-radius: 0.4rem;
+  background-color: ${theme.color.gray1_5};
+  color: ${theme.color.gray7};
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border: 0.1rem solid ${theme.color.gray1_7};
+`;
+export const OrangeTag = styled.div`
+  font-size: 1.1rem;
+  font-weight: 400;
+  padding: 0.45rem 1rem;
+  border-radius: 0.4rem;
+  background-color: ${theme.color.white};
+  color: ${theme.color.orange};
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;

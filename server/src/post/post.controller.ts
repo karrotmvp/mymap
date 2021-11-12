@@ -26,14 +26,21 @@ export class PostController {
     ) {}
 
     @UseGuards(JwtAuthGuard)
+    @Get('/myPost/info')
+    @ApiOkResponse({ description: '내 테마 정보 불러오기 성공', type: [PostEntity] })
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    async readMyPostInfo(@Req() req: any): Promise<PostEntity[]> {
+        return await this.postService.readUserPostInfo(req.user.userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get('/myPost')
     @ApiOkResponse({ description: '내 테마 불러오기 성공', type: FeedDTO })
     @ApiQuery({ name: 'page', example: 1 })
     @ApiQuery({ name: 'perPage', example: 10 })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    async readMyPost(@Req() req: any, @Query('page') page: number, @Query('perPage') perPage: number): Promise<FeedDTO> {
+    async readMyPost(@Req() req: any, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10): Promise<FeedDTO> {
         this.logger.debug('userId : ', req.user.userId, ' page : ', page, ' perPage : ', perPage);
-        if (!page && !perPage) return new FeedDTO(await this.postService.readUserPostInfo(req.user.userId), null);
         if (page < 1 || perPage < 1) throw new BadRequestException();
         this.eventEmitter.emit(MyMapEvent.POST_MYLISTED, new Event(req.user.userId, null));
         return await this.postService.readUserPost(req.user.userId, page, perPage);
@@ -105,11 +112,10 @@ export class PostController {
     @ApiQuery({ name: 'postId', example: '[1, 2, 3]', description: '핀 추가할 테마 Id' })
     @ApiBody({ type: CreatePinDTO })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    async addPin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO) {
-        const promise = postIds.map(async(postId) => {
-            return await this.postService.addPin(req.user.userId, Number(postId), pin);
-        })
-        await Promise.all(promise);
+    async handlePin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO) {
+        if (!postIds) postIds = [];
+        postIds = postIds.map(postId => Number(postId));
+        await this.postService.handlePin(req.user.userId, postIds, pin);
     }
 
     @UseGuards(JwtAuthGuard)
