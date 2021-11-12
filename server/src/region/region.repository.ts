@@ -84,7 +84,6 @@ export class RegionRepository {
         }).pipe(
             map((res) => {
                 const response = res.data?.data?.region
-                console.log(response);
                 if (!response) throw new BadRequestException();
                 return response.name3Id;
             }),
