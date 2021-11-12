@@ -1,7 +1,8 @@
 import { useEffect, useReducer, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { match } from "ts-pattern";
-import { getMyPostNames } from "../../api/post";
+import { getMyPostNames, putPostPin } from "../../api/post";
 import {
   LockAround,
   PlacePlus,
@@ -9,6 +10,7 @@ import {
   UnlockAround,
   Unselect,
 } from "../../assets";
+import { PlaceToSave } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { theme } from "../../styles/theme";
 import { reducer } from "./index.reducer";
@@ -20,6 +22,9 @@ const SaveModal = () => {
     selected: [],
   });
   const [posts, setPosts] = useState<PostType[] | []>([]);
+  const [isSubmitable, setIsSubmitable] = useState(false);
+
+  const [placeToSave, setPlaceToSave] = useRecoilState(PlaceToSave);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -30,17 +35,47 @@ const SaveModal = () => {
           _t: "SELECT",
           selected: data.posts[0].postId,
         });
+        setIsSubmitable(true);
       }
     };
     fetchPosts();
   }, []);
 
+  useEffect(() => {
+    if (state.selected.length > 0) {
+      setIsSubmitable(true);
+    } else {
+      setIsSubmitable(false);
+    }
+  }, [state.selected]);
+
+  const handleSubmit = async () => {
+    if (isSubmitable) {
+      await putPostPin(
+        { postId: state.selected },
+        { placeId: placeToSave.placeId }
+      );
+      setPlaceToSave({
+        isModalOpened: false,
+        placeId: "",
+      });
+    }
+  };
+
   return (
-    <Wrapper>
-      <div className="background" />
-      <div className="modal">
+    <Wrapper {...{ isSubmitable }}>
+      <div
+        className="background"
+        onClick={() =>
+          setPlaceToSave({
+            isModalOpened: false,
+            placeId: "",
+          })
+        }
+      />
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div>테마에 장소 추가</div>
-        <div>저장</div>
+        {state._t === "make" ? <div /> : <div onClick={handleSubmit}>저장</div>}
 
         <div className="list">
           <Theme
@@ -50,10 +85,11 @@ const SaveModal = () => {
                 isLocked: false,
               })
             }
+            disabled={state._t === "theme"}
           >
             {match(state._t)
               .with("make", () => (
-                <div>
+                <>
                   {match(state.isLocked)
                     .with(false, () => (
                       <UnlockAround
@@ -80,8 +116,8 @@ const SaveModal = () => {
                       />
                     ))
                     .exhaustive()}
-                  <input />
-                </div>
+                  <Input placeholder="만들고 싶은 테마 이름을 입력" />
+                </>
               ))
               .with("theme", () => (
                 <>
@@ -109,6 +145,7 @@ const SaveModal = () => {
                   selected: post.postId,
                 })
               }
+              disabled={state._t === "make"}
             >
               {state.selected.find((id) => id === post.postId) ? (
                 <Select />
@@ -124,7 +161,22 @@ const SaveModal = () => {
   );
 };
 
-const Wrapper = styled.div`
+const Input = styled.input`
+  border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 135%;
+  margin-left: 1rem;
+  caret-color: ${theme.color.orange};
+  ::placeholder {
+    color: ${theme.color.gray3};
+  }
+`;
+
+const Wrapper = styled.div<{ isSubmitable: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -159,7 +211,8 @@ const Wrapper = styled.div`
       font-weight: 700;
       font-size: 1.6rem;
       line-height: 135%;
-      color: ${theme.color.orange};
+      color: ${({ isSubmitable }) =>
+        isSubmitable ? theme.color.orange : theme.color.gray3};
     }
     .list {
       overflow-y: scroll;
@@ -174,13 +227,14 @@ const Wrapper = styled.div`
   }
 `;
 
-const Theme = styled.div`
+const Theme = styled.div<{ disabled?: boolean }>`
   display: flex;
   align-items: center;
-  padding: 1.8rem 0;
+  padding: 1.1rem 0;
   font-weight: 500;
   font-size: 1.5rem;
   line-height: 135%;
+  opacity: ${({ disabled }) => (!disabled ? 1 : 0.5)};
   & > div {
     margin-left: 1rem;
   }

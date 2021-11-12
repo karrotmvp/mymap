@@ -19,9 +19,12 @@ export const ViewerInfo = atom<UserType>({
   },
 });
 
-export const IsSaveModalOpened = atom({
+export const PlaceToSave = atom({
   key: "IsSaveModalOpened",
-  default: false,
+  default: {
+    isModalOpened: false,
+    placeId: "",
+  },
 });
 
 export const PageBeforeWrite = atom({

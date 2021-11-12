@@ -7,7 +7,7 @@ import Detail from "./Pages/Detail/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { ViewerInfo, RegionId, IsSaveModalOpened } from "./Shared/atom";
+import { ViewerInfo, RegionId, PlaceToSave } from "./Shared/atom";
 import { useCallback, useEffect } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
@@ -79,7 +79,7 @@ function App() {
     }
   }, []);
 
-  const isSaveModalOpened = useRecoilValue(IsSaveModalOpened);
+  const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
 
   return (
     <Router>

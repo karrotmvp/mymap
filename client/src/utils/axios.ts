@@ -40,7 +40,7 @@ export const GET = (url: string, params?: {}) =>
 export const POST = (url: string, body?: {}, params?: {}) =>
   fetchWrap({ method: "post", url, body, params });
 
-export const PUT = (url: string, body?: {}) =>
-  fetchWrap({ method: "put", url, body });
+export const PUT = (url: string, body?: {}, params?: {}) =>
+  fetchWrap({ method: "put", url, body, params });
 
 export const DELETE = (url: string) => fetchWrap({ method: "delete", url });

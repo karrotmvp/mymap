@@ -70,3 +70,16 @@ export const getMyPosts = async (params: PaginationParams = {}) => {
 export const getMyPostNames = async () => {
   return (await GET("api/post/mypost")) as FeedType;
 };
+
+// 장소 저장
+export const putPostPin = async (
+  params: {
+    postId: number[];
+  },
+  body: {
+    review?: string;
+    placeId: string;
+  }
+) => {
+  return await PUT("api/post/pin", body, params);
+};

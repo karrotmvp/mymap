@@ -1,7 +1,7 @@
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Call, PlaceAdd, Time } from "../../assets";
-import { IsSaveModalOpened } from "../../Shared/atom";
+import { PlaceToSave } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
 
@@ -25,7 +25,7 @@ const PlaceCard = ({
     `${place.businessHoursFrom} - ${place.businessHoursTo}`;
   if (place.businessHoursExtra) time += ` ${place.businessHoursExtra}`;
 
-  const setIsSaveModalOpened = useSetRecoilState(IsSaveModalOpened);
+  const setPlaceToSave = useSetRecoilState(PlaceToSave);
 
   return (
     <Wrapper {...{ className, type }}>
@@ -48,7 +48,14 @@ const PlaceCard = ({
             )}
           </div>
           {type !== "write" && (
-            <PlaceAdd onClick={() => setIsSaveModalOpened(true)} />
+            <PlaceAdd
+              onClick={() =>
+                setPlaceToSave({
+                  isModalOpened: true,
+                  placeId: place.placeId,
+                })
+              }
+            />
           )}
         </div>
 

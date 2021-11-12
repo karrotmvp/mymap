@@ -48,7 +48,10 @@ export const reducer: React.Reducer<State, Action> = (prevState, action) => {
       return {
         _t: "theme",
         isLocked: false,
-        selected: prevState.selected.splice(idx, 1),
+        selected: [
+          ...prevState.selected.slice(0, idx),
+          ...prevState.selected.slice(idx + 1, prevState.selected.length),
+        ],
       };
   }
 };
