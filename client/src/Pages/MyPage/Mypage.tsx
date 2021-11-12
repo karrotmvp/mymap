@@ -57,6 +57,7 @@ const Mypage = () => {
   const [isMyPlacesOpened, setIsMyPlacesOpened] = useState(false);
 
   // 내 리스트
+  const [isMyPlacesLoading, setIsMyPlacesLoading] = useState(false);
   const [myPlaces, setMyPlaces] = useState<PlaceType[] | []>([]);
   const [myPosts, setMyPosts] = useState<PostType[] | []>([]);
   const [myPostsHasMore, setMyPostsHasMore] = useState(true);
@@ -71,6 +72,7 @@ const Mypage = () => {
       setMyPlaces(data);
     };
     const fetchMyPosts = async () => {
+      setIsMyPlacesLoading(true);
       const data = (
         await getMyPosts({
           page: myPostPage,
@@ -81,6 +83,7 @@ const Mypage = () => {
         setMyPostsHasMore(false);
         return;
       }
+      setIsMyPlacesLoading(false);
       setMyPosts([...myPosts, ...data]);
     };
     fetchMyPlaces();
@@ -90,6 +93,7 @@ const Mypage = () => {
   const viewerInfo = useRecoilValue(ViewerInfo);
 
   // 저장한 리스트
+  const [isSavedPlacesLoading, setIsSavedPlacesLoading] = useState(false);
   const [savedPosts, setSavedPosts] = useState<PostType[] | []>([]);
   const [savedPostsHasMore, setSavedPostsHasMore] = useState(true);
   const [savedPostPage, setSavedPostPage] = useState(1);
@@ -98,6 +102,7 @@ const Mypage = () => {
   };
   useEffect(() => {
     const fetchSavedPosts = async () => {
+      setIsSavedPlacesLoading(true);
       const data = (
         await getSavedPosts({
           page: savedPostPage,
@@ -107,6 +112,7 @@ const Mypage = () => {
         setSavedPostsHasMore(false);
         return;
       }
+      setIsSavedPlacesLoading(false);
       setSavedPosts([...savedPosts, ...data]);
     };
     fetchSavedPosts();
@@ -184,11 +190,13 @@ const Mypage = () => {
               ))}
             </InfiniteScroll>
           ) : (
-            <div className="empty">
-              <LogoInactive />
-              <div>{`아직 만든 테마가 없어요.
+            !isMyPlacesLoading && (
+              <div className="empty">
+                <LogoInactive />
+                <div>{`아직 만든 테마가 없어요.
 나만의 테마를 만들어볼까요?`}</div>
-            </div>
+              </div>
+            )
           )
         ) : savedPosts.length > 0 ? (
           <InfiniteScroll
@@ -203,11 +211,13 @@ const Mypage = () => {
             ))}
           </InfiniteScroll>
         ) : (
-          <div className="empty">
-            <LogoInactive />
-            <div>{`아직 저장한 테마가 없어요.
+          !isSavedPlacesLoading && (
+            <div className="empty">
+              <LogoInactive />
+              <div>{`아직 저장한 테마가 없어요.
 추천 테마에서 이웃의 테마를 구경해 봐요!`}</div>
-          </div>
+            </div>
+          )
         )}
       </div>
 
