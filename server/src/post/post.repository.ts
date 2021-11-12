@@ -48,6 +48,6 @@ export class PostRepository extends Repository<Post> {
             },
             take: perPage,
         })
-        return posts.filter(post => post.pins);
+        return posts.filter(post => post.pins.length !== 0);
     }
 }
