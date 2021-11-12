@@ -30,7 +30,7 @@ export class DaangnStrategy extends PassportStrategy(Strategy) {
                 const response = res.data?.data
                 if (!response) throw new BadRequestException();
                 const user = new CreateUserDTO(response, token);
-                return await this.userService.login(user);
+                return user;
             }),
             catchError((err) => {
                 Sentry.captureException(err);

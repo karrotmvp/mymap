@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
 import { UpdatePostDTO } from "../dto/update-post.dto";
@@ -22,7 +23,7 @@ export class Post {
     @RelationId((post: Post) => post.user)
     userId: number;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, user => user.posts)
     @JoinColumn()
     user: User;
 
@@ -32,10 +33,10 @@ export class Post {
     @Column({ nullable: true })
     private contents: string;
 
-    @Column()
+    @Column({ nullable: true })
     private regionId: string;
 
-    @Column()
+    @Column({ nullable: true })
     private regionName: string;
 
     @Column()
@@ -47,12 +48,15 @@ export class Post {
     @OneToMany(() => SavedPost, savedPost => savedPost.post, { cascade: true })
     savedPosts: SavedPost[];
 
+    @ApiProperty()
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @ApiProperty()
     @CreateDateColumn()
     createdAt: Date;
 
+    @ApiProperty()
     @DeleteDateColumn()
     deletedAt: Date;
 
@@ -77,13 +81,18 @@ export class Post {
     public getUser(): User {
         return this.user;
     }
-    public updatePost(post: UpdatePostDTO, pins: Pin[]) {
+    public updatePost(post: UpdatePostDTO, pins: Pin[], regionName?: string) {
         this.title = post.title ? post.title : this.title;
         this.contents = post.contents ? post.contents : this.contents;
+        this.regionId = post.regionId ? post.regionId : this.regionId;
+        this.regionName = regionName ? regionName : this.regionName;
         this.share = post.share;
         this.pins = pins;
     }
     public updateShare() {
         this.share = !this.share;
+    }
+    public pushPin(pin: Pin[]) {
+        this.pins.push(...pin);
     }
 }

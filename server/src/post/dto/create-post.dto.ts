@@ -8,27 +8,28 @@ export class CreatePostDTO {
 
     @ApiProperty()
     @IsNotEmpty()
-    readonly title: string;
+    title: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly contents: string;
+    contents: string;
 
     @ApiProperty()
-    @IsNotEmpty()
-    readonly regionId: string;
+    // @IsNotEmpty()
+    regionId: string;
     
     @ApiProperty()
     @IsBoolean()
-    readonly share: boolean;
+    share: boolean;
 
     @ApiProperty({
         type: [CreatePinDTO]
     })
+    @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })
-    @ArrayMinSize(1)
+    @ArrayMinSize(0)
     @ArrayMaxSize(10)
     @Type(() => CreatePinDTO)
-    readonly pins: CreatePinDTO[];
+    pins: CreatePinDTO[];
 }

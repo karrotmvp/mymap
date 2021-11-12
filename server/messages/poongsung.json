@@ -5,7 +5,7 @@
 		"type": "PRIMARY_BUTTON",
 		"payload": {
 			"text": "장소 저장하러 가기",
-			"linkUrl": "https://live.daangn-mymap.com/onboarding"
+			"linkUrl": "https://live.daangn-mymap.com/"
 		}
 	}]
 }

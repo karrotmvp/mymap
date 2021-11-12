@@ -1,7 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from 'eventemitter2';
 import { catchError, lastValueFrom, map } from 'rxjs';
+import { Event } from 'src/event/event';
+import { MyMapEvent } from 'src/event/event-pub-sub';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
 import { PreopenUser } from './entities/preopen-user.entity';
@@ -15,12 +18,23 @@ export class UserService {
         private readonly userRepository: UserRepository,
         private readonly httpService: HttpService,
         private readonly configService: ConfigService,
-        private readonly preopenUserReposiotry: PreopenUserRepository
+        private readonly preopenUserReposiotry: PreopenUserRepository,
+        private readonly eventEmitter: EventEmitter2
         ) {}
 
-    async login(user: CreateUserDTO):Promise<CreateUserDTO> {
-        const savedUser: CreateUserDTO = await this.userRepository.saveUser(user);
-        return savedUser;
+    async login(user: CreateUserDTO, regionId: string):Promise<CreateUserDTO> {
+        let existUser: User = await this.userRepository.findOne({ where: { uniqueId: user.getUniqueId() }})
+        let isNew: boolean = false;
+        if (!existUser) {
+            existUser = new User(user.getUniqueId(), user.getToken())
+            isNew = true;
+        } else {
+            existUser.setToken(user.getToken());
+        }
+        const savedUser = await this.userRepository.save(existUser);
+        user.setUserId(savedUser.getUserId());
+        if(isNew) this.eventEmitter.emit(MyMapEvent.USER_CREATED, new Event(savedUser.getUserId(), regionId))
+        return user;
     }
 
     async readUser(userId: number): Promise<User> {
@@ -74,7 +88,7 @@ export class UserService {
     }
     async checkAdmin(userId: number) {
         const user: User = await this.userRepository.findOne(userId);
-        if (!user.getIsAdmin()) throw new UnauthorizedException();
+        if (!user || !user.getIsAdmin()) throw new UnauthorizedException();
         return true;
     }
 

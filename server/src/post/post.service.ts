@@ -9,6 +9,7 @@ import { RegionService } from 'src/region/region.service';
 import { UserDTO } from 'src/user/dto/user.dto';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { CreatePinDTO } from './dto/create-pin.dto';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
 import { PinDTO } from './dto/pin.dto';
@@ -35,8 +36,8 @@ export class PostService {
 
     async createPost(userId: number, post: CreatePostDTO) {
         const user: User = await this.userService.readUser(userId);
-        const pins: Pin[] = await this.pinRepository.savePins(post.pins);
-        const regionName: string = await this.regionService.readRegionName(post.regionId);
+        const pins: Pin[] = post.pins ? await this.pinRepository.savePins(post.pins) : null;
+        const regionName = post.regionId ? await this.regionService.readRegionName(post.regionId) : null;
         const newPost: Post = await this.postRepository.savePost(post, regionName, user, pins);
         this.eventEmitter.emit(MyMapEvent.POST_CREATED, new Event(newPost.getPostId(), null));
         return newPost;
@@ -47,8 +48,9 @@ export class PostService {
         if (!existPost) throw new BadRequestException();
         if (existPost.getUser().getUserId() !== userId) throw new NotAcceptableException();
         await this.pinRepository.deletePostPins(postId);
-        const pins: Pin[] = await this.pinRepository.savePins(post.pins);
-        return await this.postRepository.updatePost(postId, post, pins);
+        const pins: Pin[] = post.pins ? await this.pinRepository.savePins(post.pins) : null;
+        const regionName: string = post.regionId ? await this.regionService.readRegionName(post.regionId) : null;
+        return await this.postRepository.updatePost(postId, post, pins, regionName);
 }
 
     async readPostDetail(userId: number, postId: number): Promise<PostDTO> {
@@ -108,7 +110,7 @@ export class PostService {
     async deletePost(userId: number, postId: number): Promise<void> {
         const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
         if (!post) throw new BadRequestException();
-        if (!(post.getUser().getUserId() === userId || this.userService.checkAdmin(userId))) throw new NotAcceptableException();
+        if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
         await this.postRepository.softRemove(post);
     }
 
@@ -132,7 +134,7 @@ export class PostService {
 
     async readRegionPost(userId: number, regionId: string, start: number, end: number, perPage: number) {
         const regions: string[] = await this.regionService.readNeighborRegion(regionId);
-        const posts: Post[] = await this.postRepository.findWithRegionId(regions, start, end, perPage, userId);
+        const posts: Post[] = await this.postRepository.findWithRegionId(regions, start, end, perPage);
         return await this.readPostList(userId, posts);
     }
 
@@ -145,12 +147,27 @@ export class PostService {
     async checkSaved(userId: number, postId: number) {
         const savedPost = await this.savedPostRepository.findWithPostId(userId, postId);
         return savedPost ? true : false;
-        
     }
 
     async readPost(postId: number): Promise<Post> {
         const post = await this.postRepository.findWithPostId(postId);
         return post;
+    }
+
+    async readPins(userId: number): Promise<Pin[]> {
+        const posts: Post[] = await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId })
+            }
+        })
+        const postIds: number[] = posts.map(post => post.getPostId());
+        return await this.pinRepository.find({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId IN (:...postId)', { postId: postIds })
+            }
+        })
     }
 
     async readPostNum(userId: number): Promise<number> {
@@ -165,6 +182,22 @@ export class PostService {
 
     async countSavedPlaces(placeId: string): Promise<number> {
         return await this.pinRepository.countPinsWithPlaceId(placeId);
+    }
+
+    async countMySavedPlaces(userId: number, placeId: string): Promise<number> {
+        const posts: Post[] = await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId })
+            }
+        })
+        const postIds: number[] = posts.map(post => post.getPostId());
+        return await this.pinRepository.count({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId IN (:...postId) AND placeId = :placeId', { postId: postIds, placeId: placeId })
+            }
+        })
     }
 
     async readDeletedPost(postId: number): Promise<Post> {
@@ -182,10 +215,31 @@ export class PostService {
         return result;
     }
 
-    async updatePostShare(postId: number) {
-        const post: Post = await this.postRepository.findOne(postId);
+    async updatePostShare(userId: number, postId: number) {
+        const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
+        if (!post) throw new BadRequestException();
+        if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
         post.updateShare();
         await this.postRepository.save(post);
     }
 
+    async addPin(userId: number, postId: number, pin: CreatePinDTO) {
+        const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
+        if (!post) throw new BadRequestException();
+        if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
+        const newPin: Pin[] = await this.pinRepository.savePins([pin]);
+        post.pushPin(newPin)
+        await this.postRepository.save(post);
+    }
+
+    async readUserPostInfo(userId: number): Promise<PostDTO[]> {
+        const posts: Post[] = await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId });
+            }
+        })
+        const postDto: PostDTO[] = posts.map(post => new PostDTO(post, null, null, null, null))
+        return postDto;
+    }
 }
