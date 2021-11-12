@@ -100,7 +100,11 @@ const Detail = () => {
           {fromWriteForm ? (
             <Close
               className="left-icon"
-              onClick={() => history.push(pageBeforeWrite)}
+              onClick={() =>
+                pageBeforeWrite === "emptyTheme"
+                  ? history.push("/mypage")
+                  : history.push(pageBeforeWrite)
+              }
             />
           ) : (
             <Back className="left-icon" onClick={() => history.goBack()} />

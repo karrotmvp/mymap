@@ -1,6 +1,8 @@
 import { useHistory } from "react-router";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { More } from "../../assets";
+import { More, Plus } from "../../assets";
+import { PageBeforeWrite } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
 import OrangePlaceBox from "../OrangePlaceBox";
@@ -8,9 +10,14 @@ import SaveFooter from "./SaveFooter";
 
 const Collection = (post: PostType) => {
   const history = useHistory();
+  const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
 
   return (
-    <Wrapper onClick={() => history.push(`/detail/${post.postId}`)}>
+    <Wrapper
+      onClick={() =>
+        post.pins.length > 0 && history.push(`/detail/${post.postId}`)
+      }
+    >
       <div className="title-wrapper">
         <div style={{ width: "100%" }}>
           <div className="title">{post.title}</div>
@@ -18,14 +25,27 @@ const Collection = (post: PostType) => {
             {post.user.userName} · {post.regionName}
           </div>
         </div>
-        <More className="more-icon" />
+        {post.pins.length > 0 && <More className="more-icon" />}
       </div>
       <div className="places">
-        {post.pins.map((pin) => (
-          <div key={pin.pinId} className="place">
-            <OrangePlaceBox {...pin.place} />
-          </div>
-        ))}
+        {post.pins.length > 0 ? (
+          post.pins.map((pin) => (
+            <div key={pin.pinId} className="place">
+              <OrangePlaceBox {...pin.place} />
+            </div>
+          ))
+        ) : (
+          <EmptyOrangePlaceBox
+            onClick={() => {
+              setPageBeforeWrite("emptyTheme");
+              history.push(`/edit/${post.postId}`);
+            }}
+          >
+            <Plus className="orange-plus" />
+            <div>{`저장한 장소가 없어요
+장소를 저장해 주세요`}</div>
+          </EmptyOrangePlaceBox>
+        )}
       </div>
       <SaveFooter {...{ post }} />
     </Wrapper>
@@ -83,6 +103,26 @@ const Wrapper = styled.div`
         padding-right: 2rem;
       }
     }
+  }
+`;
+
+const EmptyOrangePlaceBox = styled.div`
+  ${flexCenter};
+  flex-direction: column;
+  background-color: ${theme.color.orange_very_light};
+  border: 0.1rem dashed ${theme.color.orange_medium};
+  border-radius: 1rem;
+  width: 15rem;
+  height: 10rem;
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 145%;
+  padding-bottom: 1.2rem;
+  box-sizing: border-box;
+  color: ${theme.color.orange};
+  white-space: pre-line;
+  .orange-plus {
+    fill: ${theme.color.orange};
   }
 `;
 
