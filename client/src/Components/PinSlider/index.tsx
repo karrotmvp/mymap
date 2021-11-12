@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { PlaceType } from "../../Shared/type";
-import PlaceBox, { PlaceCardType } from "../PlaceCard";
+import PlaceBox, { PlaceCardType } from "../PlaceCard/PlaceCard";
 import Swiper from "./Swiper";
 
 interface PinSliderProps {

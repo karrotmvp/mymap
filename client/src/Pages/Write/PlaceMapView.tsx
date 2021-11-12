@@ -2,7 +2,7 @@ import { Dispatch, MouseEventHandler, SetStateAction } from "react";
 import styled from "styled-components";
 import { Back, Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
-import PlaceBox from "../../Components/PlaceCard";
+import PlaceBox from "../../Components/PlaceCard/PlaceCard";
 import { PlaceType } from "../../Shared/type";
 import { Button, flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";

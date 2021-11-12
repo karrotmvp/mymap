@@ -65,3 +65,8 @@ export const getSavedPosts = async (params: PaginationParams = {}) => {
 export const getMyPosts = async (params: PaginationParams = {}) => {
   return (await GET("api/post/mypost", params)) as FeedType;
 };
+
+// 내가 쓴 리스트 제목만
+export const getMyPostNames = async () => {
+  return (await GET("api/post/mypost")) as FeedType;
+};

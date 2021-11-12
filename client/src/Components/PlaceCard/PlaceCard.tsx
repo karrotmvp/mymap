@@ -1,7 +1,9 @@
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { Call, PlaceAdd, Time } from "../assets";
-import { PlaceType } from "../Shared/type";
-import { flexCenter, gap, GrayTag, theme } from "../styles/theme";
+import { Call, PlaceAdd, Time } from "../../assets";
+import { IsSaveModalOpened } from "../../Shared/atom";
+import { PlaceType } from "../../Shared/type";
+import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
 
 // 1: 작성하기
 // 2: 그외 지도뷰
@@ -23,6 +25,8 @@ const PlaceCard = ({
     `${place.businessHoursFrom} - ${place.businessHoursTo}`;
   if (place.businessHoursExtra) time += ` ${place.businessHoursExtra}`;
 
+  const setIsSaveModalOpened = useSetRecoilState(IsSaveModalOpened);
+
   return (
     <Wrapper {...{ className, type }}>
       {place.images.length > 0 && type === "list" && (
@@ -43,7 +47,9 @@ const PlaceCard = ({
               <GrayTag>동네 장소</GrayTag>
             )}
           </div>
-          {type !== "write" && <PlaceAdd />}
+          {type !== "write" && (
+            <PlaceAdd onClick={() => setIsSaveModalOpened(true)} />
+          )}
         </div>
 
         <div className="card-bottom">

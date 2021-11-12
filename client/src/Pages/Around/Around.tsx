@@ -17,7 +17,7 @@ import {
   WrapperWithHeaderFooter,
 } from "../../styles/theme";
 import { mini } from "../../App";
-import PlaceCard from "../../Components/PlaceCard";
+import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import { match } from "ts-pattern";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import useDebounce from "../../Hooks/useDebounce";

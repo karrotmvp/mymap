@@ -4,7 +4,7 @@ import { match } from "ts-pattern";
 import { Close, List, Map } from "../../assets";
 import Header from "../../Components/Header";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
-import PlaceCard from "../../Components/PlaceCard";
+import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import { PlaceType } from "../../Shared/type";
 import { gap, theme, WrapperWithHeader } from "../../styles/theme";
 

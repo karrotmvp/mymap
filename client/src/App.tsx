@@ -6,8 +6,8 @@ import Mypage from "./Pages/MyPage/Mypage";
 import Detail from "./Pages/Detail/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { ViewerInfo, RegionId } from "./Shared/atom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { ViewerInfo, RegionId, IsSaveModalOpened } from "./Shared/atom";
 import { useCallback, useEffect } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
@@ -22,6 +22,7 @@ import { flexCenter } from "./styles/theme";
 import SearchPlace from "./Pages/Write/SearchPlace";
 import Header from "./Components/Header";
 import mixpanel from "mixpanel-browser";
+import SaveModal from "./Components/PlaceCard/SaveModal";
 
 dayjs.locale("ko");
 
@@ -78,6 +79,8 @@ function App() {
     }
   }, []);
 
+  const isSaveModalOpened = useRecoilValue(IsSaveModalOpened);
+
   return (
     <Router>
       <div className="App">
@@ -95,6 +98,7 @@ function App() {
               <Route exact path="/asdf" component={SearchPlace} />
               <Route path="/edit/:postId" component={Write} />
             </Switch>
+            {isSaveModalOpened && <SaveModal />}
           </Analytics>
         ) : (
           !preload &&

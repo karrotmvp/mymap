@@ -15,7 +15,7 @@ import {
 } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
-import PlaceCard from "../../Components/PlaceCard";
+import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import {
   Button,
   gap,
