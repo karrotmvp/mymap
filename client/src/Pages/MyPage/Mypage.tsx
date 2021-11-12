@@ -74,6 +74,7 @@ const Mypage = () => {
       const data = (
         await getMyPosts({
           page: myPostPage,
+          perPage: 10,
         })
       ).posts;
       if (data.length < 1) {

@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { match } from "ts-pattern";
-import { getMyPostNames, putPostPin } from "../../api/post";
+import { getMyPostNames, postPost, putPostPin } from "../../api/post";
 import {
   LockAround,
   PlacePlus,
@@ -10,9 +11,10 @@ import {
   UnlockAround,
   Unselect,
 } from "../../assets";
-import { PlaceToSave } from "../../Shared/atom";
+import useInput from "../../Hooks/useInput";
+import { PlaceToSave, RegionId } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
-import { theme } from "../../styles/theme";
+import { flexCenter, theme } from "../../styles/theme";
 import { reducer } from "./index.reducer";
 
 const SaveModal = () => {
@@ -23,13 +25,33 @@ const SaveModal = () => {
   });
   const [posts, setPosts] = useState<PostType[] | []>([]);
   const [isSubmitable, setIsSubmitable] = useState(false);
-
+  const newThemeValue = useInput("");
   const [placeToSave, setPlaceToSave] = useRecoilState(PlaceToSave);
+
+  const regionId = useRecoilValue(RegionId);
+
+  // 원래 저장된 장소
+  const savedThemes: number[] = [];
+
+  // 바뀌었는지
+  const [isChanged, setIsChanged] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
       const data = await getMyPostNames();
       setPosts(data.posts);
+      // 이미 포함된 테마들 세팅
+      data.posts.forEach((post) => {
+        if (post.pins.find((pin) => pin.place.placeId === placeToSave.placeId))
+          savedThemes.push(post.postId);
+      });
+      dispatch({
+        _t: "SET",
+        selected: savedThemes,
+      });
+      setIsSubmitable(false);
+
+      // 한개면 무조건 선택
       if (data.posts.length === 1) {
         dispatch({
           _t: "SELECT",
@@ -37,20 +59,19 @@ const SaveModal = () => {
         });
         setIsSubmitable(true);
       }
+
+      data.posts.find((post) => post.postId);
     };
     fetchPosts();
   }, []);
 
   useEffect(() => {
-    if (state.selected.length > 0) {
-      setIsSubmitable(true);
-    } else {
-      setIsSubmitable(false);
-    }
-  }, [state.selected]);
+    if (isChanged) setIsSubmitable(true);
+  }, [isChanged]);
 
   const handleSubmit = async () => {
     if (isSubmitable) {
+      console.log(state.selected);
       await putPostPin(
         { postId: state.selected },
         { placeId: placeToSave.placeId }
@@ -59,6 +80,43 @@ const SaveModal = () => {
         isModalOpened: false,
         placeId: "",
       });
+    }
+  };
+
+  let submitFlag = false;
+  const submitCheck = () => {
+    if (submitFlag) {
+      return submitFlag;
+    } else {
+      submitFlag = true;
+      return false;
+    }
+  };
+  const handleNewThemeValue = async () => {
+    if (newThemeValue.value.length > 0) {
+      if (submitCheck()) return;
+
+      const body = {
+        title: newThemeValue.value,
+        regionId,
+        share: !state.isLocked,
+        pins: [],
+      };
+      const data = await postPost(body);
+
+      try {
+        if (data.postId) {
+          newThemeValue.setValue("");
+          const data = await getMyPostNames();
+          setPosts(data.posts);
+        }
+      } finally {
+        dispatch({
+          _t: "SELECT",
+          selected: data.postId,
+        });
+        setIsSubmitable(true);
+      }
     }
   };
 
@@ -116,19 +174,33 @@ const SaveModal = () => {
                       />
                     ))
                     .exhaustive()}
-                  <Input placeholder="만들고 싶은 테마 이름을 입력" />
+                  <Input
+                    placeholder="만들고 싶은 테마 이름을 입력"
+                    value={newThemeValue.value}
+                    onChange={newThemeValue.onChange}
+                  />
+                  <NewBtn
+                    disabled={newThemeValue.value.length === 0}
+                    onClick={handleNewThemeValue}
+                  >
+                    완료
+                  </NewBtn>
                 </>
               ))
               .with("theme", () => (
                 <>
                   <PlacePlus />
-                  <div>새로운 테마 만들기</div>
+                  <div style={{ color: theme.color.gray5 }}>
+                    새로운 테마 만들기
+                  </div>
                 </>
               ))
               .with(null, () => (
                 <>
                   <PlacePlus />
-                  <div>새로운 테마 만들기</div>
+                  <div style={{ color: theme.color.gray5 }}>
+                    새로운 테마 만들기
+                  </div>
                 </>
               ))
               .exhaustive()}
@@ -137,14 +209,15 @@ const SaveModal = () => {
           {posts.map((post) => (
             <Theme
               key={post.postId}
-              onClick={() =>
+              onClick={() => {
+                setIsChanged(true);
                 dispatch({
                   _t: state.selected.find((id) => id === post.postId)
                     ? "REMOVE"
                     : "SELECT",
                   selected: post.postId,
-                })
-              }
+                });
+              }}
               disabled={state._t === "make"}
             >
               {state.selected.find((id) => id === post.postId) ? (
@@ -174,6 +247,20 @@ const Input = styled.input`
   ::placeholder {
     color: ${theme.color.gray3};
   }
+`;
+const NewBtn = styled.div<{ disabled: boolean }>`
+  ${flexCenter};
+  position: absolute;
+  background-color: ${({ disabled }) =>
+    disabled ? theme.color.gray2 : theme.color.orange};
+  width: 4.8rem;
+  height: 2.8rem;
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 135%;
+  right: 0;
+  border-radius: 0.4rem;
+  color: ${({ disabled }) => (disabled ? theme.color.gray4 : "#fff")};
 `;
 
 const Wrapper = styled.div<{ isSubmitable: boolean }>`
@@ -215,6 +302,7 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
         isSubmitable ? theme.color.orange : theme.color.gray3};
     }
     .list {
+      position: relative;
       overflow-y: scroll;
       height: 100%;
       margin-top: 1.8rem;

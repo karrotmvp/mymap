@@ -236,7 +236,7 @@ const Wrapper = styled.div`
     .content {
       margin-top: 1.4rem;
       font-size: 1.4rem;
-      line-height: 150%;
+      line-height: 165%;
       color: ${theme.color.gray7};
       padding-right: 3rem;
     }

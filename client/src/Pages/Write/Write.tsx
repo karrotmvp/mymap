@@ -283,7 +283,13 @@ const Write = () => {
           sub="수정한 내용을 저장할까요?"
         >
           <Button onClick={() => window.history.back()}>나가기</Button>
-          <Button>저장하기</Button>
+          <Button
+            onClick={() => {
+              isSubmittable && handleSubmit();
+            }}
+          >
+            저장하기
+          </Button>
         </Alert>
       )}
 

@@ -2,12 +2,12 @@ type State =
   | {
       _t: null;
       isLocked: boolean;
-      selected: number[] | [];
+      selected: number[];
     }
   | {
       _t: "make";
       isLocked: boolean;
-      selected: [];
+      selected: number[];
     }
   | {
       _t: "theme";
@@ -16,6 +16,10 @@ type State =
     };
 
 type Action =
+  | {
+      _t: "SET";
+      selected: number[];
+    }
   | {
       _t: "MAKE";
       isLocked: boolean;
@@ -31,11 +35,17 @@ type Action =
 
 export const reducer: React.Reducer<State, Action> = (prevState, action) => {
   switch (action._t) {
+    case "SET":
+      return {
+        _t: "theme",
+        isLocked: false,
+        selected: action.selected,
+      };
     case "MAKE":
       return {
         _t: "make",
         isLocked: action.isLocked,
-        selected: [],
+        selected: prevState.selected,
       };
     case "SELECT":
       return {

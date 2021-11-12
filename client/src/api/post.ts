@@ -10,7 +10,7 @@ export const getPost = async (postId: number) => {
 // 새 리스트 생성
 interface PostBody {
   title: string;
-  contents: string;
+  contents?: string;
   regionId: string;
   share: boolean;
   pins: Pin[];
