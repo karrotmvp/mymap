@@ -1,3 +1,4 @@
+import { filter } from "rxjs";
 import { User } from "src/user/entities/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreatePostDTO } from "./dto/create-post.dto";
@@ -38,14 +39,15 @@ export class PostRepository extends Repository<Post> {
 
     async findWithRegionId(regionId: string[], start: number, end: number, perPage: number) {
         const posts = await this.find({
-            relations: ['user'],
+            relations: ['user', 'pins'],
             order: { createdAt: 'DESC' },
             where: (qb) => {
                 // qb.where('regionId IN (:...regionId) AND (postId < :end OR postId > :start) AND (share = true OR (share = false AND Post__user.userId = :userId))', { regionId: regionId, start: start, end: end, userId: userId})
                 qb.where('regionId IN (:...regionId) AND (postId < :end OR postId > :start) AND share = true', { regionId: regionId, start: start, end: end })
+                
             },
             take: perPage,
         })
-        return posts;
+        return posts.filter(post => post.pins);
     }
 }
