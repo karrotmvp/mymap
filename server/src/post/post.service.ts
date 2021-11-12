@@ -223,18 +223,29 @@ export class PostService {
         await this.postRepository.save(post);
     }
 
-    async addPin(userId: number, postId: number, pin: CreatePinDTO) {
-        const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
-        if (!post) throw new BadRequestException();
-        if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
-        const newPin: Pin[] = await this.pinRepository.savePins([pin]);
-        post.pushPin(newPin)
-        await this.postRepository.save(post);
-    }
+    // private async savePinInPost(postId: number, )
+
+    // async handlePin(userId: number, postIds: number[], pin: CreatePinDTO) {
+    //     const pins: Pin[] = await this.pinRepository.find({
+    //         relations: ['post'],
+    //         where: { placeId: pin.placeId }
+    //     })
+    //     const includePinPosts: number[] = pins.map(pin => pin.post.getPostId());
+    //     const posts: Post[] = await this.postRepository.find({
+    //         relations: ['user', 'pins'],
+    //         where: (qb) => {
+    //             qb.where('Post__user.userId = :userId AND postId IN (:...postIds)', { userId: userId, postIds: includePinPosts })
+    //         }
+    //     })
+    //     const existIds: number[] = posts.map(post => post.getPostId());
+    //     const saveIds: number[] = postIds.filter(x => !existIds.includes(x));
+    //     const deleteIds: number[] = existIds.filter(x => !postIds.includes(x));
+
+    // }
 
     async readUserPostInfo(userId: number): Promise<PostDTO[]> {
         const posts: Post[] = await this.postRepository.find({
-            relations: ['user'],
+            relations: ['user', 'pins'],
             where: (qb) => {
                 qb.where('Post__user.userId = :userId', { userId: userId });
             }
