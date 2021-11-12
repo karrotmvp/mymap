@@ -22,15 +22,18 @@ export class UserService {
         private readonly eventEmitter: EventEmitter2
         ) {}
 
-    async login(user: CreateUserDTO):Promise<CreateUserDTO> {
+    async login(user: CreateUserDTO, regionId: string):Promise<CreateUserDTO> {
         let existUser: User = await this.userRepository.findOne({ where: { uniqueId: user.getUniqueId() }})
+        let isNew: boolean = false;
         if (!existUser) {
             existUser = new User(user.getUniqueId(), user.getToken())
+            isNew = true;
         } else {
             existUser.setToken(user.getToken());
         }
         const savedUser = await this.userRepository.save(existUser);
         user.setUserId(savedUser.getUserId());
+        if(isNew) this.eventEmitter.emit(MyMapEvent.USER_CREATED, new Event(savedUser.getUserId(), regionId))
         return user;
     }
 

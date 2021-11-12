@@ -1,6 +1,7 @@
 import { Controller } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { EventPattern, Payload } from "@nestjs/microservices";
+import { User } from "@sentry/types";
 import { init, Mixpanel } from "mixpanel";
 import { Event } from "src/event/event";
 import { MyMapEvent } from "src/event/event-pub-sub";
@@ -25,8 +26,20 @@ export class MixpanelProcessor {
 
     //user
     // @Process('user_created')
-    @EventPattern(MyMapEvent.USER_CREATED) 
+
+    @EventPattern(MyMapEvent.USER_CREATED)
     async handleUserCreated(@Payload() job: Event) {
+        const userId: number = job._id;
+        const user: UserDTO = await this.userService.readUserDetail(userId);
+        this._mixpanel.people.set_once(user.getUserId().toString(), '$created', (new Date().toISOString()));
+        this._mixpanel.track('userCreated', {
+            userName: user.getUserName(),
+            userId: user.getUserId()
+        })
+    }
+
+    @EventPattern(MyMapEvent.USER_LOGIN) 
+    async handleUserLogin(@Payload() job: Event) {
         const userId: number = job._id;
         const regionName = job.data;
         const user: UserDTO = await this.userService.readUserDetail(userId);
@@ -37,7 +50,6 @@ export class MixpanelProcessor {
             last_login_region: regionName,
             last_login_time: (new Date().toISOString()),
         })
-        this._mixpanel.people.set_once(user.getUserId().toString(), '$created', (new Date().toISOString()));
         this._mixpanel.track('login', {
             userName: user.getUserName(),
             userId: user.getUserId(),

@@ -25,4 +25,10 @@ export class RegionService {
         return regionId;
     }
 
+    async validateRegionId(regionId: string): Promise<string> {
+        const realRegion$ = await this.regionRepository.findRealRegionId(regionId);
+        const realRegion = await lastValueFrom(realRegion$);
+        return realRegion;
+    }
+
 }

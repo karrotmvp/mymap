@@ -5,7 +5,7 @@ export class PlaceDTO {
     constructor(place: any) {
         this.placeId = place.id;
         this.name = place.name;
-        this.phone = place.phone;
+        this.phone = this.phoneNumberConvert(place.phone);
         this.address = place.address;
         this.coordinates = place.coordinates;
         this.businessHoursFrom = place.businessHoursFrom;
@@ -52,4 +52,11 @@ export class PlaceDTO {
     images: object;
     @ApiProperty({ example: 0 })
     saved: number;
+
+    private phoneNumberConvert(phone: string): string {
+      if (!phone) return;
+      if (phone.length === 9) return phone.substr(0,2) + '-' + phone.substr(2,3) + '-' + phone.substr(5,4);
+      if (phone.length === 10) return phone.substr(0,3) + '-' + phone.substr(3,3) + '-' + phone.substr(6,4);
+      if (phone.length === 11) return phone.substr(0,3) + '-' + phone.substr(3,4) + '-' + phone.substr(7,4);
+    }
 }

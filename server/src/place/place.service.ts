@@ -39,6 +39,7 @@ export class PlaceService {
     }
 
     async readPlaces(placeIds: string[], userId?: number): Promise<PlaceDTO[]> {
+        if (!placeIds || placeIds.length === 0) return [];
         const places$ = await this.placeRepository.findWithIds(placeIds);
         const places = await lastValueFrom(places$);
         places.map(async(place) => {
@@ -105,10 +106,12 @@ export class PlaceService {
         })
         const newPlaces: RecommendPlace[] = await Promise.all(promise);
         await this.recommendPlaceRepository.save(newPlaces);
+        const placeIds = places.map(place => place.placeId)
+        return await this.readPlaces(placeIds);
     }
 
-    async deleteRecommendPlace(recommendId: number) {
-        const recommend = await this.recommendPlaceRepository.findOne(recommendId);
+    async deleteRecommendPlace(placeId: string) {
+        const recommend = await this.recommendPlaceRepository.findOne({ where: { placeId: placeId }});
         await this.recommendPlaceRepository.softRemove(recommend);
     }
 }

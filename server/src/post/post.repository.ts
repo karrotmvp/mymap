@@ -12,9 +12,9 @@ export class PostRepository extends Repository<Post> {
         return await this.save(newPost);
     }
 
-    async updatePost(postId: number, post: UpdatePostDTO, pins: Pin[]) {
+    async updatePost(postId: number, post: UpdatePostDTO, pins: Pin[], regionName?: string) {
         const existPost = await this.findOne(postId, { relations : ['pins'] });
-        existPost.updatePost(post, pins);
+        existPost.updatePost(post, pins, regionName);
         await this.save(existPost);
         return postId;
     }
