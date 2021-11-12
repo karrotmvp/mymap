@@ -1,48 +1,23 @@
 import { useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
+import { match } from "ts-pattern";
 import { getMyPostNames } from "../../api/post";
-import { PlacePlus, Unselect } from "../../assets";
+import {
+  LockAround,
+  PlacePlus,
+  Select,
+  UnlockAround,
+  Unselect,
+} from "../../assets";
 import { PostType } from "../../Shared/type";
 import { theme } from "../../styles/theme";
-
-type State =
-  | {
-      _t: null;
-    }
-  | {
-      _t: "make";
-    }
-  | {
-      _t: "theme";
-      selected: number;
-    };
-
-type Action =
-  | {
-      _t: "make";
-    }
-  | {
-      _t: "select";
-      selected: number;
-    };
-
-const reducer: React.Reducer<State, Action> = (prevState, action) => {
-  switch (action._t) {
-    case "make":
-      return {
-        _t: "make",
-      };
-    case "select":
-      return {
-        _t: "theme",
-        selected: action.selected,
-      };
-  }
-};
+import { reducer } from "./index.reducer";
 
 const SaveModal = () => {
   const [state, dispatch] = useReducer(reducer, {
     _t: null,
+    isLocked: false,
+    selected: [],
   });
   const [posts, setPosts] = useState<PostType[] | []>([]);
 
@@ -50,6 +25,12 @@ const SaveModal = () => {
     const fetchPosts = async () => {
       const data = await getMyPostNames();
       setPosts(data.posts);
+      if (data.posts.length === 1) {
+        dispatch({
+          _t: "SELECT",
+          selected: data.posts[0].postId,
+        });
+      }
     };
     fetchPosts();
   }, []);
@@ -62,14 +43,78 @@ const SaveModal = () => {
         <div>저장</div>
 
         <div className="list">
-          <Theme>
-            <PlacePlus />
-            <div>새로운 테마 만들기</div>
+          <Theme
+            onClick={() =>
+              dispatch({
+                _t: "MAKE",
+                isLocked: false,
+              })
+            }
+          >
+            {match(state._t)
+              .with("make", () => (
+                <div>
+                  {match(state.isLocked)
+                    .with(false, () => (
+                      <UnlockAround
+                        onClick={(e) => {
+                          e.stopPropagation();
+
+                          dispatch({
+                            _t: "MAKE",
+                            isLocked: true,
+                          });
+                        }}
+                      />
+                    ))
+                    .with(true, () => (
+                      <LockAround
+                        onClick={(e) => {
+                          e.stopPropagation();
+
+                          dispatch({
+                            _t: "MAKE",
+                            isLocked: false,
+                          });
+                        }}
+                      />
+                    ))
+                    .exhaustive()}
+                  <input />
+                </div>
+              ))
+              .with("theme", () => (
+                <>
+                  <PlacePlus />
+                  <div>새로운 테마 만들기</div>
+                </>
+              ))
+              .with(null, () => (
+                <>
+                  <PlacePlus />
+                  <div>새로운 테마 만들기</div>
+                </>
+              ))
+              .exhaustive()}
           </Theme>
 
           {posts.map((post) => (
-            <Theme key={post.postId}>
-              <Unselect />
+            <Theme
+              key={post.postId}
+              onClick={() =>
+                dispatch({
+                  _t: state.selected.find((id) => id === post.postId)
+                    ? "REMOVE"
+                    : "SELECT",
+                  selected: post.postId,
+                })
+              }
+            >
+              {state.selected.find((id) => id === post.postId) ? (
+                <Select />
+              ) : (
+                <Unselect />
+              )}
               <div>{post.title}</div>
             </Theme>
           ))}

@@ -34,7 +34,9 @@ export { ReactComponent as Search } from "./search.svg";
 
 export { ReactComponent as Unselect } from "./unselect.svg";
 export { ReactComponent as Select } from "./select.svg";
-export { ReactComponent as PlacePlus } from "./place-plus.svg";
+export { ReactComponent as PlacePlus } from "./place_plus.svg";
+export { ReactComponent as LockAround } from "./lock_around.svg";
+export { ReactComponent as UnlockAround } from "./unlock_around.svg";
 
 export { ReactComponent as Loading1 } from "./loading1.svg";
 export { ReactComponent as Loading2 } from "./loading2.svg";
