@@ -36,7 +36,7 @@ import { NotificationModule } from './notification/notification.module';
       database: configService.get('database.name'),
       entities: [join(__dirname, '/**/*.entity.js')],
       synchronize: true,
-      logging: true,
+      // logging: true,
     })
   }),
   UserModule,
