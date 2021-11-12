@@ -226,6 +226,7 @@ export class PostService {
     private async savePinInPost(postId: number, pin: CreatePinDTO) {
         const newPin: Pin[] = await this.pinRepository.savePins([pin]);
         const post = await this.postRepository.findOne(postId, { relations: ['pins'] })
+        if (!post) throw new BadRequestException();
         post.pins ? post.pins.push(...newPin) : post.pins = newPin;
         await this.postRepository.save(post);
     }
@@ -237,6 +238,7 @@ export class PostService {
                 qb.where('Pin__post.postId = :postId AND placeId = :placeId', { postId: postId, placeId: pin.placeId })
             }
         })
+        if (!deletePin) throw new BadRequestException();
         await this.pinRepository.softRemove(deletePin);
     }
 
@@ -245,7 +247,6 @@ export class PostService {
             relations: ['post'],
             where: { placeId: pin.placeId }
         })
-        console.log(pins)
         const includePinPosts: number[] = pins.map(pin => pin.post.getPostId());
         const posts: Post[] = includePinPosts.length ? await this.postRepository.find({
             relations: ['user', 'pins'],
