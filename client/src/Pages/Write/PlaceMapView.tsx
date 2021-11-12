@@ -1,8 +1,12 @@
 import { Dispatch, MouseEventHandler, SetStateAction } from "react";
+import { useHistory, useParams } from "react-router";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { putPostPin } from "../../api/post";
 import { Back, Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
-import PlaceBox from "../../Components/PlaceBox";
+import PlaceBox from "../../Components/PlaceCard/PlaceCard";
+import { PageBeforeWrite } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { Button, flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -20,10 +24,25 @@ const PlaceMapView = ({
   places: PlaceType[];
   setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
 }) => {
+  const history = useHistory();
+  const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
+  const { postId } = useParams<{ postId: string }>();
+
   const handleAddPlace = (place: PlaceType) => {
     Mixpanel.track("글작성 - 장소 추가");
     setPlaces([...places, place]);
     setIsSearchOpened(false);
+
+    if (pageBeforeWrite === "emptyTheme") {
+      const addPlaceToEmptyTheme = async () => {
+        await putPostPin(
+          { postId: [parseInt(postId)] },
+          { placeId: place.placeId }
+        );
+        history.push(`/detail/${postId}/finish`);
+      };
+      addPlaceToEmptyTheme();
+    }
   };
 
   const pin: Pin = {
@@ -42,7 +61,7 @@ const PlaceMapView = ({
       <Back onClick={close} className="back-btn" />
 
       <div className="place-info">
-        <PlaceBox type="type1" {...{ place }} />
+        <PlaceBox type="write" {...{ place }} />
         <AddBtn onClick={() => handleAddPlace(place)}>
           <Plus className="add-icon" />이 장소 추가하기
         </AddBtn>

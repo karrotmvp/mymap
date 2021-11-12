@@ -1,34 +1,23 @@
 import { useHistory } from "react-router";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { More } from "../../assets";
+import { More, Plus } from "../../assets";
+import { PageBeforeWrite } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
+import OrangePlaceBox from "../OrangePlaceBox";
 import SaveFooter from "./SaveFooter";
-
-const OrangePlaceBox = ({
-  name,
-  category,
-}: {
-  name: string;
-  category: string[];
-}) => {
-  return (
-    <OrangePlaceBoxWrapper>
-      {category?.length > 0 ? (
-        <Tag>{category[category.length - 1]}</Tag>
-      ) : (
-        <Tag>동네 장소</Tag>
-      )}
-      <div className="place-name">{name}</div>
-    </OrangePlaceBoxWrapper>
-  );
-};
 
 const Collection = (post: PostType) => {
   const history = useHistory();
+  const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
 
   return (
-    <Wrapper onClick={() => history.push(`/detail/${post.postId}`)}>
+    <Wrapper
+      onClick={() =>
+        post.pins.length > 0 && history.push(`/detail/${post.postId}`)
+      }
+    >
       <div className="title-wrapper">
         <div style={{ width: "100%" }}>
           <div className="title">{post.title}</div>
@@ -36,14 +25,27 @@ const Collection = (post: PostType) => {
             {post.user.userName} · {post.regionName}
           </div>
         </div>
-        <More className="more-icon" />
+        {post.pins.length > 0 && <More className="more-icon" />}
       </div>
       <div className="places">
-        {post.pins.map((pin) => (
-          <div key={pin.pinId} className="place">
-            <OrangePlaceBox {...pin.place} />
-          </div>
-        ))}
+        {post.pins.length > 0 ? (
+          post.pins.map((pin) => (
+            <div key={pin.pinId} className="place">
+              <OrangePlaceBox {...pin.place} />
+            </div>
+          ))
+        ) : (
+          <EmptyOrangePlaceBox
+            onClick={() => {
+              setPageBeforeWrite("emptyTheme");
+              history.push(`/edit/${post.postId}`);
+            }}
+          >
+            <Plus className="orange-plus" />
+            <div>{`저장한 장소가 없어요
+장소를 저장해 주세요`}</div>
+          </EmptyOrangePlaceBox>
+        )}
       </div>
       <SaveFooter {...{ post }} />
     </Wrapper>
@@ -65,7 +67,7 @@ const Wrapper = styled.div`
 
     .title {
       max-width: 100%;
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       line-height: 120%;
       font-weight: bold;
       white-space: nowrap;
@@ -104,43 +106,24 @@ const Wrapper = styled.div`
   }
 `;
 
-const OrangePlaceBoxWrapper = styled.div`
-  display: flex;
+const EmptyOrangePlaceBox = styled.div`
+  ${flexCenter};
   flex-direction: column;
-  align-items: flex-start;
   background-color: ${theme.color.orange_very_light};
-  min-width: 15rem;
-  max-width: 15rem;
-  height: 10rem;
+  border: 0.1rem dashed ${theme.color.orange_medium};
   border-radius: 1rem;
-  padding: 1.2rem;
-  box-sizing: border-box;
-  border: 0.1rem solid ${theme.color.orange_light};
-
-  .place-name {
-    margin-top: 0.8rem;
-    font-weight: 500;
-    color: ${theme.color.gray7};
-    line-height: 150%;
-    letter-spacing: -0.2%;
-    font-size: 1.5rem;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-`;
-
-const Tag = styled.div`
-  font-size: 1.1rem;
+  width: 15rem;
+  height: 10rem;
   font-weight: 500;
-  padding: 0.45rem 1rem;
-  border-radius: 0.4rem;
-  background-color: ${theme.color.white};
+  font-size: 1.3rem;
+  line-height: 145%;
+  padding-bottom: 1.2rem;
+  box-sizing: border-box;
   color: ${theme.color.orange};
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  white-space: pre-line;
+  .orange-plus {
+    fill: ${theme.color.orange};
+  }
 `;
 
 export default Collection;

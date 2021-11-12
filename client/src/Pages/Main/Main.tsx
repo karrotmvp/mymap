@@ -6,7 +6,7 @@ import MainSlide from "./MainSlide";
 import MapView, { Pin } from "../../Components/MapView";
 import PinSlider from "../../Components/PinSlider";
 import { Back, Close, LogoTypo } from "../../assets";
-import { PinType, PostType } from "../../Shared/type";
+import { PlaceType, PostType } from "../../Shared/type";
 import { getFeedPosts } from "../../api/post";
 import { useRecoilValue } from "recoil";
 import { RegionId } from "../../Shared/atom";
@@ -54,14 +54,14 @@ const Main = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startIdx, endIdx, regionId]);
 
-  const [pins, setPins] = useState<PinType[] | []>([]);
+  const [pins, setPins] = useState<PlaceType[] | []>([]);
   const [feedPins, setfeedPins] = useState<Pin[] | []>([]);
   useEffect(() => {
-    const _pins: PinType[] = [];
+    const _pins: PlaceType[] = [];
     feedPosts?.forEach((post) => {
       post.pins.forEach((pin) => {
-        if (!_pins.find((p) => p.place.placeId === pin.place.placeId)) {
-          _pins.push(pin);
+        if (!_pins.find((p) => p.placeId === pin.place.placeId)) {
+          _pins.push(pin.place);
         }
       });
     });
@@ -99,8 +99,8 @@ const Main = () => {
   const [current, setCurrent] = useState(-1);
   useEffect(() => {
     setCenter({
-      lat: pins[current]?.place.coordinates.latitude,
-      lng: pins[current]?.place.coordinates.longitude,
+      lat: pins[current]?.coordinates.latitude,
+      lng: pins[current]?.coordinates.longitude,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
@@ -112,7 +112,7 @@ const Main = () => {
       const targetElement = document.querySelector("#main-scroll")!;
 
       const onScroll = () => {
-        setIsScrollUp(window.innerHeight - targetElement.scrollTop < 380);
+        setIsScrollUp(window.innerHeight - targetElement.scrollTop < 450);
         setIsMapShown(targetElement.scrollTop <= 0);
       };
       targetElement.addEventListener("scroll", onScroll);
@@ -168,7 +168,7 @@ const Main = () => {
       ) : (
         current > -1 && (
           <PinSlider
-            placeBoxType="type2"
+            placeCardType="map"
             {...{ pins, current, setCurrent, setCenter }}
           />
         )

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ImageType } from "../Shared/type";
-import { theme } from "../styles/theme";
+import { GrayTag, theme } from "../styles/theme";
 
 const AroundBox = ({
   name,
@@ -17,9 +17,9 @@ const AroundBox = ({
         <img className="thumbnail" alt="thumbnail" src={images[0].thumbnail} />
       )}
       <div className="content">
-        <Tag>
+        <GrayTag>
           {category?.length > 0 ? category[category.length - 1] : "동네 장소"}
-        </Tag>
+        </GrayTag>
         <div className="place-name">{name}</div>
       </div>
     </Wrapper>
@@ -58,17 +58,6 @@ const Wrapper = styled.div`
       overflow: hidden;
     }
   }
-`;
-
-const Tag = styled.div`
-  font-size: 1.1rem;
-  font-weight: 500;
-  padding: 0.45rem 1rem;
-  border-radius: 0.4rem;
-  background-color: ${theme.color.white};
-  color: ${theme.color.orange};
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `;
 
 export default AroundBox;

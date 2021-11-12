@@ -10,7 +10,7 @@ export const getPost = async (postId: number) => {
 // 새 리스트 생성
 interface PostBody {
   title: string;
-  contents: string;
+  contents?: string;
   regionId: string;
   share: boolean;
   pins: Pin[];
@@ -64,4 +64,22 @@ export const getSavedPosts = async (params: PaginationParams = {}) => {
 // 내가 쓴 리스트
 export const getMyPosts = async (params: PaginationParams = {}) => {
   return (await GET("api/post/mypost", params)) as FeedType;
+};
+
+// 내가 쓴 리스트 제목만
+export const getMyPostNames = async () => {
+  return (await GET("api/post/mypost")) as FeedType;
+};
+
+// 장소 저장
+export const putPostPin = async (
+  params: {
+    postId: number[];
+  },
+  body: {
+    review?: string;
+    placeId: string;
+  }
+) => {
+  return await PUT("api/post/pin", body, params);
 };

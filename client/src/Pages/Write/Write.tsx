@@ -7,7 +7,7 @@ import { Close, Plus } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
-import { RegionId } from "../../Shared/atom";
+import { PageBeforeWrite, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -34,6 +34,8 @@ const Write = () => {
     useRouteMatch({
       path: "/onboarding/write",
     }) ?? {};
+
+  const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
 
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
@@ -232,7 +234,7 @@ const Write = () => {
         </div>
       )}
 
-      {isSearchOpened && (
+      {(isSearchOpened || pageBeforeWrite) && (
         <SearchPlace
           {...{ setIsSearchOpened, places, setPlaces }}
           close={() => setIsSearchOpened(false)}
@@ -283,7 +285,13 @@ const Write = () => {
           sub="수정한 내용을 저장할까요?"
         >
           <Button onClick={() => window.history.back()}>나가기</Button>
-          <Button>저장하기</Button>
+          <Button
+            onClick={() => {
+              isSubmittable && handleSubmit();
+            }}
+          >
+            저장하기
+          </Button>
         </Alert>
       )}
 

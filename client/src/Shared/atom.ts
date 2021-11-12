@@ -19,9 +19,25 @@ export const ViewerInfo = atom<UserType>({
   },
 });
 
+export const PlaceToSave = atom({
+  key: "IsSaveModalOpened",
+  default: {
+    isModalOpened: false,
+    placeId: "",
+  },
+});
+
 export const PageBeforeWrite = atom({
   key: "page_before_write",
   default: "/",
+});
+
+export const ToastMessage = atom({
+  key: "ToastMessage",
+  default: {
+    isToastShown: false,
+    message: "",
+  },
 });
 
 export const viewerInfoAtom = atomFamily({

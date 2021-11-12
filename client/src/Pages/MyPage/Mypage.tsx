@@ -1,23 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
-import { getMyPosts, getSavedPosts } from "../api/post";
-import Collection from "../Components/Collection";
-import CreateButton from "../Components/CreateButton";
-import Footer from "../Components/Footer";
-import Header from "../Components/Header";
-import { PostType } from "../Shared/type";
+import { getMyPosts, getSavedPosts } from "../../api/post";
+import Collection from "../../Components/Collection";
+import CreateButton from "../../Components/CreateButton";
+import Footer from "../../Components/Footer";
+import Header from "../../Components/Header";
+import { PlaceType, PostType } from "../../Shared/type";
 import {
   flexCenter,
   gap,
   theme,
   WrapperWithHeaderFooter,
-} from "../styles/theme";
+} from "../../styles/theme";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRecoilValue } from "recoil";
-import { ViewerInfo } from "../Shared/atom";
-import { Close, LogoInactive, Thumbnail } from "../assets";
-import { mini } from "../App";
+import { ViewerInfo } from "../../Shared/atom";
+import { Close, LogoInactive, More, Thumbnail } from "../../assets";
+import { mini } from "../../App";
+import { getPlaceSaved } from "../../api/place";
+import OrangePlaceBox from "../../Components/OrangePlaceBox";
+import MyPlaces from "./MyPlaces";
 
 const Tab = ({
   selectedTab,
@@ -51,8 +54,10 @@ const Tab = ({
 const Mypage = () => {
   const [selectedTab, setSelectedTab] = useState<"my" | "others">("my");
   const [isScrollUp, setIsScrollUp] = useState(false);
+  const [isMyPlacesOpened, setIsMyPlacesOpened] = useState(false);
 
   // 내 리스트
+  const [myPlaces, setMyPlaces] = useState<PlaceType[] | []>([]);
   const [myPosts, setMyPosts] = useState<PostType[] | []>([]);
   const [myPostsHasMore, setMyPostsHasMore] = useState(true);
   const [myPostPage, setMyPostPage] = useState(1);
@@ -61,10 +66,15 @@ const Mypage = () => {
     setMyPostPage(myPostPage + 1);
   };
   useEffect(() => {
+    const fetchMyPlaces = async () => {
+      const data = await getPlaceSaved();
+      setMyPlaces(data);
+    };
     const fetchMyPosts = async () => {
       const data = (
         await getMyPosts({
           page: myPostPage,
+          perPage: 10,
         })
       ).posts;
       if (data.length < 1) {
@@ -73,6 +83,7 @@ const Mypage = () => {
       }
       setMyPosts([...myPosts, ...data]);
     };
+    fetchMyPlaces();
     fetchMyPosts();
   }, [myPostPage]);
 
@@ -136,6 +147,26 @@ const Mypage = () => {
         </div>
       </Profile>
 
+      {myPlaces.length > 0 && (
+        <div className="all-places" onClick={() => setIsMyPlacesOpened(true)}>
+          <div className="title-wrapper">
+            <div style={{ width: "100%" }}>
+              <div className="title">
+                내가 저장한 <span>{myPlaces.length}</span>개 장소예요
+              </div>
+            </div>
+            <More className="more-icon" />
+          </div>
+          <div className="places">
+            {myPlaces.map((place) => (
+              <div key={place.placeId} className="place">
+                <OrangePlaceBox {...place} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <Tab {...{ selectedTab, setSelectedTab }} />
 
       <div id="collections">
@@ -183,6 +214,10 @@ const Mypage = () => {
       <CreateButton targetId="mypage-scroll" />
 
       <Footer />
+
+      {isMyPlacesOpened && (
+        <MyPlaces places={myPlaces} close={() => setIsMyPlacesOpened(false)} />
+      )}
     </Wrapper>
   );
 };
@@ -192,10 +227,59 @@ const Wrapper = styled.div<{ isScrollUp: boolean }>`
   overflow-y: scroll;
   position: relative;
   #collections {
-    margin-top: -2.5rem;
     padding-bottom: 8.6rem;
     & > div > div > div:not(:first-child) {
-      border-top: 0.6rem solid ${theme.color.gray1_5};
+      border-top: 0.1rem solid ${theme.color.gray1_7};
+    }
+  }
+  .all-places {
+    width: 100%;
+    padding: 3.6rem 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1.6rem solid ${theme.color.gray1_5};
+    .title-wrapper {
+      padding-left: 2rem;
+      width: 100%;
+      ${flexCenter};
+      justify-content: space-between;
+
+      .title {
+        max-width: 100%;
+        font-size: 1.6rem;
+        line-height: 120%;
+        font-weight: bold;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-right: 5rem;
+        box-sizing: border-box;
+        overflow: hidden;
+        span {
+          color: ${theme.color.orange};
+        }
+      }
+      .more-icon {
+        position: absolute;
+        right: 0;
+        fill: ${theme.color.gray6};
+      }
+    }
+
+    .places {
+      display: flex;
+      width: 100%;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      margin-top: 1.6rem;
+      padding-left: 2rem;
+      box-sizing: border-box;
+      ${gap("0.8rem")};
+      .place {
+        &:last-child {
+          padding-right: 2rem;
+        }
+      }
     }
   }
   .close-btn {
@@ -264,27 +348,28 @@ const Profile = styled.div`
 `;
 
 const TabWrapper = styled.div`
+  ${flexCenter};
   width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 2.5rem 1.6rem;
+  padding: 0 2rem;
+  padding-top: 1.9rem;
   box-sizing: border-box;
   ${gap("0.5rem")}
   position: sticky;
   top: 0;
   background-color: #fff;
   z-index: 10;
+  border-bottom: 0.1rem solid ${theme.color.gray1_7};
 `;
 
 const TabBtn = styled.div<{ $isSelected: boolean }>`
   font-size: 1.5rem;
   line-height: 120%;
-  padding: 1rem 1.2rem;
-  border-radius: 3rem;
+  padding: 1.7rem 2.9rem;
   color: ${({ $isSelected }) =>
-    $isSelected ? theme.color.white : theme.color.gray6};
+    $isSelected ? theme.color.black : theme.color.gray6};
+  border-bottom: ${({ $isSelected }) =>
+    `0.2rem solid ${$isSelected ? theme.color.gray7 : theme.color.white}`};
   font-weight: ${({ $isSelected }) => $isSelected && "bold"};
-  background-color: ${({ $isSelected }) => $isSelected && theme.color.orange};
 `;
 
 export default Mypage;
