@@ -102,11 +102,11 @@ export class PostController {
     @UseGuards(JwtAuthGuard)
     @Put('/pin')
     @ApiOkResponse({ description: '핀 추가 성공' })
-    @ApiQuery({ name: 'postId', example: '1,2,3,4,5', description: '핀 추가할 테마 Id' })
+    @ApiQuery({ name: 'postId', example: '[1, 2, 3]', description: '핀 추가할 테마 Id' })
     @ApiBody({ type: CreatePinDTO })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    async addPin(@Req() req: any, @Query('postId') postIds: string, @Body() pin: CreatePinDTO) {
-        const promise = postIds.split(',').map(async(postId) => {
+    async addPin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO) {
+        const promise = postIds.map(async(postId) => {
             return await this.postService.addPin(req.user.userId, Number(postId), pin);
         })
         await Promise.all(promise);
