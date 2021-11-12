@@ -51,6 +51,7 @@ export class PlaceRepository {
             params: {
                 query: query,
                 regionId: regionId,
+                regionRange: 'RANGE2',
                 page: page,
                 perPage: perPage
             }
