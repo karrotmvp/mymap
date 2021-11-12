@@ -226,7 +226,7 @@ export class PostService {
     private async savePinInPost(postId: number, pin: CreatePinDTO) {
         const newPin: Pin[] = await this.pinRepository.savePins([pin]);
         const post = await this.postRepository.findOne(postId, { relations: ['pins'] })
-        post.pins.push(...newPin)
+        post.pins ? post.pins.push(...newPin) : post.pins = newPin;
         await this.postRepository.save(post);
     }
 
@@ -245,13 +245,14 @@ export class PostService {
             relations: ['post'],
             where: { placeId: pin.placeId }
         })
+        console.log(pins)
         const includePinPosts: number[] = pins.map(pin => pin.post.getPostId());
-        const posts: Post[] = await this.postRepository.find({
+        const posts: Post[] = includePinPosts.length ? await this.postRepository.find({
             relations: ['user', 'pins'],
             where: (qb) => {
                 qb.where('Post__user.userId = :userId AND postId IN (:...postIds)', { userId: userId, postIds: includePinPosts })
             }
-        })
+        }) : [];
         const existIds: number[] = posts.map(post => post.getPostId());
         const saveIds: number[] = postIds.filter(x => !existIds.includes(x));
         const deleteIds: number[] = existIds.filter(x => !postIds.includes(x));

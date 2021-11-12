@@ -113,8 +113,8 @@ export class PostController {
     @ApiBody({ type: CreatePinDTO })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
     async handlePin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO) {
-        // await this.postService.handlePin(req.user.userId, postIds, pin);
-        await this.postService.handlePin(1, postIds, pin);
+        if (!postIds) postIds = [];
+        await this.postService.handlePin(req.user.userId, postIds, pin);
     }
 
     @UseGuards(JwtAuthGuard)
