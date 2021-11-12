@@ -73,13 +73,13 @@ export class PlaceController {
     @Post('admin/recommend')
     async createRecommendPlaces(@Req() req: any, @Body() places: CreateRecommendPlaceDTO[]) {
         await this.userService.checkAdmin(req.user.userId);
-        await this.placeService.createRecommendPlaces(places);
+        return await this.placeService.createRecommendPlaces(places);
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete('admin/recommend/:recommendId')
-    async deleteRecommendPlace(@Req() req: any, @Param('recommendId') recommendId: number) {
+    @Delete('admin/recommend/:placeId')
+    async deleteRecommendPlace(@Req() req: any, @Param('placeId') placeId: string) {
         await this.userService.checkAdmin(req.user.userId);
-        await this.placeService.deleteRecommendPlace(recommendId);
+        await this.placeService.deleteRecommendPlace(placeId);
     }
 }

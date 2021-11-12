@@ -32,10 +32,10 @@ export class Post {
     @Column({ nullable: true })
     private contents: string;
 
-    @Column()
+    @Column({ nullable: true })
     private regionId: string;
 
-    @Column()
+    @Column({ nullable: true })
     private regionName: string;
 
     @Column()
@@ -77,9 +77,11 @@ export class Post {
     public getUser(): User {
         return this.user;
     }
-    public updatePost(post: UpdatePostDTO, pins: Pin[]) {
+    public updatePost(post: UpdatePostDTO, pins: Pin[], regionName?: string) {
         this.title = post.title ? post.title : this.title;
         this.contents = post.contents ? post.contents : this.contents;
+        this.regionId = post.regionId ? post.regionId : this.regionId;
+        this.regionName = regionName ? regionName : this.regionName;
         this.share = post.share;
         this.pins = pins;
     }

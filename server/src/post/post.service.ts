@@ -37,7 +37,7 @@ export class PostService {
     async createPost(userId: number, post: CreatePostDTO) {
         const user: User = await this.userService.readUser(userId);
         const pins: Pin[] = post.pins ? await this.pinRepository.savePins(post.pins) : null;
-        const regionName: string = await this.regionService.readRegionName(post.regionId);
+        const regionName = post.regionId ? await this.regionService.readRegionName(post.regionId) : null;
         const newPost: Post = await this.postRepository.savePost(post, regionName, user, pins);
         this.eventEmitter.emit(MyMapEvent.POST_CREATED, new Event(newPost.getPostId(), null));
         return newPost;
@@ -48,8 +48,9 @@ export class PostService {
         if (!existPost) throw new BadRequestException();
         if (existPost.getUser().getUserId() !== userId) throw new NotAcceptableException();
         await this.pinRepository.deletePostPins(postId);
-        const pins: Pin[] = await this.pinRepository.savePins(post.pins);
-        return await this.postRepository.updatePost(postId, post, pins);
+        const pins: Pin[] = post.pins ? await this.pinRepository.savePins(post.pins) : null;
+        const regionName: string = post.regionId ? await this.regionService.readRegionName(post.regionId) : null;
+        return await this.postRepository.updatePost(postId, post, pins, regionName);
 }
 
     async readPostDetail(userId: number, postId: number): Promise<PostDTO> {
@@ -229,5 +230,14 @@ export class PostService {
         const newPin: Pin[] = await this.pinRepository.savePins([pin]);
         post.pushPin(newPin)
         await this.postRepository.save(post);
+    }
+
+    async readUserPostInfo(userId: number): Promise<Post[]> {
+        return await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId });
+            }
+        })
     }
 }

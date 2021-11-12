@@ -26,6 +26,12 @@ export class PostController {
     ) {}
 
     @UseGuards(JwtAuthGuard)
+    @Get('/')
+    async readPosts(@Req() req: any): Promise<PostEntity[]> {
+        return await this.postService.readUserPostInfo(req.user.userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get('/myPost')
     @ApiOkResponse({ description: '내 테마 불러오기 성공', type: FeedDTO })
     @ApiQuery({ name: 'page', example: 1 })
@@ -47,7 +53,7 @@ export class PostController {
     async readSavedPost(@Req() req: any, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10): Promise<FeedDTO> {
         this.logger.debug('userId : ', req.user.userId, ' page : ', page, ' perPage : ', perPage);
         if (page < 1 || perPage < 1) throw new BadRequestException();
-        this.eventEmitter.emit(MyMapEvent.USER_CREATED, new Event(req.user.userId, null))
+        this.eventEmitter.emit(MyMapEvent.POST_SAVELISTED, new Event(req.user.userId, null))
         return await this.postService.readSavedPost(req.user.userId, page, perPage);
     }
 

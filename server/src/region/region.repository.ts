@@ -74,4 +74,23 @@ export class RegionRepository {
             })
         )
     }
+
+    async findRealRegionId(regionId: string) {
+        const uri = this.configService.get('daangn.oapiuri') + 'regions/' + regionId;
+        return this.httpService.get(uri, {
+            headers: {
+                'X-Api-Key': this.configService.get('daangn.api_key')
+            }
+        }).pipe(
+            map((res) => {
+                const response = res.data?.data?.region
+                console.log(response);
+                if (!response) throw new BadRequestException();
+                return response.name3Id;
+            }),
+            catchError((err) => {
+                throw new BadRequestException();
+            })
+        )
+    }
 }

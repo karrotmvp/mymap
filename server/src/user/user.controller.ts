@@ -33,12 +33,13 @@ export class UserController {
     @ApiUnauthorizedResponse({ description: '인증 실패' })
     @ApiQuery({ name: 'code', type: String })
     async login(@Req() req: any, @Query('regionId') regionId: string): Promise<UserDTO> {
-        const user$ = req.user;
-        const user: CreateUserDTO = await lastValueFrom(user$);
+        const newUser$ = req.user;
+        const newUser: CreateUserDTO = await lastValueFrom(newUser$);
+        const user: CreateUserDTO = await this.userService.login(newUser, regionId);
         const token = await this.authService.generateToken(user);
         const regionName = await this.regionService.readRegionName(regionId);
         const userInfo: UserDTO = new UserDTO(user.getUserId(), user.getUserName(), user.getProfileImageUrl(), token, regionName);
-        this.eventEmitter.emit(MyMapEvent.USER_CREATED, new Event(user.getUserId(), regionName));
+        this.eventEmitter.emit(MyMapEvent.USER_LOGIN, new Event(user.getUserId(), regionName));
         this.logger.debug(user);
         this.logger.debug(token);
         return userInfo;

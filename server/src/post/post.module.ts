@@ -9,11 +9,12 @@ import { PlaceModule } from 'src/place/place.module';
 import { SavedPostRepository } from './savedPost.repository';
 import { RegionModule } from 'src/region/region.module';
 import { LoggerModule } from 'src/logger/logger.module';
+import { PostProcessor } from './post.processor';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PostRepository, PinRepository, SavedPostRepository]), UserModule, forwardRef(() => PlaceModule), RegionModule, LoggerModule],
   providers: [PostService],
-  controllers: [PostController],
+  controllers: process.env.WORKER === 'true' ? [PostController, PostProcessor] : [PostController],
   exports: [PostService]
 })
 export class PostModule {}

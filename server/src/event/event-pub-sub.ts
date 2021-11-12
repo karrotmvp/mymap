@@ -7,6 +7,7 @@ import { Event } from './event';
 
 export const MyMapEvent = {
     USER_CREATED: 'user.created',
+    USER_LOGIN: 'user.login',
     POST_CREATED: 'post.created',
     POST_SAVED: 'post.saved',
     POST_READED: 'post.readed',
@@ -34,6 +35,10 @@ export class EventPubSub {
     async handleUserCreatedEvent(event: Event) {
         this.mymapServiceClient.emit(MyMapEvent.USER_CREATED, event);
         // await this.userQueue.add('user_created', event);
+    }
+    @OnEvent(MyMapEvent.USER_LOGIN)
+    async handdleUserLoginEvent(event: Event) {
+        this.mymapServiceClient.emit(MyMapEvent.USER_LOGIN, event);
     }
 
     //post
