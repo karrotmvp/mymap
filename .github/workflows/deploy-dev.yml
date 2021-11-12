@@ -21,6 +21,7 @@ jobs:
       client-directory: ./client
       server-directory: ./server
       admin-directory: ./admin
+      IMAGE_TAG: ${{ github.sha }}
 
     strategy:
       matrix:
@@ -97,7 +98,7 @@ jobs:
         working-directory: ${{ env.admin-directory }}
 
       - name: S3 Upload
-        run: aws deploy push --application-name mymap-dev-deploy --description "mymap dev server deploy" --s3-location s3://mymapdeploy/deploy_dev.zip --source .
+        run: aws deploy push --application-name mymap-dev-deploy --description "mymap dev server deploy" --s3-location s3://mymapdeploy/deploy_dev_$IMAGE_TAG.zip --source .
 
       - name: code deploy
-        run: aws deploy create-deployment --application-name mymap-dev-deploy --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name mymap-dev --s3-location bucket=mymapdeploy,bundleType=zip,key=deploy_dev.zip
+        run: aws deploy create-deployment --application-name mymap-dev-deploy --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name mymap-dev --s3-location bucket=mymapdeploy,bundleType=zip,key=deploy_dev_$IMAGE_TAG.zip

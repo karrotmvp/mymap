@@ -20,6 +20,7 @@ jobs:
     env:
       client-directory: ./client
       server-directory: ./server
+      IMAGE_TAG: ${{ github.sha }}
 
     strategy:
       matrix:
@@ -79,7 +80,7 @@ jobs:
       #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       #     find ./ -name "*docker-compose.*.yml" -exec perl -pi -e "s/tagname/$IMAGE_TAG/g" {} \;
       - name: S3 Upload
-        run: aws deploy push --application-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy.zip --source .
+        run: aws deploy push --application-name mymap-deploy --description "mymap server deploy" --s3-location s3://mymapdeploy/deploy_$IMAGE_TAG.zip --source .
 
       - name: code deploy
-        run: aws deploy create-deployment --application-name mymap-deploy --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name server --s3-location bucket=mymapdeploy,bundleType=zip,key=deploy.zip
+        run: aws deploy create-deployment --application-name mymap-deploy --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name server --s3-location bucket=mymapdeploy,bundleType=zip,key=deploy_$IMAGE_TAG.zip
