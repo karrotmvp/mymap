@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PlaceType } from "../Shared/type";
-import { WrapperWithHeader } from "../styles/theme";
 import MapView, { Pin } from "./MapView";
 import PinSlider from "./PinSlider";
 
@@ -42,6 +41,7 @@ const MapViewwithSlider = ({ places }: { places: PlaceType[] }) => {
   return (
     <Wrapper>
       <MapView
+        mapId="map-view-with-slider"
         height="100vh"
         pins={_pins}
         {...{ center, setCenter, handleSelectPin }}

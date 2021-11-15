@@ -1,6 +1,7 @@
 import { RenderAfterNavermapsLoaded, NaverMap, Marker } from "react-naver-maps";
 
 interface MapViewProps {
+  mapId: string;
   width?: string;
   height?: string;
   pins?: Pin[];
@@ -26,6 +27,7 @@ export interface Pin {
 }
 
 const MapView = ({
+  mapId,
   width,
   height,
   pins,
@@ -43,7 +45,7 @@ const MapView = ({
       loading={<div />}
     >
       <NaverMap
-        mapDivId={"react-naver-map"}
+        id={mapId}
         style={{
           width: width ?? "100%",
           height: height ?? "230px",

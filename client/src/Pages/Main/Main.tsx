@@ -139,6 +139,7 @@ const Main = () => {
 
       <div onClick={() => setIsMapShown(true)}>
         <MapView
+          mapId="main"
           height="100vh"
           pins={feedPins}
           handleSelectPin={handleSelectPin}
