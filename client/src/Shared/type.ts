@@ -31,6 +31,7 @@ export interface PinType {
   pinId: number;
   review: string;
   place: PlaceType;
+  placeId?: string;
 }
 
 export interface PlaceType {
