@@ -30,15 +30,16 @@ export class PostProcessor {
 @Processor('post')
 export class DefaultPostProcessor {
     constructor(
-        private readonly userService: UserService,
         private readonly postService: PostService
     ) {}
 
     @Process('defaultPost_created')
     async createDefaultPost(job: Job<Event>) {
         const userId: number = job.data._id;
-        const user: User = await this.userService.readUser(userId);
-        
+        const newPost = new CreatePostDTO();
+        newPost.title = "기본 테마";
+        newPost.share = false;
+        await this.postService.createPost(userId, newPost);
     }
 
 }
