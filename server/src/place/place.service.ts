@@ -82,7 +82,7 @@ export class PlaceService {
     }
 
     async readRecommendPlacesRandom(regionId: string, seed: number, perPage: number, page: number): Promise<RegionPlaceDTO> {
-        const regions = await this.regionService.readNeighborRegion(regionId);
+        const regions = await this.regionService.readNeighborRegion(regionId, 'RANGE2');
         const rec_places: string[] = await this.recommendPlaceRepository.findWithRegionId(regions, seed, perPage, page);
         const places: PlaceDTO[] = await this.readPlaces(rec_places);
         const coordinates = new CoordinatesDTO();
@@ -117,7 +117,7 @@ export class PlaceService {
     }
 
     async countRecommendPlacesByRegion(regionId: string) {
-        const regionIds: string[] = await this.regionService.readNeighborRegion(regionId);
+        const regionIds: string[] = await this.regionService.readNeighborRegion(regionId, 'RANGE2');
         const num: number = await this.recommendPlaceRepository.count({
             where: (qb) => {
                 qb.where('regionId IN (:...regionId)', { regionId: regionIds })
