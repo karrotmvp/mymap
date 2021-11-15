@@ -142,10 +142,6 @@ const Mypage = () => {
     return () => targetElement.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    console.log(isSavedPlacesLoading);
-  }, [isSavedPlacesLoading]);
-
   return (
     <Wrapper id="mypage-scroll" {...{ isScrollUp }}>
       {isScrollUp && (
@@ -386,8 +382,10 @@ const TabWrapper = styled.div`
 
 const TabBtn = styled.div<{ $isSelected: boolean }>`
   font-size: 1.5rem;
+  width: 100%;
   line-height: 120%;
   padding: 1.7rem 2.9rem;
+  text-align: center;
   color: ${({ $isSelected }) =>
     $isSelected ? theme.color.black : theme.color.gray6};
   border-bottom: ${({ $isSelected }) =>
