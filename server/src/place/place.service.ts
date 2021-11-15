@@ -115,4 +115,14 @@ export class PlaceService {
         const recommend = await this.recommendPlaceRepository.findOne({ where: { placeId: placeId }});
         await this.recommendPlaceRepository.softRemove(recommend);
     }
+
+    async countRecommendPlacesByRegion(regionId: string) {
+        const regionIds: string[] = await this.regionService.readNeighborRegion(regionId);
+        const num: number = await this.recommendPlaceRepository.count({
+            where: (qb) => {
+                qb.where('regionId IN (:...regionId)', { regionId: regionIds })
+            }
+        })
+        return num;
+    }
 }

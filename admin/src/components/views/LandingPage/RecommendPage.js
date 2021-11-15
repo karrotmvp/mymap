@@ -8,6 +8,12 @@ function RecommendPage(props) {
     const [PlaceName, setPlaceName] = useState("");
     const [SearchResult, setSearchResult] = useState([]);
     const [Places, setPlaces] = useState([]);
+    const [Page, setPage] = useState(0);
+    const [Numbers, setNumbers] = useState({
+        "서초동": 0,
+        "한남동": 0,
+        "잠실동": 0
+    })
     
     const regionList = {
         "서초동": "471abc99b378",
@@ -20,10 +26,13 @@ function RecommendPage(props) {
         axios.get(process.env.REACT_APP_SERVER + 'place/admin/recommend', {
             headers: {
                 authorization: 'Bearer ' + localStorage.getItem('token')
+            },
+            params: {
+                page: Page
             }
         })
         .then(res => {
-            setPlaces(res.data)
+            setPlaces(Places => [...Places, ...res.data])
         })
         .catch(e => {
             if (e.response.status === 401) {
@@ -32,7 +41,40 @@ function RecommendPage(props) {
                 alert('불러오기 실패')
             }
         })
-    }, [props.history])
+
+        axios.get(process.env.REACT_APP_SERVER + 'place/admin/recommend/region', {
+            headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then(res => {
+            setNumbers(res.data);
+        })
+        .catch(e => {
+            if (e.response.status === 401) {
+                props.history.push('/login')
+            } else {
+                alert('불러오기 실패')
+            }
+        })
+    }, [props.history, Page])
+
+    const infiniteScroll = () => {
+        let scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
+        let scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+        let clientHeight = document.documentElement.clientHeight;
+        
+        if (scrollTop + clientHeight === scrollHeight) {
+            setPage(Page+1)
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('scroll', infiniteScroll)
+        return () => {
+            window.removeEventListener('scroll', infiniteScroll)
+        }
+    })
     
     const onChangeHandler = (e) => {
         setPlaceName(e.target.value)
@@ -73,6 +115,9 @@ function RecommendPage(props) {
         })
         .then(res => {
             setPlaces([...res.data, ...Places])
+            const key = Object.keys(regionList).find(key => regionList[key] === Region);
+            Numbers[key] += 1;
+            setNumbers({...Numbers})
         })
         .catch(e => {
             if (e.response.status === 401) {
@@ -143,6 +188,9 @@ function RecommendPage(props) {
             </div>
             <div className="theme_container" id="list">
                 <h1>추천 장소 리스트</h1>
+                <span style={{ padding: "1rem" }}>서초동 : {Numbers.서초동}</span>
+                <span style={{ padding: "1rem" }}>잠실동 : {Numbers.잠실동}</span>
+                <span style={{ padding: "1rem" }}>한남동 : {Numbers.한남동}</span>
                 <div className="theme">
                         <div>placeId</div>
                         <div>이름</div>
