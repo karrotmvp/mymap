@@ -7,8 +7,8 @@ import { RegionRepository } from './region.repository';
 export class RegionService {
     constructor(private readonly regionRepository: RegionRepository) {}
     
-    async readNeighborRegion(regionId: string): Promise<string[]> {
-        const regionIds$ = await this.regionRepository.findNeighborRegion(regionId);
+    async readNeighborRegion(regionId: string, range: string): Promise<string[]> {
+        const regionIds$ = await this.regionRepository.findNeighborRegion(regionId, range);
         const regionIds = await lastValueFrom(regionIds$);
         return regionIds;
     }

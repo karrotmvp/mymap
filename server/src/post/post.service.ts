@@ -140,7 +140,7 @@ export class PostService {
     }
 
     async readRegionPost(userId: number, regionId: string, start: number, end: number, perPage: number) {
-        const regions: string[] = await this.regionService.readNeighborRegion(regionId);
+        const regions: string[] = await this.regionService.readNeighborRegion(regionId, 'MY');
         const posts: Post[] = await this.postRepository.findWithRegionId(regions, start, end, perPage);
         return await this.readPostList(userId, posts);
     }
@@ -269,7 +269,7 @@ export class PostService {
     }
 
     async readUserPostInfo(userId: number, regionId: string): Promise<Post[]> {
-        const regionIds: string[] = await this.regionService.readNeighborRegion(regionId);
+        const regionIds: string[] = await this.regionService.readNeighborRegion(regionId, 'MY');
         const posts: Post[] = await this.postRepository.find({
             relations: ['user', 'pins'],
             where: (qb) => {

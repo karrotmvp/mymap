@@ -11,14 +11,14 @@ export class RegionRepository {
         private readonly configService: ConfigService
         ) {}
 
-    async findNeighborRegion (regionId: string) {
+    async findNeighborRegion (regionId: string, range: string) {
         const uri = this.configService.get('daangn.oapiuri') + 'regions/' + regionId + '/neighbor_regions';
         return this.httpService.get(uri, {
             headers: {
                 'X-Api-Key': this.configService.get('daangn.api_key')
             },
             params: {
-                range: 'ADJACENT'
+                range: range
             }
         }).pipe(
             map((res) => {
