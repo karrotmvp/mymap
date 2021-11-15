@@ -3,7 +3,7 @@ import { useEffect, useReducer, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { match } from "ts-pattern";
-import { getMyPostNames, postPost, putPostPin } from "../../api/post";
+import { getMyAllPosts, postPost, putPostPin } from "../../api/post";
 import {
   LockAround,
   PlacePlus,
@@ -39,7 +39,7 @@ const SaveModal = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const data = await getMyPostNames();
+      const data = await getMyAllPosts(regionId);
       setPosts(data.posts);
       // 이미 포함된 테마들 세팅
       data.posts.forEach((post) => {
@@ -107,7 +107,7 @@ const SaveModal = () => {
       try {
         if (data.postId) {
           newThemeValue.setValue("");
-          const data = await getMyPostNames();
+          const data = await getMyAllPosts(regionId);
           setPosts(data.posts);
         }
       } finally {

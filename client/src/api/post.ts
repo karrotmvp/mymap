@@ -66,9 +66,9 @@ export const getMyPosts = async (params: PaginationParams = {}) => {
   return (await GET("api/post/mypost", params)) as FeedType;
 };
 
-// 내가 쓴 리스트 제목만
-export const getMyPostNames = async () => {
-  return (await GET("api/post/mypost")) as FeedType;
+// 내가 쓴 리스트 전체
+export const getMyAllPosts = async (regionId: string) => {
+  return (await GET("api/post/mypost/info", { regionId })) as FeedType;
 };
 
 // 장소 저장
