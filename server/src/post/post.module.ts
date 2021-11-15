@@ -9,7 +9,7 @@ import { PlaceModule } from 'src/place/place.module';
 import { SavedPostRepository } from './savedPost.repository';
 import { RegionModule } from 'src/region/region.module';
 import { LoggerModule } from 'src/logger/logger.module';
-import { PostProcessor } from './post.processor';
+import { DefaultPostProcessor, PostProcessor } from './post.processor';
 import { BullModule } from '@nestjs/bull';
 
 @Module({
@@ -22,7 +22,7 @@ import { BullModule } from '@nestjs/bull';
     BullModule.registerQueue({ name: 'post' })  
   ],
   providers: [PostService],
-  controllers: process.env.WORKER === 'true' ? [PostController, PostProcessor] : [PostController],
+  controllers: process.env.WORKER === 'true' ? [PostController, PostProcessor, DefaultPostProcessor] : [PostController],
   exports: [PostService]
 })
 export class PostModule {}
