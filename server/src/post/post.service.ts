@@ -1,4 +1,6 @@
+import { InjectQueue } from '@nestjs/bull';
 import { BadRequestException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { Queue } from 'bull';
 import { EventEmitter2 } from 'eventemitter2';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
@@ -31,7 +33,8 @@ export class PostService {
         private readonly placeService: PlaceService,
         private readonly savedPostRepository: SavedPostRepository,
         private readonly regionService: RegionService,
-        private readonly eventEmitter: EventEmitter2
+        private readonly eventEmitter: EventEmitter2,
+        @InjectQueue('post') private postQueue: Queue
     ) {}
 
     async createPost(userId: number, post: CreatePostDTO) {
@@ -271,5 +274,9 @@ export class PostService {
             order: { createdAt: 'DESC' }
         })
         return posts;
+    }
+
+    async createDefaultPost(end: number) {
+        // const userIds: number[] = 
     }
 }

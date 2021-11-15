@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Q
 import { ApiBody, ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { EventEmitter2 } from 'eventemitter2';
 import { catchError } from 'rxjs';
+import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
@@ -150,6 +151,11 @@ export class PostController {
         await this.postService.deleteSavedPost(req.user.userId, postId);
     }
 
+    @UseGuards(ApiKeyAuthGuard)
+    @Post('/admin/default')
+    async createDefaultPost(@Query('end') end: number) {
+        await this.postService.createDefaultPost(end);
+    }
     
 
 }
