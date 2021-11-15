@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { getMyPosts, getSavedPosts } from "../../api/post";
 import Collection from "../../Components/Collection";
@@ -100,21 +106,23 @@ const Mypage = () => {
   const handleSavedPostNext = () => {
     setSavedPostPage(savedPostPage + 1);
   };
+
+  const fetchSavedPosts = useCallback(async () => {
+    setIsSavedPlacesLoading(true);
+    const data = (
+      await getSavedPosts({
+        page: savedPostPage,
+      })
+    ).posts;
+    if (data.length < 1) {
+      setSavedPostsHasMore(false);
+      return;
+    }
+    setIsSavedPlacesLoading(false);
+    setSavedPosts([...savedPosts, ...data]);
+  }, []);
+
   useEffect(() => {
-    const fetchSavedPosts = async () => {
-      setIsSavedPlacesLoading(true);
-      const data = (
-        await getSavedPosts({
-          page: savedPostPage,
-        })
-      ).posts;
-      if (data.length < 1) {
-        setSavedPostsHasMore(false);
-        return;
-      }
-      setIsSavedPlacesLoading(false);
-      setSavedPosts([...savedPosts, ...data]);
-    };
     fetchSavedPosts();
   }, [savedPostPage]);
 
@@ -186,7 +194,7 @@ const Mypage = () => {
               scrollableTarget="mypage-scroll"
             >
               {myPosts.map((post) => (
-                <Collection key={post.postId} {...post} />
+                <Collection key={post.postId} {...{ post }} />
               ))}
             </InfiniteScroll>
           ) : (
@@ -207,7 +215,7 @@ const Mypage = () => {
             scrollableTarget="mypage-scroll"
           >
             {savedPosts.map((post, i) => (
-              <Collection key={i} {...post} />
+              <Collection key={i} {...{ post, fetchSavedPosts }} />
             ))}
           </InfiniteScroll>
         ) : (

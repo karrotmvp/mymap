@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouteMatch } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
@@ -10,11 +11,15 @@ import { flexCenter, gap, theme } from "../../styles/theme";
 
 interface SaveFooterInterface {
   post: PostType;
+  fetchSavedPosts?: () => Promise<void>;
 }
-const SaveFooter = ({ post }: SaveFooterInterface) => {
+const SaveFooter = ({ post, fetchSavedPosts }: SaveFooterInterface) => {
   const [isSaved, setIsSaved] = useState<boolean>(post.saved);
   const [savedNum, setSavedNum] = useState<number>(post.savedNum);
   const viewerInfo = useRecoilValue(ViewerInfo);
+  const isMypage = useRouteMatch({
+    path: "/mypage",
+  })?.isExact;
 
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);
@@ -27,6 +32,9 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
     }
     // 저장 취소
     else {
+      if (isMypage && fetchSavedPosts) {
+        await fetchSavedPosts();
+      }
       await deleteSavedPost(post.postId);
       if (post.saved || savedNum - post.savedNum === 1)
         setSavedNum(savedNum - 1);
