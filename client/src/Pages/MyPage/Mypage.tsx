@@ -79,18 +79,21 @@ const Mypage = () => {
     };
     const fetchMyPosts = async () => {
       setIsMyPlacesLoading(true);
-      const data = (
-        await getMyPosts({
-          page: myPostPage,
-          perPage: 10,
-        })
-      ).posts;
-      if (data.length < 1) {
-        setMyPostsHasMore(false);
-        return;
+      try {
+        const data = (
+          await getMyPosts({
+            page: myPostPage,
+            perPage: 10,
+          })
+        ).posts;
+        if (data.length < 1) {
+          setMyPostsHasMore(false);
+          return;
+        }
+        setMyPosts([...myPosts, ...data]);
+      } finally {
+        setIsMyPlacesLoading(false);
       }
-      setIsMyPlacesLoading(false);
-      setMyPosts([...myPosts, ...data]);
     };
     fetchMyPlaces();
     fetchMyPosts();
@@ -109,17 +112,20 @@ const Mypage = () => {
 
   const fetchSavedPosts = useCallback(async () => {
     setIsSavedPlacesLoading(true);
-    const data = (
-      await getSavedPosts({
-        page: savedPostPage,
-      })
-    ).posts;
-    if (data.length < 1) {
-      setSavedPostsHasMore(false);
-      return;
+    try {
+      const data = (
+        await getSavedPosts({
+          page: savedPostPage,
+        })
+      ).posts;
+      if (data.length < 1) {
+        setSavedPostsHasMore(false);
+        return;
+      }
+      setSavedPosts([...savedPosts, ...data]);
+    } finally {
+      setIsSavedPlacesLoading(false);
     }
-    setIsSavedPlacesLoading(false);
-    setSavedPosts([...savedPosts, ...data]);
   }, []);
 
   useEffect(() => {
@@ -135,6 +141,10 @@ const Mypage = () => {
     targetElement.addEventListener("scroll", onScroll);
     return () => targetElement.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    console.log(isSavedPlacesLoading);
+  }, [isSavedPlacesLoading]);
 
   return (
     <Wrapper id="mypage-scroll" {...{ isScrollUp }}>
@@ -243,8 +253,8 @@ const Mypage = () => {
 const Wrapper = styled.div<{ isScrollUp: boolean }>`
   ${WrapperWithHeaderFooter};
   overflow-y: scroll;
-  position: relative;
   #collections {
+    position: relative;
     padding-bottom: 8.6rem;
     & > div > div > div:not(:first-child) {
       border-top: 0.1rem solid ${theme.color.gray1_7};
@@ -309,13 +319,7 @@ const Wrapper = styled.div<{ isScrollUp: boolean }>`
     z-index: 100;
   }
   .empty {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    width: 100%;
-    height: 100vh;
-    padding-top: 7rem;
+    padding-top: 5rem;
     box-sizing: border-box;
     ${flexCenter};
     flex-direction: column;
