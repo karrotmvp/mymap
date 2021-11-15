@@ -25,7 +25,12 @@ import {
 } from "../../styles/theme";
 import dayjs from "dayjs";
 import { useRecoilStateLoadable, useRecoilValue } from "recoil";
-import { ViewerInfo, postDetailAtom, PageBeforeWrite } from "../../Shared/atom";
+import {
+  ViewerInfo,
+  postDetailAtom,
+  PageBeforeWrite,
+  RegionId,
+} from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
@@ -53,6 +58,7 @@ const Detail = () => {
   });
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
+  const regionId = useRecoilValue(RegionId);
 
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
 
@@ -197,24 +203,39 @@ const Detail = () => {
         ))
         .exhaustive()}
 
-      {isEditModalOpened && (
-        <Modal>
-          <div
-            className="background"
-            onClick={() => setIsEditModalOpened(false)}
-          />
-          <div className="modal">
-            <Link to={`/edit/${postId}`} className="button">
-              <Edit />
-              수정하기
-            </Link>
-            <div onClick={onDeleteClick} className="button">
-              <Delete className="delete-icon" />
-              삭제하기
+      {isEditModalOpened &&
+        (post.contents.regionId !== regionId ? (
+          <Alert
+            close={() => setIsEditModalOpened(false)}
+            title="작성한 동네가 아니예요."
+            sub={`작성한 동네에서만 수정할 수 있어요.
+${post.contents.regionName}에 인증해 주세요.`}
+          >
+            <Button
+              className="orange"
+              onClick={() => setIsEditModalOpened(false)}
+            >
+              확인
+            </Button>
+          </Alert>
+        ) : (
+          <Modal>
+            <div
+              className="background"
+              onClick={() => setIsEditModalOpened(false)}
+            />
+            <div className="modal">
+              <Link to={`/edit/${postId}`} className="button">
+                <Edit />
+                수정하기
+              </Link>
+              <div onClick={onDeleteClick} className="button">
+                <Delete className="delete-icon" />
+                삭제하기
+              </div>
             </div>
-          </div>
-        </Modal>
-      )}
+          </Modal>
+        ))}
       {isDeleteAlertOpened && (
         <Alert
           close={() => setIsDeleteAlertOpened(false)}

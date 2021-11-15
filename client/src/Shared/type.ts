@@ -48,7 +48,7 @@ export interface PlaceType {
   category: string[];
   thumbnail: ImageType | null;
   images: ImageType[];
-  saved: number;
+  savedNum: number;
 }
 
 export interface ImageType {

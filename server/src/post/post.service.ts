@@ -1,4 +1,6 @@
+import { InjectQueue } from '@nestjs/bull';
 import { BadRequestException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { Queue } from 'bull';
 import { EventEmitter2 } from 'eventemitter2';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
@@ -31,7 +33,8 @@ export class PostService {
         private readonly placeService: PlaceService,
         private readonly savedPostRepository: SavedPostRepository,
         private readonly regionService: RegionService,
-        private readonly eventEmitter: EventEmitter2
+        private readonly eventEmitter: EventEmitter2,
+        @InjectQueue('post') private postQueue: Queue
     ) {}
 
     async createPost(userId: number, post: CreatePostDTO) {
@@ -261,14 +264,19 @@ export class PostService {
         await Promise.all(deleteIds.map(async(deleteId) => await this.deletePinInPost(deleteId, pin)));
     }
 
-    async readUserPostInfo(userId: number): Promise<Post[]> {
+    async readUserPostInfo(userId: number, regionId: string): Promise<Post[]> {
+        const regionIds: string[] = await this.regionService.readNeighborRegion(regionId);
         const posts: Post[] = await this.postRepository.find({
             relations: ['user', 'pins'],
             where: (qb) => {
-                qb.where('Post__user.userId = :userId', { userId: userId });
+                qb.where('Post__user.userId = :userId AND regionId IN (:...regionId)', { userId: userId, regionId: regionIds });
             },
             order: { createdAt: 'DESC' }
         })
         return posts;
+    }
+
+    async createDefaultPost(end: number) {
+        // const userIds: number[] = 
     }
 }

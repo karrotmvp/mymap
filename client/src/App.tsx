@@ -16,20 +16,23 @@ import ClosePage from "./Pages/ClosePage";
 import Onboarding from "./Pages/Onboarding";
 import Analytics from "react-router-ga";
 import { Mixpanel } from "./utils/mixpanel";
-import { Close, Loading1, Loading2 } from "./assets";
+import { Close, Loading1, Loading2, LogoInactive } from "./assets";
 import styled from "styled-components";
-import { flexCenter } from "./styles/theme";
+import { flexCenter, theme } from "./styles/theme";
 import SearchPlace from "./Pages/Write/SearchPlace";
 import Header from "./Components/Header";
 import mixpanel from "mixpanel-browser";
 import SaveModal from "./Components/PlaceCard/SaveModal";
+import { regions } from "./utils/const";
 
 dayjs.locale("ko");
 
 export const mini = new Mini();
 
 const preload = new URLSearchParams(window.location.search).get("preload");
-const regionId = new URLSearchParams(window.location.search).get("region_id");
+let regionId = new URLSearchParams(window.location.search).get("region_id");
+// 교보타워일 경우 서초동으로
+if (regionId === "2b6112932ec1") regionId = "471abc99b378";
 const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {
@@ -40,7 +43,7 @@ function App() {
 
   // 로그인 및 내 정보 저장
   const [viewerInfo, setViewerInfo] = useRecoilState(ViewerInfo);
-  const getMyInfo = useCallback(async (code: string, regionId: string) => {
+  const getViewerInfo = useCallback(async (code: string, regionId: string) => {
     const data = await getLogin(code, regionId);
     setViewerInfo({
       userId: data.userId,
@@ -56,15 +59,17 @@ function App() {
     if (process.env.NODE_ENV === "development") {
       setViewerInfo({
         userId: 1,
-        userName: "team1test",
-        regionName: "역삼 1동",
+        userName: "단민",
+        regionName: "역삼1동",
         profileImageUrl: "",
       });
+      setRegionId("6530459d189b");
+      // setRegionId("471abc99b378");
     } else if (!preload) {
       setRegionId(regionId as string);
       if (code) {
         mixpanel.track("기존 유저 로그인");
-        getMyInfo(code, regionId as string);
+        getViewerInfo(code, regionId as string);
       } else {
         mini.startPreset({
           preset: process.env.REACT_APP_LOGIN as string,
@@ -74,7 +79,7 @@ function App() {
           onSuccess: function (result) {
             if (result && result.code) {
               mixpanel.track("새로운 유저 로그인");
-              getMyInfo(result.code, regionId as string);
+              getViewerInfo(result.code, regionId as string);
             }
           },
         });
@@ -92,6 +97,28 @@ function App() {
       }, 1000);
     }
   }, [toastMessage.isToastShown]);
+
+  // 미오픈 지역
+  if (
+    !regions.find((region) => region === regionId) &&
+    process.env.NODE_ENV !== "development"
+  ) {
+    return (
+      <Wrapper>
+        <Header>
+          <Close onClick={() => mini.close()} className="left-icon" />
+        </Header>
+        <div className="center">
+          <LogoInactive />
+          <div>
+            <span>{viewerInfo.regionName}</span>
+            {`의 당장모아는
+오픈 준비 중이에요.`}
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
 
   return (
     <Router>
@@ -145,11 +172,24 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   .center {
     ${flexCenter};
+    flex-direction: column;
     top: 0;
     left: 0;
     position: fixed;
     width: 100%;
     height: 100vh;
+    & > div {
+      margin-top: 2.2rem;
+      font-weight: bold;
+      font-size: 1.9rem;
+      line-height: 150%;
+      text-align: center;
+      letter-spacing: -2%;
+      white-space: pre-line;
+      span {
+        color: ${theme.color.orange};
+      }
+    }
   }
 `;
 

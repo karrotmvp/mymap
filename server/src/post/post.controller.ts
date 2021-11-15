@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Q
 import { ApiBody, ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { EventEmitter2 } from 'eventemitter2';
 import { catchError } from 'rxjs';
+import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
@@ -29,8 +30,8 @@ export class PostController {
     @Get('/myPost/info')
     @ApiOkResponse({ description: '내 테마 정보 불러오기 성공', type: [PostEntity] })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    async readMyPostInfo(@Req() req: any): Promise<PostEntity[]> {
-        return await this.postService.readUserPostInfo(req.user.userId);
+    async readMyPostInfo(@Req() req: any, @Query('regionId') regionId: string): Promise<PostEntity[]> {
+        return await this.postService.readUserPostInfo(req.user.userId, regionId);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -150,6 +151,11 @@ export class PostController {
         await this.postService.deleteSavedPost(req.user.userId, postId);
     }
 
+    @UseGuards(ApiKeyAuthGuard)
+    @Post('/admin/default')
+    async createDefaultPost(@Query('end') end: number) {
+        await this.postService.createDefaultPost(end);
+    }
     
 
 }

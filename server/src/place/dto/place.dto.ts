@@ -51,7 +51,7 @@ export class PlaceDTO {
       }})
     images: object;
     @ApiProperty({ example: 0 })
-    saved: number;
+    savedNum: number;
 
     private phoneNumberConvert(phone: string): string {
       if (!phone) return;

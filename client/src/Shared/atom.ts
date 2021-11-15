@@ -6,7 +6,7 @@ import { UserType, PlaceType, PostType } from "./type";
 
 export const RegionId = atom({
   key: "region_id",
-  default: "6530459d189b",
+  default: "",
 });
 
 export const ViewerInfo = atom<UserType>({

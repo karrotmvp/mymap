@@ -34,7 +34,7 @@ const MainSlide = ({
 
           <div className="collections">
             {posts.map((post) => (
-              <Collection key={post.postId} {...post} />
+              <Collection key={post.postId} {...{ post }} />
             ))}
           </div>
         </div>

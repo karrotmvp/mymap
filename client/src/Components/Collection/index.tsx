@@ -8,7 +8,12 @@ import { flexCenter, gap, theme } from "../../styles/theme";
 import OrangePlaceBox from "../OrangePlaceBox";
 import SaveFooter from "./SaveFooter";
 
-const Collection = (post: PostType) => {
+interface CollectionProps {
+  post: PostType;
+  fetchSavedPosts?: () => Promise<void>;
+}
+
+const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
   const history = useHistory();
   const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
 
@@ -47,7 +52,7 @@ const Collection = (post: PostType) => {
           </EmptyOrangePlaceBox>
         )}
       </div>
-      <SaveFooter {...{ post }} />
+      <SaveFooter {...{ post, fetchSavedPosts }} />
     </Wrapper>
   );
 };
