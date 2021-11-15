@@ -137,12 +137,12 @@ const SaveModal = () => {
 
         <div className="list">
           <Theme
-            onClick={() =>
+            onClick={() => {
               dispatch({
                 _t: "MAKE",
-                isLocked: false,
-              })
-            }
+                isLocked: state.isLocked,
+              });
+            }}
             disabled={state._t === "theme"}
           >
             {match(state._t)
