@@ -10,9 +10,17 @@ import { SavedPostRepository } from './savedPost.repository';
 import { RegionModule } from 'src/region/region.module';
 import { LoggerModule } from 'src/logger/logger.module';
 import { PostProcessor } from './post.processor';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PostRepository, PinRepository, SavedPostRepository]), UserModule, forwardRef(() => PlaceModule), RegionModule, LoggerModule],
+  imports: [
+    TypeOrmModule.forFeature([PostRepository, PinRepository, SavedPostRepository]),
+    UserModule,
+    forwardRef(() => PlaceModule),
+    RegionModule,
+    LoggerModule,
+    BullModule.registerQueue({ name: 'post' })  
+  ],
   providers: [PostService],
   controllers: process.env.WORKER === 'true' ? [PostController, PostProcessor] : [PostController],
   exports: [PostService]
