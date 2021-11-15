@@ -90,14 +90,14 @@ const Wrapper = styled.div`
     display: flex;
     left: 0;
     right: 0;
-    bottom: 7.6rem;
+    bottom: 7.4rem;
   }
 `;
 
 const AddBtn = styled(Button)`
   position: fixed;
   width: 32rem;
-  bottom: 1.4rem;
+  bottom: 1.8rem;
   .add-icon {
     position: absolute;
     top: 0;

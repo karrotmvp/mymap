@@ -50,7 +50,7 @@ const MapView = ({
           transition: "0.3s",
         }}
         defaultZoom={14}
-        center={center}
+        center={center ?? { lat: 37.3595704, lng: 127.105399 }}
       >
         {pins?.map((pin, i) => (
           <Marker

@@ -242,7 +242,12 @@ ${post.contents.regionName}에 인증해 주세요.`}
           title="작성한 테마를 삭제하시겠어요?"
           sub="삭제한 테마는 다시 볼 수 없어요."
         >
-          <Button onClick={() => setIsDeleteAlertOpened(false)}>취소</Button>
+          <Button
+            className="white"
+            onClick={() => setIsDeleteAlertOpened(false)}
+          >
+            취소
+          </Button>
           <Button onClick={onDeleteConfirmClick}>삭제</Button>
         </Alert>
       )}

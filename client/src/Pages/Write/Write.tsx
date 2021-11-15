@@ -209,23 +209,24 @@ const Write = () => {
       <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
 
       {/* 추가된 장소들 */}
-      {places?.map((place) => (
-        <AddedList
-          key={place.placeId}
-          className="added-list"
-          isImgExist={place.images.length > 0}
-        >
-          {place.images.length > 0 && (
-            <img
-              className="photo"
-              alt="thumbnail"
-              src={place.images[0].thumbnail}
+      <div style={{ marginTop: "1.2rem" }}>
+        {places?.map((place) => (
+          <AddedList key={place.placeId} isImgExist={place.images.length > 0}>
+            {place.images.length > 0 && (
+              <img
+                className="photo"
+                alt="thumbnail"
+                src={place.images[0].thumbnail}
+              />
+            )}
+            <div className="">{place.name}</div>
+            <Close
+              onClick={() => handleRemovePlace(place)}
+              className="del-btn"
             />
-          )}
-          <div className="">{place.name}</div>
-          <Close onClick={() => handleRemovePlace(place)} className="del-btn" />
-        </AddedList>
-      ))}
+          </AddedList>
+        ))}
+      </div>
 
       {places.length < 10 && (
         <div className="add-button" onClick={() => setIsSearchOpened(true)}>
@@ -312,7 +313,10 @@ const Write = () => {
           title="다음에 만드시겠어요?"
           sub="나가면 지금 만들던 테마는 저장되지 않아요."
         >
-          <Button onClick={() => setIsWriteAlertOpened(false)}>
+          <Button
+            className="white"
+            onClick={() => setIsWriteAlertOpened(false)}
+          >
             이어서 만들기
           </Button>
           <Button onClick={() => window.history.back()}>나가기</Button>
@@ -342,7 +346,7 @@ const AddedList = styled.div<{ isImgExist: boolean }>`
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 2.2rem;
-  margin-top: 1.2rem;
+  margin-top: 0.8rem;
   padding: 0 0.6rem;
   padding-left: ${({ isImgExist }) => !isImgExist && "1.6rem"};
 
@@ -388,7 +392,7 @@ const Wrapper = styled.div`
     font-size: 1.4rem;
     line-height: 135%;
     font-weight: 500;
-    margin-top: 1.2rem;
+    margin-top: 0.8rem;
     color: ${theme.color.orange};
     .add-icon {
       position: absolute;
