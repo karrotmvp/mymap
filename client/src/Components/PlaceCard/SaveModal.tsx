@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { match } from "ts-pattern";
 import { getMyAllPosts, postPost, putPostPin } from "../../api/post";
 import {
@@ -244,6 +244,12 @@ const SaveModal = () => {
   );
 };
 
+const slideFromBotton = keyframes`
+  0% {
+    height: 0;
+  }
+`;
+
 const Input = styled.input`
   border: none;
   width: 100%;
@@ -281,6 +287,7 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
   height: 100vh;
   width: 100%;
   .modal {
+    animation: ${slideFromBotton} 0.25s linear;
     position: fixed;
     bottom: 0;
     left: 0;

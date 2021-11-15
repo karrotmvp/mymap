@@ -239,6 +239,7 @@ ${post.contents.regionName}에 인증해 주세요.`}
             <div
               className="background"
               onClick={() => setIsEditModalOpened(false)}
+              style={{ zIndex: 500 }}
             />
             <div className="modal">
               <Link to={`/edit/${postId}`} className="button">
@@ -271,12 +272,20 @@ ${post.contents.regionName}에 인증해 주세요.`}
   );
 };
 
-const slideAnimation = keyframes`
+const slideFromLeft = keyframes`
   0% {
-    margin-left:100%;
+    margin-left: 100%;
   }
   100% {
-    margin-left:0;
+    margin-left: 0;
+  }
+`;
+const slideFromBotton = keyframes`
+  0% {
+    bottom: -15.6rem;
+  }
+  100% {
+    bottom: 0;
   }
 `;
 
@@ -290,7 +299,7 @@ const MapView = styled.div`
 `;
 
 const Wrapper = styled.div<{ fromWriteForm?: boolean }>`
-  animation: ${({ fromWriteForm }) => (fromWriteForm ? "" : slideAnimation)}
+  animation: ${({ fromWriteForm }) => (fromWriteForm ? "" : slideFromLeft)}
     0.25s linear;
   ${WrapperWithHeader};
   padding-top: 8rem;
@@ -360,6 +369,7 @@ const Profile = styled.div`
 
 const Modal = styled.div`
   .modal {
+    animation: ${slideFromBotton} 0.25s linear;
     position: fixed;
     left: 0;
     right: 0;
@@ -367,7 +377,7 @@ const Modal = styled.div`
     background-color: ${theme.color.white};
     border-top-left-radius: 2.4rem;
     border-top-right-radius: 2.4rem;
-    z-index: 300;
+    z-index: 500;
     padding: 2.6rem 0.9rem;
     .button {
       font-size: 1.6rem;
