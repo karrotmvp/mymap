@@ -261,11 +261,12 @@ export class PostService {
         await Promise.all(deleteIds.map(async(deleteId) => await this.deletePinInPost(deleteId, pin)));
     }
 
-    async readUserPostInfo(userId: number): Promise<Post[]> {
+    async readUserPostInfo(userId: number, regionId: string): Promise<Post[]> {
+        const regionIds: string[] = await this.regionService.readNeighborRegion(regionId);
         const posts: Post[] = await this.postRepository.find({
             relations: ['user', 'pins'],
             where: (qb) => {
-                qb.where('Post__user.userId = :userId', { userId: userId });
+                qb.where('Post__user.userId = :userId AND regionId IN (:...regionId)', { userId: userId, regionId: regionIds });
             },
             order: { createdAt: 'DESC' }
         })
