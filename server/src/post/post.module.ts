@@ -21,7 +21,7 @@ import { BullModule } from '@nestjs/bull';
     LoggerModule,
     BullModule.registerQueue({ name: 'post' })  
   ],
-  providers: [PostService],
+  providers: process.env.WORKER === 'true' ? [PostService, DefaultPostProcessor] : [PostService],
   controllers: process.env.WORKER === 'true' ? [PostController, PostProcessor, DefaultPostProcessor] : [PostController],
   exports: [PostService]
 })
