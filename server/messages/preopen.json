@@ -1,11 +1,11 @@
 {
-	"title": "preopen",
-	"text": "test",
+	"title": "반가워요, ‘당장모아’예요!",
+	"text": "‘당장모아'가 오픈했어요! 당장모아에서 나만의 테마를 만들어 볼까요? 동네 이웃이 만든 테마도 구경할 수 있어요.",
 	"actions": [{
 		"type": "PRIMARY_BUTTON",
 		"payload": {
-			"text": "abc",
-			"linkUrl": "def"
+			"text": "당장모아 둘러보기",
+			"linkUrl": "https://live.daangn-mymap.com/"
 		}
 	}]
 }

@@ -23,7 +23,6 @@ export class RegionRepository {
         }).pipe(
             map((res) => {
                 const response = res.data?.data?.region
-                console.log(res.data)
                 if (!response) throw new BadRequestException();
                 const regionIds: string[] = response.neighborRegions.map((region) => {
                     return region.id
