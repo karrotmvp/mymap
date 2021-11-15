@@ -281,7 +281,8 @@ export class PostService {
     }
 
     async createDefaultPost(end: number) {
-        const userIds: number[] = Array.from({length: end}, (v,i) => i+1);
+        const userIds: number[] = await this.userService.readUnwrittenUserId();
+        // const userIds: number[] = Array.from({length: end}, (v,i) => i+1);
         await Promise.all(userIds.map(async(userId) => {
             await this.postQueue.add('defaultPost_created', new Event(userId, null));
         }))
