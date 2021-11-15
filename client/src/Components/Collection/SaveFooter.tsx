@@ -32,10 +32,11 @@ const SaveFooter = ({ post, fetchSavedPosts }: SaveFooterInterface) => {
     }
     // 저장 취소
     else {
+      await deleteSavedPost(post.postId);
       if (isMypage && fetchSavedPosts) {
+        console.log("asdf");
         await fetchSavedPosts();
       }
-      await deleteSavedPost(post.postId);
       if (post.saved || savedNum - post.savedNum === 1)
         setSavedNum(savedNum - 1);
     }
