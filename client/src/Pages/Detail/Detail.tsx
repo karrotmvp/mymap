@@ -115,7 +115,7 @@ const Detail = ({
       animation={!(fromWriteForm || fromDetail)}
       isMine={post.contents.user.userId === viewerInfo.userId}
     >
-      <Header style={{ zIndex: 500 }}>
+      <Header style={{ zIndex: 600 }}>
         <>
           {fromWriteForm ? (
             <Close
@@ -178,7 +178,10 @@ const Detail = ({
       <div className="content">
         {match(state._t)
           .with("list", () => (
-            <Wrapper id="detail-scroll">
+            <Wrapper
+              id="detail-scroll"
+              isMine={post.contents.user.userId === viewerInfo.userId}
+            >
               <div className="post-title">
                 <Title>{post.contents.title}</Title>
                 <div className="content">{post.contents.contents}</div>
@@ -258,11 +261,9 @@ const Detail = ({
             </Wrapper>
           ))
           .with("map", () => (
-            <MapView>
-              <MapViewwithSlider
-                places={post.contents.pins.map((p) => p.place)}
-              />
-            </MapView>
+            <MapViewwithSlider
+              places={post.contents.pins.map((p) => p.place)}
+            />
           ))
           .exhaustive()}
       </div>
@@ -287,7 +288,7 @@ ${post.contents.regionName}에 인증해 주세요.`}
             <div
               className="background"
               onClick={() => setIsEditModalOpened(false)}
-              style={{ zIndex: 500 }}
+              style={{ zIndex: 700 }}
             />
             <div className="modal">
               <Link to={`/edit/${postId}`} className="button">
@@ -349,28 +350,21 @@ const Container = styled.div<{ isMine: boolean; animation?: boolean }>`
   .content {
     animation: ${slideFromLeft} 0.25s linear;
   }
-`;
-
-const MapView = styled.div`
   ${WrapperWithHeader};
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 300;
+  z-index: 700;
   height: 100vh;
 `;
 
-const Wrapper = styled.div`
-  ${WrapperWithHeader};
-  padding-top: 8rem;
-  padding-bottom: 9.2rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 300;
+const Wrapper = styled.div<{ isMine: boolean }>`
   background-color: #fff;
   overflow-y: scroll;
   height: 100vh;
+  padding-top: 3rem;
+  padding-bottom: ${({ isMine }) => (isMine ? "9.2rem" : "14rem")};
+  box-sizing: border-box;
   .post-title {
     padding: 0 2rem;
     border-bottom: 1.6rem solid ${theme.color.gray1_5};
@@ -437,7 +431,7 @@ const Modal = styled.div`
     background-color: ${theme.color.white};
     border-top-left-radius: 2.4rem;
     border-top-right-radius: 2.4rem;
-    z-index: 500;
+    z-index: 700;
     padding: 2.6rem 0.9rem;
     .button {
       font-size: 1.6rem;

@@ -12,7 +12,7 @@ interface AlertProps {
 const Alert = ({ close, title, sub, children }: AlertProps) => {
   return (
     <Wrapper onClick={close}>
-      <div className="background" />
+      <div className="background" style={{ zIndex: 700 }} />
       <div className="alert">
         <div className="alert-wrapper" onClick={(e) => e.stopPropagation()}>
           <div className="title">{title}</div>
@@ -33,7 +33,7 @@ const Wrapper = styled.div`
     bottom: 0;
     width: 100%;
     height: 100vh;
-    z-index: 300;
+    z-index: 700;
     padding: 2rem;
     box-sizing: border-box;
     .alert-wrapper {
