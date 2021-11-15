@@ -17,7 +17,7 @@ import Onboarding from "./Pages/Onboarding";
 import Analytics from "react-router-ga";
 import { Mixpanel } from "./utils/mixpanel";
 import { Close, Loading1, Loading2, LogoInactive } from "./assets";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { flexCenter, theme } from "./styles/theme";
 import SearchPlace from "./Pages/Write/SearchPlace";
 import Header from "./Components/Header";
@@ -193,6 +193,14 @@ const Wrapper = styled.div`
   }
 `;
 
+const opacityAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
 const Toast = styled.div`
   position: fixed;
   width: 100%;
@@ -200,6 +208,7 @@ const Toast = styled.div`
   padding: 0 2rem;
   bottom: 2.8rem;
   z-index: 1000;
+  animation: ${opacityAnimation} 0.25s linear;
 
   & > div:nth-child(1) {
     width: 100%;

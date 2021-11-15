@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { deletePost, getPost } from "../../api/post";
 import {
   Back,
@@ -37,19 +37,30 @@ import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 
-const Detail = () => {
-  const { postId } = useParams<{ postId: string }>();
+const Detail = ({
+  postId: postIdFromProps,
+  close,
+}: {
+  postId?: number;
+  close?: Function;
+}) => {
+  const postIdFromParams = parseInt(useParams<{ postId: string }>().postId);
   const history = useHistory();
 
-  const { isExact: fromWriteForm } =
+  const fromWriteForm =
     useRouteMatch({
       path: "/detail/:postId/finish",
-    }) ?? {};
+    })?.isExact ?? false;
+  const fromDetail =
+    useRouteMatch({
+      path: "/detail/:postId",
+    })?.isExact ?? false;
+
+  const postId =
+    fromWriteForm || fromDetail ? postIdFromParams : postIdFromProps!;
 
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const [post, setPost] = useRecoilStateLoadable(
-    postDetailAtom(parseInt(postId))
-  );
+  const [post, setPost] = useRecoilStateLoadable(postDetailAtom(postId));
   // const resetPost = useResetRecoilState(postDetailAtom(parseInt(postId)));
 
   const [state, dispatch] = useReducer(reducer, {
@@ -64,7 +75,7 @@ const Detail = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const data = await getPost(parseInt(postId));
+      const data = await getPost(postId);
       setPost(data);
     };
     if (fromWriteForm) {
@@ -90,7 +101,7 @@ const Detail = () => {
     setIsDeleteAlertOpened(true);
   };
   const onDeleteConfirmClick = async () => {
-    await deletePost(parseInt(postId));
+    await deletePost(fromWriteForm ? postIdFromParams : postId!);
 
     history.push(pageBeforeWrite);
   };
@@ -100,8 +111,11 @@ const Detail = () => {
   }
 
   return (
-    <>
-      <Header>
+    <Container
+      animation={!(fromWriteForm || fromDetail)}
+      isMine={post.contents.user.userId === viewerInfo.userId}
+    >
+      <Header style={{ zIndex: 500 }}>
         <>
           {fromWriteForm ? (
             <Close
@@ -113,7 +127,17 @@ const Detail = () => {
               }
             />
           ) : (
-            <Back className="left-icon" onClick={() => history.goBack()} />
+            <Back
+              className="left-icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (close) {
+                  close();
+                } else {
+                  history.push("/");
+                }
+              }}
+            />
           )}
           {(state._t === "map" ||
             (state._t === "list" && state.isScrollUp)) && (
@@ -142,66 +166,106 @@ const Detail = () => {
               ))
               .exhaustive()}
           </div>
-          {post.contents.user.userId === viewerInfo.userId ? (
+          {post.contents.user.userId === viewerInfo.userId && (
             <More2
               className="right-icon"
               onClick={() => setIsEditModalOpened(true)}
             />
-          ) : (
-            <SaveButton {...post.contents} />
           )}
         </>
       </Header>
 
-      {match(state._t)
-        .with("list", () => (
-          <Wrapper id="detail-scroll">
-            <div className="post-title">
-              <Title>{post.contents.title}</Title>
-              <div className="content">{post.contents.contents}</div>
-            </div>
-
-            <Profile>
-              {post.contents.user.profileImageUrl ? (
-                <img
-                  className="photo"
-                  alt="profile"
-                  src={post.contents.user.profileImageUrl}
-                />
-              ) : (
-                <Thumbnail className="photo" />
-              )}
-              <div>
-                <div className="name">
-                  {post.contents.user.userName}님이 추천하는 리스트예요.
-                </div>
-                <div className="date">
-                  {dayjs(post.contents.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
-                  {post.contents.regionName}
-                </div>
+      <div className="content">
+        {match(state._t)
+          .with("list", () => (
+            <Wrapper id="detail-scroll">
+              <div className="post-title">
+                <Title>{post.contents.title}</Title>
+                <div className="content">{post.contents.contents}</div>
               </div>
-            </Profile>
 
-            <div className="cards">
-              {post.contents.pins.map((pin) => (
-                <div
-                  key={pin.pinId}
-                  onClick={() =>
-                    dispatch({
-                      _t: "toggle",
-                    })
-                  }
-                >
-                  <PlaceCard place={pin.place} type="list" />
+              <Profile>
+                {post.contents.user.profileImageUrl ? (
+                  <img
+                    className="photo"
+                    alt="profile"
+                    src={post.contents.user.profileImageUrl}
+                  />
+                ) : (
+                  <Thumbnail className="photo" />
+                )}
+                <div>
+                  <div className="name">
+                    {post.contents.user.userName}님이 추천하는 리스트예요.
+                  </div>
+                  <div className="date">
+                    {dayjs(post.contents.createdAt).format("YYYY년 MM월 DD일")}{" "}
+                    · {post.contents.regionName}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </Wrapper>
-        ))
-        .with("map", () => (
-          <MapViewwithSlider places={post.contents.pins.map((p) => p.place)} />
-        ))
-        .exhaustive()}
+              </Profile>
+
+              <div className="cards">
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+              </div>
+            </Wrapper>
+          ))
+          .with("map", () => (
+            <MapView>
+              <MapViewwithSlider
+                places={post.contents.pins.map((p) => p.place)}
+              />
+            </MapView>
+          ))
+          .exhaustive()}
+      </div>
 
       {isEditModalOpened &&
         (post.contents.regionId !== regionId ? (
@@ -223,6 +287,7 @@ ${post.contents.regionName}에 인증해 주세요.`}
             <div
               className="background"
               onClick={() => setIsEditModalOpened(false)}
+              style={{ zIndex: 500 }}
             />
             <div className="modal">
               <Link to={`/edit/${postId}`} className="button">
@@ -251,14 +316,61 @@ ${post.contents.regionName}에 인증해 주세요.`}
           <Button onClick={onDeleteConfirmClick}>삭제</Button>
         </Alert>
       )}
-    </>
+
+      {post.contents.user.userId !== viewerInfo.userId &&
+        state._t !== "map" && <SaveButton {...post.contents} />}
+    </Container>
   );
 };
+
+const slideFromLeft = keyframes`
+  0% {
+    margin-left: 100%;
+  }
+  100% {
+    margin-left: 0;
+  }
+`;
+const slideFromBotton = keyframes`
+  0% {
+    bottom: -15.6rem;
+  }
+  100% {
+    bottom: 0;
+  }
+`;
+
+const Container = styled.div<{ isMine: boolean; animation?: boolean }>`
+  animation: ${({ animation }) => (animation ? slideFromLeft : "")} 0.25s linear;
+  animation: ${slideFromLeft} 0.25s linear;
+  .view-toggle {
+    right: ${({ isMine }) => (isMine ? "5rem" : "2rem")};
+  }
+  .content {
+    animation: ${slideFromLeft} 0.25s linear;
+  }
+`;
+
+const MapView = styled.div`
+  ${WrapperWithHeader};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  height: 100vh;
+`;
 
 const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding-top: 8rem;
+  padding-bottom: 9.2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  background-color: #fff;
   overflow-y: scroll;
+  height: 100vh;
   .post-title {
     padding: 0 2rem;
     border-bottom: 1.6rem solid ${theme.color.gray1_5};
@@ -281,7 +393,6 @@ const Wrapper = styled.div`
   .cards {
     padding: 0 2rem;
     margin-top: 1.6rem;
-    padding-bottom: 2.8rem;
     ${gap("1.4rem", "column")}
   }
 `;
@@ -318,6 +429,7 @@ const Profile = styled.div`
 
 const Modal = styled.div`
   .modal {
+    animation: ${slideFromBotton} 0.25s linear;
     position: fixed;
     left: 0;
     right: 0;
@@ -325,7 +437,7 @@ const Modal = styled.div`
     background-color: ${theme.color.white};
     border-top-left-radius: 2.4rem;
     border-top-right-radius: 2.4rem;
-    z-index: 300;
+    z-index: 500;
     padding: 2.6rem 0.9rem;
     .button {
       font-size: 1.6rem;

@@ -41,6 +41,7 @@ const MapViewwithSlider = ({ places }: { places: PlaceType[] }) => {
   return (
     <Wrapper>
       <MapView
+        mapId="map-view-with-slider"
         height="100vh"
         pins={_pins}
         {...{ center, setCenter, handleSelectPin }}

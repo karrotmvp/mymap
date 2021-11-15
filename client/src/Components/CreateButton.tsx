@@ -55,7 +55,7 @@ const Wrapper = styled.div<{ isLong: boolean }>`
   background-color: ${theme.color.orange};
   border-radius: ${({ isLong }) => (isLong ? "2.4rem" : "50%")};
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
-  z-index: 500;
+  z-index: 200;
   transition: 0.3s;
   .text {
     white-space: nowrap;

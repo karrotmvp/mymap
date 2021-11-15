@@ -54,6 +54,7 @@ const PlaceMapView = ({
   return (
     <Wrapper>
       <MapView
+        mapId="place-map-view"
         height="100vh"
         pins={[pin]}
         center={{ lat: pin.latitude, lng: pin.longitude }}
