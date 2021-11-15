@@ -312,7 +312,10 @@ const Write = () => {
           title="다음에 만드시겠어요?"
           sub="나가면 지금 만들던 테마는 저장되지 않아요."
         >
-          <Button onClick={() => setIsWriteAlertOpened(false)}>
+          <Button
+            className="white"
+            onClick={() => setIsWriteAlertOpened(false)}
+          >
             이어서 만들기
           </Button>
           <Button onClick={() => window.history.back()}>나가기</Button>
