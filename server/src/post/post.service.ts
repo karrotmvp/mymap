@@ -132,7 +132,11 @@ export class PostService {
         const user: User = await this.userService.readUser(userId);
         const savedPostIds: number[] = await this.savedPostRepository.findWithUserId(user.getUserId(), page, perPage);
         const posts: Post[] = await this.postRepository.findByIds(savedPostIds);
-        return await this.readPostList(userId, posts);
+        const sortedPosts: Post[] = savedPostIds.map(savedPostId => {
+            const index = posts.findIndex(x => x.getPostId() === savedPostId);
+            return posts[index];
+        })
+        return await this.readPostList(userId, sortedPosts);
     }
 
     async readRegionPost(userId: number, regionId: string, start: number, end: number, perPage: number) {
@@ -277,6 +281,9 @@ export class PostService {
     }
 
     async createDefaultPost(end: number) {
-        // const userIds: number[] = 
+        const userIds: number[] = Array.from({length: end}, (v,i) => i+1);
+        await Promise.all(userIds.map(async(userId) => {
+            await this.postQueue.add('defaultPost_created', new Event(userId, null));
+        }))
     }
 }
