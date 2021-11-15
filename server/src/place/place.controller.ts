@@ -64,9 +64,23 @@ export class PlaceController {
 
     @UseGuards(JwtAuthGuard)
     @Get('admin/recommend')
-    async readRecommendPlaces(@Req() req: any, @Query('perPage') perPage: number, @Query('page') page: number) {
+    async readRecommendPlaces(@Req() req: any, @Query('perPage') perPage: number = 20, @Query('page') page: number = 0) {
         await this.userService.checkAdmin(req.user.userId);
         return await this.placeService.readRecommendPlaces(perPage, page);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('admin/recommend/region')
+    async countRecommendPlacesByRegion(@Req() req: any) {
+        await this.userService.checkAdmin(req.user.userId);
+        const seocho = await this.placeService.countRecommendPlacesByRegion("471abc99b378");
+        const jamsil = await this.placeService.countRecommendPlacesByRegion("5424e9f7ec6d");
+        const hannam = await this.placeService.countRecommendPlacesByRegion("79f5f58de451");
+        return {
+            "서초동": seocho,
+            "한남동": hannam,
+            "잠실동": jamsil
+        }
     }
 
     @UseGuards(JwtAuthGuard)

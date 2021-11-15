@@ -30,6 +30,7 @@ export class RegionRepository {
                 return regionIds;
             }), 
             catchError((err) => {
+                console.log(err)
                 throw new BadRequestException();
             })
         )
