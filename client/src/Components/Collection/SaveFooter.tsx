@@ -34,7 +34,6 @@ const SaveFooter = ({ post, fetchSavedPosts }: SaveFooterInterface) => {
     else {
       await deleteSavedPost(post.postId);
       if (isMypage && fetchSavedPosts) {
-        console.log("asdf");
         await fetchSavedPosts();
       }
       if (post.saved || savedNum - post.savedNum === 1)

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useHistory } from "react-router";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { More, Plus } from "../../assets";
+import Detail from "../../Pages/Detail/Detail";
 import { PageBeforeWrite } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
@@ -17,11 +19,15 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
   const history = useHistory();
   const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
 
+  const [detail, setDetail] = useState(false);
+
   return (
     <Wrapper
       onClick={() =>
-        post.pins.length > 0 && history.push(`/detail/${post.postId}`)
+        // post.pins.length > 0 && history.push(`/detail/${post.postId}`)
+        setDetail(true)
       }
+      {...{ detail }}
     >
       <div className="title-wrapper">
         <div style={{ width: "100%" }}>
@@ -53,11 +59,22 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
         )}
       </div>
       <SaveFooter {...{ post, fetchSavedPosts }} />
+
+      {detail && (
+        <div className="detail-page">
+          <Detail
+            postId={post.postId}
+            close={() => {
+              setDetail(false);
+            }}
+          />
+        </div>
+      )}
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ detail: boolean }>`
   width: 100%;
   padding: 3.6rem 0;
   box-sizing: border-box;

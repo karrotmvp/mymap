@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { deletePost, getPost } from "../../api/post";
 import {
   Back,
@@ -37,8 +37,14 @@ import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 
-const Detail = () => {
-  const { postId } = useParams<{ postId: string }>();
+const Detail = ({
+  postId: postIdFromProps,
+  close,
+}: {
+  postId?: number;
+  close?: Function;
+}) => {
+  const { postId: postIdFromParams } = useParams<{ postId: string }>();
   const history = useHistory();
 
   const { isExact: fromWriteForm } =
@@ -46,10 +52,10 @@ const Detail = () => {
       path: "/detail/:postId/finish",
     }) ?? {};
 
+  const postId = !fromWriteForm ? postIdFromProps! : parseInt(postIdFromParams);
+
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const [post, setPost] = useRecoilStateLoadable(
-    postDetailAtom(parseInt(postId))
-  );
+  const [post, setPost] = useRecoilStateLoadable(postDetailAtom(postId));
   // const resetPost = useResetRecoilState(postDetailAtom(parseInt(postId)));
 
   const [state, dispatch] = useReducer(reducer, {
@@ -64,7 +70,7 @@ const Detail = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const data = await getPost(parseInt(postId));
+      const data = await getPost(postId);
       setPost(data);
     };
     if (fromWriteForm) {
@@ -90,7 +96,7 @@ const Detail = () => {
     setIsDeleteAlertOpened(true);
   };
   const onDeleteConfirmClick = async () => {
-    await deletePost(parseInt(postId));
+    await deletePost(fromWriteForm ? parseInt(postIdFromParams) : postId!);
 
     history.push(pageBeforeWrite);
   };
@@ -101,7 +107,7 @@ const Detail = () => {
 
   return (
     <>
-      <Header>
+      <Header style={{ zIndex: 500 }}>
         <>
           {fromWriteForm ? (
             <Close
@@ -113,7 +119,13 @@ const Detail = () => {
               }
             />
           ) : (
-            <Back className="left-icon" onClick={() => history.goBack()} />
+            <Back
+              className="left-icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                close && close();
+              }}
+            />
           )}
           {(state._t === "map" ||
             (state._t === "list" && state.isScrollUp)) && (
@@ -155,7 +167,7 @@ const Detail = () => {
 
       {match(state._t)
         .with("list", () => (
-          <Wrapper id="detail-scroll">
+          <Wrapper id="detail-scroll" {...{ fromWriteForm }}>
             <div className="post-title">
               <Title>{post.contents.title}</Title>
               <div className="content">{post.contents.contents}</div>
@@ -199,7 +211,11 @@ const Detail = () => {
           </Wrapper>
         ))
         .with("map", () => (
-          <MapViewwithSlider places={post.contents.pins.map((p) => p.place)} />
+          <MapView>
+            <MapViewwithSlider
+              places={post.contents.pins.map((p) => p.place)}
+            />
+          </MapView>
         ))
         .exhaustive()}
 
@@ -255,10 +271,36 @@ ${post.contents.regionName}에 인증해 주세요.`}
   );
 };
 
-const Wrapper = styled.div`
+const slideAnimation = keyframes`
+  0% {
+    margin-left:100%;
+  }
+  100% {
+    margin-left:0;
+  }
+`;
+
+const MapView = styled.div`
+  ${WrapperWithHeader};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  height: 100vh;
+`;
+
+const Wrapper = styled.div<{ fromWriteForm?: boolean }>`
+  animation: ${({ fromWriteForm }) => (fromWriteForm ? "" : slideAnimation)}
+    0.25s linear;
   ${WrapperWithHeader};
   padding-top: 8rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  background-color: #fff;
   overflow-y: scroll;
+  height: 100vh;
   .post-title {
     padding: 0 2rem;
     border-bottom: 1.6rem solid ${theme.color.gray1_5};
