@@ -273,7 +273,7 @@ export class PostService {
         const posts: Post[] = await this.postRepository.find({
             relations: ['user', 'pins'],
             where: (qb) => {
-                qb.where('Post__user.userId = :userId AND regionId IN (:...regionId)', { userId: userId, regionId: regionIds });
+                qb.where('Post__user.userId = :userId AND (regionId IN (:...regionId) OR regionId IS NULL)', { userId: userId, regionId: regionIds });
             },
             order: { createdAt: 'DESC' }
         })
