@@ -40,10 +40,10 @@ const SaveModal = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       const data = await getMyAllPosts(regionId);
-      setPosts(data.posts);
+      setPosts(data);
       // 이미 포함된 테마들 세팅
-      data.posts.forEach((post) => {
-        if (post.pins.find((pin) => pin.place.placeId === placeToSave.placeId))
+      data.forEach((post) => {
+        if (post.pins.find((pin) => pin.placeId === placeToSave.placeId))
           savedThemes.push(post.postId);
       });
       dispatch({
@@ -53,15 +53,15 @@ const SaveModal = () => {
       setIsSubmitable(false);
 
       // 한개면 무조건 선택
-      if (data.posts.length === 1) {
+      if (data.length === 1) {
         dispatch({
           _t: "SELECT",
-          selected: data.posts[0].postId,
+          selected: data[0].postId,
         });
         setIsSubmitable(true);
       }
 
-      data.posts.find((post) => post.postId);
+      data.find((post) => post.postId);
     };
     fetchPosts();
   }, []);
@@ -108,7 +108,7 @@ const SaveModal = () => {
         if (data.postId) {
           newThemeValue.setValue("");
           const data = await getMyAllPosts(regionId);
-          setPosts(data.posts);
+          setPosts(data);
         }
       } finally {
         dispatch({
@@ -216,7 +216,7 @@ const SaveModal = () => {
               .exhaustive()}
           </Theme>
 
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <Theme
               key={post.postId}
               onClick={() => {
