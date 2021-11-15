@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PlaceType } from "../Shared/type";
+import { WrapperWithHeader } from "../styles/theme";
 import MapView, { Pin } from "./MapView";
 import PinSlider from "./PinSlider";
 

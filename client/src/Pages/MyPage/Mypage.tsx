@@ -149,13 +149,14 @@ const Mypage = () => {
   return (
     <Wrapper id="mypage-scroll" {...{ isScrollUp }}>
       {isScrollUp && (
-        <Header className="header-scroll" title={`${viewerInfo.userName}님`}>
+        <Header title={`${viewerInfo.userName}님`}>
           <Close className="close-btn" onClick={() => mini.close()} />
         </Header>
       )}
-      <Close className="close-btn" onClick={() => mini.close()} />
 
       <Profile>
+        <Close className="close-btn" onClick={() => mini.close()} />
+
         {viewerInfo.profileImageUrl ? (
           <img
             className="photo"

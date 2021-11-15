@@ -27,7 +27,6 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
         // post.pins.length > 0 && history.push(`/detail/${post.postId}`)
         setDetail(true)
       }
-      {...{ detail }}
     >
       <div className="title-wrapper">
         <div style={{ width: "100%" }}>
@@ -61,20 +60,18 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
       <SaveFooter {...{ post, fetchSavedPosts }} />
 
       {detail && (
-        <div className="detail-page">
-          <Detail
-            postId={post.postId}
-            close={() => {
-              setDetail(false);
-            }}
-          />
-        </div>
+        <Detail
+          postId={post.postId}
+          close={() => {
+            setDetail(false);
+          }}
+        />
       )}
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div<{ detail: boolean }>`
+const Wrapper = styled.div`
   width: 100%;
   padding: 3.6rem 0;
   box-sizing: border-box;

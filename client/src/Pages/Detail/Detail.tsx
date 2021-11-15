@@ -106,7 +106,10 @@ const Detail = ({
   }
 
   return (
-    <>
+    <Container
+      {...{ fromWriteForm }}
+      isMine={post.contents.user.userId === viewerInfo.userId}
+    >
       <Header style={{ zIndex: 500 }}>
         <>
           {fromWriteForm ? (
@@ -154,20 +157,18 @@ const Detail = ({
               ))
               .exhaustive()}
           </div>
-          {post.contents.user.userId === viewerInfo.userId ? (
+          {post.contents.user.userId === viewerInfo.userId && (
             <More2
               className="right-icon"
               onClick={() => setIsEditModalOpened(true)}
             />
-          ) : (
-            <SaveButton {...post.contents} />
           )}
         </>
       </Header>
 
       {match(state._t)
         .with("list", () => (
-          <Wrapper id="detail-scroll" {...{ fromWriteForm }}>
+          <Wrapper id="detail-scroll">
             <div className="post-title">
               <Title>{post.contents.title}</Title>
               <div className="content">{post.contents.contents}</div>
@@ -195,6 +196,42 @@ const Detail = ({
             </Profile>
 
             <div className="cards">
+              {post.contents.pins.map((pin) => (
+                <div
+                  key={pin.pinId}
+                  onClick={() =>
+                    dispatch({
+                      _t: "toggle",
+                    })
+                  }
+                >
+                  <PlaceCard place={pin.place} type="list" />
+                </div>
+              ))}
+              {post.contents.pins.map((pin) => (
+                <div
+                  key={pin.pinId}
+                  onClick={() =>
+                    dispatch({
+                      _t: "toggle",
+                    })
+                  }
+                >
+                  <PlaceCard place={pin.place} type="list" />
+                </div>
+              ))}
+              {post.contents.pins.map((pin) => (
+                <div
+                  key={pin.pinId}
+                  onClick={() =>
+                    dispatch({
+                      _t: "toggle",
+                    })
+                  }
+                >
+                  <PlaceCard place={pin.place} type="list" />
+                </div>
+              ))}
               {post.contents.pins.map((pin) => (
                 <div
                   key={pin.pinId}
@@ -268,7 +305,10 @@ ${post.contents.regionName}에 인증해 주세요.`}
           <Button onClick={onDeleteConfirmClick}>삭제</Button>
         </Alert>
       )}
-    </>
+
+      {post.contents.user.userId !== viewerInfo.userId &&
+        state._t !== "map" && <SaveButton {...post.contents} />}
+    </Container>
   );
 };
 
@@ -289,6 +329,14 @@ const slideFromBotton = keyframes`
   }
 `;
 
+const Container = styled.div<{ isMine: boolean; fromWriteForm?: boolean }>`
+  animation: ${({ fromWriteForm }) => (fromWriteForm ? "" : slideFromLeft)}
+    0.25s linear;
+  .view-toggle {
+    right: ${({ isMine }) => (isMine ? "5rem" : "2rem")};
+  }
+`;
+
 const MapView = styled.div`
   ${WrapperWithHeader};
   position: fixed;
@@ -298,11 +346,10 @@ const MapView = styled.div`
   height: 100vh;
 `;
 
-const Wrapper = styled.div<{ fromWriteForm?: boolean }>`
-  animation: ${({ fromWriteForm }) => (fromWriteForm ? "" : slideFromLeft)}
-    0.25s linear;
+const Wrapper = styled.div`
   ${WrapperWithHeader};
   padding-top: 8rem;
+  padding-bottom: 9.2rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -332,7 +379,6 @@ const Wrapper = styled.div<{ fromWriteForm?: boolean }>`
   .cards {
     padding: 0 2rem;
     margin-top: 1.6rem;
-    padding-bottom: 2.8rem;
     ${gap("1.4rem", "column")}
   }
 `;
