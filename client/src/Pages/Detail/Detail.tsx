@@ -44,15 +44,20 @@ const Detail = ({
   postId?: number;
   close?: Function;
 }) => {
-  const { postId: postIdFromParams } = useParams<{ postId: string }>();
+  const postIdFromParams = parseInt(useParams<{ postId: string }>().postId);
   const history = useHistory();
 
-  const { isExact: fromWriteForm } =
+  const fromWriteForm =
     useRouteMatch({
       path: "/detail/:postId/finish",
-    }) ?? {};
+    })?.isExact ?? false;
+  const fromDetail =
+    useRouteMatch({
+      path: "/detail/:postId",
+    })?.isExact ?? false;
 
-  const postId = !fromWriteForm ? postIdFromProps! : parseInt(postIdFromParams);
+  const postId =
+    fromWriteForm || fromDetail ? postIdFromParams : postIdFromProps!;
 
   const viewerInfo = useRecoilValue(ViewerInfo);
   const [post, setPost] = useRecoilStateLoadable(postDetailAtom(postId));
@@ -96,7 +101,7 @@ const Detail = ({
     setIsDeleteAlertOpened(true);
   };
   const onDeleteConfirmClick = async () => {
-    await deletePost(fromWriteForm ? parseInt(postIdFromParams) : postId!);
+    await deletePost(fromWriteForm ? postIdFromParams : postId!);
 
     history.push(pageBeforeWrite);
   };
@@ -107,7 +112,7 @@ const Detail = ({
 
   return (
     <Container
-      {...{ fromWriteForm }}
+      animation={!(fromWriteForm || fromDetail)}
       isMine={post.contents.user.userId === viewerInfo.userId}
     >
       <Header style={{ zIndex: 500 }}>
@@ -126,7 +131,11 @@ const Detail = ({
               className="left-icon"
               onClick={(e) => {
                 e.stopPropagation();
-                close && close();
+                if (close) {
+                  close();
+                } else {
+                  history.push("/");
+                }
               }}
             />
           )}
@@ -166,95 +175,97 @@ const Detail = ({
         </>
       </Header>
 
-      {match(state._t)
-        .with("list", () => (
-          <Wrapper id="detail-scroll">
-            <div className="post-title">
-              <Title>{post.contents.title}</Title>
-              <div className="content">{post.contents.contents}</div>
-            </div>
-
-            <Profile>
-              {post.contents.user.profileImageUrl ? (
-                <img
-                  className="photo"
-                  alt="profile"
-                  src={post.contents.user.profileImageUrl}
-                />
-              ) : (
-                <Thumbnail className="photo" />
-              )}
-              <div>
-                <div className="name">
-                  {post.contents.user.userName}님이 추천하는 리스트예요.
-                </div>
-                <div className="date">
-                  {dayjs(post.contents.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
-                  {post.contents.regionName}
-                </div>
+      <div className="content">
+        {match(state._t)
+          .with("list", () => (
+            <Wrapper id="detail-scroll">
+              <div className="post-title">
+                <Title>{post.contents.title}</Title>
+                <div className="content">{post.contents.contents}</div>
               </div>
-            </Profile>
 
-            <div className="cards">
-              {post.contents.pins.map((pin) => (
-                <div
-                  key={pin.pinId}
-                  onClick={() =>
-                    dispatch({
-                      _t: "toggle",
-                    })
-                  }
-                >
-                  <PlaceCard place={pin.place} type="list" />
+              <Profile>
+                {post.contents.user.profileImageUrl ? (
+                  <img
+                    className="photo"
+                    alt="profile"
+                    src={post.contents.user.profileImageUrl}
+                  />
+                ) : (
+                  <Thumbnail className="photo" />
+                )}
+                <div>
+                  <div className="name">
+                    {post.contents.user.userName}님이 추천하는 리스트예요.
+                  </div>
+                  <div className="date">
+                    {dayjs(post.contents.createdAt).format("YYYY년 MM월 DD일")}{" "}
+                    · {post.contents.regionName}
+                  </div>
                 </div>
-              ))}
-              {post.contents.pins.map((pin) => (
-                <div
-                  key={pin.pinId}
-                  onClick={() =>
-                    dispatch({
-                      _t: "toggle",
-                    })
-                  }
-                >
-                  <PlaceCard place={pin.place} type="list" />
-                </div>
-              ))}
-              {post.contents.pins.map((pin) => (
-                <div
-                  key={pin.pinId}
-                  onClick={() =>
-                    dispatch({
-                      _t: "toggle",
-                    })
-                  }
-                >
-                  <PlaceCard place={pin.place} type="list" />
-                </div>
-              ))}
-              {post.contents.pins.map((pin) => (
-                <div
-                  key={pin.pinId}
-                  onClick={() =>
-                    dispatch({
-                      _t: "toggle",
-                    })
-                  }
-                >
-                  <PlaceCard place={pin.place} type="list" />
-                </div>
-              ))}
-            </div>
-          </Wrapper>
-        ))
-        .with("map", () => (
-          <MapView>
-            <MapViewwithSlider
-              places={post.contents.pins.map((p) => p.place)}
-            />
-          </MapView>
-        ))
-        .exhaustive()}
+              </Profile>
+
+              <div className="cards">
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+                {post.contents.pins.map((pin) => (
+                  <div
+                    key={pin.pinId}
+                    onClick={() =>
+                      dispatch({
+                        _t: "toggle",
+                      })
+                    }
+                  >
+                    <PlaceCard place={pin.place} type="list" />
+                  </div>
+                ))}
+              </div>
+            </Wrapper>
+          ))
+          .with("map", () => (
+            <MapView>
+              <MapViewwithSlider
+                places={post.contents.pins.map((p) => p.place)}
+              />
+            </MapView>
+          ))
+          .exhaustive()}
+      </div>
 
       {isEditModalOpened &&
         (post.contents.regionId !== regionId ? (
@@ -329,11 +340,14 @@ const slideFromBotton = keyframes`
   }
 `;
 
-const Container = styled.div<{ isMine: boolean; fromWriteForm?: boolean }>`
-  animation: ${({ fromWriteForm }) => (fromWriteForm ? "" : slideFromLeft)}
-    0.25s linear;
+const Container = styled.div<{ isMine: boolean; animation?: boolean }>`
+  animation: ${({ animation }) => (animation ? slideFromLeft : "")} 0.25s linear;
+  animation: ${slideFromLeft} 0.25s linear;
   .view-toggle {
     right: ${({ isMine }) => (isMine ? "5rem" : "2rem")};
+  }
+  .content {
+    animation: ${slideFromLeft} 0.25s linear;
   }
 `;
 
