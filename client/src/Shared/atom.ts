@@ -19,6 +19,11 @@ export const ViewerInfo = atom<UserType>({
   },
 });
 
+export const DetailId = atom<number | null>({
+  key: "DetailId",
+  default: null,
+});
+
 export const PlaceToSave = atom({
   key: "IsSaveModalOpened",
   default: {

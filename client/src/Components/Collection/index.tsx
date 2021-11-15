@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useHistory } from "react-router";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { More, Plus } from "../../assets";
-import Detail from "../../Pages/Detail/Detail";
-import { PageBeforeWrite } from "../../Shared/atom";
+import { DetailId, PageBeforeWrite } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
 import OrangePlaceBox from "../OrangePlaceBox";
@@ -19,13 +17,13 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
   const history = useHistory();
   const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
 
-  const [detail, setDetail] = useState(false);
+  const setDetailId = useSetRecoilState(DetailId);
 
   return (
     <Wrapper
       onClick={() =>
         // post.pins.length > 0 && history.push(`/detail/${post.postId}`)
-        setDetail(true)
+        setDetailId(post.postId)
       }
     >
       <div className="title-wrapper">
@@ -58,15 +56,6 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
         )}
       </div>
       <SaveFooter {...{ post, fetchSavedPosts }} />
-
-      {detail && (
-        <Detail
-          postId={post.postId}
-          close={() => {
-            setDetail(false);
-          }}
-        />
-      )}
     </Wrapper>
   );
 };

@@ -7,7 +7,13 @@ import Detail from "./Pages/Detail/Detail";
 import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { ViewerInfo, RegionId, PlaceToSave, ToastMessage } from "./Shared/atom";
+import {
+  ViewerInfo,
+  RegionId,
+  PlaceToSave,
+  ToastMessage,
+  DetailId,
+} from "./Shared/atom";
 import { useCallback, useEffect } from "react";
 import { getLogin } from "./api/user";
 import dayjs from "dayjs";
@@ -40,6 +46,7 @@ function App() {
 
   const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
+  const [detailId, setDetailId] = useRecoilState(DetailId);
 
   // 로그인 및 내 정보 저장
   const [viewerInfo, setViewerInfo] = useRecoilState(ViewerInfo);
@@ -143,6 +150,14 @@ function App() {
                 <div />
                 <div>{toastMessage.message}</div>
               </Toast>
+            )}
+            {detailId && (
+              <Detail
+                postId={detailId}
+                close={() => {
+                  setDetailId(null);
+                }}
+              />
             )}
           </Analytics>
         ) : (
