@@ -30,7 +30,7 @@ const fetchWrap = async ({
   } catch (error) {
     console.log(error);
     // localStorage.removeItem("token");
-    // window.location.href = "/401";
+    window.location.href = "/401";
   }
 };
 
