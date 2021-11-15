@@ -99,4 +99,12 @@ export class UserService {
             skip: page * perPage
         })
     }
+
+    async readUnwrittenUserId() {
+        const user = (await this.userRepository.find({
+            relations: ['posts'],
+        })).filter(x => x.posts.length === 0).map(x => x.getUserId());
+        const unwrittenUser = [...new Set(user)];
+        return unwrittenUser
+    }
 }
