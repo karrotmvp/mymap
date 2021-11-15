@@ -284,7 +284,9 @@ const Write = () => {
           title="수정한 내용이 저장되지 않았어요!"
           sub="수정한 내용을 저장할까요?"
         >
-          <Button onClick={() => window.history.back()}>나가기</Button>
+          <Button className="white" onClick={() => window.history.back()}>
+            나가기
+          </Button>
           <Button
             onClick={() => {
               isSubmittable && handleSubmit();

@@ -38,8 +38,8 @@ const Wrapper = styled.div`
     box-sizing: border-box;
     .alert-wrapper {
       width: 100%;
-      padding: 2rem 2.4rem;
-      border-radius: 1.6rem;
+      padding: 2rem;
+      border-radius: 1.2rem;
       background-color: ${theme.color.white};
       .title {
         font-size: 1.6rem;
@@ -49,21 +49,22 @@ const Wrapper = styled.div`
       .sub {
         font-size: 1.4rem;
         font-weight: 500;
-        line-height: 135%;
+        line-height: 150%;
         color: ${theme.color.gray6};
-        margin-top: 0.2rem;
+        margin-top: 0.6rem;
+        white-space: pre-line;
       }
       .buttons {
-        margin-top: 2.3rem;
+        margin-top: 2.6rem;
         display: flex;
         ${gap("1rem")};
         & > div {
           width: 100%;
-          &:first-child {
-            background-color: ${theme.color.white};
-            color: ${theme.color.gray7};
-            border: 0.1rem solid ${theme.color.gray3};
-          }
+        }
+        .white {
+          background-color: ${theme.color.white};
+          color: ${theme.color.gray7};
+          border: 0.1rem solid ${theme.color.gray3};
         }
       }
     }

@@ -60,6 +60,7 @@ function App() {
         regionName: "역삼 1동",
         profileImageUrl: "",
       });
+      setRegionId("6530459d189b");
     } else if (!preload) {
       setRegionId(regionId as string);
       if (code) {
