@@ -230,11 +230,13 @@ export class PostService {
         await this.postRepository.save(post);
     }
 
-    private async savePinInPost(postId: number, pin: CreatePinDTO) {
+    private async savePinInPost(postId: number, pin: CreatePinDTO, regionId: string, regionName: string) {
         const newPin: Pin[] = await this.pinRepository.savePins([pin]);
-        const post = await this.postRepository.findOne(postId, { relations: ['pins'] })
+        const post: Post = await this.postRepository.findOne(postId, { relations: ['pins'] })
         if (!post) throw new BadRequestException();
         post.pins ? post.pins.push(...newPin) : post.pins = newPin;
+        post.setRegionId(regionId);
+        post.setRegionName(regionName);
         await this.postRepository.save(post);
     }
 
@@ -249,7 +251,7 @@ export class PostService {
         await this.pinRepository.softRemove(deletePin);
     }
 
-    async handlePin(userId: number, postIds: number[], pin: CreatePinDTO) {
+    async handlePin(userId: number, postIds: number[], pin: CreatePinDTO, regionId: string) {
         const pins: Pin[] = await this.pinRepository.find({
             relations: ['post'],
             where: { placeId: pin.placeId }
@@ -261,10 +263,11 @@ export class PostService {
                 qb.where('Post__user.userId = :userId AND postId IN (:...postIds)', { userId: userId, postIds: includePinPosts })
             }
         }) : [];
+        const regionName: string = await this.regionService.readRegionName(regionId);
         const existIds: number[] = posts.map(post => post.getPostId());
         const saveIds: number[] = postIds.filter(x => !existIds.includes(x));
         const deleteIds: number[] = existIds.filter(x => !postIds.includes(x));
-        await Promise.all(saveIds.map(async(saveId) => await this.savePinInPost(saveId, pin)));
+        await Promise.all(saveIds.map(async(saveId) => await this.savePinInPost(saveId, pin, regionId, regionName)));
         await Promise.all(deleteIds.map(async(deleteId) => await this.deletePinInPost(deleteId, pin)));
     }
 

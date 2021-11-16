@@ -104,4 +104,10 @@ export class Post {
     public pushPin(pin: Pin[]) {
         this.pins.push(...pin);
     }
+    public setRegionId(regionId: string) {
+        this.regionId = regionId;
+    }
+    public setRegionName(regionName: string) {
+        this.regionName = regionName;
+    }
 }
