@@ -37,6 +37,68 @@ import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 
+// const get = async () => {
+//   return new Promise((resolve) => {
+//     resolve(
+//       setTimeout(() => {
+//         console.log("asdf");
+//       }, 1000)
+//     );
+//   });
+// };
+
+// type state =
+//   | {
+//       _t: "pending";
+//     }
+//   | {
+//       _t: "rejected";
+//       result: any;
+//     }
+//   | {
+//       _t: "resolved";
+//       result: any;
+//     };
+
+// function make() {
+//   let status: state = { _t: "pending" };
+
+//   const b = async () => {
+//     try {
+//       status = {
+//         _t: "resolved",
+//         result: await get(),
+//       };
+//     } catch (error) {
+//       status = {
+//         _t: "rejected",
+//         result: error,
+//       };
+//     }
+//   };
+
+//   const c = async () => {
+//     try {
+//       await b();
+//     } finally {
+//       switch (status._t) {
+//         case "pending":
+//           throw b();
+//         case "rejected":
+//           throw status.result;
+//         case "resolved":
+//           return status.result;
+//         default:
+//           break;
+//       }
+//     }
+//   };
+
+//   return c();
+// }
+
+// console.log("asdf", make());
+
 const Detail = ({
   postId: postIdFromProps,
   close,
@@ -73,11 +135,12 @@ const Detail = ({
 
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
 
+  const fetchPost = async () => {
+    const data = await getPost(postId);
+    setPost(data);
+  };
+
   useEffect(() => {
-    const fetchPost = async () => {
-      const data = await getPost(postId);
-      setPost(data);
-    };
     if (fromWriteForm) {
       fetchPost();
     }
@@ -103,7 +166,17 @@ const Detail = ({
   const onDeleteConfirmClick = async () => {
     await deletePost(fromWriteForm ? postIdFromParams : postId!);
 
-    history.push(pageBeforeWrite);
+    if (fromWriteForm) {
+      history.push(
+        pageBeforeWrite === "emptyTheme" ? "/mypage" : pageBeforeWrite
+      );
+    } else {
+      if (close) {
+        close();
+      } else {
+        history.push("/");
+      }
+    }
   };
 
   if (post.state !== "hasValue") {
@@ -121,9 +194,9 @@ const Detail = ({
             <Close
               className="left-icon"
               onClick={() =>
-                pageBeforeWrite === "emptyTheme"
-                  ? history.push("/mypage")
-                  : history.push(pageBeforeWrite)
+                history.push(
+                  pageBeforeWrite === "emptyTheme" ? "/mypage" : pageBeforeWrite
+                )
               }
             />
           ) : (
