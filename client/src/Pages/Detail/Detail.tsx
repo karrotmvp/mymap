@@ -210,50 +210,7 @@ const Detail = ({
 
               <div className="cards">
                 {post.contents.pins.map((pin) => (
-                  <div
-                    key={pin.pinId}
-                    onClick={() =>
-                      dispatch({
-                        _t: "toggle",
-                      })
-                    }
-                  >
-                    <PlaceCard place={pin.place} type="list" />
-                  </div>
-                ))}
-                {post.contents.pins.map((pin) => (
-                  <div
-                    key={pin.pinId}
-                    onClick={() =>
-                      dispatch({
-                        _t: "toggle",
-                      })
-                    }
-                  >
-                    <PlaceCard place={pin.place} type="list" />
-                  </div>
-                ))}
-                {post.contents.pins.map((pin) => (
-                  <div
-                    key={pin.pinId}
-                    onClick={() =>
-                      dispatch({
-                        _t: "toggle",
-                      })
-                    }
-                  >
-                    <PlaceCard place={pin.place} type="list" />
-                  </div>
-                ))}
-                {post.contents.pins.map((pin) => (
-                  <div
-                    key={pin.pinId}
-                    onClick={() =>
-                      dispatch({
-                        _t: "toggle",
-                      })
-                    }
-                  >
+                  <div key={pin.pinId}>
                     <PlaceCard place={pin.place} type="list" />
                   </div>
                 ))}
