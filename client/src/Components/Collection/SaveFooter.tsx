@@ -1,25 +1,24 @@
-import { useState } from "react";
-import { useRouteMatch } from "react-router";
-import { useRecoilValue } from "recoil";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save2, SaveActive2, Secret } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
-import { ViewerInfo } from "../../Shared/atom";
+import { PostIsSaved, ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
 
 interface SaveFooterInterface {
   post: PostType;
-  fetchSavedPosts?: () => Promise<void>;
+  savedPosts?: PostType[];
+  setSavedPosts?: Dispatch<SetStateAction<PostType[]>>;
 }
-const SaveFooter = ({ post, fetchSavedPosts }: SaveFooterInterface) => {
-  const [isSaved, setIsSaved] = useState<boolean>(post.saved);
+const SaveFooter = ({ post }: SaveFooterInterface) => {
+  const [isSaved, setIsSaved] = useRecoilState(
+    PostIsSaved(post.postId.toString())
+  );
   const [savedNum, setSavedNum] = useState<number>(post.savedNum);
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const isMypage = useRouteMatch({
-    path: "/mypage",
-  })?.isExact;
 
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);
@@ -33,9 +32,6 @@ const SaveFooter = ({ post, fetchSavedPosts }: SaveFooterInterface) => {
     // 저장 취소
     else {
       await deleteSavedPost(post.postId);
-      if (isMypage && fetchSavedPosts) {
-        await fetchSavedPosts();
-      }
       if (post.saved || savedNum - post.savedNum === 1)
         setSavedNum(savedNum - 1);
     }

@@ -205,9 +205,11 @@ const Mypage = () => {
             loader={<div />}
             scrollableTarget="mypage-scroll"
           >
-            {savedPosts.map((post, i) => (
-              <Collection key={i} {...{ post }} />
-            ))}
+            {savedPosts
+              .filter((post) => post.saved !== false)
+              .map((post, i) => (
+                <Collection key={i} {...{ post, savedPosts, setSavedPosts }} />
+              ))}
           </InfiniteScroll>
         ) : (
           savedPostsResultStatus !== "loading" && (
