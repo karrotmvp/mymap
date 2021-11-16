@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { getPost, postPost, putPost } from "../../api/post";
+import { postPost, putPost, useGetPost } from "../../api/post";
 import { Close, Plus } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
@@ -94,19 +94,16 @@ const Write = () => {
 
   // 수정
   const postId = parseInt(useParams<{ postId: string }>().postId) ?? null;
+  const { data: post } = useGetPost(postId);
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    if (!isWrite && !isOnboarding) {
-      const fetchPost = async () => {
-        const data = await getPost(postId);
-        inputVal.setValue(data.title);
-        textareaVal.setValue(data.contents);
-        setIsShare(data.share);
-        setPlaces(data.pins.map((pin) => pin.place));
-      };
-      fetchPost();
+    if (!isWrite && !isOnboarding && post) {
+      inputVal.setValue(post.title);
+      textareaVal.setValue(post.contents);
+      setIsShare(post.share);
+      setPlaces(post.pins.map((pin) => pin.place));
     }
   }, []);
 

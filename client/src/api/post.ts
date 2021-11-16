@@ -1,11 +1,14 @@
 import { Pin } from "../Components/MapView";
 import { FeedType, PostType } from "../Shared/type";
 import { DELETE, GET, POST, PUT } from "../utils/axios";
+import { useQuery } from "react-query";
 
 // 리스트 상세
-export const getPost = async (postId: number) => {
+const getPost = async (postId: number) => {
   return (await GET(`api/post/${postId}`)) as PostType;
 };
+export const useGetPost = (postId: number) =>
+  useQuery(["useGetPost", postId], () => getPost(postId));
 
 // 새 리스트 생성
 interface PostBody {
@@ -35,12 +38,16 @@ interface GetFeedPostsParams {
   end?: number;
   perPage?: number;
 }
-export const getFeedPosts = async (
+const getFeedPosts = async (
   regionId: string,
   params: GetFeedPostsParams = {}
 ) => {
   return (await GET(`api/post/feed/${regionId}`, params)) as FeedType;
 };
+export const useGetFeedPosts = (
+  regionId: string,
+  params: GetFeedPostsParams = {}
+) => useQuery(["useGetFeedPosts"], () => getFeedPosts(regionId, params));
 
 // 리스트 저장
 export const postSavedPost = async (postId: number) => {
@@ -57,19 +64,25 @@ interface PaginationParams {
   page?: number;
   perPage?: number;
 }
-export const getSavedPosts = async (params: PaginationParams = {}) => {
+const getSavedPosts = async (params: PaginationParams = {}) => {
   return (await GET("api/post/savedPost", params)) as FeedType;
 };
+export const useGetSavedPosts = (params: PaginationParams = {}) =>
+  useQuery(["useGetSavedPosts"], () => getSavedPosts(params));
 
 // 내가 쓴 리스트
-export const getMyPosts = async (params: PaginationParams = {}) => {
+const getMyPosts = async (params: PaginationParams = {}) => {
   return (await GET("api/post/mypost", params)) as FeedType;
 };
+export const useGetMyPosts = (params: PaginationParams = {}) =>
+  useQuery(["useGetMyPosts"], () => getMyPosts(params));
 
 // 내가 쓴 리스트 전체
-export const getMyAllPosts = async (regionId: string) => {
+const getMyAllPosts = async (regionId: string) => {
   return (await GET("api/post/mypost/info", { regionId })) as PostType[];
 };
+export const useGetMyAllPosts = (regionId: string) =>
+  useQuery(["useGetMyAllPosts"], () => getMyAllPosts(regionId));
 
 // 장소 저장
 export const putPostPin = async (

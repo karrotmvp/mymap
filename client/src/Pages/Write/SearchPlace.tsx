@@ -8,7 +8,6 @@ import {
 } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { getSearch } from "../../api/place";
 import { Back, NoSearch, SearchClose } from "../../assets";
 import SearchList from "../../Components/SearchList";
 import useDebounce from "../../Hooks/useDebounce";
@@ -20,6 +19,7 @@ import PlaceMapView from "./PlaceMapView";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Mixpanel } from "../../utils/mixpanel";
 import { useHistory } from "react-router";
+import { useGetSearch } from "../../api/place";
 
 const SearchPlace = ({
   setIsSearchOpened,
@@ -49,19 +49,18 @@ const SearchPlace = ({
   const [resultHasMore, setResultHasMore] = useState(true);
   const [resultPage, setResultPage] = useState(1);
 
-  useEffect(() => {
-    Mixpanel.track("글작성 - 장소 검색 진입");
-  }, []);
-
-  // 검색
-  const getSearchItems = useCallback(async () => {
-    const data = await getSearch(regionId, {
+  const { data: searchResult, refetch: refetchSearchResult } = useGetSearch(
+    regionId,
+    {
       query: searchVal.value,
       page: resultPage,
-    });
-    setResult(data);
+    }
+  );
+
+  const getSearchItems = useCallback(async () => {
+    await refetchSearchResult();
+    if (searchResult) setResult(searchResult);
   }, [searchVal.value]);
-  // 검색 디바운스
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
 
   useEffect(() => {
@@ -76,18 +75,21 @@ const SearchPlace = ({
   };
   useEffect(() => {
     const fetchResult = async () => {
-      const data = await getSearch(regionId, {
-        query: searchVal.value,
-        page: resultPage,
-      });
-      if (data.length < 1) {
-        setResultHasMore(false);
-        return;
+      await refetchSearchResult();
+      if (searchResult) {
+        if (searchResult.length < 1) {
+          setResultHasMore(false);
+          return;
+        }
+        setResult([...result, ...searchResult]);
       }
-      setResult([...result, ...data]);
     };
     if (searchVal.value.length > 0) fetchResult();
   }, [resultPage]);
+
+  useEffect(() => {
+    Mixpanel.track("글작성 - 장소 검색 진입");
+  }, []);
 
   return (
     <Wrapper>

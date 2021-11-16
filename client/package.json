@@ -18,6 +18,7 @@
     "react-flickity-component": "^3.6.2",
     "react-infinite-scroll-component": "^6.1.0",
     "react-naver-maps": "^0.0.13",
+    "react-query": "^3.32.3",
     "react-router-dom": "^5.3.0",
     "react-router-ga": "^1.2.3",
     "react-scripts": "4.0.3",
@@ -60,6 +61,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-infinite-scroll-component": "^5.0.0",
+    "@types/react-query": "^1.2.9",
     "@types/react-router-dom": "^5.3.1",
     "@types/recoil": "^0.0.9",
     "@types/styled-components": "^5.1.14"
