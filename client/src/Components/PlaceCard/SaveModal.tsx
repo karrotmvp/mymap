@@ -283,7 +283,7 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 500;
+  z-index: 800;
   height: 100vh;
   width: 100%;
   .modal {
@@ -294,7 +294,7 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
     background-color: #fff;
     width: 100%;
     height: calc(100vh / 3 * 2);
-    z-index: 500;
+    z-index: 800;
     box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.15);
     border-radius: 2rem 2rem 0 0;
     padding: 0 2rem;
