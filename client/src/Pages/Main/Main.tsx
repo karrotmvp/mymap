@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Footer from "../../Components/Footer";
@@ -7,12 +8,12 @@ import MapView, { Pin } from "../../Components/MapView";
 import PinSlider from "../../Components/PinSlider";
 import { Back, Close, LogoTypo } from "../../assets";
 import { PlaceType, PostType } from "../../Shared/type";
-import { getFeedPosts } from "../../api/post";
 import { useRecoilValue } from "recoil";
 import { RegionId } from "../../Shared/atom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { WrapperWithFooter } from "../../styles/theme";
 import { mini } from "../../App";
+import { useGetFeedPosts } from "../../api/post";
 
 const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -23,35 +24,37 @@ const Main = () => {
     lng: 127.105399,
   });
 
-  // infinite scroll
   const [startIdx, setStartIdx] = useState(0);
   const [endIdx, setEndIdx] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+
+  const { data: feedPostsResult, refetch: refetchFeedPostsResult } =
+    useGetFeedPosts(regionId, {
+      start: startIdx,
+      end: endIdx,
+    });
+
   const handleNext = () => {
     setStartIdx(feedPosts[0]?.postId);
     setEndIdx(feedPosts[feedPosts.length - 1]?.postId);
   };
+
   useEffect(() => {
-    const fetchFeedPosts = async () => {
-      const data = await getFeedPosts(regionId, {
-        start: startIdx,
-        end: endIdx,
-      });
-      if (!data) {
-        return;
-      }
-      if (data.posts.length < 1) {
+    if (feedPostsResult) {
+      if (feedPostsResult.posts.length < 1) {
         setHasMore(false);
         return;
       }
-      setFeedPosts([...feedPosts, ...data.posts]);
+      setFeedPosts([...feedPosts, ...feedPostsResult.posts]);
       setCenter({
-        lat: data.coordinates.latitude,
-        lng: data.coordinates.longitude,
+        lat: feedPostsResult.coordinates.latitude,
+        lng: feedPostsResult.coordinates.longitude,
       });
-    };
-    fetchFeedPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+  }, [feedPostsResult]);
+
+  useEffect(() => {
+    refetchFeedPostsResult();
   }, [startIdx, endIdx, regionId]);
 
   const [pins, setPins] = useState<PlaceType[] | []>([]);

@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { getAroundPlaces, getSearch } from "../../api/place";
 import { Close, List, Map, NoSearch, Search, SearchClose } from "../../assets";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
@@ -23,77 +22,55 @@ import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useGetAroundPlaces, useGetSearch } from "../../api/place";
+import { reducer } from "./index.reducer";
 
 const Around = () => {
   const regionId = useRecoilValue(RegionId);
-  const [places, setPlaces] = useState<PlaceType[] | []>([]);
-  useEffect(() => {
-    const fetchAroundPlaces = async () => {
-      const data = await getAroundPlaces(regionId);
-      setPlaces([...places, ...data.places]);
-    };
-    fetchAroundPlaces();
-  }, []);
 
-  type State =
-    | {
-        _t: "map";
-      }
-    | {
-        _t: "list";
-      };
-  const reducer: React.Reducer<State, void> = (prevState) => {
-    switch (prevState._t) {
-      case "list":
-        return {
-          _t: "map",
-        };
-      case "map":
-        return {
-          _t: "list",
-        };
-    }
-  };
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
   });
 
-  // 검색
-  const [result, setResult] = useState<PlaceType[] | []>([]);
   const [resultHasMore, setResultHasMore] = useState(true);
   const [resultPage, setResultPage] = useState(1);
-
   const searchVal = useInput("");
-  const getSearchItems = useCallback(async () => {
-    const data = await getSearch(regionId, {
+  const [result, setResult] = useState<PlaceType[] | []>([]);
+
+  const { data: searchResult, refetch: refetchSearchResult } = useGetSearch(
+    regionId,
+    {
       query: searchVal.value,
       page: resultPage,
-    });
-    setResult(data);
+    }
+  );
+  const { data: aroundPlaces } = useGetAroundPlaces(regionId);
+
+  const getSearchItems = useCallback(async () => {
+    await refetchSearchResult();
+    if (searchResult) setResult(searchResult);
   }, [searchVal.value]);
-  // 검색 디바운스
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
+
   useEffect(() => {
     setResultPage(1);
     setResultHasMore(true);
     if (searchVal.value.length > 0) debouncedSearchVal();
   }, [searchVal.value]);
-
-  // 무한 스크롤
   const handleResultNext = () => {
     setResultPage(resultPage + 1);
   };
+
   useEffect(() => {
     const fetchResult = async () => {
-      const data = await getSearch(regionId, {
-        query: searchVal.value,
-        page: resultPage,
-      });
-      if (data.length < 1) {
-        setResultHasMore(false);
-        return;
+      await refetchSearchResult();
+      if (searchResult) {
+        if (searchResult.length < 1) {
+          setResultHasMore(false);
+          return;
+        }
+        setResult([...result, ...searchResult]);
       }
-      setResult([...result, ...data]);
     };
     if (searchVal.value.length > 0) fetchResult();
   }, [resultPage]);
@@ -176,19 +153,26 @@ const Around = () => {
                   </div>
 
                   <div className="cards">
-                    {places.map((place) => (
-                      <div key={place.placeId}>
-                        <PlaceCard {...{ place }} type="list" />
-                      </div>
-                    ))}
+                    {aroundPlaces &&
+                      aroundPlaces.places.map((place) => (
+                        <div key={place.placeId}>
+                          <PlaceCard {...{ place }} type="list" />
+                        </div>
+                      ))}
                   </div>
                 </div>
               )}
             </>
           ))
-          .with("map", () => (
-            <MapViewwithSlider places={result.length > 0 ? result : places} />
-          ))
+          .with(
+            "map",
+            () =>
+              aroundPlaces && (
+                <MapViewwithSlider
+                  places={result.length > 0 ? result : aroundPlaces.places}
+                />
+              )
+          )
           .exhaustive()}
 
         <Footer />

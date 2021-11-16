@@ -2,7 +2,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { deletePost, getPost } from "../../api/post";
+import { deletePost, useGetPost } from "../../api/post";
 import {
   Back,
   Close,
@@ -24,80 +24,18 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import dayjs from "dayjs";
-import { useRecoilStateLoadable, useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   ViewerInfo,
-  postDetailAtom,
   PageBeforeWrite,
   RegionId,
+  PostToEdit,
 } from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
-
-// const get = async () => {
-//   return new Promise((resolve) => {
-//     resolve(
-//       setTimeout(() => {
-//         console.log("asdf");
-//       }, 1000)
-//     );
-//   });
-// };
-
-// type state =
-//   | {
-//       _t: "pending";
-//     }
-//   | {
-//       _t: "rejected";
-//       result: any;
-//     }
-//   | {
-//       _t: "resolved";
-//       result: any;
-//     };
-
-// function make() {
-//   let status: state = { _t: "pending" };
-
-//   const b = async () => {
-//     try {
-//       status = {
-//         _t: "resolved",
-//         result: await get(),
-//       };
-//     } catch (error) {
-//       status = {
-//         _t: "rejected",
-//         result: error,
-//       };
-//     }
-//   };
-
-//   const c = async () => {
-//     try {
-//       await b();
-//     } finally {
-//       switch (status._t) {
-//         case "pending":
-//           throw b();
-//         case "rejected":
-//           throw status.result;
-//         case "resolved":
-//           return status.result;
-//         default:
-//           break;
-//       }
-//     }
-//   };
-
-//   return c();
-// }
-
-// console.log("asdf", make());
 
 const Detail = ({
   postId: postIdFromProps,
@@ -113,17 +51,14 @@ const Detail = ({
     useRouteMatch({
       path: "/detail/:postId/finish",
     })?.isExact ?? false;
-  const fromDetail =
-    useRouteMatch({
-      path: "/detail/:postId",
-    })?.isExact ?? false;
+  // const fromDetail =
+  //   useRouteMatch({
+  //     path: "/detail/:postId",
+  //   })?.isExact ?? false;
 
-  const postId =
-    fromWriteForm || fromDetail ? postIdFromParams : postIdFromProps!;
+  const postId = fromWriteForm ? postIdFromParams : postIdFromProps!;
 
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const [post, setPost] = useRecoilStateLoadable(postDetailAtom(postId));
-  // const resetPost = useResetRecoilState(postDetailAtom(parseInt(postId)));
 
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
@@ -134,17 +69,9 @@ const Detail = ({
   const regionId = useRecoilValue(RegionId);
 
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
+  const setPostToEdit = useSetRecoilState(PostToEdit);
 
-  const fetchPost = async () => {
-    const data = await getPost(postId);
-    setPost(data);
-  };
-
-  useEffect(() => {
-    if (fromWriteForm) {
-      fetchPost();
-    }
-  }, []);
+  const { data: post, refetch: refetchPost } = useGetPost(postId);
 
   useEffect(() => {
     const targetElement = document.querySelector("#detail-scroll");
@@ -179,14 +106,17 @@ const Detail = ({
     }
   };
 
-  if (post.state !== "hasValue") {
-    return null;
-  }
+  useEffect(() => {
+    if (fromWriteForm) refetchPost();
+  }, []);
+  useEffect(() => {
+    if (post) setPostToEdit(post);
+  }, [post]);
 
   return (
     <Container
-      animation={!(fromWriteForm || fromDetail)}
-      isMine={post.contents.user.userId === viewerInfo.userId}
+      animation={!fromWriteForm}
+      isMine={post?.user.userId === viewerInfo.userId}
     >
       <Header style={{ zIndex: 600 }}>
         <>
@@ -214,7 +144,7 @@ const Detail = ({
           )}
           {(state._t === "map" ||
             (state._t === "list" && state.isScrollUp)) && (
-            <div className="post-title">{post.contents.title}</div>
+            <div className="post-title">{post?.title}</div>
           )}
           <div
             className="view-toggle"
@@ -239,7 +169,7 @@ const Detail = ({
               ))
               .exhaustive()}
           </div>
-          {post.contents.user.userId === viewerInfo.userId && (
+          {post?.user.userId === viewerInfo.userId && (
             <More2
               className="right-icon"
               onClick={() => setIsEditModalOpened(true)}
@@ -253,36 +183,36 @@ const Detail = ({
           .with("list", () => (
             <Wrapper
               id="detail-scroll"
-              isMine={post.contents.user.userId === viewerInfo.userId}
+              isMine={post?.user.userId === viewerInfo.userId}
             >
               <div className="post-title">
-                <Title>{post.contents.title}</Title>
-                <div className="content">{post.contents.contents}</div>
+                <Title>{post?.title}</Title>
+                <div className="content">{post?.contents}</div>
               </div>
 
               <Profile>
-                {post.contents.user.profileImageUrl ? (
+                {post?.user.profileImageUrl ? (
                   <img
                     className="photo"
                     alt="profile"
-                    src={post.contents.user.profileImageUrl}
+                    src={post?.user.profileImageUrl}
                   />
                 ) : (
                   <Thumbnail className="photo" />
                 )}
                 <div>
                   <div className="name">
-                    {post.contents.user.userName}님이 추천하는 리스트예요.
+                    {post?.user.userName}님이 추천하는 리스트예요.
                   </div>
                   <div className="date">
-                    {dayjs(post.contents.createdAt).format("YYYY년 MM월 DD일")}{" "}
-                    · {post.contents.regionName}
+                    {dayjs(post?.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
+                    {post?.regionName}
                   </div>
                 </div>
               </Profile>
 
               <div className="cards">
-                {post.contents.pins.map((pin) => (
+                {post?.pins.map((pin) => (
                   <div key={pin.pinId}>
                     <PlaceCard place={pin.place} type="list" />
                   </div>
@@ -290,21 +220,23 @@ const Detail = ({
               </div>
             </Wrapper>
           ))
-          .with("map", () => (
-            <MapViewwithSlider
-              places={post.contents.pins.map((p) => p.place)}
-            />
-          ))
+          .with(
+            "map",
+            () =>
+              post && (
+                <MapViewwithSlider places={post.pins.map((p) => p.place)} />
+              )
+          )
           .exhaustive()}
       </div>
 
       {isEditModalOpened &&
-        (post.contents.regionId !== regionId ? (
+        (post?.regionId !== regionId ? (
           <Alert
             close={() => setIsEditModalOpened(false)}
             title="작성한 동네가 아니예요."
             sub={`작성한 동네에서만 수정할 수 있어요.
-${post.contents.regionName}에 인증해 주세요.`}
+${post?.regionName}에 인증해 주세요.`}
           >
             <Button
               className="orange"
@@ -348,8 +280,9 @@ ${post.contents.regionName}에 인증해 주세요.`}
         </Alert>
       )}
 
-      {post.contents.user.userId !== viewerInfo.userId &&
-        state._t !== "map" && <SaveButton {...post.contents} />}
+      {post?.user.userId !== viewerInfo.userId &&
+        post &&
+        state._t !== "map" && <SaveButton {...post} />}
     </Container>
   );
 };
@@ -373,12 +306,8 @@ const slideFromBotton = keyframes`
 
 const Container = styled.div<{ isMine: boolean; animation?: boolean }>`
   animation: ${({ animation }) => (animation ? slideFromLeft : "")} 0.25s linear;
-  animation: ${slideFromLeft} 0.25s linear;
   .view-toggle {
     right: ${({ isMine }) => (isMine ? "5rem" : "2rem")};
-  }
-  .content {
-    animation: ${slideFromLeft} 0.25s linear;
   }
   ${WrapperWithHeader};
   position: fixed;

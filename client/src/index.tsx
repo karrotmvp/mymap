@@ -9,6 +9,7 @@ import { RecoilRoot } from "recoil";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import mixpanel from "mixpanel-browser";
+import { QueryClientProvider, QueryClient } from "react-query";
 
 Sentry.init({
   dsn: "https://4f85a46b252644a590e9413fa9cd9b6b@o1046587.ingest.sentry.io/6023393",
@@ -21,13 +22,17 @@ Sentry.init({
 
 mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN as string);
 
+const queryClient = new QueryClient();
+
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <GlobalStyle />
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <GlobalStyle />
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </QueryClientProvider>
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
