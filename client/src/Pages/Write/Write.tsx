@@ -1,13 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ChangeEvent, useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { getPost, postPost, putPost } from "../../api/post";
 import { Close, Plus } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
-import { PageBeforeWrite, RegionId } from "../../Shared/atom";
+import { DetailId, PageBeforeWrite, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -25,6 +26,12 @@ import SearchPlace from "./SearchPlace";
 
 const Write = () => {
   const history = useHistory();
+  const setDetailId = useSetRecoilState(DetailId);
+
+  // 상세 -> 수정
+  useEffect(() => {
+    setDetailId(null);
+  }, []);
 
   const { isExact: isWrite } =
     useRouteMatch({
@@ -101,7 +108,6 @@ const Write = () => {
       };
       fetchPost();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 완료
