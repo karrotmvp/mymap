@@ -113,10 +113,10 @@ export class PostController {
     @ApiQuery({ name: 'postId', example: '[1, 2, 3]', description: '핀 추가할 테마 Id' })
     @ApiBody({ type: CreatePinDTO })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    async handlePin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO) {
+    async handlePin(@Req() req: any, @Query('postId') postIds: number[], @Body() pin: CreatePinDTO, @Query('regionId') regionId: string) {
         if (!postIds) postIds = [];
         postIds = postIds.map(postId => Number(postId));
-        await this.postService.handlePin(req.user.userId, postIds, pin);
+        await this.postService.handlePin(req.user.userId, postIds, pin, regionId);
     }
 
     @UseGuards(JwtAuthGuard)
