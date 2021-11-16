@@ -1,6 +1,6 @@
 import { atom, atomFamily, selectorFamily } from "recoil";
 import { getLogin } from "../api/user";
-import { UserType } from "./type";
+import { PostType, UserType } from "./type";
 
 export const RegionId = atom({
   key: "region_id",
@@ -28,6 +28,11 @@ export const PlaceToSave = atom({
     isModalOpened: false,
     placeId: "",
   },
+});
+
+export const PostToEdit = atom<PostType | null>({
+  key: "PostToEdit",
+  default: null,
 });
 
 export const PageBeforeWrite = atom({

@@ -86,35 +86,34 @@ const Mypage = () => {
   const handleMyPostNext = () => {
     setMyPostPage(myPostPage + 1);
   };
-  useEffect(() => {
-    const fetch = async () => {
-      await refetchMyPostsResult();
-      if (myPostsResult) {
-        if (myPostsResult.posts.length < 1) {
-          setMyPostsHasMore(false);
-          return;
-        }
-        setMyPosts([...myPosts, ...myPostsResult.posts]);
-      }
-    };
-    fetch();
-  }, [myPostPage]);
-
   const handleSavedPostNext = () => {
     setSavedPostPage(savedPostPage + 1);
   };
+
   useEffect(() => {
-    const fetch = async () => {
-      await refetchSavedPostsResult();
-      if (savedPostsResult) {
-        if (savedPostsResult.posts.length < 1) {
-          setSavedPostsHasMore(false);
-          return;
-        }
-        setSavedPosts([...myPosts, ...savedPostsResult.posts]);
+    if (myPostsResult) {
+      if (myPostsResult.posts.length < 1) {
+        setMyPostsHasMore(false);
+        return;
       }
-    };
-    fetch();
+      setMyPosts([...myPosts, ...myPostsResult.posts]);
+    }
+  }, [myPostsResult]);
+  useEffect(() => {
+    if (savedPostsResult) {
+      if (savedPostsResult.posts.length < 1) {
+        setSavedPostsHasMore(false);
+        return;
+      }
+      setSavedPosts([...savedPosts, ...savedPostsResult.posts]);
+    }
+  }, [savedPostsResult]);
+
+  useEffect(() => {
+    refetchMyPostsResult();
+  }, [myPostPage]);
+  useEffect(() => {
+    refetchSavedPostsResult();
   }, [savedPostPage]);
 
   useEffect(() => {

@@ -40,21 +40,21 @@ const Main = () => {
   };
 
   useEffect(() => {
-    const fetchFeedPosts = async () => {
-      await refetchFeedPostsResult();
-      if (feedPostsResult) {
-        if (feedPostsResult.posts.length < 1) {
-          setHasMore(false);
-          return;
-        }
-        setFeedPosts([...feedPosts, ...feedPostsResult.posts]);
-        setCenter({
-          lat: feedPostsResult.coordinates.latitude,
-          lng: feedPostsResult.coordinates.longitude,
-        });
+    if (feedPostsResult) {
+      if (feedPostsResult.posts.length < 1) {
+        setHasMore(false);
+        return;
       }
-    };
-    fetchFeedPosts();
+      setFeedPosts([...feedPosts, ...feedPostsResult.posts]);
+      setCenter({
+        lat: feedPostsResult.coordinates.latitude,
+        lng: feedPostsResult.coordinates.longitude,
+      });
+    }
+  }, [feedPostsResult]);
+
+  useEffect(() => {
+    refetchFeedPostsResult();
   }, [startIdx, endIdx, regionId]);
 
   const [pins, setPins] = useState<PlaceType[] | []>([]);

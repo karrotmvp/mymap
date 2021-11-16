@@ -2,13 +2,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import {
-  deletePost,
-  useGetFeedPosts,
-  useGetMyAllPosts,
-  useGetMyPosts,
-  useGetPost,
-} from "../../api/post";
+import { deletePost, useGetPost } from "../../api/post";
 import {
   Back,
   Close,
@@ -30,8 +24,13 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import dayjs from "dayjs";
-import { useRecoilValue } from "recoil";
-import { ViewerInfo, PageBeforeWrite, RegionId } from "../../Shared/atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  ViewerInfo,
+  PageBeforeWrite,
+  RegionId,
+  PostToEdit,
+} from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
@@ -52,13 +51,12 @@ const Detail = ({
     useRouteMatch({
       path: "/detail/:postId/finish",
     })?.isExact ?? false;
-  const fromDetail =
-    useRouteMatch({
-      path: "/detail/:postId",
-    })?.isExact ?? false;
+  // const fromDetail =
+  //   useRouteMatch({
+  //     path: "/detail/:postId",
+  //   })?.isExact ?? false;
 
-  const postId =
-    fromWriteForm || fromDetail ? postIdFromParams : postIdFromProps!;
+  const postId = fromWriteForm ? postIdFromParams : postIdFromProps!;
 
   const viewerInfo = useRecoilValue(ViewerInfo);
 
@@ -71,11 +69,9 @@ const Detail = ({
   const regionId = useRecoilValue(RegionId);
 
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
+  const setPostToEdit = useSetRecoilState(PostToEdit);
 
   const { data: post, refetch: refetchPost } = useGetPost(postId);
-  const { refetch: refetchFeedPosts } = useGetFeedPosts(regionId);
-  const { refetch: refetchMyPosts } = useGetMyPosts();
-  const { refetch: refetchMyAllPosts } = useGetMyAllPosts(regionId);
 
   useEffect(() => {
     const targetElement = document.querySelector("#detail-scroll");
@@ -96,9 +92,6 @@ const Detail = ({
   };
   const onDeleteConfirmClick = async () => {
     await deletePost(fromWriteForm ? postIdFromParams : postId!);
-    refetchFeedPosts();
-    refetchMyPosts();
-    refetchMyAllPosts();
 
     if (fromWriteForm) {
       history.push(
@@ -116,10 +109,13 @@ const Detail = ({
   useEffect(() => {
     if (fromWriteForm) refetchPost();
   }, []);
+  useEffect(() => {
+    if (post) setPostToEdit(post);
+  }, [post]);
 
   return (
     <Container
-      animation={!(fromWriteForm || fromDetail)}
+      animation={!fromWriteForm}
       isMine={post?.user.userId === viewerInfo.userId}
     >
       <Header style={{ zIndex: 600 }}>
@@ -310,12 +306,8 @@ const slideFromBotton = keyframes`
 
 const Container = styled.div<{ isMine: boolean; animation?: boolean }>`
   animation: ${({ animation }) => (animation ? slideFromLeft : "")} 0.25s linear;
-  animation: ${slideFromLeft} 0.25s linear;
   .view-toggle {
     right: ${({ isMine }) => (isMine ? "5rem" : "2rem")};
-  }
-  .content {
-    animation: ${slideFromLeft} 0.25s linear;
   }
   ${WrapperWithHeader};
   position: fixed;

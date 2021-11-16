@@ -3,12 +3,17 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { postPost, putPost, useGetPost } from "../../api/post";
+import { postPost, putPost } from "../../api/post";
 import { Close, Plus } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
-import { DetailId, PageBeforeWrite, RegionId } from "../../Shared/atom";
+import {
+  DetailId,
+  PageBeforeWrite,
+  PostToEdit,
+  RegionId,
+} from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -94,16 +99,16 @@ const Write = () => {
 
   // 수정
   const postId = parseInt(useParams<{ postId: string }>().postId) ?? null;
-  const { data: post } = useGetPost(postId);
+  const postToEdit = useRecoilValue(PostToEdit);
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    if (!isWrite && !isOnboarding && post) {
-      inputVal.setValue(post.title);
-      textareaVal.setValue(post.contents);
-      setIsShare(post.share);
-      setPlaces(post.pins.map((pin) => pin.place));
+    if (!isWrite && !isOnboarding && postToEdit) {
+      inputVal.setValue(postToEdit.title);
+      textareaVal.setValue(postToEdit.contents);
+      setIsShare(postToEdit.share);
+      setPlaces(postToEdit.pins.map((pin) => pin.place));
     }
   }, []);
 
