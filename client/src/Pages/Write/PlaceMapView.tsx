@@ -6,7 +6,7 @@ import { putPostPin } from "../../api/post";
 import { Back, Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
 import PlaceBox from "../../Components/PlaceCard/PlaceCard";
-import { PageBeforeWrite } from "../../Shared/atom";
+import { PageBeforeWrite, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { Button, flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -27,6 +27,7 @@ const PlaceMapView = ({
   const history = useHistory();
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
   const { postId } = useParams<{ postId: string }>();
+  const regionId = useRecoilValue(RegionId);
 
   const handleAddPlace = (place: PlaceType) => {
     Mixpanel.track("글작성 - 장소 추가");
@@ -36,7 +37,7 @@ const PlaceMapView = ({
     if (pageBeforeWrite === "emptyTheme") {
       const addPlaceToEmptyTheme = async () => {
         await putPostPin(
-          { postId: [parseInt(postId)] },
+          { postId: [parseInt(postId)], regionId },
           { placeId: place.placeId }
         );
         history.push(`/detail/${postId}/finish`);

@@ -75,6 +75,7 @@ export const getMyAllPosts = async (regionId: string) => {
 export const putPostPin = async (
   params: {
     postId: number[];
+    regionId: string;
   },
   body: {
     review?: string;

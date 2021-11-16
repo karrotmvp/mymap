@@ -73,7 +73,7 @@ const SaveModal = () => {
   const handleSubmit = async () => {
     if (isSubmitable) {
       await putPostPin(
-        { postId: state.selected },
+        { postId: state.selected, regionId },
         { placeId: placeToSave.placeId }
       );
       setPlaceToSave({

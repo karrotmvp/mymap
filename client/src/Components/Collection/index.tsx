@@ -20,12 +20,7 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
   const setDetailId = useSetRecoilState(DetailId);
 
   return (
-    <Wrapper
-      onClick={() =>
-        // post.pins.length > 0 && history.push(`/detail/${post.postId}`)
-        setDetailId(post.postId)
-      }
-    >
+    <Wrapper onClick={() => post.pins.length > 0 && setDetailId(post.postId)}>
       <div className="title-wrapper">
         <div style={{ width: "100%" }}>
           <div className="title">{post.title}</div>
