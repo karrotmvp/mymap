@@ -342,6 +342,10 @@ const Theme = styled.div<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.5)};
   & > div {
     margin-left: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-y: hidden;
+    width: 100%;
   }
 `;
 
