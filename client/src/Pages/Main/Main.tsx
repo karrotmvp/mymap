@@ -39,12 +39,19 @@ const Main = () => {
     setEndIdx(feedPosts[feedPosts.length - 1]?.postId);
   };
 
+  let lastStartIdx = 0,
+    lastEndIdx = 0;
+
   useEffect(() => {
+    lastStartIdx = startIdx;
+    lastEndIdx = endIdx;
+
     if (feedPostsResult) {
       if (feedPostsResult.posts.length < 1) {
         setHasMore(false);
         return;
       }
+
       setFeedPosts([...feedPosts, ...feedPostsResult.posts]);
       setCenter({
         lat: feedPostsResult.coordinates.latitude,
@@ -54,8 +61,11 @@ const Main = () => {
   }, [feedPostsResult]);
 
   useEffect(() => {
-    refetchFeedPostsResult();
-  }, [startIdx, endIdx, regionId]);
+    console.log("asdf", startIdx, endIdx);
+    if (startIdx !== lastStartIdx && endIdx !== lastEndIdx) {
+      refetchFeedPostsResult();
+    }
+  }, [startIdx, endIdx]);
 
   const [pins, setPins] = useState<PlaceType[] | []>([]);
   const [feedPins, setfeedPins] = useState<Pin[] | []>([]);
