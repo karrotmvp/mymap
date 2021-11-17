@@ -17,11 +17,10 @@ export const ViewerInfo = atom<UserType>({
   },
 });
 
-export const PostIsSaved = (postId: string, defaultVal?: boolean) =>
-  atom({
-    key: postId,
-    default: defaultVal ?? false,
-  });
+export const PostIsSaved = atomFamily({
+  key: "PostIsSaved",
+  default: false,
+});
 
 export const DetailId = atom<number | null>({
   key: "DetailId",
