@@ -8,7 +8,6 @@ import { theme } from "./styles/theme";
 import { RecoilRoot } from "recoil";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
-import mixpanel from "mixpanel-browser";
 import { QueryClientProvider, QueryClient } from "react-query";
 
 Sentry.init({
@@ -19,8 +18,6 @@ Sentry.init({
   // for finer control
   tracesSampleRate: 1.0,
 });
-
-mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN as string);
 
 const queryClient = new QueryClient();
 

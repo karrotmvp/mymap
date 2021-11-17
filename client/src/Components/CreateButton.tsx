@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import mixpanel from "mixpanel-browser";
 import { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -7,6 +6,7 @@ import styled from "styled-components";
 import { CreatePlus } from "../assets";
 import { PageBeforeWrite } from "../Shared/atom";
 import { flexCenter, theme } from "../styles/theme";
+import { Mixpanel } from "../utils/mixpanel";
 
 const CreateButton = ({ targetId }: { targetId: string }) => {
   const [isLong, setIsLong] = useState(true);
@@ -36,7 +36,7 @@ const CreateButton = ({ targetId }: { targetId: string }) => {
     return () => targetElement.removeEventListener("scroll", onSrcoll);
   }, []);
   return (
-    <Link to="/write" onClick={() => mixpanel.track("글작성 버튼 누름")}>
+    <Link to="/write" onClick={() => Mixpanel.track("글작성 버튼 누름")}>
       <Wrapper {...{ isLong }}>
         <CreatePlus />
         {isLong && <div className="text">테마 만들기</div>}
