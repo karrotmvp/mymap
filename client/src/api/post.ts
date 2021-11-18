@@ -47,10 +47,7 @@ const getFeedPosts = async (
 export const useGetFeedPosts = (
   regionId: string,
   params: GetFeedPostsParams = {}
-) =>
-  useQuery(["useGetFeedPosts"], () => getFeedPosts(regionId, params), {
-    refetchOnMount: "always",
-  });
+) => useQuery(["useGetFeedPosts"], () => getFeedPosts(regionId, params));
 
 // 리스트 저장
 export const postSavedPost = async (postId: number) => {

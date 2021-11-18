@@ -27,12 +27,13 @@ import SearchPlace from "./Pages/Write/SearchPlace";
 import Header from "./Components/Header";
 import SaveModal from "./Components/PlaceCard/SaveModal";
 import { regions } from "./utils/const";
+import { useGetRegion } from "./api/region";
 
 dayjs.locale("ko");
 
 export const mini = new Mini();
 
-// const preload = new URLSearchParams(window.location.search).get("preload");
+const preload = new URLSearchParams(window.location.search).get("preload");
 let regionIdFromParmas =
   new URLSearchParams(window.location.search).get("region_id") ??
   "6530459d189b";
@@ -43,6 +44,8 @@ const code = new URLSearchParams(window.location.search).get("code");
 function App() {
   const [regionId, setRegionId] = useRecoilState(RegionId);
   const setCode = useSetRecoilState(Code);
+
+  const { data: regionName } = useGetRegion(regionIdFromParmas);
 
   useEffect(() => {
     setRegionId(regionIdFromParmas);
@@ -113,7 +116,8 @@ function App() {
   // 미오픈 지역
   if (
     !regions.find((region) => region === regionId) &&
-    process.env.NODE_ENV !== "development"
+    process.env.NODE_ENV !== "development" &&
+    !preload
   ) {
     return (
       <Wrapper>
@@ -123,7 +127,7 @@ function App() {
         <div className="center">
           <LogoInactive />
           <div>
-            {/* <span>{viewerInfo.regionName}</span> */}
+            <span>{regionName && regionName}</span>
             {`의 당장모아는
 오픈 준비 중이에요.`}
           </div>
@@ -136,7 +140,7 @@ function App() {
     <Router>
       <div className="App">
         {/* {viewerInfo.userId ? ( */}
-        {regionId && (
+        {regionId && !preload && (
           <Analytics id="UA-211655411-1" debug>
             <Switch>
               <Route exact path="/" component={Main} />
