@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "src/user/entities/user.entity";
@@ -19,23 +19,27 @@ export class RolesGuard implements CanActivate {
             context.getHandler(),
             context.getClass()
         ]);
-        let permission = Role.Unsigned_User
-        if (requireRole === undefined) return true;
-        const req = context.switchToHttp().getRequest()
-        const BearerHeader: string = req.headers.authorization
-        const token = BearerHeader ? BearerHeader.substring(7, BearerHeader.length) : null;
-        let userObj = { userId: null }
-        if (token && token.length > 0) {
-            const payload = await this.jwtService.verify(token);
-            const userId = payload.sub;
-            const user: User = await this.userService.readUser(userId);
-            permission = user ? Role.Signed_User : Role.Unsigned_User;
-            if (requireRole === Role.Admin) {
-                permission = await this.userService.checkAdmin(userId) ? Role.Admin : permission;
+        try {
+            let permission = Role.Unsigned_User
+            if (requireRole === undefined) return true;
+            const req = context.switchToHttp().getRequest()
+            const BearerHeader: string = req.headers.authorization
+            const token = BearerHeader ? BearerHeader.substring(7, BearerHeader.length) : null;
+            let userObj = { userId: null }
+            if (token && token.length > 0) {
+                const payload = await this.jwtService.verify(token);
+                const userId = payload.sub;
+                const user: User = await this.userService.readUser(userId);
+                permission = user ? Role.Signed_User : Role.Unsigned_User;
+                if (requireRole === Role.Admin) {
+                    permission = await this.userService.checkAdmin(userId) ? Role.Admin : permission;
+                }
+                userObj.userId = userId
             }
-            userObj.userId = userId
+            req.user = userObj;
+            return requireRole <= permission ? true : false
+        } catch (e) {
+            throw new UnauthorizedException();
         }
-        req.user = userObj;
-        return requireRole <= permission ? true : false
     }
 }
