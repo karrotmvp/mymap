@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer, useState } from "react";
+import { useRouteMatch } from "react-router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { keyframes } from "styled-components";
 import { match } from "ts-pattern";
@@ -14,9 +15,11 @@ import {
 import useInput from "../../Hooks/useInput";
 import { PlaceToSave, RegionId, ToastMessage } from "../../Shared/atom";
 import { flexCenter, theme } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 import { reducer } from "./index.reducer";
 
 const SaveModal = () => {
+  const isAround = useRouteMatch({ path: "/around" })?.isExact;
   const [state, dispatch] = useReducer(reducer, {
     _t: null,
     isLocked: false,
@@ -39,6 +42,10 @@ const SaveModal = () => {
 
   const handleSubmit = async () => {
     if (isSubmitable) {
+      Mixpanel.track("장소 저장");
+      if (isAround) {
+        Mixpanel.track("둘러보기 - 장소 저장");
+      }
       await putPostPin(
         { postId: state.selected, regionId },
         { placeId: placeToSave.placeId }
@@ -63,6 +70,7 @@ const SaveModal = () => {
     if (newThemeValue.value.length > 0) {
       if (submitCheck()) return;
 
+      Mixpanel.track("장소 저장 - 새로운 테마 만들기");
       const body = {
         title: newThemeValue.value,
         regionId,
@@ -231,7 +239,7 @@ const SaveModal = () => {
               ) : (
                 <Unselect />
               )}
-              <div>{post.title}</div>
+              <div className="theme-title">{post.title}</div>
             </Theme>
           ))}
         </div>
@@ -336,7 +344,7 @@ const Theme = styled.div<{ disabled?: boolean }>`
   font-size: 1.5rem;
   line-height: 135%;
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.5)};
-  & > div {
+  .theme-title {
     margin-left: 1rem;
     white-space: nowrap;
     text-overflow: ellipsis;

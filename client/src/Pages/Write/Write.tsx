@@ -159,7 +159,7 @@ const Write = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    Mixpanel.track("글작성 완료");
+    Mixpanel.track("글작성 - 작성 완료");
     const body = {
       title: inputVal.value,
       contents: textareaVal.value,

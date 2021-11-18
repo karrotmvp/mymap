@@ -9,7 +9,7 @@ const SubmitFinish = () => {
   const history = useHistory();
 
   const onClickButton = async () => {
-    Mixpanel.track("글작성 완료 후 둘러보기");
+    Mixpanel.track("온보딩 - 글작성 완료 후 둘러보기");
     history.push("/");
   };
 

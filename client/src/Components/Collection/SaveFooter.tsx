@@ -7,6 +7,7 @@ import useDebounce from "../../Hooks/useDebounce";
 import { PostIsSaved, ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 interface SaveFooterInterface {
   post: PostType;
@@ -25,6 +26,7 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
 
     // 저장
     if (!isSaved) {
+      Mixpanel.track("테마 저장 - 메인");
       await postSavedPost(post.postId);
       if (!post.saved || savedNum - post.savedNum === -1)
         setSavedNum(savedNum + 1);

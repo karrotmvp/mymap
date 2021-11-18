@@ -9,6 +9,7 @@ import {
   Mypage,
   MypageActive,
 } from "../assets";
+import { Mixpanel } from "../utils/mixpanel";
 
 const Footer = () => {
   const pathname = window.location.pathname;
@@ -19,7 +20,11 @@ const Footer = () => {
         {pathname === "/" ? <HomeActive /> : <Home />}
         <div>추천 테마</div>
       </FooterLink>
-      <FooterLink to="/around" $isClicked={pathname === "/around"}>
+      <FooterLink
+        to="/around"
+        $isClicked={pathname === "/around"}
+        onClick={() => Mixpanel.track("둘러보기 - 진입")}
+      >
         {pathname === "/around" ? <AroundActive /> : <Around />}
         <div>장소 둘러보기</div>
       </FooterLink>

@@ -6,6 +6,7 @@ import useDebounce from "../../Hooks/useDebounce";
 import { PostIsSaved } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const SaveButton = (post: PostType) => {
   const [isSaved, setIsSaved] = useRecoilState(
@@ -13,8 +14,10 @@ const SaveButton = (post: PostType) => {
   );
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);
-    if (!isSaved) await postSavedPost(post.postId);
-    else await deleteSavedPost(post.postId);
+    if (!isSaved) {
+      Mixpanel.track("테마 저장 - 상세");
+      await postSavedPost(post.postId);
+    } else await deleteSavedPost(post.postId);
   };
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);
 

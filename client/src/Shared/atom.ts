@@ -21,6 +21,10 @@ export const PostIsSaved = atomFamily({
   key: "PostIsSaved",
   default: false,
 });
+export const PostIsDefaultEmpty = atomFamily({
+  key: "PostIsSaved",
+  default: false,
+});
 
 export const DetailId = atom<number | null>({
   key: "DetailId",

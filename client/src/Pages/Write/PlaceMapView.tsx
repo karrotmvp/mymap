@@ -6,7 +6,11 @@ import { putPostPin } from "../../api/post";
 import { Back, Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
 import PlaceBox from "../../Components/PlaceCard/PlaceCard";
-import { PageBeforeWrite, RegionId } from "../../Shared/atom";
+import {
+  PageBeforeWrite,
+  PostIsDefaultEmpty,
+  RegionId,
+} from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { Button, flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -25,12 +29,18 @@ const PlaceMapView = ({
   setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
 }) => {
   const history = useHistory();
-  const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
   const { postId } = useParams<{ postId: string }>();
+
+  const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
   const regionId = useRecoilValue(RegionId);
+  const isDefaultEmpty = useRecoilValue(PostIsDefaultEmpty(postId));
 
   const handleAddPlace = (place: PlaceType) => {
-    Mixpanel.track("글작성 - 장소 추가");
+    Mixpanel.track("글작성 - 장소 추가 완료");
+    if (isDefaultEmpty) {
+      Mixpanel.track("기본테마 - 장소 추가 완료");
+    }
+
     setPlaces([...places, place]);
     setIsSearchOpened(false);
 

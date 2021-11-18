@@ -74,7 +74,7 @@ function App() {
     } else if (!preload) {
       setRegionId(regionId as string);
       if (code) {
-        Mixpanel.track("기존 유저 로그인");
+        Mixpanel.track("로그인 - 기존 유저");
         getViewerInfo(code, regionId as string);
       } else {
         mini.startPreset({
@@ -84,7 +84,7 @@ function App() {
           },
           onSuccess: function (result) {
             if (result && result.code) {
-              Mixpanel.track("새로운 유저 로그인");
+              Mixpanel.track("로그인 - 새로운 유저");
               getViewerInfo(result.code, regionId as string);
             }
           },

@@ -4,9 +4,15 @@ import { useHistory, useRouteMatch } from "react-router";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { More, Plus } from "../../assets";
-import { DetailId, PageBeforeWrite, PostIsSaved } from "../../Shared/atom";
+import {
+  DetailId,
+  PageBeforeWrite,
+  PostIsDefaultEmpty,
+  PostIsSaved,
+} from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 import OrangePlaceBox from "../OrangePlaceBox";
 import SaveFooter from "./SaveFooter";
 
@@ -24,11 +30,17 @@ const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
   const [isSaved, setIsSaved] = useRecoilState(
     PostIsSaved(post.postId.toString())
   );
+  const [isDefaultEmpty, setIsDefaultEmpty] = useRecoilState(
+    PostIsDefaultEmpty(post.postId.toString())
+  );
 
   const isMypage = useRouteMatch({ path: "/mypage" })?.isExact;
 
   useEffect(() => {
     setIsSaved(post.saved);
+    if (post.title === "기본 테마" && post.pins.length === 0) {
+      setIsDefaultEmpty(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -40,6 +52,14 @@ const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
       ]);
     }
   }, [isSaved]);
+
+  const handleClickEmptyTheme = () => {
+    if (isDefaultEmpty) {
+      Mixpanel.track("기본테마 - 장소 추가 진입");
+    }
+    setPageBeforeWrite("emptyTheme");
+    history.push(`/edit/${post.postId}`);
+  };
 
   return (
     <Wrapper onClick={() => post.pins.length > 0 && setDetailId(post.postId)}>
@@ -60,12 +80,7 @@ const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
             </div>
           ))
         ) : (
-          <EmptyOrangePlaceBox
-            onClick={() => {
-              setPageBeforeWrite("emptyTheme");
-              history.push(`/edit/${post.postId}`);
-            }}
-          >
+          <EmptyOrangePlaceBox onClick={handleClickEmptyTheme}>
             <Plus className="orange-plus" />
             <div>{`저장한 장소가 없어요
 장소를 저장해 주세요`}</div>
