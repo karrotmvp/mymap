@@ -10,8 +10,6 @@ interface StartPresetProps {
   regionId: string;
 }
 
-export const token = localStorage.getItem("token");
-
 export const startPreset = ({
   setViewerInfo,
   code,
@@ -36,7 +34,8 @@ export const startPreset = ({
       regionName: "역삼1동",
       profileImageUrl: "",
     });
-    localStorage.setItem("token", "isLogined");
+    if (!localStorage.getItem("token"))
+      localStorage.setItem("token", "isLogined");
   } else {
     if (code) {
       Mixpanel.track("로그인 - 기존 유저");

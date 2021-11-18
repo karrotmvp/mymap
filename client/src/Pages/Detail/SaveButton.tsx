@@ -7,7 +7,7 @@ import { Code, PostIsSaved, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { startPreset, token } from "../../utils/preset";
+import { startPreset } from "../../utils/preset";
 
 const SaveButton = (post: PostType) => {
   const [isSaved, setIsSaved] = useRecoilState(
@@ -19,7 +19,7 @@ const SaveButton = (post: PostType) => {
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const handleSaveToggle = async () => {
-    if (!token) {
+    if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, code, regionId } });
     } else {
       setIsSaved(!isSaved);

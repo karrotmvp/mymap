@@ -8,7 +8,7 @@ import { PostIsSaved, ViewerInfo, Code, RegionId } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { startPreset, token } from "../../utils/preset";
+import { startPreset } from "../../utils/preset";
 
 interface SaveFooterInterface {
   post: PostType;
@@ -27,7 +27,7 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const handleSaveToggle = async () => {
-    if (!token) {
+    if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, code, regionId } });
     } else {
       setIsSaved(!isSaved);

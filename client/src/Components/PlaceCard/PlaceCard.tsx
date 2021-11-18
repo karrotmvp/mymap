@@ -1,9 +1,10 @@
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Call, PlaceAdd, Time } from "../../assets";
-import { PlaceToSave } from "../../Shared/atom";
+import { Code, PlaceToSave, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
+import { startPreset } from "../../utils/preset";
 
 // 1: 작성하기
 // 2: 그외 지도뷰
@@ -25,7 +26,21 @@ const PlaceCard = ({
     `${place.businessHoursFrom} - ${place.businessHoursTo}`;
   if (place.businessHoursExtra) time += ` ${place.businessHoursExtra}`;
 
+  const regionId = useRecoilValue(RegionId);
+  const code = useRecoilValue(Code);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
+
   const setPlaceToSave = useSetRecoilState(PlaceToSave);
+  const clickPlaceAdd = () => {
+    if (!localStorage.getItem("token")) {
+      startPreset({ ...{ setViewerInfo, code, regionId } });
+    } else {
+      setPlaceToSave({
+        isModalOpened: true,
+        placeId: place.placeId,
+      });
+    }
+  };
 
   return (
     <Wrapper {...{ className, type }}>
@@ -47,16 +62,7 @@ const PlaceCard = ({
               <GrayTag>동네 장소</GrayTag>
             )}
           </div>
-          {type !== "write" && (
-            <PlaceAdd
-              onClick={() =>
-                setPlaceToSave({
-                  isModalOpened: true,
-                  placeId: place.placeId,
-                })
-              }
-            />
-          )}
+          {type !== "write" && <PlaceAdd onClick={clickPlaceAdd} />}
         </div>
 
         <div className="card-bottom">

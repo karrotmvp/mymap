@@ -27,7 +27,7 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { startPreset, token } from "../../utils/preset";
+import { startPreset } from "../../utils/preset";
 import OnboardAlert from "./Onboard/OnboardAlert";
 import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
@@ -164,7 +164,7 @@ const Write = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    if (!token) {
+    if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, code, regionId } });
     } else {
       Mixpanel.track("글작성 - 작성 완료");

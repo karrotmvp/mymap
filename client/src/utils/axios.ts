@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { token } from "./preset";
 
 const fetchWrap = async ({
   method,
@@ -12,6 +11,7 @@ const fetchWrap = async ({
   params?: {};
   body?: {};
 }) => {
+  const token = localStorage.getItem("token");
   try {
     const config: AxiosRequestConfig = {
       baseURL: process.env.REACT_APP_ENDPOINT,
@@ -30,7 +30,6 @@ const fetchWrap = async ({
     return data;
   } catch (error) {
     console.log(error);
-    localStorage.removeItem("token");
     window.location.href = "/401";
   }
 };

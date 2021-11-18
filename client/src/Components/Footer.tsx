@@ -13,7 +13,7 @@ import {
 import { Mixpanel } from "../utils/mixpanel";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { RegionId, Code, ViewerInfo } from "../Shared/atom";
-import { token, startPreset } from "../utils/preset";
+import { startPreset } from "../utils/preset";
 
 const Footer = () => {
   const pathname = window.location.pathname;
@@ -24,7 +24,7 @@ const Footer = () => {
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const clickMypage = () => {
-    if (!token) {
+    if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, code, regionId } });
     } else {
       history.push("/mypage");
