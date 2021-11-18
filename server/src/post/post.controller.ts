@@ -4,6 +4,9 @@ import { EventEmitter2 } from 'eventemitter2';
 import { catchError } from 'rxjs';
 import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
 import { MyLogger } from 'src/logger/logger.service';
@@ -26,7 +29,8 @@ export class PostController {
         private readonly eventEmitter: EventEmitter2
     ) {}
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Get('/myPost/info')
     @ApiOkResponse({ description: '내 테마 정보 불러오기 성공', type: [PostEntity] })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
@@ -34,7 +38,8 @@ export class PostController {
         return await this.postService.readUserPostInfo(req.user.userId, regionId);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Get('/myPost')
     @ApiOkResponse({ description: '내 테마 불러오기 성공', type: FeedDTO })
     @ApiQuery({ name: 'page', example: 1 })
@@ -47,7 +52,8 @@ export class PostController {
         return await this.postService.readUserPost(req.user.userId, page, perPage);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Get('/savedPost')
     @ApiOkResponse({ description: '저장한 테마 불러오기 성공', type: FeedDTO })
     @ApiQuery({ name: 'page', example: 1 })
@@ -60,14 +66,15 @@ export class PostController {
         return await this.postService.readSavedPost(req.user.userId, page, perPage);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
     @Get('/admin')
     async readPostList(@Req() req: any, @Query('regionId') regionId: string, @Query('page') page: number = 0, @Query('perPage') perPage: number = 20) {
-        await this.userService.checkAdmin(req.user.userId);
         return await this.postService.readPostListInfo(regionId, page, perPage);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
     @Get('/:postId')
     @ApiOkResponse({ description: '테마 불러오기 성공', type: PostDTO })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
@@ -78,7 +85,8 @@ export class PostController {
         return post;
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
     @Get('/feed/:regionId')
     @ApiOkResponse({ description: '피드 불러오기 성공', type: FeedDTO })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
@@ -93,21 +101,24 @@ export class PostController {
         return await this.postService.readRegionPost(req.user.userId, regionId, start, end, perPage);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Post('/')
     async createPost(@Req() req: any, @Body() post: CreatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' post : ', post);
         return await this.postService.createPost(req.user.userId, post);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Post('/savedPost/:postId')
     async savePost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId);
         return await this.postService.savePost(req.user.userId, postId);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Put('/pin')
     @ApiOkResponse({ description: '핀 추가 성공' })
     @ApiQuery({ name: 'postId', example: '[1, 2, 3]', description: '핀 추가할 테마 Id' })
@@ -119,7 +130,8 @@ export class PostController {
         await this.postService.handlePin(req.user.userId, postIds, pin, regionId);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Put('/:postId')
     async updatePost(@Req() req: any, @Param('postId') postId:number, @Body() post:UpdatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId, ' post : ', post);
@@ -127,7 +139,8 @@ export class PostController {
         return await this.postService.updatePost(req.user.userId, postId, post);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Put('/share/:postId')
     @ApiOkResponse({ description: '테마 공개 여부 변경 성공' })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
@@ -135,7 +148,8 @@ export class PostController {
         await this.postService.updatePostShare(req.user.userId, postId);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Delete('/:postId')
     async deletePost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId)
@@ -143,7 +157,8 @@ export class PostController {
         await this.postService.deletePost(req.user.userId, postId);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Delete('/savedPost/:postId')
     async deleteSavedPost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId);
@@ -151,11 +166,10 @@ export class PostController {
         await this.postService.deleteSavedPost(req.user.userId, postId);
     }
 
-    @UseGuards(ApiKeyAuthGuard)
-    @Post('/admin/default')
-    async createDefaultPost(@Query('end') end: number) {
-        await this.postService.createDefaultPost(end);
-    }
-    
-
+    //Deprecated
+    // @UseGuards(ApiKeyAuthGuard)
+    // @Post('/admin/default')
+    // async createDefaultPost(@Query('end') end: number) {
+    //     await this.postService.createDefaultPost(end);
+    // }
 }

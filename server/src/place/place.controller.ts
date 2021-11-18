@@ -2,6 +2,9 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query,
 import { ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { EventEmitter2 } from 'eventemitter2';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
 import { MyLogger } from 'src/logger/logger.service';
@@ -21,6 +24,8 @@ export class PlaceController {
         private readonly userService: UserService
     ) {}
 
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
     @Get('/search/:regionId')
     async searchPlace(@Param('regionId') regionId: string, @Query('query') query: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
         this.logger.debug('regionId : ', regionId, ' query : ', query, ' page : ', page, ' perPage : ', perPage);
@@ -28,7 +33,8 @@ export class PlaceController {
         return await this.placeService.searchPlace(query, regionId, page, perPage);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Get('/saved')
     @ApiOkResponse({ description: '저장한 장소 모음 불러오기 성공', type: [PlaceDTO] })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
@@ -36,12 +42,15 @@ export class PlaceController {
         return await this.placeService.readSavedPlaces(req.user.userId);
     }
 
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
     @Get('/:placeId')
     async readPlace(@Param('placeId') placeId: string) {
         this.logger.debug('placeId : ', placeId);
         return await this.placeService.readPlace(placeId);
     }
 
+    // Deprecated
     // @Get('/region/:regionId')
     // async readRegionPlaces(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
     //     this.logger.debug('regionId : ', regionId, 'seed : ', seed, 'page', page, ' perPage : ', perPage);
@@ -52,6 +61,8 @@ export class PlaceController {
     //     return await this.placeService.readRegionPlaces(regionId, seed, perPage, page);
     // }
 
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
     @Get('/recommend/:regionId')
     @ApiOkResponse({ description: '둘러보기 리스트 가져오기 성공', type: [RegionPlaceDTO] })
     @ApiQuery({ name: 'seed', description: '랜덤 세션 유지를 위한 seed, 첫 요청에는 필요없어요. 두 번째 페이지 요청부터 담아서 보내주세요(1~51)' })
@@ -62,17 +73,17 @@ export class PlaceController {
         return await this.placeService.readRecommendPlacesRandom(regionId, Number(seed), perPage, page);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
     @Get('admin/recommend')
     async readRecommendPlaces(@Req() req: any, @Query('perPage') perPage: number = 20, @Query('page') page: number = 0) {
-        await this.userService.checkAdmin(req.user.userId);
         return await this.placeService.readRecommendPlaces(perPage, page);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
     @Get('admin/recommend/region')
     async countRecommendPlacesByRegion(@Req() req: any) {
-        await this.userService.checkAdmin(req.user.userId);
         const seocho = await this.placeService.countRecommendPlacesByRegion("471abc99b378");
         const jamsil = await this.placeService.countRecommendPlacesByRegion("5424e9f7ec6d");
         const hannam = await this.placeService.countRecommendPlacesByRegion("79f5f58de451");
@@ -83,17 +94,17 @@ export class PlaceController {
         }
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
     @Post('admin/recommend')
     async createRecommendPlaces(@Req() req: any, @Body() places: CreateRecommendPlaceDTO[]) {
-        await this.userService.checkAdmin(req.user.userId);
         return await this.placeService.createRecommendPlaces(places);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
     @Delete('admin/recommend/:placeId')
     async deleteRecommendPlace(@Req() req: any, @Param('placeId') placeId: string) {
-        await this.userService.checkAdmin(req.user.userId);
         await this.placeService.deleteRecommendPlace(placeId);
     }
 }

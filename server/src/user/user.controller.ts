@@ -6,6 +6,9 @@ import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { DaangnAuthGuard } from 'src/auth/daangn.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
 import { MyLogger } from 'src/logger/logger.service';
@@ -45,7 +48,8 @@ export class UserController {
         return userInfo;
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
     @Post('preopen')
     @ApiCreatedResponse({ description: '오픈 알림 등록 완료' })
     @ApiUnauthorizedResponse({ description: '토큰 만료, 유저 정보 오류' })
@@ -69,10 +73,10 @@ export class UserController {
         return token;
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
     @Get('admin')
     async readUserList(@Req() req: any, @Query('page') page: number = 0, @Query('perPage') perPage: number = 50) {
-        await this.userService.checkAdmin(req.user.userId);
         return await this.userService.readUserList(page, perPage);
     }
 }

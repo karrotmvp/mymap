@@ -1,7 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { LoggerModule } from 'src/logger/logger.module';
 import { UserModule } from 'src/user/user.module';
@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { DaangnStrategy } from './daangn.strategy';
 import { JWTStrategy } from './jwt.strategy';
 
+@Global()
 @Module({
   imports: [JwtModule.registerAsync({
     imports: [ConfigModule],
@@ -26,6 +27,6 @@ import { JWTStrategy } from './jwt.strategy';
   forwardRef(() => UserModule),
   PassportModule],
   providers: [AuthService, JWTStrategy, DaangnStrategy, ApiKeyStrategy],
-  exports: [AuthService]
+  exports: [AuthService, JwtModule]
 })
 export class AuthModule {}

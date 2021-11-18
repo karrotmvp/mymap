@@ -55,6 +55,9 @@ export const GlobalStyle = createGlobalStyle`
     img {
         object-fit: cover;
     }
+    input, textarea {
+        caret-color: ${theme.color.orange};
+    }
 
     // naver map
     #react-naver-map{
