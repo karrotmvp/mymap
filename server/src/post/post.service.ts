@@ -65,7 +65,7 @@ export class PostService {
         const detailPins: PinDTO[] = await this.readPinDetail(post.pins, coordinate);
         const savedNum: number = await this.savedPostRepository.countSavedNum(postId);
         const detailPost: PostDTO = new PostDTO(post, user, detailPins, coordinate, savedNum);
-        const saved = await this.checkSaved(userId, postId);
+        const saved = userId ? await this.checkSaved(userId, postId) : null;
         detailPost.setSaved(saved);
         return detailPost;
     }
@@ -283,11 +283,12 @@ export class PostService {
         return posts;
     }
 
-    async createDefaultPost(end: number) {
-        const userIds: number[] = await this.userService.readUnwrittenUserId();
-        // const userIds: number[] = Array.from({length: end}, (v,i) => i+1);
-        await Promise.all(userIds.map(async(userId) => {
-            await this.postQueue.add('defaultPost_created', new Event(userId, null));
-        }))
-    }
+    // Deprecated
+    // async createDefaultPost(end: number) {
+    //     const userIds: number[] = await this.userService.readUnwrittenUserId();
+    //     // const userIds: number[] = Array.from({length: end}, (v,i) => i+1);
+    //     await Promise.all(userIds.map(async(userId) => {
+    //         await this.postQueue.add('defaultPost_created', new Event(userId, null));
+    //     }))
+    // }
 }
