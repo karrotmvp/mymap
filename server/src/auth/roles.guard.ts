@@ -25,7 +25,7 @@ export class RolesGuard implements CanActivate {
         const BearerHeader: string = req.headers.authorization
         const token = BearerHeader ? BearerHeader.substring(7, BearerHeader.length) : null;
         let userObj = { userId: null }
-        if (token) {
+        if (token && token.length > 0) {
             const payload = await this.jwtService.verify(token);
             const userId = payload.sub;
             const user: User = await this.userService.readUser(userId);
