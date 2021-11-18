@@ -64,7 +64,7 @@ const Main = () => {
     if (startIdx !== lastStartIdx && endIdx !== lastEndIdx) {
       refetchFeedPostsResult();
     }
-  }, [startIdx, endIdx]);
+  }, [startIdx, endIdx, regionId]);
 
   const [pins, setPins] = useState<PlaceType[] | []>([]);
   const [feedPins, setfeedPins] = useState<Pin[] | []>([]);

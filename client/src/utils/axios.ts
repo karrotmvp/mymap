@@ -11,13 +11,14 @@ const fetchWrap = async ({
   params?: {};
   body?: {};
 }) => {
+  const token = localStorage.getItem("token");
   try {
     const config: AxiosRequestConfig = {
       baseURL: process.env.REACT_APP_ENDPOINT,
       withCredentials: true,
       params,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: token ? `Bearer ${token}` : "",
       },
     };
     const { data } =
@@ -28,7 +29,7 @@ const fetchWrap = async ({
       {};
     return data;
   } catch (error) {
-    localStorage.removeItem("token");
+    console.log(error);
     window.location.href = "/401";
   }
 };

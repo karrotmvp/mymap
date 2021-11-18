@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { theme } from "../styles/theme";
+import { useHistory } from "react-router";
 import {
   Around,
   AroundActive,
@@ -10,9 +11,25 @@ import {
   MypageActive,
 } from "../assets";
 import { Mixpanel } from "../utils/mixpanel";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { RegionId, Code, ViewerInfo } from "../Shared/atom";
+import { startPreset } from "../utils/preset";
 
 const Footer = () => {
   const pathname = window.location.pathname;
+  const history = useHistory();
+
+  const regionId = useRecoilValue(RegionId);
+  const code = useRecoilValue(Code);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
+
+  const clickMypage = () => {
+    if (!localStorage.getItem("token")) {
+      startPreset({ ...{ setViewerInfo, code, regionId } });
+    } else {
+      history.push("/mypage");
+    }
+  };
 
   return (
     <Wrapper>
@@ -28,10 +45,10 @@ const Footer = () => {
         {pathname === "/around" ? <AroundActive /> : <Around />}
         <div>장소 둘러보기</div>
       </FooterLink>
-      <FooterLink to="/mypage" $isClicked={pathname === "/mypage"}>
+      <FooterDiv onClick={clickMypage} $isClicked={pathname === "/mypage"}>
         {pathname === "/mypage" ? <MypageActive /> : <Mypage />}
         <div>나의 테마</div>
-      </FooterLink>
+      </FooterDiv>
     </Wrapper>
   );
 };
@@ -50,6 +67,16 @@ const Wrapper = styled.div`
 `;
 
 const FooterLink = styled(Link)<{ $isClicked: boolean }>`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 150%;
+  & > div {
+    color: ${({ $isClicked }) =>
+      $isClicked ? theme.color.orange : theme.color.gray5};
+  }
+`;
+const FooterDiv = styled.div<{ $isClicked: boolean }>`
   display: flex;
   align-items: center;
   flex-direction: column;

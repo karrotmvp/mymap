@@ -1,13 +1,14 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save2, SaveActive2, Secret } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
-import { PostIsSaved, ViewerInfo } from "../../Shared/atom";
+import { PostIsSaved, ViewerInfo, Code, RegionId } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
+import { startPreset } from "../../utils/preset";
 
 interface SaveFooterInterface {
   post: PostType;
@@ -21,21 +22,29 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
   const [savedNum, setSavedNum] = useState<number>(post.savedNum);
   const viewerInfo = useRecoilValue(ViewerInfo);
 
-  const handleSaveToggle = async () => {
-    setIsSaved(!isSaved);
+  const regionId = useRecoilValue(RegionId);
+  const code = useRecoilValue(Code);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
 
-    // 저장
-    if (!isSaved) {
-      Mixpanel.track("테마 저장 - 메인");
-      await postSavedPost(post.postId);
-      if (!post.saved || savedNum - post.savedNum === -1)
-        setSavedNum(savedNum + 1);
-    }
-    // 저장 취소
-    else {
-      await deleteSavedPost(post.postId);
-      if (post.saved || savedNum - post.savedNum === 1)
-        setSavedNum(savedNum - 1);
+  const handleSaveToggle = async () => {
+    if (!localStorage.getItem("token")) {
+      startPreset({ ...{ setViewerInfo, code, regionId } });
+    } else {
+      setIsSaved(!isSaved);
+
+      // 저장
+      if (!isSaved) {
+        Mixpanel.track("테마 저장 - 메인");
+        await postSavedPost(post.postId);
+        if (!post.saved || savedNum - post.savedNum === -1)
+          setSavedNum(savedNum + 1);
+      }
+      // 저장 취소
+      else {
+        await deleteSavedPost(post.postId);
+        if (post.saved || savedNum - post.savedNum === 1)
+          setSavedNum(savedNum - 1);
+      }
     }
   };
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);

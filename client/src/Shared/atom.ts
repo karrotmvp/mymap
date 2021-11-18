@@ -6,6 +6,10 @@ export const RegionId = atom({
   key: "region_id",
   default: "",
 });
+export const Code = atom({
+  key: "Code",
+  default: "",
+});
 
 export const ViewerInfo = atom<UserType>({
   key: "my_info",
@@ -22,7 +26,7 @@ export const PostIsSaved = atomFamily({
   default: false,
 });
 export const PostIsDefaultEmpty = atomFamily({
-  key: "PostIsSaved",
+  key: "PostIsDefaultEmpty",
   default: false,
 });
 
