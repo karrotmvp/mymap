@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { token } from "./preset";
 
 const fetchWrap = async ({
   method,
@@ -17,7 +18,7 @@ const fetchWrap = async ({
       withCredentials: true,
       params,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: token ? `Bearer ${token}` : "",
       },
     };
     const { data } =
@@ -28,6 +29,7 @@ const fetchWrap = async ({
       {};
     return data;
   } catch (error) {
+    console.log(error);
     localStorage.removeItem("token");
     window.location.href = "/401";
   }

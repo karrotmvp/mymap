@@ -8,21 +8,19 @@ import Write from "./Pages/Write/Write";
 import Mini from "@karrotmarket/mini";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  ViewerInfo,
   RegionId,
   PlaceToSave,
   ToastMessage,
   DetailId,
+  Code,
 } from "./Shared/atom";
-import { useCallback, useEffect } from "react";
-import { getLogin } from "./api/user";
+import { useEffect } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
 import Onboarding from "./Pages/Onboarding";
 import Analytics from "react-router-ga";
-import { Mixpanel } from "./utils/mixpanel";
-import { Close, Loading1, Loading2, LogoInactive } from "./assets";
+import { Close, LogoInactive } from "./assets";
 import styled, { keyframes } from "styled-components";
 import { flexCenter, theme } from "./styles/theme";
 import SearchPlace from "./Pages/Write/SearchPlace";
@@ -34,64 +32,72 @@ dayjs.locale("ko");
 
 export const mini = new Mini();
 
-const preload = new URLSearchParams(window.location.search).get("preload");
-let regionId = new URLSearchParams(window.location.search).get("region_id");
+// const preload = new URLSearchParams(window.location.search).get("preload");
+let regionIdFromParmas =
+  new URLSearchParams(window.location.search).get("region_id") ??
+  "6530459d189b";
 // 교보타워일 경우 서초동으로
-if (regionId === "2b6112932ec1") regionId = "471abc99b378";
+if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
 const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {
-  const setRegionId = useSetRecoilState(RegionId);
+  const [regionId, setRegionId] = useRecoilState(RegionId);
+  const setCode = useSetRecoilState(Code);
+
+  useEffect(() => {
+    setRegionId(regionIdFromParmas);
+    setCode(code!);
+  }, []);
 
   const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
   const [detailId, setDetailId] = useRecoilState(DetailId);
 
   // 로그인 및 내 정보 저장
-  const [viewerInfo, setViewerInfo] = useRecoilState(ViewerInfo);
-  const getViewerInfo = useCallback(async (code: string, regionId: string) => {
-    const data = await getLogin(code, regionId);
-    setViewerInfo({
-      userId: data.userId,
-      userName: data.userName,
-      regionName: data.regionName,
-      profileImageUrl: data.profileImageUrl,
-    });
-    localStorage.setItem("token", data.token);
-    Mixpanel.identify(data.userId.toString());
-  }, []);
+  // const [viewerInfo, setViewerInfo] = useRecoilState(ViewerInfo);
+  // const getViewerInfo = useCallback(async (code: string, regionId: string) => {
+  //   const data = await getLogin(code, regionId);
+  //   setViewerInfo({
+  //     userId: data.userId,
+  //     userName: data.userName,
+  //     regionName: data.regionName,
+  //     profileImageUrl: data.profileImageUrl,
+  //   });
+  //   localStorage.setItem("token", data.token);
+  //   Mixpanel.identify(data.userId.toString());
+  // }, []);
 
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      setViewerInfo({
-        userId: 1,
-        userName: "단민",
-        regionName: "역삼1동",
-        profileImageUrl: "",
-      });
-      setRegionId("6530459d189b");
-      // setRegionId("471abc99b378");
-    } else if (!preload) {
-      setRegionId(regionId as string);
-      if (code) {
-        Mixpanel.track("로그인 - 기존 유저");
-        getViewerInfo(code, regionId as string);
-      } else {
-        mini.startPreset({
-          preset: process.env.REACT_APP_LOGIN as string,
-          params: {
-            appId: process.env.REACT_APP_APP_ID as string,
-          },
-          onSuccess: function (result) {
-            if (result && result.code) {
-              Mixpanel.track("로그인 - 새로운 유저");
-              getViewerInfo(result.code, regionId as string);
-            }
-          },
-        });
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  // if (process.env.NODE_ENV === "development") {
+  //   setViewerInfo({
+  //     userId: 1,
+  //     userName: "단민",
+  //     regionName: "역삼1동",
+  //     profileImageUrl: "",
+  //   });
+  //   setRegionId("6530459d189b");
+  //   // setRegionId("471abc99b378");
+  // } else if (!preload) {
+  //   setRegionId(regionId as string);
+  //   if (code) {
+  //     Mixpanel.track("로그인 - 기존 유저");
+  //     getViewerInfo(code, regionId as string);
+  //   } else {
+  //     mini.startPreset({
+  //       preset: process.env.REACT_APP_LOGIN as string,
+  //       params: {
+  //         appId: process.env.REACT_APP_APP_ID as string,
+  //       },
+  //       onSuccess: function (result) {
+  //         if (result && result.code) {
+  //           Mixpanel.track("로그인 - 새로운 유저");
+  //           getViewerInfo(result.code, regionId as string);
+  //         }
+  //       },
+  //     });
+  //   }
+  // }
+  // }, []);
 
   useEffect(() => {
     if (toastMessage.isToastShown) {
@@ -117,7 +123,7 @@ function App() {
         <div className="center">
           <LogoInactive />
           <div>
-            <span>{viewerInfo.regionName}</span>
+            {/* <span>{viewerInfo.regionName}</span> */}
             {`의 당장모아는
 오픈 준비 중이에요.`}
           </div>
@@ -129,7 +135,8 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {viewerInfo.userId ? (
+        {/* {viewerInfo.userId ? ( */}
+        {regionId && (
           <Analytics id="UA-211655411-1" debug>
             <Switch>
               <Route exact path="/" component={Main} />
@@ -159,7 +166,8 @@ function App() {
               />
             )}
           </Analytics>
-        ) : (
+        )}
+        {/* ) : (
           !preload &&
           !code && (
             <Wrapper onClick={() => mini.close()}>
@@ -172,7 +180,7 @@ function App() {
               </div>
             </Wrapper>
           )
-        )}
+        )} */}
       </div>
     </Router>
   );

@@ -9,10 +9,12 @@ import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
 import {
+  Code,
   DetailId,
   PageBeforeWrite,
   PostToEdit,
   RegionId,
+  ViewerInfo,
 } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
@@ -25,6 +27,7 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
+import { startPreset, token } from "../../utils/preset";
 import OnboardAlert from "./Onboard/OnboardAlert";
 import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
@@ -144,6 +147,8 @@ const Write = () => {
   };
 
   const regionId = useRecoilValue(RegionId);
+  const code = useRecoilValue(Code);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   let submitFlag = false;
 
@@ -159,29 +164,33 @@ const Write = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    Mixpanel.track("글작성 - 작성 완료");
-    const body = {
-      title: inputVal.value,
-      contents: textareaVal.value,
-      regionId,
-      share: isShare as boolean,
-      pins: places.map((place) => {
-        return {
-          placeId: place.placeId,
-          latitude: place.coordinates.latitude,
-          longitude: place.coordinates.longitude,
-        };
-      }),
-    };
-    if (isWrite || isOnboarding) {
-      const data = await postPost(body);
-      if (data.postId) {
-        if (isWrite) history.push(`/detail/${data.postId}/finish`);
-        else if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
-      }
+    if (!token) {
+      startPreset({ ...{ setViewerInfo, code, regionId } });
     } else {
-      const data = await putPost(postId!, body);
-      if (data) history.push(`/detail/${postId}/finish`);
+      Mixpanel.track("글작성 - 작성 완료");
+      const body = {
+        title: inputVal.value,
+        contents: textareaVal.value,
+        regionId,
+        share: isShare as boolean,
+        pins: places.map((place) => {
+          return {
+            placeId: place.placeId,
+            latitude: place.coordinates.latitude,
+            longitude: place.coordinates.longitude,
+          };
+        }),
+      };
+      if (isWrite || isOnboarding) {
+        const data = await postPost(body);
+        if (data.postId) {
+          if (isWrite) history.push(`/detail/${data.postId}/finish`);
+          else if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
+        }
+      } else {
+        const data = await putPost(postId!, body);
+        if (data) history.push(`/detail/${postId}/finish`);
+      }
     }
   };
 

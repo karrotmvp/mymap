@@ -1,23 +1,33 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save, SaveActive } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
-import { PostIsSaved } from "../../Shared/atom";
+import { Code, PostIsSaved, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
+import { startPreset, token } from "../../utils/preset";
 
 const SaveButton = (post: PostType) => {
   const [isSaved, setIsSaved] = useRecoilState(
     PostIsSaved(post.postId.toString())
   );
+
+  const regionId = useRecoilValue(RegionId);
+  const code = useRecoilValue(Code);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
+
   const handleSaveToggle = async () => {
-    setIsSaved(!isSaved);
-    if (!isSaved) {
-      Mixpanel.track("테마 저장 - 상세");
-      await postSavedPost(post.postId);
-    } else await deleteSavedPost(post.postId);
+    if (!token) {
+      startPreset({ ...{ setViewerInfo, code, regionId } });
+    } else {
+      setIsSaved(!isSaved);
+      if (!isSaved) {
+        Mixpanel.track("테마 저장 - 상세");
+        await postSavedPost(post.postId);
+      } else await deleteSavedPost(post.postId);
+    }
   };
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);
 
