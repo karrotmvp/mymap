@@ -1,8 +1,10 @@
-import { useHistory } from "react-router";
-import { useSetRecoilState } from "recoil";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { useHistory, useRouteMatch } from "react-router";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { More, Plus } from "../../assets";
-import { DetailId, PageBeforeWrite } from "../../Shared/atom";
+import { DetailId, PageBeforeWrite, PostIsSaved } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
 import OrangePlaceBox from "../OrangePlaceBox";
@@ -10,14 +12,34 @@ import SaveFooter from "./SaveFooter";
 
 interface CollectionProps {
   post: PostType;
-  fetchSavedPosts?: () => Promise<void>;
+  savedPosts?: PostType[];
+  setSavedPosts?: Dispatch<SetStateAction<PostType[]>>;
 }
 
-const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
+const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
   const history = useHistory();
   const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
 
   const setDetailId = useSetRecoilState(DetailId);
+  const [isSaved, setIsSaved] = useRecoilState(
+    PostIsSaved(post.postId.toString())
+  );
+
+  const isMypage = useRouteMatch({ path: "/mypage" })?.isExact;
+
+  useEffect(() => {
+    setIsSaved(post.saved);
+  }, []);
+
+  useEffect(() => {
+    if (isMypage && savedPosts && setSavedPosts && !isSaved) {
+      const idxToDelete = savedPosts.findIndex((p) => p.postId === post.postId);
+      setSavedPosts([
+        ...savedPosts.slice(0, idxToDelete),
+        ...savedPosts.slice(idxToDelete + 1, savedPosts.length),
+      ]);
+    }
+  }, [isSaved]);
 
   return (
     <Wrapper onClick={() => post.pins.length > 0 && setDetailId(post.postId)}>
@@ -50,7 +72,7 @@ const Collection = ({ post, fetchSavedPosts }: CollectionProps) => {
           </EmptyOrangePlaceBox>
         )}
       </div>
-      <SaveFooter {...{ post, fetchSavedPosts }} />
+      <SaveFooter {...{ post, savedPosts, setSavedPosts }} />
     </Wrapper>
   );
 };

@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save, SaveActive } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
+import { PostIsSaved } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 
 const SaveButton = (post: PostType) => {
-  const [isSaved, setIsSaved] = useState<boolean>(post.saved);
+  const [isSaved, setIsSaved] = useRecoilState(
+    PostIsSaved(post.postId.toString())
+  );
   const handleSaveToggle = async () => {
     setIsSaved(!isSaved);
     if (!isSaved) await postSavedPost(post.postId);

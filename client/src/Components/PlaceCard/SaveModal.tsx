@@ -3,7 +3,7 @@ import { useEffect, useReducer, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { keyframes } from "styled-components";
 import { match } from "ts-pattern";
-import { getMyAllPosts, postPost, putPostPin } from "../../api/post";
+import { postPost, putPostPin, useGetMyAllPosts } from "../../api/post";
 import {
   LockAround,
   PlacePlus,
@@ -13,7 +13,6 @@ import {
 } from "../../assets";
 import useInput from "../../Hooks/useInput";
 import { PlaceToSave, RegionId, ToastMessage } from "../../Shared/atom";
-import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { reducer } from "./index.reducer";
 
@@ -23,7 +22,6 @@ const SaveModal = () => {
     isLocked: false,
     selected: [],
   });
-  const [posts, setPosts] = useState<PostType[] | []>([]);
   const [isSubmitable, setIsSubmitable] = useState(false);
   const newThemeValue = useInput("");
   const [placeToSave, setPlaceToSave] = useRecoilState(PlaceToSave);
@@ -37,38 +35,7 @@ const SaveModal = () => {
   // 바뀌었는지
   const [isChanged, setIsChanged] = useState(false);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const data = await getMyAllPosts(regionId);
-      setPosts(data);
-      // 이미 포함된 테마들 세팅
-      data.forEach((post) => {
-        if (post.pins.find((pin) => pin.placeId === placeToSave.placeId))
-          savedThemes.push(post.postId);
-      });
-      dispatch({
-        _t: "SET",
-        selected: savedThemes,
-      });
-      setIsSubmitable(false);
-
-      // 한개면 무조건 선택
-      if (data.length === 1) {
-        dispatch({
-          _t: "SELECT",
-          selected: data[0].postId,
-        });
-        setIsSubmitable(true);
-      }
-
-      data.find((post) => post.postId);
-    };
-    fetchPosts();
-  }, []);
-
-  useEffect(() => {
-    if (isChanged) setIsSubmitable(true);
-  }, [isChanged]);
+  const { data: posts, refetch: refetchPosts } = useGetMyAllPosts(regionId);
 
   const handleSubmit = async () => {
     if (isSubmitable) {
@@ -107,8 +74,7 @@ const SaveModal = () => {
       try {
         if (data.postId) {
           newThemeValue.setValue("");
-          const data = await getMyAllPosts(regionId);
-          setPosts(data);
+          refetchPosts();
         }
       } finally {
         dispatch({
@@ -119,6 +85,36 @@ const SaveModal = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (posts) {
+      // 이미 포함된 테마들 세팅
+      posts.forEach((post) => {
+        if (post.pins.find((pin) => pin.placeId === placeToSave.placeId))
+          savedThemes.push(post.postId);
+      });
+      dispatch({
+        _t: "SET",
+        selected: savedThemes,
+      });
+      setIsSubmitable(false);
+
+      // 한개면 무조건 선택
+      if (posts.length === 1) {
+        dispatch({
+          _t: "SELECT",
+          selected: posts[0].postId,
+        });
+        setIsSubmitable(true);
+      }
+
+      posts.find((post) => post.postId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isChanged) setIsSubmitable(true);
+  }, [isChanged]);
 
   return (
     <Wrapper {...{ isSubmitable }}>

@@ -1,18 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
-import { getMyPosts, getSavedPosts } from "../../api/post";
 import Collection from "../../Components/Collection";
 import CreateButton from "../../Components/CreateButton";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
-import { PlaceType, PostType } from "../../Shared/type";
+import { PostType } from "../../Shared/type";
 import {
   flexCenter,
   gap,
@@ -24,9 +17,10 @@ import { useRecoilValue } from "recoil";
 import { ViewerInfo } from "../../Shared/atom";
 import { Close, LogoInactive, More, Thumbnail } from "../../assets";
 import { mini } from "../../App";
-import { getPlaceSaved } from "../../api/place";
 import OrangePlaceBox from "../../Components/OrangePlaceBox";
 import MyPlaces from "./MyPlaces";
+import { useGetPlaceSaved } from "../../api/place";
+import { useGetMyPosts, useGetSavedPosts } from "../../api/post";
 
 const Tab = ({
   selectedTab,
@@ -58,78 +52,68 @@ const Tab = ({
 };
 
 const Mypage = () => {
+  const viewerInfo = useRecoilValue(ViewerInfo);
+
   const [selectedTab, setSelectedTab] = useState<"my" | "others">("my");
   const [isScrollUp, setIsScrollUp] = useState(false);
   const [isMyPlacesOpened, setIsMyPlacesOpened] = useState(false);
 
-  // 내 리스트
-  const [isMyPlacesLoading, setIsMyPlacesLoading] = useState(false);
-  const [myPlaces, setMyPlaces] = useState<PlaceType[] | []>([]);
   const [myPosts, setMyPosts] = useState<PostType[] | []>([]);
   const [myPostsHasMore, setMyPostsHasMore] = useState(true);
   const [myPostPage, setMyPostPage] = useState(1);
 
-  const handleMyPostNext = () => {
-    setMyPostPage(myPostPage + 1);
-  };
-  useEffect(() => {
-    const fetchMyPlaces = async () => {
-      const data = await getPlaceSaved();
-      setMyPlaces(data);
-    };
-    const fetchMyPosts = async () => {
-      setIsMyPlacesLoading(true);
-      try {
-        const data = (
-          await getMyPosts({
-            page: myPostPage,
-            perPage: 10,
-          })
-        ).posts;
-        if (data.length < 1) {
-          setMyPostsHasMore(false);
-          return;
-        }
-        setMyPosts([...myPosts, ...data]);
-      } finally {
-        setIsMyPlacesLoading(false);
-      }
-    };
-    fetchMyPlaces();
-    fetchMyPosts();
-  }, [myPostPage]);
-
-  const viewerInfo = useRecoilValue(ViewerInfo);
-
-  // 저장한 리스트
-  const [isSavedPlacesLoading, setIsSavedPlacesLoading] = useState(false);
   const [savedPosts, setSavedPosts] = useState<PostType[] | []>([]);
   const [savedPostsHasMore, setSavedPostsHasMore] = useState(true);
   const [savedPostPage, setSavedPostPage] = useState(1);
+
+  const { data: myPlaces } = useGetPlaceSaved();
+  const {
+    status: myPostsResultStatus,
+    data: myPostsResult,
+    refetch: refetchMyPostsResult,
+  } = useGetMyPosts({
+    page: myPostPage,
+    perPage: 10,
+  });
+  const {
+    status: savedPostsResultStatus,
+    data: savedPostsResult,
+    refetch: refetchSavedPostsResult,
+  } = useGetSavedPosts({
+    page: savedPostPage,
+  });
+
+  const handleMyPostNext = () => {
+    setMyPostPage(myPostPage + 1);
+  };
   const handleSavedPostNext = () => {
     setSavedPostPage(savedPostPage + 1);
   };
 
-  const fetchSavedPosts = useCallback(async () => {
-    setIsSavedPlacesLoading(true);
-    try {
-      const data = (
-        await getSavedPosts({
-          page: savedPostPage,
-        })
-      ).posts;
-      if (data.length < 1) {
+  useEffect(() => {
+    if (myPostsResult) {
+      if (myPostsResult.posts.length < 1) {
+        setMyPostsHasMore(false);
+        return;
+      }
+      setMyPosts([...myPosts, ...myPostsResult.posts]);
+    }
+  }, [myPostsResult]);
+  useEffect(() => {
+    if (savedPostsResult) {
+      if (savedPostsResult.posts.length < 1) {
         setSavedPostsHasMore(false);
         return;
       }
-      setSavedPosts([...savedPosts, ...data]);
-    } finally {
-      setIsSavedPlacesLoading(false);
+      setSavedPosts([...savedPosts, ...savedPostsResult.posts]);
     }
-  }, []);
+  }, [savedPostsResult]);
 
   useEffect(() => {
-    fetchSavedPosts();
+    refetchMyPostsResult();
+  }, [myPostPage]);
+  useEffect(() => {
+    refetchSavedPostsResult();
   }, [savedPostPage]);
 
   useEffect(() => {
@@ -168,7 +152,7 @@ const Mypage = () => {
         </div>
       </Profile>
 
-      {myPlaces.length > 0 && (
+      {myPlaces && myPlaces.length > 0 && (
         <div className="all-places" onClick={() => setIsMyPlacesOpened(true)}>
           <div className="title-wrapper">
             <div style={{ width: "100%" }}>
@@ -205,7 +189,7 @@ const Mypage = () => {
               ))}
             </InfiniteScroll>
           ) : (
-            !isMyPlacesLoading && (
+            myPostsResultStatus !== "loading" && (
               <div className="empty">
                 <LogoInactive />
                 <div>{`아직 만든 테마가 없어요.
@@ -221,12 +205,14 @@ const Mypage = () => {
             loader={<div />}
             scrollableTarget="mypage-scroll"
           >
-            {savedPosts.map((post, i) => (
-              <Collection key={i} {...{ post, fetchSavedPosts }} />
-            ))}
+            {savedPosts
+              .filter((post) => post.saved !== false)
+              .map((post, i) => (
+                <Collection key={i} {...{ post, savedPosts, setSavedPosts }} />
+              ))}
           </InfiniteScroll>
         ) : (
-          !isSavedPlacesLoading && (
+          savedPostsResultStatus !== "loading" && (
             <div className="empty">
               <LogoInactive />
               <div>{`아직 저장한 테마가 없어요.
@@ -240,7 +226,7 @@ const Mypage = () => {
 
       <Footer />
 
-      {isMyPlacesOpened && (
+      {isMyPlacesOpened && myPlaces && (
         <MyPlaces places={myPlaces} close={() => setIsMyPlacesOpened(false)} />
       )}
     </Wrapper>

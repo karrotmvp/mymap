@@ -27,7 +27,6 @@ import styled, { keyframes } from "styled-components";
 import { flexCenter, theme } from "./styles/theme";
 import SearchPlace from "./Pages/Write/SearchPlace";
 import Header from "./Components/Header";
-import mixpanel from "mixpanel-browser";
 import SaveModal from "./Components/PlaceCard/SaveModal";
 import { regions } from "./utils/const";
 
@@ -75,7 +74,7 @@ function App() {
     } else if (!preload) {
       setRegionId(regionId as string);
       if (code) {
-        mixpanel.track("기존 유저 로그인");
+        Mixpanel.track("기존 유저 로그인");
         getViewerInfo(code, regionId as string);
       } else {
         mini.startPreset({
@@ -85,7 +84,7 @@ function App() {
           },
           onSuccess: function (result) {
             if (result && result.code) {
-              mixpanel.track("새로운 유저 로그인");
+              Mixpanel.track("새로운 유저 로그인");
               getViewerInfo(result.code, regionId as string);
             }
           },
@@ -135,7 +134,7 @@ function App() {
             <Switch>
               <Route exact path="/" component={Main} />
               <Route exact path="/401" component={ClosePage} />
-              <Route path="/detail/:postId" component={Detail} />
+              <Route exact path="/detail/:postId/finish" component={Detail} />
               <Route exact path="/around" component={Around} />
               <Route exact path="/mypage" component={Mypage} />
               <Route exact path="/write" component={Write} />
