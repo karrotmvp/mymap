@@ -27,6 +27,9 @@ export class PlaceController {
     @Roles(Role.Unsigned_User)
     @UseGuards(RolesGuard)
     @Get('/search/:regionId')
+    @ApiOkResponse({ description: '장소 이름으로 검색 성공', type: [PlaceDTO] })
+    @ApiQuery({ name: 'page', example: 1, required: false })
+    @ApiQuery({ name: 'perPage', example: 10, required: false })
     async searchPlace(@Param('regionId') regionId: string, @Query('query') query: string, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10) {
         this.logger.debug('regionId : ', regionId, ' query : ', query, ' page : ', page, ' perPage : ', perPage);
         if (page < 1 || perPage < 1) throw new BadRequestException();
@@ -66,8 +69,8 @@ export class PlaceController {
     @Get('/recommend/:regionId')
     @ApiOkResponse({ description: '둘러보기 리스트 가져오기 성공', type: [RegionPlaceDTO] })
     @ApiQuery({ name: 'seed', description: '랜덤 세션 유지를 위한 seed, 첫 요청에는 필요없어요. 두 번째 페이지 요청부터 담아서 보내주세요(1~51)' })
-    @ApiQuery({ name: 'page', example: 1 })
-    @ApiQuery({ name: 'perPage', example: 10 })
+    @ApiQuery({ name: 'page', example: 0, required: false })
+    @ApiQuery({ name: 'perPage', example: 10, required: false })
     async readRecommendPlacesRandom(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('perPage') perPage: number = 10, @Query('page') page: number = 0): Promise<RegionPlaceDTO> {
         if (!seed) seed = (Math.floor(Math.random() * 50) + 1).toString();
         return await this.placeService.readRecommendPlacesRandom(regionId, Number(seed), perPage, page);
