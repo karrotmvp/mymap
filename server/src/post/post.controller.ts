@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { EventEmitter2 } from 'eventemitter2';
 import { catchError } from 'rxjs';
 import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
@@ -42,8 +42,8 @@ export class PostController {
     @UseGuards(RolesGuard)
     @Get('/myPost')
     @ApiOkResponse({ description: '내 테마 불러오기 성공', type: FeedDTO })
-    @ApiQuery({ name: 'page', example: 1 })
-    @ApiQuery({ name: 'perPage', example: 10 })
+    @ApiQuery({ name: 'page', example: 1, required: false })
+    @ApiQuery({ name: 'perPage', example: 10, required: false })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
     async readMyPost(@Req() req: any, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10): Promise<FeedDTO> {
         this.logger.debug('userId : ', req.user.userId, ' page : ', page, ' perPage : ', perPage);
@@ -56,8 +56,8 @@ export class PostController {
     @UseGuards(RolesGuard)
     @Get('/savedPost')
     @ApiOkResponse({ description: '저장한 테마 불러오기 성공', type: FeedDTO })
-    @ApiQuery({ name: 'page', example: 1 })
-    @ApiQuery({ name: 'perPage', example: 10 })
+    @ApiQuery({ name: 'page', example: 1, required: false })
+    @ApiQuery({ name: 'perPage', example: 10, required: false })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
     async readSavedPost(@Req() req: any, @Query('page') page: number = 1, @Query('perPage') perPage: number = 10): Promise<FeedDTO> {
         this.logger.debug('userId : ', req.user.userId, ' page : ', page, ' perPage : ', perPage);
@@ -77,7 +77,7 @@ export class PostController {
     @UseGuards(RolesGuard)
     @Get('/:postId')
     @ApiOkResponse({ description: '테마 불러오기 성공', type: PostDTO })
-    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer', required: false })
     async readPost(@Req() req: any, @Param('postId') postId: number): Promise<PostDTO> {
         this.logger.debug('userId : ', req.user.userId, 'postId : ', postId);
         const post: PostDTO = await this.postService.readPostDetail(req.user.userId, postId);
@@ -89,10 +89,10 @@ export class PostController {
     @UseGuards(RolesGuard)
     @Get('/feed/:regionId')
     @ApiOkResponse({ description: '피드 불러오기 성공', type: FeedDTO })
-    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    @ApiQuery({ name: 'start', example: 10, description: '지금까지 불러온 가장 최근 테마 ID' })
-    @ApiQuery({ name: 'end', example: 1, description: '지금까지 불러온 가장 오래된 테마 ID' })
-    @ApiQuery({ name: 'perPage', example: 10 })
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer', required: false })
+    @ApiQuery({ name: 'start', example: 10, description: '지금까지 불러온 가장 최근 테마 ID', required: false })
+    @ApiQuery({ name: 'end', example: 1, description: '지금까지 불러온 가장 오래된 테마 ID', required: false })
+    @ApiQuery({ name: 'perPage', example: 10, required: false })
     @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
     async readRegionPost(@Req() req: any, @Param('regionId') regionId: string, @Query('start') start: number = 0, @Query('end') end: number = 0, @Query('perPage') perPage: number = 10): Promise<FeedDTO> {
         this.logger.debug('userId : ', req.user.userId, 'regionId : ', regionId, 'start : ', start, 'end : ', end, 'perPage : ', perPage)
@@ -104,6 +104,8 @@ export class PostController {
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Post('/')
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    @ApiCreatedResponse({ description: '테마 생성 완료', type: PostEntity })
     async createPost(@Req() req: any, @Body() post: CreatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' post : ', post);
         return await this.postService.createPost(req.user.userId, post);
@@ -112,6 +114,8 @@ export class PostController {
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Post('/savedPost/:postId')
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    @ApiCreatedResponse({ description: '테마 저장 완료' })
     async savePost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId);
         return await this.postService.savePost(req.user.userId, postId);
@@ -133,6 +137,8 @@ export class PostController {
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Put('/:postId')
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    @ApiCreatedResponse({ description: '테마 업데이트 완료', type: Number })
     async updatePost(@Req() req: any, @Param('postId') postId:number, @Body() post:UpdatePostDTO) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId, ' post : ', post);
         this.eventEmitter.emit(MyMapEvent.POST_UPDATED, new Event(postId, req.user.userId));
@@ -151,6 +157,8 @@ export class PostController {
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Delete('/:postId')
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    @ApiOkResponse({ description: '테마 삭제 완료' })
     async deletePost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId)
         this.eventEmitter.emit(MyMapEvent.POST_DELETED, new Event(postId, req.user.userId));
@@ -160,13 +168,15 @@ export class PostController {
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Delete('/savedPost/:postId')
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    @ApiCreatedResponse({ description: '테마 저장 취소 완료' })
     async deleteSavedPost(@Req() req: any, @Param('postId') postId: number) {
         this.logger.debug('userId : ', req.user.userId, ' postId : ', postId);
         this.eventEmitter.emit(MyMapEvent.POST_UNSAVED, new Event(req.user.userId, postId));
         await this.postService.deleteSavedPost(req.user.userId, postId);
     }
 
-    //Deprecated
+    // Deprecated
     // @UseGuards(ApiKeyAuthGuard)
     // @Post('/admin/default')
     // async createDefaultPost(@Query('end') end: number) {
