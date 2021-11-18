@@ -42,7 +42,6 @@ const getFeedPosts = async (
   regionId: string,
   params: GetFeedPostsParams = {}
 ) => {
-  console.log("api", params);
   return (await GET(`api/post/feed/${regionId}`, params)) as FeedType;
 };
 export const useGetFeedPosts = (

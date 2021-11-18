@@ -61,7 +61,6 @@ const Main = () => {
   }, [feedPostsResult]);
 
   useEffect(() => {
-    console.log("asdf", startIdx, endIdx);
     if (startIdx !== lastStartIdx && endIdx !== lastEndIdx) {
       refetchFeedPostsResult();
     }
