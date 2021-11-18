@@ -263,7 +263,6 @@ const Input = styled.input`
   font-size: 1.5rem;
   line-height: 135%;
   margin-left: 1rem;
-  caret-color: ${theme.color.orange};
   ::placeholder {
     color: ${theme.color.gray3};
   }
