@@ -1,3 +1,4 @@
+import { useHistory } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { useGetAroundPlaces } from "../../api/place";
@@ -18,6 +19,8 @@ import {
 } from "../../styles/theme";
 
 const Select = () => {
+  const history = useHistory();
+
   const regionId = useRecoilValue(RegionId);
   const { data: regionName } = useGetRegion(regionId);
   const { data: recommend } = useGetAroundPlaces(regionId);
@@ -72,7 +75,16 @@ const Select = () => {
       </div>
 
       <div className="footer">
-        <Button className="button">{selected.length}개 장소 선택</Button>
+        <Button
+          className="button"
+          onClick={() => {
+            if (selected.length > 0) {
+              history.push("/onboarding/write");
+            }
+          }}
+        >
+          {selected.length}개 장소 선택
+        </Button>
       </div>
     </Wrapper>
   );

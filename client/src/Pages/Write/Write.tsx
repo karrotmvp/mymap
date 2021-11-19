@@ -44,10 +44,10 @@ const Write = () => {
     useRouteMatch({
       path: "/write",
     }) ?? {};
-  const { isExact: isOnboarding } =
-    useRouteMatch({
-      path: "/onboarding/write",
-    }) ?? {};
+  // const { isExact: isOnboarding } =
+  //   useRouteMatch({
+  //     path: "/onboarding/write",
+  //   }) ?? {};
 
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
 
@@ -106,7 +106,7 @@ const Write = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    if (!isWrite && !isOnboarding && postToEdit) {
+    if (!isWrite && postToEdit) {
       inputVal.setValue(postToEdit.title);
       textareaVal.setValue(postToEdit.contents);
       setIsShare(postToEdit.share);
@@ -115,7 +115,7 @@ const Write = () => {
   }, []);
 
   // 완료
-  const [isSubmittable, setIsSubmittable] = useState(false);
+  const [isSubmitable, setIsSubmittable] = useState(false);
   useEffect(() => {
     if (
       inputVal.value &&
@@ -138,8 +138,6 @@ const Write = () => {
   const handleClose = () => {
     if (isWrite) {
       setIsWriteAlertOpened(true);
-    } else if (isOnboarding) {
-      setIsOnboardOutAlertOpened(true);
     } else {
       setIsEditAlertOpened(true);
     }
@@ -179,11 +177,10 @@ const Write = () => {
           };
         }),
       };
-      if (isWrite || isOnboarding) {
+      if (isWrite) {
         const data = await postPost(body);
         if (data.postId) {
-          if (isWrite) history.push(`/detail/${data.postId}/finish`);
-          else if (isOnboarding) setIsOnboardSubmitAlertOpened(true);
+          history.push(`/detail/${data.postId}/finish`);
         }
       } else {
         const data = await putPost(postId!, body);
@@ -195,7 +192,7 @@ const Write = () => {
   return (
     <Wrapper>
       <Header
-        title={isWrite || isOnboarding ? "테마 만들기" : "테마 수정"}
+        title={isWrite ? "테마 만들기" : "테마 수정"}
         className="write-header"
       >
         <Close onClick={handleClose} className="left-icon" />
@@ -305,7 +302,7 @@ const Write = () => {
           </Button>
           <Button
             onClick={() => {
-              isSubmittable && handleSubmit();
+              isSubmitable && handleSubmit();
             }}
           >
             저장하기
@@ -341,11 +338,11 @@ const Write = () => {
       <div className="footer">
         <SubmitBtn
           onClick={() => {
-            isSubmittable && handleSubmit();
+            isSubmitable && handleSubmit();
           }}
-          $disabled={!isSubmittable}
+          $disabled={!isSubmitable}
         >
-          {isWrite || isOnboarding ? "만들기" : "수정 완료"}
+          {isWrite ? "만들기" : "수정 완료"}
         </SubmitBtn>
       </div>
     </Wrapper>
