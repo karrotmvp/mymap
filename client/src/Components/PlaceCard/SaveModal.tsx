@@ -124,6 +124,15 @@ const SaveModal = () => {
     if (isChanged) setIsSubmitable(true);
   }, [isChanged]);
 
+  useEffect(() => {
+    if (state._t === "make") {
+      const element = document.querySelector(
+        "#new-theme-input"
+      ) as HTMLInputElement;
+      element.focus();
+    }
+  }, [state._t]);
+
   return (
     <Wrapper {...{ isSubmitable }}>
       <div
@@ -189,6 +198,7 @@ const SaveModal = () => {
                     ))
                     .exhaustive()}
                   <Input
+                    id="new-theme-input"
                     placeholder="만들고 싶은 테마 이름을 입력"
                     value={newThemeValue.value}
                     onChange={newThemeValue.onChange}
@@ -204,7 +214,7 @@ const SaveModal = () => {
               .with("theme", () => (
                 <>
                   <PlacePlus />
-                  <div style={{ color: theme.color.gray5 }}>
+                  <div style={{ color: theme.color.gray5, marginLeft: "1rem" }}>
                     새로운 테마 만들기
                   </div>
                 </>
@@ -212,7 +222,7 @@ const SaveModal = () => {
               .with(null, () => (
                 <>
                   <PlacePlus />
-                  <div style={{ color: theme.color.gray5 }}>
+                  <div style={{ color: theme.color.gray5, marginLeft: "1rem" }}>
                     새로운 테마 만들기
                   </div>
                 </>
@@ -289,6 +299,9 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
   z-index: 800;
   height: 100vh;
   width: 100%;
+  svg {
+    min-width: 3.4rem;
+  }
   .modal {
     animation: ${slideFromBotton} 0.25s linear;
     position: fixed;
