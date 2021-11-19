@@ -1,7 +1,7 @@
 import { useReducer } from "react";
 import styled from "styled-components";
 import { match } from "ts-pattern";
-import { Close, List, Map } from "../../assets";
+import { Back, List, Map } from "../../assets";
 import Header from "../../Components/Header";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
@@ -41,7 +41,7 @@ const MyPlaces = ({ places, close }: MyPlacesProps) => {
   return (
     <Wrapper>
       <Header title="내가 저장한 장소">
-        <Close className="left-icon" onClick={close} />
+        <Back className="left-icon" onClick={close} />
         <div className="view-toggle" onClick={() => dispatch()}>
           {match(state._t)
             .with("map", () => (
