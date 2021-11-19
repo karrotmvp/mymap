@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -18,6 +19,7 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const Select = () => {
   const history = useHistory();
@@ -41,6 +43,10 @@ const Select = () => {
       setSelected([...selected, place]);
     }
   };
+
+  useEffect(() => {
+    Mixpanel.track("온보딩 - 진입");
+  }, []);
 
   return (
     <Wrapper isSubmitable={selected.length > 0}>
@@ -80,6 +86,7 @@ const Select = () => {
           className="button"
           onClick={() => {
             if (selected.length > 0) {
+              Mixpanel.track("온보딩 - 장소 선택 완료");
               history.push("/onboarding/write");
             }
           }}
