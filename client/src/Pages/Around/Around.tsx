@@ -24,6 +24,7 @@ import useInput from "../../Hooks/useInput";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useGetAroundPlaces, useGetSearch } from "../../api/place";
 import { reducer } from "./index.reducer";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const Around = () => {
   const regionId = useRecoilValue(RegionId);
@@ -57,6 +58,7 @@ const Around = () => {
     setResultHasMore(true);
     if (searchVal.value.length > 0) debouncedSearchVal();
   }, [searchVal.value]);
+
   const handleResultNext = () => {
     setResultPage(resultPage + 1);
   };
@@ -74,6 +76,10 @@ const Around = () => {
     };
     if (searchVal.value.length > 0) fetchResult();
   }, [resultPage]);
+
+  useEffect(() => {
+    Mixpanel.track("둘러보기 진입");
+  }, []);
 
   return (
     <>

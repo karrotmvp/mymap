@@ -10,7 +10,6 @@ import {
   Mypage,
   MypageActive,
 } from "../assets";
-import { Mixpanel } from "../utils/mixpanel";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { RegionId, ViewerInfo } from "../Shared/atom";
 import { startPreset } from "../utils/preset";
@@ -36,11 +35,7 @@ const Footer = () => {
         {pathname === "/" ? <HomeActive /> : <Home />}
         <div>추천 테마</div>
       </FooterLink>
-      <FooterLink
-        to="/around"
-        $isClicked={pathname === "/around"}
-        onClick={() => Mixpanel.track("둘러보기 - 진입")}
-      >
+      <FooterLink to="/around" $isClicked={pathname === "/around"}>
         {pathname === "/around" ? <AroundActive /> : <Around />}
         <div>장소 둘러보기</div>
       </FooterLink>

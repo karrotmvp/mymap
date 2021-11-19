@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import styled from "styled-components";
 import { match } from "ts-pattern";
 import { Back, List, Map } from "../../assets";
@@ -7,6 +7,7 @@ import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import { PlaceType } from "../../Shared/type";
 import { gap, theme, WrapperWithHeader } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 interface MyPlacesProps {
   places: PlaceType[];
@@ -37,6 +38,10 @@ const MyPlaces = ({ places, close }: MyPlacesProps) => {
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
   });
+
+  useEffect(() => {
+    Mixpanel.track("내가 저장한 장소 진입");
+  }, []);
 
   return (
     <Wrapper>

@@ -36,6 +36,7 @@ import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -107,8 +108,10 @@ const Detail = ({
   };
 
   useEffect(() => {
+    Mixpanel.track("메인 피드 진입");
     if (fromWriteForm) refetchPost();
   }, []);
+
   useEffect(() => {
     if (post) setPostToEdit(post);
   }, [post]);
