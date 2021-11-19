@@ -65,13 +65,15 @@ const Write = () => {
 
   const handleSubmit = async () => {
     if (submitCheck()) return;
-    console.log(localStorage.getItem("token"));
 
     if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, regionId } });
     } else {
       const body = {
-        title: input.value,
+        title:
+          input.value !== ""
+            ? input.value
+            : `${regionName} 주민이 관심있는 장소`,
         regionId,
         share: true,
         pins: selected.map((place) => {
@@ -89,12 +91,12 @@ const Write = () => {
 
   useEffect(() => {
     if (regionName) {
-      input.setValue(`${regionName} 주민이 관심있는 장소`);
+      input.setValue("");
     }
   }, [regionName]);
 
   return (
-    <Wrapper isSubmitable={input.value.length > 0}>
+    <Wrapper>
       <Header>
         <Back className="left-icon" onClick={() => history.goBack()} />
         <LogoTypo />
@@ -112,7 +114,7 @@ const Write = () => {
             $error={isInputOver}
             // maxLength={30}
             onInput={handleInput}
-            placeholder="예) 나만 알고있던 혼밥하기 좋은 식당"
+            placeholder={`${regionName} 주민이 관심있는 장소`}
             value={input.value}
           />
           {isInputOver && (
@@ -134,13 +136,7 @@ const Write = () => {
       </div>
 
       <ButtonFooter>
-        <Button
-          className="button"
-          onClick={() => {
-            console.log("click");
-            if (input.value.length > 0) handleSubmit();
-          }}
-        >
+        <Button className="button" onClick={handleSubmit}>
           우리 동네 장소 추천하기
         </Button>
       </ButtonFooter>
@@ -148,7 +144,7 @@ const Write = () => {
   );
 };
 
-const Wrapper = styled.div<{ isSubmitable: boolean }>`
+const Wrapper = styled.div`
   ${WrapperWithHeader}
   height: auto;
   .form {
@@ -189,12 +185,6 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
       color: ${theme.color.gray6};
       white-space: pre-line;
     }
-  }
-  .button {
-    background-color: ${({ isSubmitable }) =>
-      isSubmitable ? theme.color.orange : theme.color.gray2};
-    color: ${({ isSubmitable }) =>
-      isSubmitable ? theme.color.white : theme.color.gray6};
   }
 `;
 
