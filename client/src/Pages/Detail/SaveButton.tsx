@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save, SaveActive } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
-import { Code, PostIsSaved, RegionId, ViewerInfo } from "../../Shared/atom";
+import { PostIsSaved, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -15,12 +15,11 @@ const SaveButton = (post: PostType) => {
   );
 
   const regionId = useRecoilValue(RegionId);
-  const code = useRecoilValue(Code);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const handleSaveToggle = async () => {
     if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, code, regionId } });
+      startPreset({ ...{ setViewerInfo, regionId } });
     } else {
       setIsSaved(!isSaved);
       if (!isSaved) {

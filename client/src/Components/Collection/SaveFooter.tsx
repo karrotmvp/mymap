@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save2, SaveActive2, Secret } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
-import { PostIsSaved, ViewerInfo, Code, RegionId } from "../../Shared/atom";
+import { PostIsSaved, ViewerInfo, RegionId } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, gap, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -23,12 +23,11 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
   const viewerInfo = useRecoilValue(ViewerInfo);
 
   const regionId = useRecoilValue(RegionId);
-  const code = useRecoilValue(Code);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const handleSaveToggle = async () => {
     if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, code, regionId } });
+      startPreset({ ...{ setViewerInfo, regionId } });
     } else {
       setIsSaved(!isSaved);
 

@@ -1,7 +1,7 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Call, PlaceAdd, Time } from "../../assets";
-import { Code, PlaceToSave, RegionId, ViewerInfo } from "../../Shared/atom";
+import { PlaceToSave, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
 import { startPreset } from "../../utils/preset";
@@ -27,13 +27,12 @@ const PlaceCard = ({
   if (place.businessHoursExtra) time += ` ${place.businessHoursExtra}`;
 
   const regionId = useRecoilValue(RegionId);
-  const code = useRecoilValue(Code);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const setPlaceToSave = useSetRecoilState(PlaceToSave);
   const clickPlaceAdd = () => {
     if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, code, regionId } });
+      startPreset({ ...{ setViewerInfo, regionId } });
     } else {
       setPlaceToSave({
         isModalOpened: true,
