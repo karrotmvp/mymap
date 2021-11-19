@@ -14,6 +14,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { WrapperWithFooter } from "../../styles/theme";
 import { mini } from "../../App";
 import { useGetFeedPosts } from "../../api/post";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const Main = () => {
   const [isMapShown, setIsMapShown] = useState(false);
@@ -137,6 +138,10 @@ const Main = () => {
     setIsPinSelected(false);
     setCurrent(-1);
   };
+
+  useEffect(() => {
+    Mixpanel.track("메인 피드 진입");
+  }, []);
 
   return (
     <Wrapper>

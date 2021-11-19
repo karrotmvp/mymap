@@ -21,6 +21,7 @@ import OrangePlaceBox from "../../Components/OrangePlaceBox";
 import MyPlaces from "./MyPlaces";
 import { useGetPlaceSaved } from "../../api/place";
 import { useGetMyPosts, useGetSavedPosts } from "../../api/post";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const Tab = ({
   selectedTab,
@@ -30,6 +31,11 @@ const Tab = ({
   setSelectedTab: Dispatch<SetStateAction<"my" | "others">>;
 }) => {
   const handleSelectedTab = (tab: "my" | "others") => {
+    if (tab !== selectedTab) {
+      Mixpanel.track(
+        `나의테마 - ${tab === "my" ? "내가 만든 테마" : "저장한 테마"}`
+      );
+    }
     setSelectedTab(tab);
   };
 
@@ -117,6 +123,8 @@ const Mypage = () => {
   }, [savedPostPage]);
 
   useEffect(() => {
+    Mixpanel.track("나의테마 - 진입");
+
     const targetElement = document.querySelector("#mypage-scroll")!;
 
     const onScroll = () => {
