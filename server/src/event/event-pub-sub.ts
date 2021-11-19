@@ -17,6 +17,7 @@ export const MyMapEvent = {
     POST_UPDATED: 'post.updated',
     POST_SAVELISTED: 'post.savedlisted',
     POST_MYLISTED: 'post.mylisted',
+    POST_PIN_UPDATED: 'post.pin.updated',
     PLACE_LISTED: 'place.listed',
     NOTI_EXECUTED: 'noti.executed',
 } as const
@@ -85,6 +86,11 @@ export class EventPubSub {
     @OnEvent(MyMapEvent.POST_MYLISTED)
     async handlePostMyListed(event: Event) {
         this.mymapServiceClient.emit(MyMapEvent.POST_MYLISTED, event);
+        // await this.postQueue.add('post_mylisted', event);
+    }
+    @OnEvent(MyMapEvent.POST_PIN_UPDATED)
+    async handlePostPinUpdated(event: Event) {
+        this.mymapServiceClient.emit(MyMapEvent.POST_PIN_UPDATED, event);
         // await this.postQueue.add('post_mylisted', event);
     }
     //place

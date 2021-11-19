@@ -73,6 +73,7 @@ export class PlaceController {
     @ApiQuery({ name: 'perPage', example: 10, required: false })
     async readRecommendPlacesRandom(@Param('regionId') regionId: string, @Query('seed') seed: string, @Query('perPage') perPage: number = 10, @Query('page') page: number = 0): Promise<RegionPlaceDTO> {
         if (!seed) seed = (Math.floor(Math.random() * 50) + 1).toString();
+        this.eventEmitter.emit(MyMapEvent.PLACE_LISTED, new Event(null, regionId));
         return await this.placeService.readRecommendPlacesRandom(regionId, Number(seed), perPage, page);
     }
 
