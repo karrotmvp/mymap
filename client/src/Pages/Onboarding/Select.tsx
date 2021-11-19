@@ -101,7 +101,7 @@ const Select = () => {
 const Wrapper = styled.div<{ isSubmitable: boolean }>`
   ${WrapperWithHeader}
   padding: 8rem 2rem 9.2rem 2rem;
-  height: auto;
+  overflow-y: scroll;
   .sub {
     margin-top: 1rem;
     color: ${theme.color.gray7};

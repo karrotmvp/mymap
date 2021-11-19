@@ -157,7 +157,6 @@ const Write = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeader}
-  height: auto;
   .form {
     padding: 3rem 2rem 5.4rem 2rem;
   }
@@ -195,6 +194,7 @@ const Wrapper = styled.div`
       line-height: 170%;
       color: ${theme.color.gray6};
       white-space: pre-line;
+      border-radius: 1rem;
     }
   }
 `;
