@@ -18,6 +18,7 @@ import {
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
+  ButtonFooter,
   flexCenter,
   gap,
   input,
@@ -335,7 +336,7 @@ const Write = () => {
         </Alert>
       )}
 
-      <div className="footer">
+      <ButtonFooter>
         <SubmitBtn
           onClick={() => {
             isSubmitable && handleSubmit();
@@ -344,7 +345,7 @@ const Write = () => {
         >
           {isWrite ? "만들기" : "수정 완료"}
         </SubmitBtn>
-      </div>
+      </ButtonFooter>
     </Wrapper>
   );
 };
@@ -437,15 +438,6 @@ const Wrapper = styled.div`
     ${gap("0.8rem")};
     margin-top: 1.2rem;
     box-sizing: border-box;
-  }
-  .footer {
-    position: fixed;
-    width: 100%;
-    height: 7.4rem;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: ${theme.color.white};
   }
 `;
 

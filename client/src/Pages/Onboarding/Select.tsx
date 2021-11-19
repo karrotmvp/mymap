@@ -11,6 +11,7 @@ import { OnboardingSelected, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
+  ButtonFooter,
   flexCenter,
   gap,
   theme,
@@ -74,7 +75,7 @@ const Select = () => {
         ))}
       </div>
 
-      <div className="footer">
+      <ButtonFooter>
         <Button
           className="button"
           onClick={() => {
@@ -85,7 +86,7 @@ const Select = () => {
         >
           {selected.length}개 장소 선택
         </Button>
-      </div>
+      </ButtonFooter>
     </Wrapper>
   );
 };
@@ -117,23 +118,11 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
       }
     }
   }
-  .footer {
-    z-index: 1;
-    position: fixed;
-    width: 100%;
-    height: 7.4rem;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: ${theme.color.white};
-    padding: 1rem 2rem 1.4rem 2rem;
-    box-sizing: border-box;
-    .button {
-      background-color: ${({ isSubmitable }) =>
-        isSubmitable ? theme.color.orange : theme.color.gray2};
-      color: ${({ isSubmitable }) =>
-        isSubmitable ? theme.color.white : theme.color.gray6};
-    }
+  .button {
+    background-color: ${({ isSubmitable }) =>
+      isSubmitable ? theme.color.orange : theme.color.gray2};
+    color: ${({ isSubmitable }) =>
+      isSubmitable ? theme.color.white : theme.color.gray6};
   }
 `;
 

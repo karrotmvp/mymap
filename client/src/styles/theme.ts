@@ -26,6 +26,19 @@ export const WrapperWithFooter = css`
   box-sizing: border-box;
 `;
 
+export const ButtonFooter = styled.div`
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+  height: 7.4rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  padding: 1rem 2rem 1.4rem 2rem;
+  box-sizing: border-box;
+`;
+
 const calculateMargin = (
   gap: string,
   direction: "row" | "column" | "column-reverse"

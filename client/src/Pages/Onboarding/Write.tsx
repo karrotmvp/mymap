@@ -11,6 +11,7 @@ import useInput from "../../Hooks/useInput";
 import { OnboardingSelected, RegionId, ViewerInfo } from "../../Shared/atom";
 import {
   Button,
+  ButtonFooter,
   input,
   theme,
   Title,
@@ -64,6 +65,7 @@ const Write = () => {
 
   const handleSubmit = async () => {
     if (submitCheck()) return;
+    console.log(localStorage.getItem("token"));
 
     if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, regionId } });
@@ -131,16 +133,17 @@ const Write = () => {
         </div>
       </div>
 
-      <div className="footer">
+      <ButtonFooter>
         <Button
           className="button"
           onClick={() => {
-            input.value.length > 0 && handleSubmit();
+            console.log("click");
+            if (input.value.length > 0) handleSubmit();
           }}
         >
           우리 동네 장소 추천하기
         </Button>
-      </div>
+      </ButtonFooter>
     </Wrapper>
   );
 };
@@ -187,23 +190,11 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
       white-space: pre-line;
     }
   }
-  .footer {
-    z-index: 1;
-    position: fixed;
-    width: 100%;
-    height: 7.4rem;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: ${theme.color.white};
-    padding: 1rem 2rem 1.4rem 2rem;
-    box-sizing: border-box;
-    .button {
-      background-color: ${({ isSubmitable }) =>
-        isSubmitable ? theme.color.orange : theme.color.gray2};
-      color: ${({ isSubmitable }) =>
-        isSubmitable ? theme.color.white : theme.color.gray6};
-    }
+  .button {
+    background-color: ${({ isSubmitable }) =>
+      isSubmitable ? theme.color.orange : theme.color.gray2};
+    color: ${({ isSubmitable }) =>
+      isSubmitable ? theme.color.white : theme.color.gray6};
   }
 `;
 
