@@ -1,6 +1,6 @@
 import { atom, atomFamily, selectorFamily } from "recoil";
 import { getLogin } from "../api/user";
-import { PostType, UserType } from "./type";
+import { PlaceType, PostType, UserType } from "./type";
 
 export const RegionId = atom({
   key: "region_id",
@@ -15,6 +15,11 @@ export const ViewerInfo = atom<UserType>({
     regionName: "",
     profileImageUrl: "",
   },
+});
+
+export const OnboardingSelected = atom<PlaceType[]>({
+  key: "OnboardingSelected",
+  default: [],
 });
 
 export const PostIsSaved = atomFamily({

@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
-import Onboarding from "./Pages/Onboarding";
+import Select from "./Pages/Onboarding/Select";
 import Analytics from "react-router-ga";
 import { Close, LogoInactive } from "./assets";
 import styled, { keyframes } from "styled-components";
@@ -30,6 +30,8 @@ import { regions } from "./utils/const";
 import { useGetRegion } from "./api/region";
 import { getLogin } from "./api/user";
 import { Mixpanel } from "./utils/mixpanel";
+import Finish from "./Pages/Onboarding/Finish";
+import OnboardingWrite from "./Pages/Onboarding/Write";
 
 dayjs.locale("ko");
 
@@ -71,7 +73,7 @@ function App() {
 
     if (process.env.NODE_ENV === "development") {
       if (!localStorage.getItem("token")) {
-        localStorage.setItem("token", "isLogined");
+        // localStorage.setItem("token", "isLogined");
       } else {
         setViewerInfo({
           userId: 1,
@@ -180,8 +182,13 @@ function App() {
               <Route exact path="/around" component={Around} />
               <Route exact path="/mypage" component={Mypage} />
               <Route exact path="/write" component={Write} />
-              <Route exact path="/onboarding" component={Onboarding} />
-              <Route exact path="/onboarding/write" component={Write} />
+              <Route exact path="/onboarding" component={Select} />
+              <Route
+                exact
+                path="/onboarding/write"
+                component={OnboardingWrite}
+              />
+              <Route exact path="/onboarding/finish" component={Finish} />
               <Route exact path="/asdf" component={SearchPlace} />
               <Route path="/edit/:postId" component={Write} />
             </Switch>

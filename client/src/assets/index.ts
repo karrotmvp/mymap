@@ -54,3 +54,5 @@ export { ReactComponent as Notification } from "./onboarding/notification.svg";
 export { ReactComponent as Carousel1 } from "./onboarding/carousel1.svg";
 export { ReactComponent as Carousel2 } from "./onboarding/carousel2.svg";
 export { ReactComponent as Carousel3 } from "./onboarding/carousel3.svg";
+
+export { ReactComponent as Onboarding } from "./onboarding/onboarding.svg";
