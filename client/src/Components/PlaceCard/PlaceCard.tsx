@@ -1,3 +1,4 @@
+import { ReactChild } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Call, PlaceAdd, Time } from "../../assets";
@@ -9,17 +10,16 @@ import { startPreset } from "../../utils/preset";
 // 1: 작성하기
 // 2: 그외 지도뷰
 // 3: 일반뷰 리스트
-export type PlaceCardType = "write" | "map" | "list";
+export type PlaceCardType = "write" | "map" | "list" | "onboarding";
 
-const PlaceCard = ({
-  place,
-  className,
-  type,
-}: {
+interface PlaceCardProps {
   place: PlaceType;
   className?: string;
   type: PlaceCardType;
-}) => {
+  children?: ReactChild | ReactChild[];
+}
+
+const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
   let time =
     place.businessHoursFrom &&
     place.businessHoursTo &&
@@ -61,7 +61,9 @@ const PlaceCard = ({
               <GrayTag>동네 장소</GrayTag>
             )}
           </div>
-          {type !== "write" && <PlaceAdd onClick={clickPlaceAdd} />}
+          {type !== "write" && type !== "onboarding" && (
+            <PlaceAdd onClick={clickPlaceAdd} />
+          )}
         </div>
 
         <div className="card-bottom">
@@ -88,11 +90,15 @@ const PlaceCard = ({
               </>
             )}
 
-            {type !== "write" && place.savedNum > 0 && (
-              <div className="recommend">
-                {place.savedNum}개 테마에 저장된 장소예요.
-              </div>
-            )}
+            {type !== "write" &&
+              type !== "onboarding" &&
+              place.savedNum > 0 && (
+                <div className="recommend">
+                  {place.savedNum}개 테마에 저장된 장소예요.
+                </div>
+              )}
+
+            {children}
           </div>
 
           {place.images.length > 0 && type !== "list" && (
@@ -109,12 +115,16 @@ const PlaceCard = ({
 };
 
 const Wrapper = styled.div<{ type: PlaceCardType }>`
+  position: relative;
   background-color: ${theme.color.white};
   box-shadow: ${({ type }) =>
-    type !== "list" && "0px 0px 16px rgba(0, 0, 0, 0.15)"};
+    type !== "list" &&
+    type !== "onboarding" &&
+    "0px 0px 16px rgba(0, 0, 0, 0.15)"};
   border-radius: 1.2rem;
   border: ${({ type }) =>
-    type === "list" && `0.1rem solid ${theme.color.gray1_7}`};
+    (type === "list" || type === "onboarding") &&
+    `0.1rem solid ${theme.color.gray1_7}`};
   width: ${({ type }) =>
     type === "map" ? "30.3rem" : type === "write" ? "32rem" : "100%"};
 
