@@ -12,7 +12,7 @@ import {
   PlaceToSave,
   ToastMessage,
   DetailId,
-  Code,
+  ViewerInfo,
 } from "./Shared/atom";
 import { useEffect } from "react";
 import dayjs from "dayjs";
@@ -28,6 +28,8 @@ import Header from "./Components/Header";
 import SaveModal from "./Components/PlaceCard/SaveModal";
 import { regions } from "./utils/const";
 import { useGetRegion } from "./api/region";
+import { getLogin } from "./api/user";
+import { Mixpanel } from "./utils/mixpanel";
 
 dayjs.locale("ko");
 
@@ -43,13 +45,42 @@ const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {
   const [regionId, setRegionId] = useRecoilState(RegionId);
-  const setCode = useSetRecoilState(Code);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const { data: regionName } = useGetRegion(regionIdFromParmas);
 
   useEffect(() => {
     setRegionId(regionIdFromParmas);
-    setCode(code!);
+
+    const getViewerInfo = async (code: string, regionId: string) => {
+      const data = await getLogin(code, regionId);
+      setViewerInfo({
+        userId: data.userId,
+        userName: data.userName,
+        regionName: data.regionName,
+        profileImageUrl: data.profileImageUrl,
+      });
+      localStorage.setItem("token", data.token);
+      Mixpanel.identify(data.userId.toString());
+    };
+
+    if (code) {
+      Mixpanel.track("로그인 - 기존 유저");
+      getViewerInfo(code, regionId as string);
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      if (!localStorage.getItem("token")) {
+        localStorage.setItem("token", "isLogined");
+      } else {
+        setViewerInfo({
+          userId: 1,
+          userName: "단민",
+          regionName: "역삼1동",
+          profileImageUrl: "",
+        });
+      }
+    }
   }, []);
 
   const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;

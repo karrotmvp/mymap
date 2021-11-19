@@ -9,7 +9,6 @@ import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
 import {
-  Code,
   DetailId,
   PageBeforeWrite,
   PostToEdit,
@@ -147,7 +146,6 @@ const Write = () => {
   };
 
   const regionId = useRecoilValue(RegionId);
-  const code = useRecoilValue(Code);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   let submitFlag = false;
@@ -165,7 +163,7 @@ const Write = () => {
     if (submitCheck()) return;
 
     if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, code, regionId } });
+      startPreset({ ...{ setViewerInfo, regionId } });
     } else {
       Mixpanel.track("글작성 - 작성 완료");
       const body = {

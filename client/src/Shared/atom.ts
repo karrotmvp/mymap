@@ -6,10 +6,6 @@ export const RegionId = atom({
   key: "region_id",
   default: "",
 });
-export const Code = atom({
-  key: "Code",
-  default: "",
-});
 
 export const ViewerInfo = atom<UserType>({
   key: "my_info",
