@@ -132,6 +132,7 @@ export class PostController {
         if (!postIds) postIds = [];
         postIds = postIds.map(postId => Number(postId));
         await this.postService.handlePin(req.user.userId, postIds, pin, regionId);
+        this.eventEmitter.emit(MyMapEvent.POST_PIN_UPDATED, new Event(req.user.userId, postIds));
     }
 
     @Roles(Role.Signed_User)

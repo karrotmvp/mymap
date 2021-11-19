@@ -34,7 +34,7 @@ export class MixpanelProcessor {
         this._mixpanel.people.set_once(user.getUserId().toString(), '$created', (new Date().toISOString()));
         this._mixpanel.track('userCreated', {
             userName: user.getUserName(),
-            userId: user.getUserId()
+            distinct_id: user.getUserId()
         })
     }
 
@@ -52,7 +52,7 @@ export class MixpanelProcessor {
         })
         this._mixpanel.track('login', {
             userName: user.getUserName(),
-            userId: user.getUserId(),
+            distinct_id: user.getUserId(),
             regionName: regionName
         })
     }
@@ -70,7 +70,8 @@ export class MixpanelProcessor {
             regionId: post.getRegionId(),
             regionName: post.getRegionName(),
             pinNum: post.pins.length,
-            share: post.getShare()
+            share: post.getShare(),
+            distinct_id: Number(userId)
         })
     }
     @EventPattern(MyMapEvent.POST_SAVED)
@@ -84,7 +85,7 @@ export class MixpanelProcessor {
             regionId: post.getRegionId(),
             regionName: post.getRegionName(),
             postId: postId,
-            userId: userId
+            distinct_id: userId
         })
     }
     @EventPattern(MyMapEvent.POST_READED)
@@ -98,7 +99,7 @@ export class MixpanelProcessor {
             regionId: post.getRegionId(),
             regionName: post.getRegionName(),
             postId: postId,
-            userId: userId,
+            distinct_id: userId,
         })
     }
     @EventPattern(MyMapEvent.POST_LISTED)
@@ -119,7 +120,7 @@ export class MixpanelProcessor {
             regionId: post.getRegionId(),
             regionName: post.getRegionName(),
             postId: postId,
-            userId: userId
+            distinct_id: userId
         })
     }
     @EventPattern(MyMapEvent.POST_DELETED)
@@ -131,7 +132,7 @@ export class MixpanelProcessor {
             regionId: post.getRegionId(),
             regionName: post.getRegionName(),
             postId: postId,
-            userId: userId
+            distinct_id: userId
         })
     }
     @EventPattern(MyMapEvent.POST_UPDATED)
@@ -143,21 +144,30 @@ export class MixpanelProcessor {
             regionId: post.getRegionId(),
             regionName: post.getRegionName(),
             postId: postId,
-            userId: userId
+            distinct_id: userId
         })
     }
     @EventPattern(MyMapEvent.POST_SAVELISTED)
     async handlePostSaveListed(@Payload() job: Event) {
         const userId: number = job._id;
         this._mixpanel.track('savelistPost', {
-            userId: userId
+            distinct_id: userId
         })
     }
     @EventPattern(MyMapEvent.POST_MYLISTED)
     async handlePostMyListed(@Payload() job: Event) {
         const userId: number = job._id;
         this._mixpanel.track('mylistPost', {
-            userId: userId
+            distinct_id: userId
+        })
+    }
+    @EventPattern(MyMapEvent.POST_PIN_UPDATED)
+    async handlePostPinUpdated(@Payload() job: Event) {
+        const userId: number = job._id;
+        const postIds: number[] = job.data;
+        this._mixpanel.track('updatePostPin', {
+            distinct_id: userId,
+            postId: postIds
         })
     }
 
