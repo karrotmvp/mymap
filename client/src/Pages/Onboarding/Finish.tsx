@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -13,10 +14,15 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const Finish = () => {
   const history = useHistory();
   const viewerInfo = useRecoilValue(ViewerInfo);
+
+  useEffect(() => {
+    Mixpanel.track("온보딩 - 완료 페이지 진입");
+  }, []);
 
   return (
     <Wrapper>
@@ -37,7 +43,13 @@ const Finish = () => {
       </div>
 
       <ButtonFooter>
-        <Button className="button" onClick={() => history.push("/")}>
+        <Button
+          className="button"
+          onClick={() => {
+            Mixpanel.track("온보딩 - 구경하기");
+            history.push("/");
+          }}
+        >
           ‘당장모아’에서 구경하기
         </Button>
       </ButtonFooter>
