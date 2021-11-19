@@ -66,7 +66,7 @@ function App() {
 
     if (code) {
       Mixpanel.track("로그인 - 기존 유저");
-      getViewerInfo(code, regionId as string);
+      getViewerInfo(code, regionIdFromParmas);
     }
 
     if (process.env.NODE_ENV === "development") {
