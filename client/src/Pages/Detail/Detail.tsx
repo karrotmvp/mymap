@@ -37,6 +37,7 @@ import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import { Mixpanel } from "../../utils/mixpanel";
+import { regionsGroup } from "../../utils/const";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -73,6 +74,15 @@ const Detail = ({
   const setPostToEdit = useSetRecoilState(PostToEdit);
 
   const { data: post, refetch: refetchPost } = useGetPost(postId);
+
+  const regionGroup = regionsGroup
+    .map((region) => {
+      if (region.find((r) => r === regionId)) {
+        return [...region];
+      }
+      return [];
+    })
+    .find((group) => group.length > 0);
 
   useEffect(() => {
     const targetElement = document.querySelector("#detail-scroll");
@@ -234,7 +244,7 @@ const Detail = ({
       </div>
 
       {isEditModalOpened &&
-        (post?.regionId !== regionId ? (
+        (!regionGroup?.find((id) => id === post?.regionId) ? (
           <Alert
             close={() => setIsEditModalOpened(false)}
             title="작성한 동네가 아니예요."
