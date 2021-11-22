@@ -7,6 +7,10 @@ services:
       - /home/ubuntu/deploy/mymap:/deploy/mymap
     ports:
       - "3001:3000"
+    environment:
+      - DD_APM_ENABLED=true
+      - DD_API_KEY=$DD_API_KEY
+      - DD_SITE=$DD_SITE
 
 networks:
   default:

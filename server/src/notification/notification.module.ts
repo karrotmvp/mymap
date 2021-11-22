@@ -19,15 +19,15 @@ import { HttpModule } from '@nestjs/axios';
   controllers: [NotificationController]
 })
 export class NotificationModule{
-  // @Inject(getQueueToken('notification'))
-  //   private readonly queue: Queue
+  @Inject(getQueueToken('notification'))
+    private readonly queue: Queue
 
-  //   configure(consumer: MiddlewareConsumer) {
-  //       const serverAdapter = new ExpressAdapter()
-  //       const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard(
-  //           {   queues: [new BullAdapter(this.queue)], serverAdapter },
-  //       )
-  //       serverAdapter.setBasePath('/api/admin/queues')
-  //       consumer.apply(serverAdapter.getRouter()).forRoutes('/api/admin/queues');
-  //   }
+    configure(consumer: MiddlewareConsumer) {
+        const serverAdapter = new ExpressAdapter()
+        const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard(
+            {   queues: [new BullAdapter(this.queue)], serverAdapter },
+        )
+        serverAdapter.setBasePath('/api/admin/queues')
+        consumer.apply(serverAdapter.getRouter()).forRoutes('/api/admin/queues');
+    }
 }
