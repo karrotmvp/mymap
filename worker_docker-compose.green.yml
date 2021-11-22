@@ -7,9 +7,11 @@ services:
       - /home/ubuntu/deploy/mymap:/deploy/mymap
     environment:
       - "WORKER=true"
-      - DD_APM_ENABLED=true
-      - DD_API_KEY=$DD_API_KEY
-      - DD_SITE=$DD_SITE
+      - DD_AGENT_HOST=host.docker.internal
+      - DD_TRACE_AGENT_PORT="8126"
+      - DD_LOGS_INJECTION=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   default:
