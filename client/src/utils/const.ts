@@ -12,3 +12,24 @@ export const regions = [
   "798608f67a48",
   // "6530459d189b", // 역삼1동 임시로
 ];
+
+export const regionsGroup = [
+  // 서초
+  [
+    "471abc99b378",
+    "1e652eeb5b91",
+    "d25d973fdf1b",
+    "9eccb81d1788",
+    "cc1856fff005",
+  ],
+  // 잠실
+  [
+    "5424e9f7ec6d",
+    "2c450d31f107",
+    "6a7eefda7865",
+    "ee1c4acc500b",
+    "798608f67a48",
+  ],
+  // 한남
+  ["79f5f58de451"],
+];
