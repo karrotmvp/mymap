@@ -9,8 +9,12 @@ import { ConfigService } from '@nestjs/config';
 import * as Tracing from '@sentry/tracing'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import tracer from 'dd-trace'
 
 async function bootstrap() {
+  if (process.env.DEV !== 'true') {
+    tracer.init()
+  }
   if (process.env.WORKER === 'true') {
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
       transport: Transport.REDIS,
