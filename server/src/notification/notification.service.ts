@@ -19,10 +19,12 @@ export class NotificationService {
     }
 
     async createPreopenNotification() {
-        const preopenUsers: PreopenUser[] = await this.userService.readPreopenUsers();
+        const preopenUsers: User[] = await this.userService.readPreopenUsers();
         preopenUsers.map(async(preopenUser) => {
-            await this.notificationQueue.add('notification_created', new Notification(preopenUser.getUser().getUniqueId(), 'preopen'))
-            await this.userService.setPreopenUserSended(preopenUser.getPreopenUserId());
+            await this.notificationQueue.add('notification_created', new Notification(preopenUser.getUniqueId(), 'preopen'), {
+                attempts: 5,
+                backoff: 5000
+            })
         })
     }
 }

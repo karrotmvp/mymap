@@ -5,6 +5,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
+import { LessThan } from 'typeorm';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
 import { PreopenUser } from './entities/preopen-user.entity';
@@ -76,7 +77,9 @@ export class UserService {
     }
 
     async readPreopenUsers() {
-        return await this.preopenUserReposiotry.find({ relations: ['user'] });
+        return await this.userRepository.find({
+            where: { createdAt: LessThan('2021-11-09') }
+        })
     }
     async setPreopenUserSended(preopenUserId: number) {
         const preopenUser: PreopenUser = await this.preopenUserReposiotry.findOne(preopenUserId);
