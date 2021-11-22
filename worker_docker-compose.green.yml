@@ -8,7 +8,7 @@ services:
     environment:
       - "WORKER=true"
       - DD_AGENT_HOST=host.docker.internal
-      - DD_TRACE_AGENT_PORT="8126"
+      - DD_TRACE_AGENT_PORT=8126
       - DD_LOGS_INJECTION=true
     extra_hosts:
       - "host.docker.internal:host-gateway"
