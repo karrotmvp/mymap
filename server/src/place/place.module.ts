@@ -11,6 +11,7 @@ import { PlaceController } from './place.controller';
 import { PlaceRepository } from './place.repository';
 import { PlaceService } from './place.service';
 import { RecommendPlaceRepository } from './recommendPlace.repository';
+import { SavedPlaceController } from './savedPlace.controller';
 import { SavedPlaceRepository } from './savedPlace.repository';
 
 @Module({
@@ -21,7 +22,7 @@ import { SavedPlaceRepository } from './savedPlace.repository';
   UserModule,
   RegionModule
   ],
-  controllers: [PlaceController],
+  controllers: [PlaceController, SavedPlaceController],
   providers: [PlaceService, PlaceRepository],
   exports: [PlaceService]
 })
