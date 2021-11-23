@@ -17,7 +17,7 @@ export class RecommendPlace {
     @Column()
     private regionId: string;
 
-    @Column()
+    @Column({ default: 0 })
     private priority: number;
 
     @CreateDateColumn()

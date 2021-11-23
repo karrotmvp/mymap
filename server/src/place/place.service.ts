@@ -148,7 +148,10 @@ export class PlaceService {
     async createSavedPlaces(userId: number, placeIds: string[]): Promise<void> {
         const user: User = await this.userService.readUser(userId);
         const exist: SavedPlace[] = await this.savePlaceRepository.find({
-            where: { placeId: In(placeIds) }
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('SavedPlace__user.userId = :userId AND placeId IN (:...placeId)', { userId: userId, placeId: placeIds })
+            }
         })
         const existPlaceIds: string[] = exist.map(_ => _.getPlaceId());
         placeIds = placeIds.filter(placeId => !existPlaceIds.includes(placeId));
