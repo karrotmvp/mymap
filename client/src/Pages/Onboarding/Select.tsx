@@ -47,7 +47,7 @@ const Select = () => {
   };
 
   useEffect(() => {
-    Mixpanel.track("온보딩 - 진입");
+    Mixpanel.track("온보딩A - 진입");
   }, []);
 
   return (
@@ -87,7 +87,7 @@ const Select = () => {
           className="button"
           onClick={() => {
             if (selected.length > 0) {
-              Mixpanel.track("온보딩 - 장소 선택 완료");
+              Mixpanel.track("온보딩A - 장소 선택 완료");
               // history.push("/onboarding/write");
               setIsSelectedFinished(true);
             }

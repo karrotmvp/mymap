@@ -67,7 +67,7 @@ const Write = ({ close }: { close: () => void }) => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    Mixpanel.track("온보딩 - 작성 완료");
+    Mixpanel.track("온보딩A - 작성 완료");
 
     if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, regionId } });
@@ -126,7 +126,7 @@ const Write = ({ close }: { close: () => void }) => {
             onInput={handleInput}
             placeholder={`${regionName} 주민이 관심있는 장소`}
             value={input.value}
-            onClick={() => Mixpanel.track("온보딩 - 텍스트박스 클릭")}
+            onClick={() => Mixpanel.track("온보딩A - 텍스트박스 클릭")}
           />
           {isInputOver && (
             <div className="error">

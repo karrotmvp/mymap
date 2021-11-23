@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useGetAroundPlaces } from "../../api/place";
 import { useGetRegion } from "../../api/region";
+import { postSavedPlaces } from "../../api/savedPlaces";
 import { mini } from "../../App";
 import { Close, LogoTypo, Unselect, Select as SelectIcon } from "../../assets";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
-import { OnboardingSelected, RegionId } from "../../Shared/atom";
+import { OnboardingSelected, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -20,6 +21,7 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
+import { startPreset } from "../../utils/preset";
 
 const Select = () => {
   const history = useHistory();
@@ -27,6 +29,7 @@ const Select = () => {
   const regionId = useRecoilValue(RegionId);
   const { data: regionName } = useGetRegion(regionId);
   const { data: recommend } = useGetAroundPlaces(regionId);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const [selected, setSelected] = useRecoilState(OnboardingSelected);
   const isSelected = (placeId: string) => {
@@ -45,8 +48,36 @@ const Select = () => {
   };
 
   useEffect(() => {
-    Mixpanel.track("온보딩 - 진입");
+    Mixpanel.track("온보딩B - 진입");
   }, []);
+
+  let submitFlag = false;
+
+  const submitCheck = () => {
+    if (submitFlag) {
+      return submitFlag;
+    } else {
+      submitFlag = true;
+      return false;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (submitCheck()) return;
+
+    Mixpanel.track("온보딩B - 장소 선택 완료");
+
+    if (!localStorage.getItem("token")) {
+      startPreset({ ...{ setViewerInfo, regionId } });
+    } else {
+      const places = selected.map((p) => p.placeId);
+      const params = {
+        placeId: places,
+      };
+      await postSavedPlaces(params);
+      history.push("/onboarding2/finish");
+    }
+  };
 
   return (
     <Wrapper isSubmitable={selected.length > 0}>
@@ -57,7 +88,8 @@ const Select = () => {
 
       <Title style={{ color: theme.color.orange }}>{`${regionName} 주민님,
 관심 있는 동네 장소가 있나요?`}</Title>
-      <div className="sub">내가 좋아하는 장소를 이웃들에게 알려주세요.</div>
+      <div className="sub">{`관심 있는 장소를 저장해 보세요.
+저장한 장소는 언제든 다시 볼 수 있어요.`}</div>
 
       <div className="list">
         {recommend?.places.map((place) => (
@@ -85,12 +117,11 @@ const Select = () => {
           className="button"
           onClick={() => {
             if (selected.length > 0) {
-              Mixpanel.track("온보딩 - 장소 선택 완료");
-              history.push("/onboarding/write");
+              handleSubmit();
             }
           }}
         >
-          {selected.length}개 장소 선택
+          {selected.length}개 장소 저장하기
         </Button>
       </ButtonFooter>
     </Wrapper>
@@ -102,11 +133,12 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
   padding: 8rem 2rem 9.2rem 2rem;
   overflow-y: scroll;
   .sub {
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     color: ${theme.color.gray7};
     font-weight: 500;
     font-size: 1.5rem;
     line-height: 150%;
+    white-space: pre-line;
   }
   .list {
     ${flexCenter};
