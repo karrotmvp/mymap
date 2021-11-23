@@ -28,10 +28,12 @@ const fetchWrap = async ({
       (method === "delete" && (await axios.delete(url, config))) ||
       {};
     return data;
-  } catch (error) {
-    console.log(error);
-    localStorage.removeItem("token");
-    window.location.href = "/401";
+  } catch (error: any) {
+    console.log(error.response.status, error);
+    if (error.response.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/401";
+    }
   }
 };
 
