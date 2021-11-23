@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { SavedPlace } from "src/place/entities/savedPlace.entity";
 import { Post } from "src/post/entities/post.entity";
 import { SavedPost } from "src/post/entities/savedPost.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -13,6 +14,9 @@ export class User {
     @ApiProperty()
     @PrimaryGeneratedColumn()
     private userId: number;
+
+    @OneToMany(() => SavedPlace, savedPlace => savedPlace.user, { cascade: true })
+    savedPlaces: SavedPlace[];
 
     @OneToMany(() => SavedPost, savedPost => savedPost.user, { cascade: true })
     savedPosts: SavedPost[];

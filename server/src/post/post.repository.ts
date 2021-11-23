@@ -37,6 +37,17 @@ export class PostRepository extends Repository<Post> {
         return posts;
     }
 
+    async findWithUserIdAndRegionId(userId: number, regionIds: string[]): Promise<Post[]> {
+        const posts: Post[] = await this.find({
+            relations: ['user', 'pins'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId AND (regionId IN (:...regionId) OR regionId IS NULL)', { userId: userId, regionId: regionIds });
+            },
+            order: { createdAt: 'DESC' }
+        })
+        return posts;
+    }
+
     async findWithRegionId(regionId: string[], start: number, end: number, perPage: number) {
         const posts = await this.find({
             relations: ['user', 'pins'],
@@ -50,4 +61,6 @@ export class PostRepository extends Repository<Post> {
         })
         return posts.filter(post => post.pins.length !== 0);
     }
+
+
 }

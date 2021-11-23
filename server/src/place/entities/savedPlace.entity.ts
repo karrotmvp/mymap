@@ -2,23 +2,20 @@ import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class RecommendPlace {
-    constructor(placeId: string, regionId: string) {
+export class SavedPlace {
+    constructor(user: User, placeId: string) {
         this.placeId = placeId;
-        this.regionId = regionId;
+        this.user = user;
     }
 
     @PrimaryGeneratedColumn()
-    private recommendPlaceId: number;
+    private savedPlaceId: number;
 
     @Column()
     private placeId: string;
 
-    @Column()
-    private regionId: string;
-
-    @Column()
-    private priority: number;
+    @ManyToOne(() => User, user => user.savedPlaces)
+    user: User;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -30,6 +27,6 @@ export class RecommendPlace {
     deletedAt: Date;
 
     public getPlaceId(): string {
-        return this.placeId;
+        return this.placeId
     }
 }
