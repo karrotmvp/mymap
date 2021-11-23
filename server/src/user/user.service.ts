@@ -62,7 +62,7 @@ export class UserService {
         return await lastValueFrom(userDetail$);
     }
 
-    async createPreopenUser(userId: number, regionId: string) {
+    async createPreopenUser(userId: number, regionId: string): Promise<void> {
         const existPreopen = await this.preopenUserReposiotry.findOne({
             relations: ['user'],
             where: (qb) => {
@@ -76,38 +76,42 @@ export class UserService {
         this.preopenUserReposiotry.save(preopenUser);
     }
 
-    async readPreopenUsers() {
+    async readPreopenUsers(): Promise<User[]> {
         return await this.userRepository.find({
             where: { createdAt: LessThan('2021-11-09') }
         })
     }
-    async setPreopenUserSended(preopenUserId: number) {
-        const preopenUser: PreopenUser = await this.preopenUserReposiotry.findOne(preopenUserId);
-        return await this.preopenUserReposiotry.softRemove(preopenUser);
-    }
 
-    async readAdmin() {
+    // admin
+
+    async readAdmin(): Promise<User> {
         return await this.userRepository.findOne({ where: { isAdmin: true } });
     }
-    async checkAdmin(userId: number) {
+    async checkAdmin(userId: number): Promise<boolean> {
         const user: User = await this.userRepository.findOne(userId);
         if (!user || !user.getIsAdmin()) throw new UnauthorizedException();
         return true;
     }
 
-    async readUserList(page: number, perPage: number) {
+    async readUserList(page: number, perPage: number): Promise<User[]> {
         return await this.userRepository.find({
             relations: ['posts', 'savedPosts'],
             take: perPage,
             skip: page * perPage
         })
     }
-
-    async readUnwrittenUserId() {
-        const user = (await this.userRepository.find({
-            relations: ['posts'],
-        })).filter(x => x.posts.length === 0).map(x => x.getUserId());
-        const unwrittenUser = [...new Set(user)];
-        return unwrittenUser
-    }
+    
+    // Deprecated
+    // async setPreopenUserSended(preopenUserId: number) {
+    //     const preopenUser: PreopenUser = await this.preopenUserReposiotry.findOne(preopenUserId);
+    //     return await this.preopenUserReposiotry.softRemove(preopenUser);
+    // }
+    // 
+    // async readUnwrittenUserId(): Promise<number[]> {
+    //     const user = (await this.userRepository.find({
+    //         relations: ['posts'],
+    //     })).filter(x => x.posts.length === 0).map(x => x.getUserId());
+    //     const unwrittenUser = [...new Set(user)];
+    //     return unwrittenUser
+    // }
 }

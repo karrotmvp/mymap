@@ -11,6 +11,7 @@ import { RegionService } from 'src/region/region.service';
 import { UserDTO } from 'src/user/dto/user.dto';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { In } from 'typeorm';
 import { CreatePinDTO } from './dto/create-pin.dto';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
@@ -230,28 +231,37 @@ export class PostService {
         await this.postRepository.save(post);
     }
 
-    private async savePinInPost(postId: number, pin: CreatePinDTO, regionId: string, regionName: string) {
-        const newPin: Pin[] = await this.pinRepository.savePins([pin]);
-        const post: Post = await this.postRepository.findOne(postId, { relations: ['pins'] })
-        if (!post) throw new BadRequestException();
-        post.pins ? post.pins.push(...newPin) : post.pins = newPin;
-        post.setRegionId(regionId);
-        post.setRegionName(regionName);
-        await this.postRepository.save(post);
+    private async savePinInPost(postIds: number[], pin: CreatePinDTO, regionId: string, regionName: string) {
+        const newPins: Pin[][] = await Promise.all(postIds.map(async(_) => {
+            const newPin: Pin[] = await this.pinRepository.savePins([pin]);
+            return newPin;
+        }))
+        const posts: Post[] = await this.postRepository.find({
+            relations: ['pins'],
+            where: { postId: In(postIds) }
+        })
+        if (!posts) throw new BadRequestException();
+        const savedPosts: Post[] = posts.map((post, idx) => {
+            post.pins ? post.pins.push(...newPins[idx]) : post.pins = newPins[idx];
+            post.setRegionId(regionId);
+            post.setRegionName(regionName);
+            return post;
+        })
+        await this.postRepository.save(savedPosts);
     }
 
-    private async deletePinInPost(postId: number, pin: CreatePinDTO) {
-        const deletePin: Pin[] = await this.pinRepository.find({
+    private async deletePinInPost(postIds: number[], pin: CreatePinDTO) {
+        const deletePins: Pin[] = await this.pinRepository.find({
             relations: ['post'],
             where: (qb) => {
-                qb.where('Pin__post.postId = :postId AND placeId = :placeId', { postId: postId, placeId: pin.placeId })
+                qb.where('Pin__post.postId IN (:...postId) AND placeId = :placeId', { postId: postIds, placeId: pin.placeId })
             }
         })
-        if (!deletePin) throw new BadRequestException();
-        await this.pinRepository.softRemove(deletePin);
+        if (!deletePins) throw new BadRequestException();
+        await this.pinRepository.softRemove(deletePins);
     }
 
-    async handlePin(userId: number, postIds: number[], pin: CreatePinDTO, regionId: string) {
+    async handlePin(userId: number, postIds: number[], pin: CreatePinDTO, regionId: string): Promise<void> {
         const pins: Pin[] = await this.pinRepository.find({
             relations: ['post'],
             where: { placeId: pin.placeId }
@@ -267,19 +277,13 @@ export class PostService {
         const existIds: number[] = posts.map(post => post.getPostId());
         const saveIds: number[] = postIds.filter(x => !existIds.includes(x));
         const deleteIds: number[] = existIds.filter(x => !postIds.includes(x));
-        await Promise.all(saveIds.map(async(saveId) => await this.savePinInPost(saveId, pin, regionId, regionName)));
-        await Promise.all(deleteIds.map(async(deleteId) => await this.deletePinInPost(deleteId, pin)));
+        if (saveIds && saveIds.length) await this.savePinInPost(saveIds, pin, regionId, regionName);
+        if (deleteIds && deleteIds.length) await this.deletePinInPost(deleteIds, pin);
     }
 
     async readUserPostInfo(userId: number, regionId: string): Promise<Post[]> {
         const regionIds: string[] = await this.regionService.readNeighborRegion(regionId, 'MY');
-        const posts: Post[] = await this.postRepository.find({
-            relations: ['user', 'pins'],
-            where: (qb) => {
-                qb.where('Post__user.userId = :userId AND (regionId IN (:...regionId) OR regionId IS NULL)', { userId: userId, regionId: regionIds });
-            },
-            order: { createdAt: 'DESC' }
-        })
+        const posts: Post[] = await this.postRepository.findWithUserIdAndRegionId(userId, regionIds);
         return posts;
     }
 
