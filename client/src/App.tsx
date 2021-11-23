@@ -31,7 +31,6 @@ import { useGetRegion } from "./api/region";
 import { getLogin } from "./api/user";
 import { Mixpanel } from "./utils/mixpanel";
 import Finish from "./Pages/Onboarding/Finish";
-import OnboardingWrite from "./Pages/Onboarding/Write";
 
 dayjs.locale("ko");
 
@@ -189,11 +188,6 @@ function App() {
               <Route exact path="/mypage" component={Mypage} />
               <Route exact path="/write" component={Write} />
               <Route exact path="/onboarding" component={Select} />
-              <Route
-                exact
-                path="/onboarding/write"
-                component={OnboardingWrite}
-              />
               <Route exact path="/onboarding/finish" component={Finish} />
 
               <Route exact path="/onboarding2" component={Select2} />

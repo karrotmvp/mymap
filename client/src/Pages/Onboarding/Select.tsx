@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useHistory } from "react-router";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { useGetAroundPlaces } from "../../api/place";
@@ -20,13 +19,16 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
+import Write from "./Write";
 
 const Select = () => {
-  const history = useHistory();
-
   const regionId = useRecoilValue(RegionId);
   const { data: regionName } = useGetRegion(regionId);
-  const { data: recommend } = useGetAroundPlaces(regionId);
+  const { data: recommend } = useGetAroundPlaces(regionId, {
+    keepPreviousData: true,
+  });
+
+  const [isSelectFinished, setIsSelectedFinished] = useState(false);
 
   const [selected, setSelected] = useRecoilState(OnboardingSelected);
   const isSelected = (placeId: string) => {
@@ -86,13 +88,16 @@ const Select = () => {
           onClick={() => {
             if (selected.length > 0) {
               Mixpanel.track("온보딩 - 장소 선택 완료");
-              history.push("/onboarding/write");
+              // history.push("/onboarding/write");
+              setIsSelectedFinished(true);
             }
           }}
         >
           {selected.length}개 장소 선택
         </Button>
       </ButtonFooter>
+
+      {isSelectFinished && <Write close={() => setIsSelectedFinished(false)} />}
     </Wrapper>
   );
 };

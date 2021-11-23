@@ -20,7 +20,7 @@ import {
 import { Mixpanel } from "../../utils/mixpanel";
 import { startPreset } from "../../utils/preset";
 
-const Write = () => {
+const Write = ({ close }: { close: () => void }) => {
   const history = useHistory();
 
   const regionId = useRecoilValue(RegionId);
@@ -108,7 +108,7 @@ const Write = () => {
   return (
     <Wrapper>
       <Header>
-        <Back className="left-icon" onClick={() => history.goBack()} />
+        <Back className="left-icon" onClick={close} />
         <LogoTypo />
       </Header>
 
@@ -157,6 +157,11 @@ const Write = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeader}
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  z-index: 500;
   .form {
     padding: 3rem 2rem 5.4rem 2rem;
   }
