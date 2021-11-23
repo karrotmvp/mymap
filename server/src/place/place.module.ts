@@ -11,12 +11,13 @@ import { PlaceController } from './place.controller';
 import { PlaceRepository } from './place.repository';
 import { PlaceService } from './place.service';
 import { RecommendPlaceRepository } from './recommendPlace.repository';
+import { SavedPlaceRepository } from './savedPlace.repository';
 
 @Module({
   imports: [HttpModule.register({
     timeout: 5000,
   }), ConfigModule, LoggerModule, forwardRef(() => PostModule),
-  TypeOrmModule.forFeature([RecommendPlaceRepository]),
+  TypeOrmModule.forFeature([RecommendPlaceRepository, SavedPlaceRepository]),
   UserModule,
   RegionModule
   ],

@@ -36,14 +36,15 @@ export class PlaceController {
         return await this.placeService.searchPlace(query, regionId, page, perPage);
     }
 
-    @Roles(Role.Signed_User)
-    @UseGuards(RolesGuard)
-    @Get('/saved')
-    @ApiOkResponse({ description: '저장한 장소 모음 불러오기 성공', type: [PlaceDTO] })
-    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
-    async readSavedPlaces(@Req() req: any): Promise<PlaceDTO[]> {
-        return await this.placeService.readSavedPlaces(req.user.userId);
-    }
+    // Deprecated
+    // @Roles(Role.Signed_User)
+    // @UseGuards(RolesGuard)
+    // @Get('/saved')
+    // @ApiOkResponse({ description: '저장한 장소 모음 불러오기 성공', type: [PlaceDTO] })
+    // @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    // async readSavedPlaces(@Req() req: any): Promise<PlaceDTO[]> {
+    //     return await this.placeService.readSavedPlaces(req.user.userId);
+    // }
 
     @Roles(Role.Unsigned_User)
     @UseGuards(RolesGuard)
