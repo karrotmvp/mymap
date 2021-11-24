@@ -23,7 +23,7 @@ const SaveButton = (post: PostType) => {
     } else {
       setIsSaved(!isSaved);
       if (!isSaved) {
-        Mixpanel.track("테마 저장 - 상세");
+        Mixpanel.track("테마 저장 - 상세", { postId: post.postId });
         await postSavedPost(post.postId);
       } else await deleteSavedPost(post.postId);
     }
