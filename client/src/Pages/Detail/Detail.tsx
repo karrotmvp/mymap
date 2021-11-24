@@ -59,7 +59,8 @@ const Detail = ({
       path: "/detail/:postId",
     })?.isExact ?? false;
 
-  const postId = fromWriteForm ? postIdFromParams : postIdFromProps!;
+  const postId =
+    fromWriteForm || fromDetail ? postIdFromParams : postIdFromProps!;
 
   const viewerInfo = useRecoilValue(ViewerInfo);
 

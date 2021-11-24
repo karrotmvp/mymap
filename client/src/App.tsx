@@ -184,6 +184,7 @@ function App() {
             <Switch>
               <Route exact path="/" component={Main} />
               <Route exact path="/401" component={ClosePage} />
+              <Route exact path="/detail/:postId" component={Detail} />
               <Route exact path="/detail/:postId/finish" component={Detail} />
               <Route exact path="/around" component={Around} />
               <Route exact path="/mypage" component={Mypage} />
