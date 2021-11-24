@@ -37,7 +37,8 @@ export class RolesGuard implements CanActivate {
                 userObj.userId = userId
             }
             req.user = userObj;
-            return requireRole <= permission ? true : false
+            if (requireRole <= permission) return true
+            throw new UnauthorizedException();
         } catch (e) {
             throw new UnauthorizedException();
         }

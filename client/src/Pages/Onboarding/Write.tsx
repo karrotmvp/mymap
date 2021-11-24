@@ -20,7 +20,7 @@ import {
 import { Mixpanel } from "../../utils/mixpanel";
 import { startPreset } from "../../utils/preset";
 
-const Write = () => {
+const Write = ({ close }: { close: () => void }) => {
   const history = useHistory();
 
   const regionId = useRecoilValue(RegionId);
@@ -67,7 +67,7 @@ const Write = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    Mixpanel.track("온보딩 - 작성 완료");
+    Mixpanel.track("온보딩A - 작성 완료");
 
     if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, regionId } });
@@ -108,7 +108,7 @@ const Write = () => {
   return (
     <Wrapper>
       <Header>
-        <Back className="left-icon" onClick={() => history.goBack()} />
+        <Back className="left-icon" onClick={close} />
         <LogoTypo />
       </Header>
 
@@ -126,7 +126,7 @@ const Write = () => {
             onInput={handleInput}
             placeholder={`${regionName} 주민이 관심있는 장소`}
             value={input.value}
-            onClick={() => Mixpanel.track("온보딩 - 텍스트박스 클릭")}
+            onClick={() => Mixpanel.track("온보딩A - 텍스트박스 클릭")}
           />
           {isInputOver && (
             <div className="error">
@@ -157,6 +157,11 @@ const Write = () => {
 
 const Wrapper = styled.div`
   ${WrapperWithHeader}
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  z-index: 500;
   .form {
     padding: 3rem 2rem 5.4rem 2rem;
   }

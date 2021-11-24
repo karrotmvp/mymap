@@ -37,6 +37,7 @@ import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import { Mixpanel } from "../../utils/mixpanel";
+import { mini } from "../../App";
 import { regionsGroup } from "../../utils/const";
 
 const Detail = ({
@@ -53,10 +54,10 @@ const Detail = ({
     useRouteMatch({
       path: "/detail/:postId/finish",
     })?.isExact ?? false;
-  // const fromDetail =
-  //   useRouteMatch({
-  //     path: "/detail/:postId",
-  //   })?.isExact ?? false;
+  const fromDetail =
+    useRouteMatch({
+      path: "/detail/:postId",
+    })?.isExact ?? false;
 
   const postId = fromWriteForm ? postIdFromParams : postIdFromProps!;
 
@@ -133,14 +134,20 @@ const Detail = ({
     >
       <Header style={{ zIndex: 600 }}>
         <>
-          {fromWriteForm ? (
+          {fromWriteForm || fromDetail ? (
             <Close
               className="left-icon"
-              onClick={() =>
-                history.push(
-                  pageBeforeWrite === "emptyTheme" ? "/mypage" : pageBeforeWrite
-                )
-              }
+              onClick={() => {
+                if (fromDetail) {
+                  mini.close();
+                } else {
+                  history.push(
+                    pageBeforeWrite === "emptyTheme"
+                      ? "/mypage"
+                      : pageBeforeWrite
+                  );
+                }
+              }}
             />
           ) : (
             <Back

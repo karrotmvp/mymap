@@ -19,11 +19,11 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
 import Select from "./Pages/Onboarding/Select";
+import Select2 from "./Pages/Onboarding2/Select";
 import Analytics from "react-router-ga";
 import { Close, LogoInactive } from "./assets";
 import styled, { keyframes } from "styled-components";
 import { flexCenter, theme } from "./styles/theme";
-import SearchPlace from "./Pages/Write/SearchPlace";
 import Header from "./Components/Header";
 import SaveModal from "./Components/PlaceCard/SaveModal";
 import { regions } from "./utils/const";
@@ -31,7 +31,7 @@ import { useGetRegion } from "./api/region";
 import { getLogin } from "./api/user";
 import { Mixpanel } from "./utils/mixpanel";
 import Finish from "./Pages/Onboarding/Finish";
-import OnboardingWrite from "./Pages/Onboarding/Write";
+import Finish2 from "./Pages/Onboarding2/Finish";
 
 dayjs.locale("ko");
 
@@ -43,6 +43,12 @@ let regionIdFromParmas =
   "6530459d189b";
 // 교보타워일 경우 서초동으로
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
+// 로컬에서는 역삼1동일 경우 서초동으로
+if (process.env.NODE_ENV === "development") {
+  if (regionIdFromParmas === "6530459d189b") {
+    regionIdFromParmas = "471abc99b378";
+  }
+}
 const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {
@@ -183,13 +189,11 @@ function App() {
               <Route exact path="/mypage" component={Mypage} />
               <Route exact path="/write" component={Write} />
               <Route exact path="/onboarding" component={Select} />
-              <Route
-                exact
-                path="/onboarding/write"
-                component={OnboardingWrite}
-              />
               <Route exact path="/onboarding/finish" component={Finish} />
-              <Route exact path="/asdf" component={SearchPlace} />
+
+              <Route exact path="/onboarding2" component={Select2} />
+              <Route exact path="/onboarding2/finish" component={Finish2} />
+
               <Route path="/edit/:postId" component={Write} />
             </Switch>
             {isSaveModalOpened && <SaveModal />}

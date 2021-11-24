@@ -12,6 +12,11 @@ import { RecommendPlace } from './entities/recommendPlace.entity';
 import { RecommendPlaceRepository } from './recommendPlace.repository';
 import { Pin } from 'src/post/entities/pin.entity';
 import { CoordinatesDTO } from './dto/coordinates.dto';
+import { UserService } from 'src/user/user.service';
+import { SavedPlace } from './entities/savedPlace.entity';
+import { User } from 'src/user/entities/user.entity';
+import { SavedPlaceRepository } from './savedPlace.repository';
+import { In } from 'typeorm';
 
 @Injectable()
 export class PlaceService {
@@ -20,7 +25,9 @@ export class PlaceService {
         @Inject(forwardRef(() => PostService))
         private readonly postService: PostService,
         private readonly regionService: RegionService,
-        private readonly recommendPlaceRepository: RecommendPlaceRepository
+        private readonly recommendPlaceRepository: RecommendPlaceRepository,
+        private readonly userService: UserService,
+        private readonly savePlaceRepository: SavedPlaceRepository
     ) {}
 
     private async convertId(regionId: string): Promise<number> {
@@ -61,6 +68,7 @@ export class PlaceService {
         return await lastValueFrom(paginator$);
     }
 
+    // Deprecated
     // async readRegionPlaces(regionId: string, seed: string, perPage: number, page: number): Promise<RegionPlaceDTO> {
     //     const regionNum = await this.convertId(regionId);
     //     const places$ = await this.placeRepository.findWithRegion(regionNum, seed, perPage, page);
@@ -73,13 +81,6 @@ export class PlaceService {
     //     const regionPlace = new RegionPlaceDTO(newPlaces, seed);
     //     return regionPlace;
     // }
-
-    async readSavedPlaces(userId: number): Promise<PlaceDTO[]> {
-        const pins: Pin[] = await this.postService.readPins(userId);
-        const places: string[] = pins.map(pin => pin.getPlaceId());
-        const placeIds: string[] = [...new Set(places)];
-        return await this.readPlaces(placeIds, userId);
-    }
 
     async readRecommendPlacesRandom(regionId: string, seed: number, perPage: number, page: number): Promise<RegionPlaceDTO> {
         const regions = await this.regionService.readNeighborRegion(regionId, 'RANGE_2');
@@ -124,5 +125,40 @@ export class PlaceService {
             }
         })
         return num;
+    }
+
+    async readSavedPlaces(userId: number): Promise<PlaceDTO[]> {
+        // A
+        // const pins: Pin[] = await this.postService.readPins(userId);
+        // const places: string[] = pins.map(pin => pin.getPlaceId());
+        // const placeIds: string[] = [...new Set(places)];
+        // return await this.readPlaces(placeIds, userId);
+        const savedPlaces: SavedPlace[] = await this.savePlaceRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('SavedPlace__user.userId = :userId', { userId: userId })
+            }
+        })
+        const placeIds: string[] = savedPlaces.map(savedPlace => {
+            return savedPlace.getPlaceId()
+        })
+        return await this.readPlaces(placeIds, userId);
+    }
+
+    async createSavedPlaces(userId: number, placeIds: string[]): Promise<void> {
+        const user: User = await this.userService.readUser(userId);
+        const exist: SavedPlace[] = await this.savePlaceRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('SavedPlace__user.userId = :userId AND placeId IN (:...placeId)', { userId: userId, placeId: placeIds })
+            }
+        })
+        const existPlaceIds: string[] = exist.map(_ => _.getPlaceId());
+        placeIds = placeIds.filter(placeId => !existPlaceIds.includes(placeId));
+        const newSavedPlaces: SavedPlace[] = placeIds.map(placeId => {
+            const newSavedPlace = new SavedPlace(user, placeId);
+            return newSavedPlace;
+        })
+        await this.savePlaceRepository.save(newSavedPlaces);
     }
 }

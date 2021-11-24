@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -20,10 +19,6 @@ const Finish = () => {
   const history = useHistory();
   const viewerInfo = useRecoilValue(ViewerInfo);
 
-  useEffect(() => {
-    Mixpanel.track("온보딩A - 완료 페이지 진입");
-  }, []);
-
   return (
     <Wrapper>
       <Header>
@@ -31,13 +26,12 @@ const Finish = () => {
         <LogoTypo />
       </Header>
 
-      <Title style={{ color: theme.color.orange }}>장소를 추천했어요!</Title>
+      <Title style={{ color: theme.color.orange }}>장소를 저장했어요!</Title>
       <div className="sub">
-        {`${viewerInfo.userName}님이 추천한 장소는 
-‘당장모아’에서 언제든 다시 볼 수 있어요. 
-이웃들이 추천한 장소도 구경해 보세요.`}
+        {`${viewerInfo.userName}님이 저장한 장소는
+내 근처 탭, 생활서비스에 있는 ‘당장모아’에서 
+언제든 다시 볼 수 있어요.`}
       </div>
-
       <div className="center">
         <Onboarding />
       </div>
@@ -46,11 +40,11 @@ const Finish = () => {
         <Button
           className="button"
           onClick={() => {
-            Mixpanel.track("온보딩A - 구경하기");
-            history.push("/");
+            Mixpanel.track("온보딩B - 구경하기");
+            history.push("/mypage");
           }}
         >
-          ‘당장모아’에서 구경하기
+          저장한 장소 확인하기
         </Button>
       </ButtonFooter>
     </Wrapper>

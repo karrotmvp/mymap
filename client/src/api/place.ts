@@ -26,12 +26,12 @@ const getAroundPlaces = async (regionId: string) => {
     };
   };
 };
-export const useGetAroundPlaces = (regionId: string) =>
-  useQuery(["useGetAroundPlaces"], () => getAroundPlaces(regionId));
+export const useGetAroundPlaces = (regionId: string, option?: any) =>
+  useQuery(["useGetAroundPlaces"], () => getAroundPlaces(regionId), option);
 
-// 내 모든 장소
-const getPlaceSaved = async () => {
-  return (await GET("api/place/saved")) as PlaceType[];
-};
-export const useGetPlaceSaved = () =>
-  useQuery(["useGetPlaceSaved"], () => getPlaceSaved());
+// // 내 모든 장소
+// const getPlaceSaved = async () => {
+//   return (await GET("api/place/saved")) as PlaceType[];
+// };
+// export const useGetPlaceSaved = () =>
+//   useQuery(["useGetPlaceSaved"], () => getPlaceSaved());

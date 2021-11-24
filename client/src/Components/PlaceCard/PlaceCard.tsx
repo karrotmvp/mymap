@@ -16,7 +16,7 @@ interface PlaceCardProps {
   place: PlaceType;
   className?: string;
   type: PlaceCardType;
-  children?: ReactChild | ReactChild[];
+  children?: ReactChild[];
 }
 
 const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
@@ -43,13 +43,14 @@ const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
 
   return (
     <Wrapper {...{ className, type }}>
-      {place.images.length > 0 && type === "list" && (
-        <img
-          className="list-photo"
-          alt="thumbnail"
-          src={place.images[0].thumbnail}
-        />
-      )}
+      {place.images.length > 0 &&
+        (type === "list" || type === "onboarding") && (
+          <img
+            className="list-photo"
+            alt="thumbnail"
+            src={place.images[0].thumbnail}
+          />
+        )}
       <div className="wrapper">
         <div className="card-top">
           <div className="category">
@@ -64,6 +65,7 @@ const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
           {type !== "write" && type !== "onboarding" && (
             <PlaceAdd onClick={clickPlaceAdd} />
           )}
+          {children && children[0]}
         </div>
 
         <div className="card-bottom">
@@ -98,16 +100,18 @@ const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
                 </div>
               )}
 
-            {children}
+            {children && children[1]}
           </div>
 
-          {place.images.length > 0 && type !== "list" && (
-            <img
-              className="photo"
-              alt="thumbnail"
-              src={place.images[0].thumbnail}
-            />
-          )}
+          {place.images.length > 0 &&
+            type !== "list" &&
+            type !== "onboarding" && (
+              <img
+                className="photo"
+                alt="thumbnail"
+                src={place.images[0].thumbnail}
+              />
+            )}
         </div>
       </div>
     </Wrapper>
@@ -115,7 +119,6 @@ const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
 };
 
 const Wrapper = styled.div<{ type: PlaceCardType }>`
-  position: relative;
   background-color: ${theme.color.white};
   box-shadow: ${({ type }) =>
     type !== "list" &&
@@ -136,6 +139,7 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
   }
 
   .wrapper {
+    position: relative;
     align-items: center;
     padding: ${({ type }) => (type === "map" ? "1.5rem 1.3rem" : "1.5rem")};
     width: 100%;

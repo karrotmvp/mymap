@@ -19,9 +19,9 @@ import { Close, LogoInactive, More, Thumbnail } from "../../assets";
 import { mini } from "../../App";
 import OrangePlaceBox from "../../Components/OrangePlaceBox";
 import MyPlaces from "./MyPlaces";
-import { useGetPlaceSaved } from "../../api/place";
 import { useGetMyPosts, useGetSavedPosts } from "../../api/post";
 import { Mixpanel } from "../../utils/mixpanel";
+import { useGetSavedPlaces } from "../../api/savedPlaces";
 
 const Tab = ({
   selectedTab,
@@ -72,7 +72,7 @@ const Mypage = () => {
   const [savedPostsHasMore, setSavedPostsHasMore] = useState(true);
   const [savedPostPage, setSavedPostPage] = useState(1);
 
-  const { data: myPlaces } = useGetPlaceSaved();
+  const { data: myPlaces } = useGetSavedPlaces();
   const {
     status: myPostsResultStatus,
     data: myPostsResult,

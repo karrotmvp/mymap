@@ -24,7 +24,6 @@ import { PostService } from './post.service';
 export class PostController {
     constructor(
         private readonly postService: PostService,
-        private readonly userService: UserService,
         private readonly logger: MyLogger,
         private readonly eventEmitter: EventEmitter2
     ) {}
@@ -121,6 +120,11 @@ export class PostController {
         return await this.postService.savePost(req.user.userId, postId);
     }
 
+    /*
+    ** 알고리즘 수정완료
+    ** 테스트 완료
+    ** one to many join where 알아보기
+    */
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Put('/pin')
