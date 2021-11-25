@@ -212,7 +212,7 @@ export class PostService {
         return await this.postRepository.findOne(postId, { withDeleted: true });
     }
 
-    async readPostListInfo(regionId: string, page: number, perPage: number) {
+    async readPostListInfo(regionId: string, page: number, perPage: number): Promise<Post[]> {
         const result = await this.postRepository.find({
             relations: ['user', 'pins'] ,
             where: regionId ? { regionId: regionId }: {},
@@ -223,7 +223,7 @@ export class PostService {
         return result;
     }
 
-    async updatePostShare(userId: number, postId: number) {
+    async updatePostShare(userId: number, postId: number): Promise<void> {
         const post = await this.postRepository.findOne(postId, {relations: ['pins', 'user']});
         if (!post) throw new BadRequestException();
         if (!(post.getUser().getUserId() === userId || await this.userService.checkAdmin(userId))) throw new NotAcceptableException();
@@ -231,7 +231,7 @@ export class PostService {
         await this.postRepository.save(post);
     }
 
-    private async savePinInPost(postIds: number[], pin: CreatePinDTO, regionId: string, regionName: string) {
+    private async savePinInPost(postIds: number[], pin: CreatePinDTO, regionId: string, regionName: string): Promise<void> {
         const newPins: Pin[][] = await Promise.all(postIds.map(async(_) => {
             const newPin: Pin[] = await this.pinRepository.savePins([pin]);
             return newPin;
@@ -250,7 +250,7 @@ export class PostService {
         await this.postRepository.save(savedPosts);
     }
 
-    private async deletePinInPost(postIds: number[], pin: CreatePinDTO) {
+    private async deletePinInPost(postIds: number[], pin: CreatePinDTO): Promise<void> {
         const deletePins: Pin[] = await this.pinRepository.find({
             relations: ['post'],
             where: (qb) => {
