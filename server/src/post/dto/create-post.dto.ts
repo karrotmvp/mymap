@@ -28,8 +28,6 @@ export class CreatePostDTO {
     @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })
-    @ArrayMinSize(0)
-    @ArrayMaxSize(10)
     @Type(() => CreatePinDTO)
     pins: CreatePinDTO[];
 }
