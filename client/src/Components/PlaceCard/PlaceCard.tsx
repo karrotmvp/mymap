@@ -2,7 +2,12 @@ import { ReactChild } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Call, PlaceAdd, Time } from "../../assets";
-import { PlaceToSave, RegionId, ViewerInfo } from "../../Shared/atom";
+import {
+  ReigonDiffModal,
+  PlaceToSave,
+  RegionId,
+  ViewerInfo,
+} from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
 import { startPreset } from "../../utils/preset";
@@ -17,9 +22,18 @@ interface PlaceCardProps {
   className?: string;
   type: PlaceCardType;
   children?: ReactChild[];
+  isDifferentRegion?: boolean;
+  postRegionName?: string;
 }
 
-const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
+const PlaceCard = ({
+  place,
+  className,
+  type,
+  children,
+  isDifferentRegion = false,
+  postRegionName,
+}: PlaceCardProps) => {
   let time =
     place.businessHoursFrom &&
     place.businessHoursTo &&
@@ -28,16 +42,24 @@ const PlaceCard = ({ place, className, type, children }: PlaceCardProps) => {
 
   const regionId = useRecoilValue(RegionId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
+  const setIsReigonDiffModalShown = useSetRecoilState(ReigonDiffModal);
 
   const setPlaceToSave = useSetRecoilState(PlaceToSave);
   const clickPlaceAdd = () => {
     if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, regionId } });
     } else {
-      setPlaceToSave({
-        isModalOpened: true,
-        placeId: place.placeId,
-      });
+      if (isDifferentRegion && postRegionName) {
+        setIsReigonDiffModalShown({
+          isModalOpened: true,
+          postRegionName,
+        });
+      } else {
+        setPlaceToSave({
+          isModalOpened: true,
+          placeId: place.placeId,
+        });
+      }
     }
   };
 

@@ -4,7 +4,15 @@ import { PlaceType } from "../Shared/type";
 import MapView, { Pin } from "./MapView";
 import PinSlider from "./PinSlider";
 
-const MapViewwithSlider = ({ places }: { places: PlaceType[] }) => {
+const MapViewwithSlider = ({
+  places,
+  isDifferentRegion,
+  postRegionName,
+}: {
+  places: PlaceType[];
+  isDifferentRegion?: boolean;
+  postRegionName?: string;
+}) => {
   const _pins: Pin[] = places.map((pin) => {
     return {
       id: pin.placeId,
@@ -49,7 +57,13 @@ const MapViewwithSlider = ({ places }: { places: PlaceType[] }) => {
       <PinSlider
         placeCardType="map"
         pins={places}
-        {...{ current, setCurrent, setCenter }}
+        {...{
+          current,
+          setCurrent,
+          setCenter,
+          isDifferentRegion,
+          postRegionName,
+        }}
       />
     </Wrapper>
   );

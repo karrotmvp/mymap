@@ -44,6 +44,14 @@ export const PlaceToSave = atom({
   },
 });
 
+export const ReigonDiffModal = atom({
+  key: "IsReigonDiffModalShown",
+  default: {
+    isModalOpened: false,
+    postRegionName: "",
+  },
+});
+
 export const PostToEdit = atom<PostType | null>({
   key: "PostToEdit",
   default: null,

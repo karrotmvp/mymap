@@ -13,6 +13,7 @@ import {
   ToastMessage,
   DetailId,
   ViewerInfo,
+  ReigonDiffModal,
 } from "./Shared/atom";
 import { useEffect } from "react";
 import dayjs from "dayjs";
@@ -23,7 +24,7 @@ import Select2 from "./Pages/Onboarding2/Select";
 import Analytics from "react-router-ga";
 import { Close, LogoInactive } from "./assets";
 import styled, { keyframes } from "styled-components";
-import { flexCenter, theme } from "./styles/theme";
+import { Button, flexCenter, theme } from "./styles/theme";
 import Header from "./Components/Header";
 import SaveModal from "./Components/PlaceCard/SaveModal";
 import { regions } from "./utils/const";
@@ -32,6 +33,7 @@ import { getLogin } from "./api/user";
 import { Mixpanel } from "./utils/mixpanel";
 import Finish from "./Pages/Onboarding/Finish";
 import Finish2 from "./Pages/Onboarding2/Finish";
+import Alert from "./Components/Alert";
 
 dayjs.locale("ko");
 
@@ -92,54 +94,9 @@ function App() {
   }, []);
 
   const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
+  const [reigonDiffModal, setReigonDiffModal] = useRecoilState(ReigonDiffModal);
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
   const [detailId, setDetailId] = useRecoilState(DetailId);
-
-  // 로그인 및 내 정보 저장
-  // const [viewerInfo, setViewerInfo] = useRecoilState(ViewerInfo);
-  // const getViewerInfo = useCallback(async (code: string, regionId: string) => {
-  //   const data = await getLogin(code, regionId);
-  //   setViewerInfo({
-  //     userId: data.userId,
-  //     userName: data.userName,
-  //     regionName: data.regionName,
-  //     profileImageUrl: data.profileImageUrl,
-  //   });
-  //   localStorage.setItem("token", data.token);
-  //   Mixpanel.identify(data.userId.toString());
-  // }, []);
-
-  // useEffect(() => {
-  // if (process.env.NODE_ENV === "development") {
-  //   setViewerInfo({
-  //     userId: 1,
-  //     userName: "단민",
-  //     regionName: "역삼1동",
-  //     profileImageUrl: "",
-  //   });
-  //   setRegionId("6530459d189b");
-  //   // setRegionId("471abc99b378");
-  // } else if (!preload) {
-  //   setRegionId(regionId as string);
-  //   if (code) {
-  //     Mixpanel.track("로그인 - 기존 유저");
-  //     getViewerInfo(code, regionId as string);
-  //   } else {
-  //     mini.startPreset({
-  //       preset: process.env.REACT_APP_LOGIN as string,
-  //       params: {
-  //         appId: process.env.REACT_APP_APP_ID as string,
-  //       },
-  //       onSuccess: function (result) {
-  //         if (result && result.code) {
-  //           Mixpanel.track("로그인 - 새로운 유저");
-  //           getViewerInfo(result.code, regionId as string);
-  //         }
-  //       },
-  //     });
-  //   }
-  // }
-  // }, []);
 
   useEffect(() => {
     if (toastMessage.isToastShown) {
@@ -211,6 +168,30 @@ function App() {
                   setDetailId(null);
                 }}
               />
+            )}
+            {reigonDiffModal.isModalOpened && (
+              <Alert
+                close={() =>
+                  setReigonDiffModal({
+                    isModalOpened: false,
+                    postRegionName: "",
+                  })
+                }
+                title={`${reigonDiffModal.postRegionName}에 있는 장소예요.`}
+                sub={`${reigonDiffModal.postRegionName}으로 인증 후 테마에 추가해 주세요.`}
+              >
+                <Button
+                  className="orange"
+                  onClick={() =>
+                    setReigonDiffModal({
+                      isModalOpened: false,
+                      postRegionName: "",
+                    })
+                  }
+                >
+                  확인
+                </Button>
+              </Alert>
             )}
           </Analytics>
         )}

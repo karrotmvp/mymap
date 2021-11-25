@@ -36,7 +36,6 @@ import SaveButton from "./SaveButton";
 import { match } from "ts-pattern";
 import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
-import { Mixpanel } from "../../utils/mixpanel";
 import { mini } from "../../App";
 import { regionsGroup } from "../../utils/const";
 
@@ -86,19 +85,6 @@ const Detail = ({
     })
     .find((group) => group.length > 0);
 
-  useEffect(() => {
-    const targetElement = document.querySelector("#detail-scroll");
-    const onScroll = () => {
-      dispatch({
-        _t: "scroll",
-        scrollY: targetElement?.scrollTop || 0,
-      });
-    };
-
-    targetElement?.addEventListener("scroll", onScroll);
-    return () => targetElement?.removeEventListener("scroll", onScroll);
-  });
-
   const onDeleteClick = () => {
     setIsEditModalOpened(false);
     setIsDeleteAlertOpened(true);
@@ -120,13 +106,23 @@ const Detail = ({
   };
 
   useEffect(() => {
-    Mixpanel.track("메인 피드 진입");
-    if (fromWriteForm) refetchPost();
-  }, []);
-
-  useEffect(() => {
     if (post) setPostToEdit(post);
   }, [post]);
+
+  useEffect(() => {
+    if (fromWriteForm) refetchPost();
+
+    const targetElement = document.querySelector("#detail-scroll");
+    const onScroll = () => {
+      dispatch({
+        _t: "scroll",
+        scrollY: targetElement?.scrollTop || 0,
+      });
+    };
+
+    targetElement?.addEventListener("scroll", onScroll);
+    return () => targetElement?.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <Container
@@ -235,7 +231,12 @@ const Detail = ({
               <div className="cards">
                 {post?.pins.map((pin) => (
                   <div key={pin.pinId}>
-                    <PlaceCard place={pin.place} type="list" />
+                    <PlaceCard
+                      place={pin.place}
+                      type="list"
+                      isDifferentRegion={regionId !== post.regionId}
+                      postRegionName={post.regionName}
+                    />
                   </div>
                 ))}
               </div>
@@ -245,7 +246,11 @@ const Detail = ({
             "map",
             () =>
               post && (
-                <MapViewwithSlider places={post.pins.map((p) => p.place)} />
+                <MapViewwithSlider
+                  places={post.pins.map((p) => p.place)}
+                  isDifferentRegion={regionId !== post.regionId}
+                  postRegionName={post.regionName}
+                />
               )
           )
           .exhaustive()}
