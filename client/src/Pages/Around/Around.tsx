@@ -2,7 +2,15 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { Close, List, Map, NoSearch, Search, SearchClose } from "../../assets";
+import {
+  Back,
+  Close,
+  List,
+  Map,
+  NoSearch,
+  Search,
+  SearchClose,
+} from "../../assets";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import { RegionId } from "../../Shared/atom";
@@ -33,6 +41,8 @@ const Around = () => {
 
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
+    sliderCurrent: 0,
+    isSelected: false,
   });
 
   const [resultHasMore, setResultHasMore] = useState(true);
@@ -65,6 +75,15 @@ const Around = () => {
     setResultPage(resultPage + 1);
   };
 
+  // 카드 클릭하면 해당 인덱스 지도뷰
+  const handleClickPlaceCard = (idx: number) => {
+    dispatch({
+      _t: "select",
+      sliderCurrent: idx,
+      isSelected: true,
+    });
+  };
+
   useEffect(() => {
     const fetchResult = async () => {
       await refetchSearchResult();
@@ -87,11 +106,30 @@ const Around = () => {
     <>
       <Wrapper>
         <Header title={`${regionName} 둘러보기`}>
-          <Close className="left-icon" onClick={() => mini.close()} />
+          {searchVal.value.length > 0 || state.isSelected ? (
+            <Back
+              className="left-icon"
+              onClick={() => {
+                dispatch({
+                  _t: "toggle",
+                });
+                searchVal.setValue("");
+              }}
+            />
+          ) : (
+            <Close className="left-icon" onClick={() => mini.close()} />
+          )}
           {searchVal.value.length > 0 && result.length === 0 ? (
             <div />
           ) : (
-            <div className="view-toggle" onClick={dispatch}>
+            <div
+              className="view-toggle"
+              onClick={() =>
+                dispatch({
+                  _t: "toggle",
+                })
+              }
+            >
               {match(state._t)
                 .with("map", () => (
                   <>
@@ -139,8 +177,11 @@ const Around = () => {
                       scrollableTarget="around-search-list"
                     >
                       <div className="result-cards">
-                        {result.map((place) => (
-                          <div key={place.placeId}>
+                        {result.map((place, i) => (
+                          <div
+                            key={place.placeId}
+                            onClick={() => handleClickPlaceCard(i)}
+                          >
                             <PlaceCard type="list" {...{ place }} />
                           </div>
                         ))}
@@ -162,8 +203,11 @@ const Around = () => {
 
                   <div className="cards">
                     {aroundPlaces &&
-                      aroundPlaces.places.map((place) => (
-                        <div key={place.placeId}>
+                      aroundPlaces.places.map((place, i) => (
+                        <div
+                          key={place.placeId}
+                          onClick={() => handleClickPlaceCard(i)}
+                        >
                           <PlaceCard {...{ place }} type="list" />
                         </div>
                       ))}
@@ -178,6 +222,7 @@ const Around = () => {
               aroundPlaces && (
                 <MapViewwithSlider
                   places={result.length > 0 ? result : aroundPlaces.places}
+                  defaultCurrent={state.sliderCurrent}
                 />
               )
           )

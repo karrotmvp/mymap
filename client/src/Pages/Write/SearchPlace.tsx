@@ -158,12 +158,7 @@ const SearchPlace = ({
       {isMapOpened && place && (
         <PlaceMapView
           close={() => setIsMapOpened(false)}
-          {...{
-            place,
-            setIsSearchOpened,
-            places,
-            setPlaces,
-          }}
+          {...{ place, setIsSearchOpened, places, setPlaces }}
         />
       )}
     </Wrapper>

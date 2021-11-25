@@ -8,10 +8,12 @@ const MapViewwithSlider = ({
   places,
   isDifferentRegion,
   postRegionName,
+  defaultCurrent = 0,
 }: {
   places: PlaceType[];
   isDifferentRegion?: boolean;
   postRegionName?: string;
+  defaultCurrent?: number;
 }) => {
   const _pins: Pin[] = places.map((pin) => {
     return {
@@ -38,7 +40,7 @@ const MapViewwithSlider = ({
   };
 
   // 카드 이동
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(defaultCurrent);
   useEffect(() => {
     setCenter({
       lat: places[current].coordinates.latitude,
