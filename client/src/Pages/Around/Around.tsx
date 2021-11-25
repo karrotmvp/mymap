@@ -110,9 +110,10 @@ const Around = () => {
             <Back
               className="left-icon"
               onClick={() => {
-                dispatch({
-                  _t: "toggle",
-                });
+                if (state._t === "map")
+                  dispatch({
+                    _t: "toggle",
+                  });
                 searchVal.setValue("");
               }}
             />
@@ -121,7 +122,7 @@ const Around = () => {
           )}
           {searchVal.value.length > 0 && result.length === 0 ? (
             <div />
-          ) : (
+          ) : !(state.isSelected || searchVal.value.length > 0) ? (
             <div
               className="view-toggle"
               onClick={() =>
@@ -145,6 +146,8 @@ const Around = () => {
                 ))
                 .exhaustive()}
             </div>
+          ) : (
+            <div />
           )}
         </Header>
 
@@ -193,10 +196,7 @@ const Around = () => {
                 )
               ) : (
                 <div className="around-scroll">
-                  <Title
-                    style={{ fontSize: "1.8rem", lineHeight: "2.52rem" }}
-                  >{`우리 동네 장소
-어디까지 알고 있나요?`}</Title>
+                  <Title>{`${regionName}엔 이런 장소가 있어요`}</Title>
                   <div className="sub">
                     새로운 장소를 나만의 테마에 저장해요
                   </div>
