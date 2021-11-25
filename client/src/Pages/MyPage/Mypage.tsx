@@ -155,8 +155,8 @@ const Mypage = () => {
           <Thumbnail className="photo" />
         )}
         <div className="user">
+          <div className="place">{viewerInfo.regionName} 주민</div>
           <div className="name">{viewerInfo.userName}</div>
-          <div className="place">{viewerInfo.regionName}</div>
         </div>
       </Profile>
 
@@ -347,15 +347,15 @@ const Profile = styled.div`
     background-color: ${theme.color.gray4};
   }
   .user {
-    margin-left: 1.2rem;
-    .name {
-      font-size: 1.8rem;
-      line-height: 115%;
-    }
+    margin-left: 2rem;
     .place {
-      font-size: 1.5rem;
-      line-height: 115%;
-      margin-top: 0.7rem;
+      font-size: 1.3rem;
+      line-height: 150%;
+    }
+    .name {
+      font-size: 1.6rem;
+      line-height: 150%;
+      margin-top: 0.2rem;
     }
   }
 `;

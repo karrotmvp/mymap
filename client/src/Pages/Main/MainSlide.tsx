@@ -4,6 +4,9 @@ import Collection from "../../Components/Collection";
 import CreateButton from "../../Components/CreateButton";
 import { PostType } from "../../Shared/type";
 import { Dispatch, SetStateAction } from "react";
+import { useRecoilValue } from "recoil";
+import { useGetRegion } from "../../api/region";
+import { RegionId } from "../../Shared/atom";
 
 const MainSlide = ({
   isScrollUp,
@@ -14,6 +17,9 @@ const MainSlide = ({
   posts: PostType[];
   setIsMapShown: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const regionId = useRecoilValue(RegionId);
+  const { data: regionName } = useGetRegion(regionId);
+
   return (
     <>
       <Card
@@ -29,8 +35,8 @@ const MainSlide = ({
         )}
 
         <div className="content">
-          <Title className="main-title">{`우리 동네 이웃들의
-추천 테마를 구경해보세요`}</Title>
+          <Title className="main-title">{`${regionName} 이웃들이 만든
+테마 지도를 구경해 보세요`}</Title>
 
           <div className="collections">
             {posts.map((post) => (

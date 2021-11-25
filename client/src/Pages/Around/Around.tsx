@@ -25,9 +25,11 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useGetAroundPlaces, useGetSearch } from "../../api/place";
 import { reducer } from "./index.reducer";
 import { Mixpanel } from "../../utils/mixpanel";
+import { useGetRegion } from "../../api/region";
 
 const Around = () => {
   const regionId = useRecoilValue(RegionId);
+  const { data: regionName } = useGetRegion(regionId);
 
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
@@ -84,7 +86,7 @@ const Around = () => {
   return (
     <>
       <Wrapper>
-        <Header title="장소 둘러보기">
+        <Header title={`${regionName} 둘러보기`}>
           <Close className="left-icon" onClick={() => mini.close()} />
           {searchVal.value.length > 0 && result.length === 0 ? (
             <div />
