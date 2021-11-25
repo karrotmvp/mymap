@@ -114,7 +114,9 @@ const Around = () => {
                   dispatch({
                     _t: "toggle",
                   });
-                searchVal.setValue("");
+                else {
+                  searchVal.setValue("");
+                }
               }}
             />
           ) : (

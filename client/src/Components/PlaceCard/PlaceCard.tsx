@@ -85,7 +85,12 @@ const PlaceCard = ({
             )}
           </div>
           {type !== "write" && type !== "onboarding" && (
-            <PlaceAdd onClick={clickPlaceAdd} />
+            <PlaceAdd
+              onClick={(e) => {
+                e.stopPropagation();
+                clickPlaceAdd();
+              }}
+            />
           )}
           {children && children[0]}
         </div>

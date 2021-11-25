@@ -38,6 +38,7 @@ import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import { mini } from "../../App";
 import { regionsGroup } from "../../utils/const";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -106,7 +107,10 @@ const Detail = ({
   };
 
   useEffect(() => {
-    if (post) setPostToEdit(post);
+    if (post) {
+      setPostToEdit(post);
+      Mixpanel.track("상세글 진입", { postId: post.postId });
+    }
   }, [post]);
 
   useEffect(() => {
