@@ -14,14 +14,14 @@ import {
 } from "../../styles/theme";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRecoilValue } from "recoil";
-import { ViewerInfo } from "../../Shared/atom";
+import { Installed, ViewerInfo } from "../../Shared/atom";
 import { Close, LogoInactive, More, Thumbnail } from "../../assets";
-import { mini } from "../../App";
 import OrangePlaceBox from "../../Components/OrangePlaceBox";
 import MyPlaces from "./MyPlaces";
 import { useGetMyPosts, useGetSavedPosts } from "../../api/post";
 import { Mixpanel } from "../../utils/mixpanel";
 import { useGetSavedPlaces } from "../../api/savedPlaces";
+import { handleClose } from "../../utils/preset";
 
 const Tab = ({
   selectedTab,
@@ -59,6 +59,7 @@ const Tab = ({
 
 const Mypage = () => {
   const viewerInfo = useRecoilValue(ViewerInfo);
+  const installed = useRecoilValue(Installed);
 
   const [selectedTab, setSelectedTab] = useState<"my" | "others">("my");
   const [isScrollUp, setIsScrollUp] = useState(false);
@@ -138,12 +139,12 @@ const Mypage = () => {
     <Wrapper id="mypage-scroll" {...{ isScrollUp }}>
       {isScrollUp && (
         <Header title={`${viewerInfo.userName}님`}>
-          <Close className="close-btn" onClick={() => mini.close()} />
+          <Close className="close-btn" onClick={() => handleClose(installed)} />
         </Header>
       )}
 
       <Profile>
-        <Close className="close-btn" onClick={() => mini.close()} />
+        <Close className="close-btn" onClick={() => handleClose(installed)} />
 
         {viewerInfo.profileImageUrl ? (
           <img

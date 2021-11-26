@@ -7,9 +7,14 @@ import { Mixpanel } from "./mixpanel";
 interface StartPresetProps {
   setViewerInfo: SetterOrUpdater<UserType>;
   regionId: string;
+  afterFunc?: () => void;
 }
 
-export const startPreset = ({ setViewerInfo, regionId }: StartPresetProps) => {
+export const startPreset = ({
+  setViewerInfo,
+  regionId,
+  afterFunc,
+}: StartPresetProps) => {
   const getViewerInfo = async (code: string, regionId: string) => {
     const data = await getLogin(code, regionId);
     setViewerInfo({
@@ -22,10 +27,6 @@ export const startPreset = ({ setViewerInfo, regionId }: StartPresetProps) => {
     Mixpanel.identify(data.userId.toString());
   };
 
-  // if (code) {
-  //   Mixpanel.track("로그인 - 기존 유저");
-  //   getViewerInfo(code, regionId as string);
-  // } else {
   mini.startPreset({
     preset: process.env.REACT_APP_LOGIN as string,
     params: {
@@ -37,6 +38,25 @@ export const startPreset = ({ setViewerInfo, regionId }: StartPresetProps) => {
         getViewerInfo(result.code, regionId as string);
       }
     },
+    onClose: function () {
+      afterFunc && afterFunc();
+    },
   });
-  // }
+};
+
+export const handleClose = (installed: boolean) => {
+  if (!installed) {
+    mini.startPreset({
+      preset: process.env.REACT_APP_INSTALL as string,
+      params: {
+        appId: process.env.REACT_APP_APP_ID as string,
+      },
+      onSuccess: function () {},
+      onClose: function () {
+        mini.close();
+      },
+    });
+  } else {
+    mini.close();
+  }
 };

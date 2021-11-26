@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Back, Close, Map, NoSearch, Search, SearchClose } from "../../assets";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
-import { RegionId } from "../../Shared/atom";
+import { Installed, RegionId } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   flexCenter,
@@ -15,7 +15,6 @@ import {
   Title,
   WrapperWithHeaderFooter,
 } from "../../styles/theme";
-import { mini } from "../../App";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import { match } from "ts-pattern";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
@@ -26,9 +25,11 @@ import { useGetAroundPlaces, useGetSearch } from "../../api/place";
 import { Mixpanel } from "../../utils/mixpanel";
 import { useGetRegion } from "../../api/region";
 import { reducer } from "../../Shared/reducer";
+import { handleClose } from "../../utils/preset";
 
 const Around = () => {
   const regionId = useRecoilValue(RegionId);
+  const installed = useRecoilValue(Installed);
   const { data: regionName } = useGetRegion(regionId);
 
   const [state, dispatch] = useReducer(reducer, {
@@ -114,7 +115,10 @@ const Around = () => {
               }}
             />
           ) : (
-            <Close className="left-icon" onClick={() => mini.close()} />
+            <Close
+              className="left-icon"
+              onClick={() => handleClose(installed)}
+            />
           )}
           {searchVal.value.length > 0 && result.length === 0 ? (
             <div />

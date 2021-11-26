@@ -7,6 +7,11 @@ export const RegionId = atom({
   default: "",
 });
 
+export const Installed = atom({
+  key: "Installed",
+  default: false,
+});
+
 export const ViewerInfo = atom<UserType>({
   key: "my_info",
   default: {
