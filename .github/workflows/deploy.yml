@@ -49,6 +49,7 @@ jobs:
           REACT_APP_ENDPOINT: ${{ secrets.REACT_APP_ENDPOINT }}
           REACT_APP_LOGIN: ${{ secrets.REACT_APP_LOGIN }}
           REACT_APP_MIXPANEL_TOKEN: ${{ secrets.REACT_APP_MIXPANEL_TOKEN }}
+          REACT_APP_INSTALL: ${{ secrets.REACT_APP_INSTALL }}
 
       - name: Install server dependencies
         run: npm install
