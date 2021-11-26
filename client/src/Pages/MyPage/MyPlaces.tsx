@@ -1,10 +1,11 @@
 import { useEffect, useReducer } from "react";
 import styled from "styled-components";
 import { match } from "ts-pattern";
-import { Back, List, Map } from "../../assets";
+import { Back, Map } from "../../assets";
 import Header from "../../Components/Header";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
+import { reducer } from "../../Shared/reducer";
 import { PlaceType } from "../../Shared/type";
 import { gap, theme, WrapperWithHeader } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -14,30 +15,21 @@ interface MyPlacesProps {
   close: () => void;
 }
 
-type State =
-  | {
-      _t: "map";
-    }
-  | {
-      _t: "list";
-    };
-export const reducer: React.Reducer<State, void> = (prevState) => {
-  switch (prevState._t) {
-    case "list":
-      return {
-        _t: "map",
-      };
-    case "map":
-      return {
-        _t: "list",
-      };
-  }
-};
-
 const MyPlaces = ({ places, close }: MyPlacesProps) => {
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
+    sliderCurrent: 0,
+    isSelected: false,
   });
+
+  // 카드 클릭하면 해당 인덱스 지도뷰
+  const handleClickPlaceCard = (idx: number) => {
+    dispatch({
+      _t: "select",
+      sliderCurrent: idx,
+      isSelected: true,
+    });
+  };
 
   useEffect(() => {
     Mixpanel.track("내가 저장한 장소 진입");
@@ -46,36 +38,49 @@ const MyPlaces = ({ places, close }: MyPlacesProps) => {
   return (
     <Wrapper>
       <Header title="내가 저장한 장소">
-        <Back className="left-icon" onClick={close} />
-        <div className="view-toggle" onClick={() => dispatch()}>
-          {match(state._t)
-            .with("map", () => (
-              <>
-                <List />
-                목록
-              </>
-            ))
-            .with("list", () => (
-              <>
-                <Map />
-                지도
-              </>
-            ))
-            .exhaustive()}
-        </div>
+        <Back
+          className="left-icon"
+          onClick={() => {
+            if (state._t === "list") close();
+            else
+              dispatch({
+                _t: "toggle",
+              });
+          }}
+        />
+        {state._t === "list" ? (
+          <div
+            className="view-toggle"
+            onClick={() =>
+              dispatch({
+                _t: "toggle",
+              })
+            }
+          >
+            <Map />
+            지도
+          </div>
+        ) : (
+          <div />
+        )}
       </Header>
 
       {match(state._t)
         .with("list", () => (
           <div className="cards">
-            {places.map((place) => (
-              <div key={place.placeId} onClick={dispatch}>
+            {places.map((place, i) => (
+              <div key={place.placeId} onClick={() => handleClickPlaceCard(i)}>
                 <PlaceCard {...{ place }} type="list" />
               </div>
             ))}
           </div>
         ))
-        .with("map", () => <MapViewwithSlider {...{ places }} />)
+        .with("map", () => (
+          <MapViewwithSlider
+            {...{ places }}
+            defaultCurrent={state.sliderCurrent}
+          />
+        ))
         .exhaustive()}
     </Wrapper>
   );

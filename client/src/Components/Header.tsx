@@ -8,6 +8,7 @@ interface HeaderProps {
   children?: ReactChild | ReactChild[];
   className?: string;
   style?: React.CSSProperties;
+  isMapView?: boolean;
 }
 
 const Header = ({
@@ -16,11 +17,12 @@ const Header = ({
   isTransparent,
   children,
   className,
+  isMapView = false,
 }: HeaderProps) => {
   return (
     <Wrapper
-      {...{ style }}
-      {...{ className }}
+      {...{ style, className }}
+      $isMapView={isMapView}
       $isTransparent={isTransparent || false}
     >
       <div className="title">{title}</div>
@@ -29,7 +31,7 @@ const Header = ({
   );
 };
 
-const Wrapper = styled.div<{ $isTransparent: boolean }>`
+const Wrapper = styled.div<{ $isTransparent: boolean; $isMapView: boolean }>`
   ${flexCenter};
   width: 100%;
   height: 5rem;
@@ -55,7 +57,7 @@ const Wrapper = styled.div<{ $isTransparent: boolean }>`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    right: 12.4rem;
+    right: ${({ $isMapView }) => ($isMapView ? "4rem" : "12.4rem")};
     box-sizing: border-box;
   }
   .left-icon {
@@ -79,7 +81,6 @@ const Wrapper = styled.div<{ $isTransparent: boolean }>`
     line-height: 135%;
     padding: 0.5rem 0.8rem;
     top: 0.7rem;
-    right: 5rem;
   }
 `;
 

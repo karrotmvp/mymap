@@ -46,11 +46,12 @@ let regionIdFromParmas =
 // 교보타워일 경우 서초동으로
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
 // 로컬에서는 역삼1동일 경우 서초동으로
-if (process.env.NODE_ENV === "development") {
-  if (regionIdFromParmas === "6530459d189b") {
-    regionIdFromParmas = "471abc99b378";
-  }
-}
+// if (process.env.NODE_ENV === "development") {
+//   if (regionIdFromParmas === "6530459d189b") {
+//     regionIdFromParmas = "471abc99b378";
+//   }
+// }
+console.log(regionIdFromParmas);
 const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {

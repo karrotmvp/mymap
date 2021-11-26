@@ -2,15 +2,7 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import {
-  Back,
-  Close,
-  List,
-  Map,
-  NoSearch,
-  Search,
-  SearchClose,
-} from "../../assets";
+import { Back, Close, Map, NoSearch, Search, SearchClose } from "../../assets";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
 import { RegionId } from "../../Shared/atom";
@@ -31,9 +23,9 @@ import useDebounce from "../../Hooks/useDebounce";
 import useInput from "../../Hooks/useInput";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useGetAroundPlaces, useGetSearch } from "../../api/place";
-import { reducer } from "./index.reducer";
 import { Mixpanel } from "../../utils/mixpanel";
 import { useGetRegion } from "../../api/region";
+import { reducer } from "../../Shared/reducer";
 
 const Around = () => {
   const regionId = useRecoilValue(RegionId);
@@ -106,7 +98,9 @@ const Around = () => {
     <>
       <Wrapper>
         <Header title={`${regionName} 둘러보기`}>
-          {searchVal.value.length > 0 || state.isSelected ? (
+          {searchVal.value.length > 0 ||
+          state.isSelected ||
+          state._t === "map" ? (
             <Back
               className="left-icon"
               onClick={() => {
@@ -125,29 +119,21 @@ const Around = () => {
           {searchVal.value.length > 0 && result.length === 0 ? (
             <div />
           ) : !(state.isSelected || searchVal.value.length > 0) ? (
-            <div
-              className="view-toggle"
-              onClick={() =>
-                dispatch({
-                  _t: "toggle",
-                })
-              }
-            >
-              {match(state._t)
-                .with("map", () => (
-                  <>
-                    <List />
-                    목록
-                  </>
-                ))
-                .with("list", () => (
-                  <>
-                    <Map />
-                    지도
-                  </>
-                ))
-                .exhaustive()}
-            </div>
+            state._t === "list" ? (
+              <div
+                className="view-toggle"
+                onClick={() =>
+                  dispatch({
+                    _t: "toggle",
+                  })
+                }
+              >
+                <Map />
+                지도
+              </div>
+            ) : (
+              <div />
+            )
           ) : (
             <div />
           )}
