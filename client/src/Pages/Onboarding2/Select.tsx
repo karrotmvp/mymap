@@ -43,7 +43,9 @@ const Select = () => {
         ...selected.slice(idx + 1, selected.length),
       ]);
     } else {
-      setSelected([...selected, place]);
+      if (selected.length < 10) {
+        setSelected([...selected, place]);
+      }
     }
   };
 
@@ -87,9 +89,12 @@ const Select = () => {
       </Header>
 
       <Title style={{ color: theme.color.orange }}>{`${regionName} 주민님,
-관심 있는 동네 장소가 있나요?`}</Title>
-      <div className="sub">{`관심 있는 장소를 저장해 보세요.
-저장한 장소는 언제든 다시 볼 수 있어요.`}</div>
+관심 있는 ${regionName} 장소가 있나요?`}</Title>
+      <div className="sub">
+        {`관심 있는 장소를 저장해 보세요.
+저장한 장소는 언제든 다시 볼 수 있어요. `}
+        <span>{"(최대 10개)"}</span>
+      </div>
 
       <div className="list">
         {recommend?.places.map((place) => (
@@ -139,6 +144,9 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
     font-size: 1.5rem;
     line-height: 150%;
     white-space: pre-line;
+    span {
+      color: ${theme.color.gray5};
+    }
   }
   .list {
     ${flexCenter};
