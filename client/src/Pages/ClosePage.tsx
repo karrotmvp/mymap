@@ -1,12 +1,12 @@
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { mini } from "../App";
 import { LogoInactive } from "../assets";
+import { Installed } from "../Shared/atom";
 import { Button, flexCenter, gap, theme } from "../styles/theme";
+import { handleClose } from "../utils/preset";
 
 const ClosePage = () => {
-  const handleClose = () => {
-    mini.close();
-  };
+  const installed = useRecoilValue(Installed);
 
   return (
     <Wrapper>
@@ -15,7 +15,7 @@ const ClosePage = () => {
       <div className="title bold">당근마켓으로 돌아가요.</div>
       <div className="sub">당장모아에서 다시 만나길 기다릴게요.</div>
 
-      <Button className="close-btn" onClick={handleClose}>
+      <Button className="close-btn" onClick={() => handleClose(installed)}>
         당근마켓으로 이동
       </Button>
     </Wrapper>

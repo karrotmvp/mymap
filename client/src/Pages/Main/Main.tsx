@@ -9,14 +9,15 @@ import PinSlider from "../../Components/PinSlider";
 import { Back, Close, LogoTypo } from "../../assets";
 import { PlaceType, PostType } from "../../Shared/type";
 import { useRecoilValue } from "recoil";
-import { RegionId } from "../../Shared/atom";
+import { Installed, RegionId } from "../../Shared/atom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { WrapperWithFooter } from "../../styles/theme";
-import { mini } from "../../App";
 import { useGetFeedPosts } from "../../api/post";
 import { Mixpanel } from "../../utils/mixpanel";
+import { handleClose } from "../../utils/preset";
 
 const Main = () => {
+  const installed = useRecoilValue(Installed);
   const [isMapShown, setIsMapShown] = useState(false);
   const regionId = useRecoilValue(RegionId);
   const [feedPosts, setFeedPosts] = useState<PostType[] | []>([]);
@@ -154,7 +155,7 @@ const Main = () => {
             onClick={handleBack}
           />
         ) : (
-          <Close className="left-icon" onClick={() => mini.close()} />
+          <Close className="left-icon" onClick={() => handleClose(installed)} />
         )}
       </Header>
 

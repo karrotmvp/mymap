@@ -2,10 +2,9 @@ import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { mini } from "../../App";
 import { Close, LogoTypo, Onboarding } from "../../assets";
 import Header from "../../Components/Header";
-import { ViewerInfo } from "../../Shared/atom";
+import { Installed, ViewerInfo } from "../../Shared/atom";
 import {
   Button,
   ButtonFooter,
@@ -15,10 +14,12 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
+import { handleClose } from "../../utils/preset";
 
 const Finish = () => {
   const history = useHistory();
   const viewerInfo = useRecoilValue(ViewerInfo);
+  const installed = useRecoilValue(Installed);
 
   useEffect(() => {
     Mixpanel.track("온보딩A - 완료 페이지 진입");
@@ -27,7 +28,7 @@ const Finish = () => {
   return (
     <Wrapper>
       <Header>
-        <Close className="left-icon" onClick={() => mini.close()} />
+        <Close className="left-icon" onClick={() => handleClose(installed)} />
         <LogoTypo />
       </Header>
 

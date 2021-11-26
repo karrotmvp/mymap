@@ -14,6 +14,7 @@ import {
   DetailId,
   ViewerInfo,
   ReigonDiffModal,
+  Installed,
 } from "./Shared/atom";
 import { useEffect } from "react";
 import dayjs from "dayjs";
@@ -34,34 +35,35 @@ import { Mixpanel } from "./utils/mixpanel";
 import Finish from "./Pages/Onboarding/Finish";
 import Finish2 from "./Pages/Onboarding2/Finish";
 import Alert from "./Components/Alert";
+import { handleClose } from "./utils/preset";
 
 dayjs.locale("ko");
 
 export const mini = new Mini();
 
 const preload = new URLSearchParams(window.location.search).get("preload");
+const installedFromParams =
+  new URLSearchParams(window.location.search).get("installed") === "true"
+    ? true
+    : false;
 let regionIdFromParmas =
   new URLSearchParams(window.location.search).get("region_id") ??
   "6530459d189b";
 // 교보타워일 경우 서초동으로
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
-// 로컬에서는 역삼1동일 경우 서초동으로
-// if (process.env.NODE_ENV === "development") {
-//   if (regionIdFromParmas === "6530459d189b") {
-//     regionIdFromParmas = "471abc99b378";
-//   }
-// }
-console.log(regionIdFromParmas);
+
 const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {
   const [regionId, setRegionId] = useRecoilState(RegionId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
+  const setInstalled = useSetRecoilState(Installed);
 
   const { data: regionName } = useGetRegion(regionIdFromParmas);
 
   useEffect(() => {
     setRegionId(regionIdFromParmas);
+    setInstalled(installedFromParams);
 
     const getViewerInfo = async (code: string, regionId: string) => {
       const data = await getLogin(code, regionId);
@@ -95,6 +97,7 @@ function App() {
   }, []);
 
   const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
+  const installed = useRecoilValue(Installed);
   const [reigonDiffModal, setReigonDiffModal] = useRecoilState(ReigonDiffModal);
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
   const [detailId, setDetailId] = useRecoilState(DetailId);
@@ -119,7 +122,7 @@ function App() {
     return (
       <Wrapper>
         <Header>
-          <Close onClick={() => mini.close()} className="left-icon" />
+          <Close onClick={() => handleClose(installed)} className="left-icon" />
         </Header>
         <div className="center">
           <LogoInactive />

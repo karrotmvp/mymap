@@ -5,11 +5,15 @@ import styled from "styled-components";
 import { useGetAroundPlaces } from "../../api/place";
 import { useGetRegion } from "../../api/region";
 import { postSavedPlaces } from "../../api/savedPlaces";
-import { mini } from "../../App";
 import { Close, LogoTypo, Unselect, Select as SelectIcon } from "../../assets";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
-import { OnboardingSelected, RegionId, ViewerInfo } from "../../Shared/atom";
+import {
+  Installed,
+  OnboardingSelected,
+  RegionId,
+  ViewerInfo,
+} from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import {
   Button,
@@ -21,12 +25,14 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { startPreset } from "../../utils/preset";
+import { handleClose, startPreset } from "../../utils/preset";
 
 const Select = () => {
   const history = useHistory();
 
   const regionId = useRecoilValue(RegionId);
+  const installed = useRecoilValue(Installed);
+
   const { data: regionName } = useGetRegion(regionId);
   const { data: recommend } = useGetAroundPlaces(regionId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
@@ -69,13 +75,14 @@ const Select = () => {
 
     Mixpanel.track("온보딩B - 장소 선택 완료");
 
+    const places = selected.map((p) => p.placeId);
+    const params = {
+      placeId: places,
+    };
+
     if (!localStorage.getItem("token")) {
       startPreset({ ...{ setViewerInfo, regionId } });
     } else {
-      const places = selected.map((p) => p.placeId);
-      const params = {
-        placeId: places,
-      };
       await postSavedPlaces(params);
       history.push("/onboarding2/finish");
     }
@@ -84,7 +91,7 @@ const Select = () => {
   return (
     <Wrapper isSubmitable={selected.length > 0}>
       <Header>
-        <Close className="left-icon" onClick={() => mini.close()} />
+        <Close className="left-icon" onClick={() => handleClose(installed)} />
         <LogoTypo />
       </Header>
 
