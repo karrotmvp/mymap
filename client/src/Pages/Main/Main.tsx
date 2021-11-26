@@ -148,7 +148,11 @@ const Main = () => {
       <Header isTransparent={!isScrollUp}>
         {isScrollUp ? <LogoTypo /> : <div />}
         {isPinSelected ? (
-          <Back className="left-icon" onClick={handleBack} />
+          <Back
+            className="left-icon"
+            style={{ fill: "#000" }}
+            onClick={handleBack}
+          />
         ) : (
           <Close className="left-icon" onClick={() => mini.close()} />
         )}

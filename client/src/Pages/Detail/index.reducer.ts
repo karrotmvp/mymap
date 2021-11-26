@@ -3,10 +3,14 @@ import React from "react";
 type State =
   | {
       _t: "map";
+      sliderCurrent: number;
+      isSelected: boolean;
     }
   | {
       _t: "list";
       isScrollUp: boolean;
+      sliderCurrent: number;
+      isSelected: boolean;
     };
 
 type Action =
@@ -16,6 +20,11 @@ type Action =
   | {
       _t: "scroll";
       scrollY: number;
+    }
+  | {
+      _t: "select";
+      sliderCurrent: number;
+      isSelected: boolean;
     };
 
 export const reducer: React.Reducer<State, Action> = (prevState, action) => {
@@ -25,15 +34,25 @@ export const reducer: React.Reducer<State, Action> = (prevState, action) => {
         case "list":
           return {
             _t: "map",
+            sliderCurrent: 0,
+            isSelected: false,
           };
         case "map":
           return {
             _t: "list",
             isScrollUp: false,
+            sliderCurrent: 0,
+            isSelected: false,
           };
       }
       break;
     }
+    case "select":
+      return {
+        _t: "map",
+        sliderCurrent: action.sliderCurrent,
+        isSelected: true,
+      };
     case "scroll": {
       switch (prevState._t) {
         case "map":

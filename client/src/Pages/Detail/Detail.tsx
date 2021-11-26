@@ -3,16 +3,7 @@ import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { deletePost, useGetPost } from "../../api/post";
-import {
-  Back,
-  Close,
-  Delete,
-  Edit,
-  List,
-  Map,
-  More2,
-  Thumbnail,
-} from "../../assets";
+import { Back, Close, Delete, Edit, Map, More2, Thumbnail } from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
@@ -67,6 +58,8 @@ const Detail = ({
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
     isScrollUp: false,
+    sliderCurrent: 0,
+    isSelected: false,
   });
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
@@ -111,7 +104,20 @@ const Detail = ({
       setPostToEdit(post);
       Mixpanel.track("상세글 진입", { postId: post.postId });
     }
+    console.log(
+      regionGroup,
+      regionGroup?.find((id) => id === post?.regionId)
+    );
   }, [post]);
+
+  // 카드 클릭하면 해당 인덱스 지도뷰
+  const handleClickPlaceCard = (idx: number) => {
+    dispatch({
+      _t: "select",
+      sliderCurrent: idx,
+      isSelected: true,
+    });
+  };
 
   useEffect(() => {
     if (fromWriteForm) refetchPost();
@@ -133,9 +139,21 @@ const Detail = ({
       animation={!fromWriteForm}
       isMine={post?.user.userId === viewerInfo.userId}
     >
-      <Header style={{ zIndex: 600 }}>
+      <Header
+        style={{ zIndex: 600 }}
+        isMapView={!(state._t === "list" && state.isScrollUp)}
+      >
         <>
-          {fromWriteForm || fromDetail ? (
+          {state._t === "map" ? (
+            <Back
+              className="left-icon"
+              onClick={() =>
+                dispatch({
+                  _t: "toggle",
+                })
+              }
+            />
+          ) : fromWriteForm || fromDetail ? (
             <Close
               className="left-icon"
               onClick={() => {
@@ -163,33 +181,25 @@ const Detail = ({
               }}
             />
           )}
+
           {(state._t === "map" ||
             (state._t === "list" && state.isScrollUp)) && (
             <div className="post-title">{post?.title}</div>
           )}
-          <div
-            className="view-toggle"
-            onClick={() =>
-              dispatch({
-                _t: "toggle",
-              })
-            }
-          >
-            {match(state._t)
-              .with("map", () => (
-                <>
-                  <List />
-                  목록
-                </>
-              ))
-              .with("list", () => (
-                <>
-                  <Map />
-                  지도
-                </>
-              ))
-              .exhaustive()}
-          </div>
+
+          {state._t === "list" && (
+            <div
+              className="view-toggle"
+              onClick={() =>
+                dispatch({
+                  _t: "toggle",
+                })
+              }
+            >
+              <Map />
+              지도
+            </div>
+          )}
           {post?.user.userId === viewerInfo.userId && (
             <More2
               className="right-icon"
@@ -233,8 +243,8 @@ const Detail = ({
               </Profile>
 
               <div className="cards">
-                {post?.pins.map((pin) => (
-                  <div key={pin.pinId}>
+                {post?.pins.map((pin, i) => (
+                  <div key={pin.pinId} onClick={() => handleClickPlaceCard(i)}>
                     <PlaceCard
                       place={pin.place}
                       type="list"
@@ -254,6 +264,7 @@ const Detail = ({
                   places={post.pins.map((p) => p.place)}
                   isDifferentRegion={regionId !== post.regionId}
                   postRegionName={post.regionName}
+                  defaultCurrent={state.sliderCurrent}
                 />
               )
           )
