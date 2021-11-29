@@ -47,9 +47,9 @@ const installedFromParams =
     ? true
     : false;
 let regionIdFromParmas =
-  new URLSearchParams(window.location.search).get("region_id") ??
-  "6530459d189b";
+  new URLSearchParams(window.location.search).get("region_id") ?? "";
 // 교보타워일 경우 서초동으로
+
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
 
 const code = new URLSearchParams(window.location.search).get("code");
@@ -112,6 +112,10 @@ function App() {
       }, 1000);
     }
   }, [toastMessage.isToastShown]);
+
+  if (regionIdFromParmas === "") {
+    return <ClosePage />;
+  }
 
   // 미오픈 지역
   if (
