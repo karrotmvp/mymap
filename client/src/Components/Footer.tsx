@@ -12,7 +12,7 @@ import {
 } from "../assets";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { RegionId, ViewerInfo } from "../Shared/atom";
-import { startPreset } from "../utils/preset";
+import { funcNeedLogin } from "../utils/preset";
 
 const Footer = () => {
   const pathname = window.location.pathname;
@@ -22,11 +22,13 @@ const Footer = () => {
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const clickMypage = () => {
-    if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, regionId } });
-    } else {
-      history.push("/mypage");
-    }
+    funcNeedLogin({
+      ...{
+        setViewerInfo,
+        regionId,
+        afterFunc: () => history.push("/mypage"),
+      },
+    });
   };
 
   return (

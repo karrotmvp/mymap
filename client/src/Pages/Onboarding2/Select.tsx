@@ -25,7 +25,7 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { handleClose, startPreset } from "../../utils/preset";
+import { handleClose, funcNeedLogin } from "../../utils/preset";
 
 const Select = () => {
   const history = useHistory();
@@ -80,12 +80,16 @@ const Select = () => {
       placeId: places,
     };
 
-    if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, regionId } });
-    } else {
-      await postSavedPlaces(params);
-      history.push("/onboarding2/finish");
-    }
+    funcNeedLogin({
+      ...{
+        setViewerInfo,
+        regionId,
+        afterFunc: async () => {
+          await postSavedPlaces(params);
+          history.push("/onboarding2/finish");
+        },
+      },
+    });
   };
 
   return (

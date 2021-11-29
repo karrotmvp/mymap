@@ -10,7 +10,7 @@ import {
 } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
-import { startPreset } from "../../utils/preset";
+import { funcNeedLogin } from "../../utils/preset";
 
 // 1: 작성하기
 // 2: 그외 지도뷰
@@ -46,21 +46,25 @@ const PlaceCard = ({
 
   const setPlaceToSave = useSetRecoilState(PlaceToSave);
   const clickPlaceAdd = () => {
-    if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, regionId } });
-    } else {
-      if (isDifferentRegion && postRegionName) {
-        setIsReigonDiffModalShown({
-          isModalOpened: true,
-          postRegionName,
-        });
-      } else {
-        setPlaceToSave({
-          isModalOpened: true,
-          placeId: place.placeId,
-        });
-      }
-    }
+    funcNeedLogin({
+      ...{
+        setViewerInfo,
+        regionId,
+        afterFunc: () => {
+          if (isDifferentRegion && postRegionName) {
+            setIsReigonDiffModalShown({
+              isModalOpened: true,
+              postRegionName,
+            });
+          } else {
+            setPlaceToSave({
+              isModalOpened: true,
+              placeId: place.placeId,
+            });
+          }
+        },
+      },
+    });
   };
 
   return (
