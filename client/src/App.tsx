@@ -263,6 +263,9 @@ const Toast = styled.div`
   bottom: 2.8rem;
   z-index: 1000;
   animation: ${opacityAnimation} 0.25s linear;
+  -webkit-animation: ${opacityAnimation} 0.25s linear;
+  -moz-animation: ${opacityAnimation} 0.25s linear;
+  -o-animation: ${opacityAnimation} 0.25s linear;
 
   & > div:nth-child(1) {
     width: 100%;

@@ -304,6 +304,9 @@ const Wrapper = styled.div<{ isSubmitable: boolean }>`
   }
   .modal {
     animation: ${slideFromBotton} 0.25s linear;
+    -webkit-animation: ${slideFromBotton} 0.25s linear;
+    -moz-animation: ${slideFromBotton} 0.25s linear;
+    -o-animation: ${slideFromBotton} 0.25s linear;
     position: fixed;
     bottom: 0;
     left: 0;
