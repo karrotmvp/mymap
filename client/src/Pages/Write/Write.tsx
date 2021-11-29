@@ -27,7 +27,7 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { startPreset } from "../../utils/preset";
+import { funcNeedLogin } from "../../utils/preset";
 import OnboardAlert from "./Onboard/OnboardAlert";
 import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
@@ -161,33 +161,37 @@ const Write = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, regionId } });
-    } else {
-      Mixpanel.track("글작성 - 작성 완료");
-      const body = {
-        title: inputVal.value,
-        contents: textareaVal.value,
+    funcNeedLogin({
+      ...{
+        setViewerInfo,
         regionId,
-        share: isShare as boolean,
-        pins: places.map((place) => {
-          return {
-            placeId: place.placeId,
-            latitude: place.coordinates.latitude,
-            longitude: place.coordinates.longitude,
+        afterFunc: async () => {
+          Mixpanel.track("글작성 - 작성 완료");
+          const body = {
+            title: inputVal.value,
+            contents: textareaVal.value,
+            regionId,
+            share: isShare as boolean,
+            pins: places.map((place) => {
+              return {
+                placeId: place.placeId,
+                latitude: place.coordinates.latitude,
+                longitude: place.coordinates.longitude,
+              };
+            }),
           };
-        }),
-      };
-      if (isWrite) {
-        const data = await postPost(body);
-        if (data.postId) {
-          history.push(`/detail/${data.postId}/finish`);
-        }
-      } else {
-        const data = await putPost(postId!, body);
-        if (data) history.push(`/detail/${postId}/finish`);
-      }
-    }
+          if (isWrite) {
+            const data = await postPost(body);
+            if (data.postId) {
+              history.push(`/detail/${data.postId}/finish`);
+            }
+          } else {
+            const data = await putPost(postId!, body);
+            if (data) history.push(`/detail/${postId}/finish`);
+          }
+        },
+      },
+    });
   };
 
   return (

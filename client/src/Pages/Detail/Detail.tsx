@@ -349,6 +349,12 @@ const slideFromBotton = keyframes`
 
 const Container = styled.div<{ isMine: boolean; animation?: boolean }>`
   animation: ${({ animation }) => (animation ? slideFromLeft : "")} 0.25s linear;
+  -webkit-animation: ${({ animation }) => (animation ? slideFromLeft : "")}
+    0.25s linear;
+  -moz-animation: ${({ animation }) => (animation ? slideFromLeft : "")} 0.25s
+    linear;
+  -o-animation: ${({ animation }) => (animation ? slideFromLeft : "")} 0.25s
+    linear;
   .view-toggle {
     right: ${({ isMine }) => (isMine ? "5rem" : "2rem")};
   }
@@ -426,6 +432,9 @@ const Profile = styled.div`
 const Modal = styled.div`
   .modal {
     animation: ${slideFromBotton} 0.25s linear;
+    -webkit-animation: ${slideFromBotton} 0.25s linear;
+    -moz-animation: ${slideFromBotton} 0.25s linear;
+    -o-animation: ${slideFromBotton} 0.25s linear;
     position: fixed;
     left: 0;
     right: 0;

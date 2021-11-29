@@ -7,7 +7,7 @@ import { PostIsSaved, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { startPreset } from "../../utils/preset";
+import { funcNeedLogin } from "../../utils/preset";
 
 const SaveButton = (post: PostType) => {
   const [isSaved, setIsSaved] = useRecoilState(
@@ -18,15 +18,19 @@ const SaveButton = (post: PostType) => {
   const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const handleSaveToggle = async () => {
-    if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, regionId } });
-    } else {
-      setIsSaved(!isSaved);
-      if (!isSaved) {
-        Mixpanel.track("테마 저장 - 상세", { postId: post.postId });
-        await postSavedPost(post.postId);
-      } else await deleteSavedPost(post.postId);
-    }
+    funcNeedLogin({
+      ...{
+        setViewerInfo,
+        regionId,
+        afterFunc: async () => {
+          setIsSaved(!isSaved);
+          if (!isSaved) {
+            Mixpanel.track("테마 저장 - 상세", { postId: post.postId });
+            await postSavedPost(post.postId);
+          } else await deleteSavedPost(post.postId);
+        },
+      },
+    });
   };
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);
 

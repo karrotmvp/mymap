@@ -18,7 +18,7 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { startPreset } from "../../utils/preset";
+import { funcNeedLogin } from "../../utils/preset";
 
 const Write = ({ close }: { close: () => void }) => {
   const history = useHistory();
@@ -69,27 +69,31 @@ const Write = ({ close }: { close: () => void }) => {
 
     Mixpanel.track("온보딩A - 작성 완료");
 
-    if (!localStorage.getItem("token")) {
-      startPreset({ ...{ setViewerInfo, regionId } });
-    } else {
-      const body = {
-        title:
-          input.value !== ""
-            ? input.value
-            : `${regionName} 주민이 관심있는 장소`,
+    funcNeedLogin({
+      ...{
+        setViewerInfo,
         regionId,
-        share: true,
-        pins: selected.map((place) => {
-          return {
-            placeId: place.placeId,
-            latitude: place.coordinates.latitude,
-            longitude: place.coordinates.longitude,
+        afterFunc: async () => {
+          const body = {
+            title:
+              input.value !== ""
+                ? input.value
+                : `${regionName} 주민이 관심있는 장소`,
+            regionId,
+            share: true,
+            pins: selected.map((place) => {
+              return {
+                placeId: place.placeId,
+                latitude: place.coordinates.latitude,
+                longitude: place.coordinates.longitude,
+              };
+            }),
           };
-        }),
-      };
-      const data = await postPost(body);
-      if (data.postId) history.push(`/onboarding/finish`);
-    }
+          const data = await postPost(body);
+          if (data.postId) history.push(`/onboarding/finish`);
+        },
+      },
+    });
   };
 
   useEffect(() => {
