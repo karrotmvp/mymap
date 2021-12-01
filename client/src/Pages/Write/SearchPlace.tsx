@@ -58,22 +58,12 @@ const SearchPlace = ({
   );
 
   const getSearchItems = useCallback(async () => {
-    console.log(searchVal.value);
     if (searchVal.value.length > 0) {
       const data = await refetchSearchResult();
       setResult(data.data ?? []);
     }
   }, [searchVal.value, searchResult]);
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
-
-  console.log();
-
-  useEffect(() => {
-    console.log("result", result);
-  }, [result]);
-  useEffect(() => {
-    console.log("searchResult", searchResult);
-  }, [searchResult]);
 
   useEffect(() => {
     setResultPage(1);
@@ -87,16 +77,14 @@ const SearchPlace = ({
   };
   useEffect(() => {
     const fetchResult = async () => {
-      await refetchSearchResult();
-      if (searchResult) {
-        if (searchResult.length < 1) {
+      const data = await refetchSearchResult();
+      if (data.data) {
+        if (data.data.length < 1) {
           setResultHasMore(false);
           return;
         }
         if (searchVal.value.length > 0) {
-          setResult([...result, ...searchResult]);
-        } else {
-          setResult(searchResult ?? []);
+          setResult([...result, ...data.data]);
         }
       }
     };
