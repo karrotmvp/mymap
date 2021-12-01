@@ -49,26 +49,23 @@ const SearchPlace = ({
   const [resultHasMore, setResultHasMore] = useState(true);
   const [resultPage, setResultPage] = useState(1);
 
-  const { data: searchResult, refetch: refetchSearchResult } = useGetSearch(
-    regionId,
-    {
-      query: searchVal.value,
-      page: resultPage,
-    }
-  );
+  const { refetch: refetchSearchResult } = useGetSearch(regionId, {
+    query: searchVal.value,
+    page: resultPage,
+  });
 
   const getSearchItems = useCallback(async () => {
     if (searchVal.value.length > 0) {
       const data = await refetchSearchResult();
       setResult(data.data ?? []);
     }
-  }, [searchVal.value, searchResult]);
+  }, [searchVal.value]);
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
 
   useEffect(() => {
     setResultPage(1);
     setResultHasMore(true);
-    if (searchVal.value.length > 0) debouncedSearchVal();
+    debouncedSearchVal();
   }, [searchVal.value]);
 
   // 무한 스크롤
@@ -81,14 +78,14 @@ const SearchPlace = ({
       if (data.data) {
         if (data.data.length < 1) {
           setResultHasMore(false);
-          return;
-        }
-        if (searchVal.value.length > 0) {
+        } else {
           setResult([...result, ...data.data]);
         }
       }
     };
-    fetchResult();
+    if (searchVal.value.length > 0) {
+      fetchResult();
+    }
   }, [resultPage]);
 
   useEffect(() => {
@@ -128,13 +125,13 @@ const SearchPlace = ({
               loader={<div />}
               scrollableTarget="search-list"
             >
-              {result.map((place) => {
+              {result.map((place, i) => {
                 const isExist = places.find((p) => p.placeId === place.placeId)
                   ? true
                   : false;
                 return (
                   <div
-                    key={place.placeId}
+                    key={`${place.placeId}${i}`}
                     onClick={() => !isExist && handleOpenMap(place)}
                   >
                     <SearchList
