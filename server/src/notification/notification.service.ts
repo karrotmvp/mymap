@@ -4,12 +4,16 @@ import { Queue } from 'bull';
 import { PreopenUser } from 'src/user/entities/preopen-user.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { CreateVerificationNotificationDTO } from './dto/create-verification-notification.dto';
 import { Notification } from './dto/notification.dto';
+import { VerificationNotification } from './entities/verification-notification.entity';
+import { VerificationNotificationRepository } from './verification-notification.repository';
 
 @Injectable()
 export class NotificationService {
     constructor(
         private readonly userService: UserService,
+        private readonly verificationNotificationRepository: VerificationNotificationRepository,
         @InjectQueue('notification') private notificationQueue: Queue
     ) {}
 
@@ -27,4 +31,14 @@ export class NotificationService {
             })
         })
     }
+
+    async createVerificationNotification(userId: number, createVerificationNotificationDTO: CreateVerificationNotificationDTO) {
+        const user: User = await this.userService.readUser(userId);
+        const newEntity: VerificationNotification = new VerificationNotification();
+        newEntity.user = user;
+        newEntity.type = createVerificationNotificationDTO.type;
+        newEntity.id = createVerificationNotificationDTO.id;
+        await this.verificationNotificationRepository.save(newEntity);
+    }
+
 }
