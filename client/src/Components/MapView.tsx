@@ -46,6 +46,7 @@ const MapView = ({
     >
       <NaverMap
         id={mapId}
+        className="naver-map"
         style={{
           width: width ?? "100%",
           height: height ?? "230px",

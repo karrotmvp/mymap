@@ -60,7 +60,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     // naver map
-    #react-naver-map{
+    .naver-map{
         & > div {
             display: none;
         }
