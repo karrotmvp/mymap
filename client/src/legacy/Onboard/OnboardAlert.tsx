@@ -1,13 +1,13 @@
-import { mini } from "../../../App";
+import { mini } from "../../App";
 import { useRouteMatch } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { postNotification } from "../../../api/notification";
-import { postPreopen } from "../../../api/user";
-import { Notification } from "../../../assets";
-import { RegionId } from "../../../Shared/atom";
-import { Button, flexCenter, gap, theme } from "../../../styles/theme";
-import { Mixpanel } from "../../../utils/mixpanel";
+import { postNotification } from "../../api/notification";
+import { postPreopen } from "../../api/user";
+import { Notification } from "../../assets";
+import { RegionId } from "../../Shared/atom";
+import { Button, flexCenter, gap, theme } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const OnboardAlert = ({ close }: { close: () => void }) => {
   const regionId = useRecoilValue(RegionId);

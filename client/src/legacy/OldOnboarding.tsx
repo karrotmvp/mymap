@@ -15,7 +15,7 @@ import {
 import Swiper from "../Components/PinSlider/Swiper";
 import { Button, theme } from "../styles/theme";
 import { Mixpanel } from "../utils/mixpanel";
-import OnboardAlert from "./Write/Onboard/OnboardAlert";
+import OnboardAlert from "./Onboard/OnboardAlert";
 
 const carousel = [
   { key: "one", top: <OneOne />, bottom: <OneTwo className="one-two" /> },

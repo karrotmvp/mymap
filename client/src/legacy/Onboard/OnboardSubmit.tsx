@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Button, flexCenter, gap, theme } from "../../../styles/theme";
+import { Button, flexCenter, gap, theme } from "../../styles/theme";
 import SubmitFinish from "./SubmitFinish";
 
 const OnboardSubmit = ({

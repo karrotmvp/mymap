@@ -1,9 +1,9 @@
-import { mini } from "../../../App";
+import { mini } from "../../App";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import { Close, Finish1, Finish2 } from "../../../assets";
-import { Button, flexCenter, theme } from "../../../styles/theme";
-import { Mixpanel } from "../../../utils/mixpanel";
+import { Close, Finish1, Finish2 } from "../../assets";
+import { Button, flexCenter, theme } from "../../styles/theme";
+import { Mixpanel } from "../../utils/mixpanel";
 
 const SubmitFinish = () => {
   const history = useHistory();
