@@ -106,7 +106,9 @@ const Finish = () => {
         <LogoTypo />
       </Header>
 
-      <Title style={{ color: theme.color.orange }}>{title}</Title>
+      <Title style={{ color: theme.color.orange, fontWeight: "bold" }}>
+        {title}
+      </Title>
       {sub}
 
       <div className="center">

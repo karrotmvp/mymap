@@ -122,7 +122,11 @@ const Two = () => {
         <LogoTypo />
       </Header>
 
-      <Title style={{ fontSize: "1.9rem", marginTop: "2.3rem" }}>{title}</Title>
+      <Title
+        style={{ fontSize: "1.9rem", marginTop: "2.3rem", fontWeight: "bold" }}
+      >
+        {title}
+      </Title>
 
       <div className="sub">{sub}</div>
 
