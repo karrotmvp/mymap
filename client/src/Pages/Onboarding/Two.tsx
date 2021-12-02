@@ -151,9 +151,14 @@ const Two = () => {
       </div>
 
       <ButtonFooter>
-        <Button className="button" onClick={handleSubmit}>
+        <SubmitBtn
+          onClick={() => {
+            input.value.length > 0 && handleSubmit();
+          }}
+          $disabled={input.value.length === 0}
+        >
           다 적었어요
-        </Button>
+        </SubmitBtn>
       </ButtonFooter>
     </Wrapper>
   );
@@ -189,6 +194,13 @@ const Input = styled.textarea<{ $error?: boolean }>`
   padding-right: 5rem;
   height: 5.4rem;
   background-color: ${theme.color.gray1};
+`;
+
+const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
+  background-color: ${({ $disabled }) =>
+    $disabled ? theme.color.gray2 : theme.color.orange};
+  color: ${({ $disabled }) =>
+    $disabled ? theme.color.gray7 : theme.color.white};
 `;
 
 export default Two;
