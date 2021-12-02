@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { postNotificationVerification } from "../../api/notification";
 import { mini } from "../../App";
 import { Close, LogoTypo, Onboarding } from "../../assets";
 import Header from "../../Components/Header";
@@ -18,7 +19,9 @@ import { Mixpanel } from "../../utils/mixpanel";
 import { funcNeedLogin, handleClose } from "../../utils/preset";
 
 const Finish = () => {
-  const { type: onboardingType } = useParams<{ type: string }>();
+  const { type } = useParams<{ type: string }>();
+  const { id } = useParams<{ id: string }>();
+
   const setViewerInfo = useSetRecoilState(ViewerInfo);
   const installed = useRecoilValue(Installed);
   const regionId = useRecoilValue(RegionId);
@@ -35,7 +38,7 @@ const Finish = () => {
   let title = "";
   let sub = <div />;
 
-  if (onboardingType === "1") {
+  if (type === "one") {
     title = "알려주셔서 감사해요!";
     sub = (
       <div className="sub">
@@ -43,7 +46,7 @@ const Finish = () => {
         채팅으로 알려드릴게요.`}
       </div>
     );
-  } else if (onboardingType === "2") {
+  } else if (type === "two") {
     title = "알려주셔서 감사해요!";
     if (regionGroup?.find((region) => region === "471abc99b378")) {
       // 서초
@@ -83,8 +86,11 @@ const Finish = () => {
       ...{
         setViewerInfo,
         regionId,
-        afterFunc: () => {
-          if (onboardingType === "2") {
+        afterFunc: async () => {
+          await postNotificationVerification(type, parseInt(id));
+          if (type === "one") {
+            Mixpanel.track("온보딩1 - 동의 후 알림받기");
+          } else if (type === "two") {
             Mixpanel.track("온보딩2 - 동의 후 알림받기");
           }
           mini.close();

@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { postVerification2 } from "../../api/verifications";
 import { mini } from "../../App";
 import { Close, LogoTypo, SearchClose } from "../../assets";
 import Header from "../../Components/Header";
@@ -56,25 +57,11 @@ const Two = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    //   const body = {
-    //     title:
-    //       input.value !== ""
-    //         ? input.value
-    //         : `${regionName} 주민이 관심있는 장소`,
-    //     regionId,
-    //     share: true,
-    //     pins: selected.map((place) => {
-    //       return {
-    //         placeId: place.placeId,
-    //         latitude: place.coordinates.latitude,
-    //         longitude: place.coordinates.longitude,
-    //       };
-    //     }),
-    //   };
-    //   const data = await postPost(body);
-    //   if (data.postId) history.push(`/onboarding/finish`);
-    Mixpanel.track("온보딩2 - 다 적었어요");
-    history.push(`/onboarding/finish/2`);
+    const data = await postVerification2(regionId, input.value);
+    if (data.TwoId) {
+      Mixpanel.track("온보딩2 - 다 적었어요");
+      history.push(`/onboarding/finish/two/${data.TwoId}`);
+    }
   };
 
   useEffect(() => {

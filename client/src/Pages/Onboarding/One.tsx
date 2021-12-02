@@ -1,11 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ChangeEvent, useEffect } from "react";
 import { useHistory } from "react-router";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { postVerification1 } from "../../api/verifications";
 import { mini } from "../../App";
 import { Close, LogoTypo, SearchClose } from "../../assets";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
+import { RegionId } from "../../Shared/atom";
 import {
   Button,
   ButtonFooter,
@@ -18,6 +21,7 @@ import { Mixpanel } from "../../utils/mixpanel";
 
 const One = () => {
   const history = useHistory();
+  const regionId = useRecoilValue(RegionId);
 
   const input = useInput("");
 
@@ -51,23 +55,11 @@ const One = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    // const body = {
-    //   title:
-    //     input.value !== "" ? input.value : `${regionName} 주민이 관심있는 장소`,
-    //   regionId,
-    //   share: true,
-    //   pins: selected.map((place) => {
-    //     return {
-    //       placeId: place.placeId,
-    //       latitude: place.coordinates.latitude,
-    //       longitude: place.coordinates.longitude,
-    //     };
-    //   }),
-    // };
-    // const data = await postPost(body);
-    // if (data.postId) history.push(`/onboarding/finish`);
-    Mixpanel.track("온보딩1 - 다 적었어요");
-    history.push(`/onboarding/finish/1`);
+    const data = await postVerification1(regionId, input.value);
+    if (data.OneId) {
+      Mixpanel.track("온보딩1 - 다 적었어요");
+      history.push(`/onboarding/finish/one/${data.OneId}`);
+    }
   };
 
   useEffect(() => {

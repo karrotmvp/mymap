@@ -50,7 +50,7 @@ let regionIdFromParmas =
   new URLSearchParams(window.location.search).get("region_id") ?? "";
 // 교보타워일 경우 서초동으로
 
-if (process.env.NODE_ENV === "development") regionIdFromParmas = "79f5f58de451";
+if (process.env.NODE_ENV === "development") regionIdFromParmas = "471abc99b378";
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
 
 const code = new URLSearchParams(window.location.search).get("code");
@@ -159,12 +159,16 @@ function App() {
               <Route exact path="/mypage" component={Mypage} />
 
               <Route exact path="/write" component={Write} />
-              <Route path="/edit/:postId" component={Write} />
+              <Route exact path="/edit/:postId" component={Write} />
 
               {/* 온보딩 */}
-              <Route exact path="/onboarding/1" component={One} />
-              <Route exact path="/onboarding/2" component={Two} />
-              <Route exact path="/onboarding/finish/:type" component={Finish} />
+              <Route exact path="/onboarding/one" component={One} />
+              <Route exact path="/onboarding/two" component={Two} />
+              <Route
+                exact
+                path="/onboarding/finish/:type/:id"
+                component={Finish}
+              />
             </Switch>
             {isSaveModalOpened && <SaveModal />}
             {toastMessage.isToastShown && (
