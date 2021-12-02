@@ -10,11 +10,13 @@ import { createBullBoard } from '@bull-board/api';
 import { NotificationProcessor } from './notification.processor';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { VerificationNotificationRepository } from './verification-notification.repository';
 
 @Module({
   imports: [UserModule, BullModule.registerQueue({ name: 'notification' }), ConfigModule, HttpModule.register({
     timeout: 5000
-  })],
+  }), TypeOrmModule.forFeature([VerificationNotificationRepository])],
   providers: process.env.WORKER === 'true' ? [NotificationService, NotificationProcessor] : [NotificationService],
   controllers: [NotificationController]
 })
