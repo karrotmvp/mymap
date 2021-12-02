@@ -10,3 +10,11 @@ export const postNotification = async () => {
     }
   );
 };
+
+// 온보딩 알림받기
+export const postNotificationVerification = async (
+  type: string,
+  id: number
+) => {
+  return await POST("api/notification/verification", { type, id });
+};

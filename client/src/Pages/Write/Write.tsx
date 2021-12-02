@@ -28,8 +28,6 @@ import {
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
 import { funcNeedLogin } from "../../utils/preset";
-import OnboardAlert from "./Onboard/OnboardAlert";
-import OnboardSubmit from "./Onboard/OnboardSubmit";
 import SearchPlace from "./SearchPlace";
 
 const Write = () => {
@@ -45,10 +43,6 @@ const Write = () => {
     useRouteMatch({
       path: "/write",
     }) ?? {};
-  // const { isExact: isOnboarding } =
-  //   useRouteMatch({
-  //     path: "/onboarding/write",
-  //   }) ?? {};
 
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
 
@@ -131,9 +125,6 @@ const Write = () => {
 
   const [isEditAlertOpened, setIsEditAlertOpened] = useState(false);
   const [isWriteAlertOpened, setIsWriteAlertOpened] = useState(false);
-  const [isOnboardOutAlertOpened, setIsOnboardOutAlertOpened] = useState(false);
-  const [isOnboardSubmitAlertOpened, setIsOnboardSubmitAlertOpened] =
-    useState(false);
 
   // close
   const handleClose = () => {
@@ -315,15 +306,6 @@ const Write = () => {
         </Alert>
       )}
 
-      {isOnboardOutAlertOpened && (
-        <OnboardAlert close={() => setIsOnboardOutAlertOpened(false)} />
-      )}
-      {isOnboardSubmitAlertOpened && (
-        <OnboardSubmit
-          close={() => setIsOnboardSubmitAlertOpened(false)}
-          {...{ handleSubmit }}
-        />
-      )}
       {isWriteAlertOpened && (
         <Alert
           close={() => setIsWriteAlertOpened(false)}

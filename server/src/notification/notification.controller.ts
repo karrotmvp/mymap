@@ -1,11 +1,14 @@
-import { BadRequestException, Controller, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { CreateVerificationNotificationDTO } from './dto/create-verification-notification.dto';
 import { NotificationService } from './notification.service';
 
+@ApiTags('api/notification')
 @Controller('api/notification')
 export class NotificationController {
     constructor(private readonly notificationService: NotificationService) {}
@@ -22,5 +25,14 @@ export class NotificationController {
     @Post('preopen')
     async createPreopenNotification() {
         await this.notificationService.createPreopenNotification();
+    }
+
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
+    @Post('/verification')
+    @ApiCreatedResponse({ description: '알림 생성 완료' })
+    @ApiBody({ description: '알림 생성 형식', type: CreateVerificationNotificationDTO })
+    async createVerificationNotification(@Req() req: any, @Body() createVerificationNotificationDTO: CreateVerificationNotificationDTO) {
+        await this.notificationService.createVerificationNotification(req.user.userId, createVerificationNotificationDTO);
     }
 }

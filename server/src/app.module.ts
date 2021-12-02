@@ -18,6 +18,7 @@ import { ToolsModule } from './tools/tools.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { SentryInterceptor } from './sentry.interceptor';
 import { NotificationModule } from './notification/notification.module';
+import { VerificationModule } from './verification/verification.module';
 
 @Module({
   imports: [
@@ -60,7 +61,8 @@ import { NotificationModule } from './notification/notification.module';
   }),
   EventModule,
   ToolsModule,
-  NotificationModule
+  NotificationModule,
+  VerificationModule
   ],
   controllers: [AppController],
   providers: [AppService, {

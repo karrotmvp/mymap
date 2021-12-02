@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { VerificationNotification } from "src/notification/entities/verification-notification.entity";
 import { SavedPlace } from "src/place/entities/savedPlace.entity";
 import { Post } from "src/post/entities/post.entity";
 import { SavedPost } from "src/post/entities/savedPost.entity";
@@ -23,6 +24,9 @@ export class User {
 
     @OneToMany(() => Post, post => post.user, { cascade: true })
     posts: Post[];
+
+    @OneToMany(() => VerificationNotification, verificationNotification => verificationNotification.user, { cascade: true })
+    verificationNotifications: VerificationNotification[];
 
     @ApiProperty()
     @Column({ unique: true })
