@@ -22,6 +22,7 @@ import {
   flexCenter,
   gap,
   input,
+  SubmitBtn,
   theme,
   Title,
   WrapperWithHeader,
@@ -442,14 +443,6 @@ const SelectBtn = styled.div<{ $isSelected: boolean }>`
   font-weight: 500;
   color: ${({ $isSelected }) =>
     $isSelected ? theme.color.orange : theme.color.gray7};
-`;
-
-const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
-  margin: 1rem 2rem;
-  background-color: ${({ $disabled }) =>
-    $disabled ? theme.color.gray2 : theme.color.orange};
-  color: ${({ $disabled }) =>
-    $disabled ? theme.color.gray7 : theme.color.white};
 `;
 
 const Input = styled.textarea<{ $error?: boolean }>`

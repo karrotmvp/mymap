@@ -111,6 +111,12 @@ export const Button = styled.div`
   box-sizing: border-box;
   background-color: ${theme.color.orange};
 `;
+export const SubmitBtn = styled(Button)<{ $disabled: boolean }>`
+  background-color: ${({ $disabled }) =>
+    $disabled ? theme.color.gray2 : theme.color.orange};
+  color: ${({ $disabled }) =>
+    $disabled ? theme.color.gray7 : theme.color.white};
+`;
 
 export const Title = styled.div`
   font-weight: 500;
