@@ -3,8 +3,8 @@ import { ChangeEvent, useEffect } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { useGetRegion } from "../../api/region";
-import { Back, LogoTypo, SearchClose } from "../../assets";
+import { mini } from "../../App";
+import { Close, LogoTypo, SearchClose } from "../../assets";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
 import { RegionId } from "../../Shared/atom";
@@ -19,11 +19,10 @@ import {
 import { regionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
 
-const Two = ({ close }: { close: () => void }) => {
+const Two = () => {
   const history = useHistory();
 
   const regionId = useRecoilValue(RegionId);
-  const { data: regionName } = useGetRegion(regionId);
 
   const input = useInput("");
 
@@ -79,12 +78,6 @@ const Two = ({ close }: { close: () => void }) => {
   };
 
   useEffect(() => {
-    if (regionName) {
-      input.setValue("");
-    }
-  }, [regionName]);
-
-  useEffect(() => {
     const element = document.querySelector(
       "#onboarding-input"
     ) as HTMLTextAreaElement;
@@ -101,48 +94,56 @@ const Two = ({ close }: { close: () => void }) => {
     .find((group) => group.length > 0);
 
   let title = <div />;
+  let sub = "";
+  let placeholder = "";
   if (regionGroup?.find((region) => region === "471abc99b378")) {
     // 서초
     title = (
       <div>
-        {`${regionName}에서 퇴근 후 
+        {`서초동에서 퇴근 후 
 문화생활을 즐기기 좋은 곳은 어디인가요?`}
       </div>
     );
+    sub = "서초동 이웃에게 알려주세요.";
+    placeholder = "놀숲 만화카페, 슈퍼스타 코인 노래방";
   } else if (regionGroup?.find((region) => region === "5424e9f7ec6d")) {
     // 잠실
     title = (
       <div>
-        {`${regionName}에서
+        {`잠실동에서
 자주 가는 친절한 병원은 어디인가요?`}
       </div>
     );
+    sub = "잠실동 이웃에게 알려주세요.";
+    placeholder = "잠실 연세 내과, 사랑 치과";
   } else {
     // 한남
     title = (
       <div>
-        {`${regionName}에서 친구들과, 연인과 가기 좋은
+        {`한남동에서 친구들과, 연인과 가기 좋은
 분위기 최고 bar는 어디인가요?`}
       </div>
     );
+    sub = "한남동 이웃에게 알려주세요.";
+    placeholder = "소코(SOKO Bar), 블라인드피그";
   }
 
   return (
     <Wrapper>
       <Header>
-        <Back className="left-icon" onClick={close} />
+        <Close className="left-icon" onClick={() => mini.close()} />
         <LogoTypo />
       </Header>
 
       <Title style={{ fontSize: "1.9rem", marginTop: "2.3rem" }}>{title}</Title>
 
-      <div className="sub">{`${regionName} 이웃에게 알려주세요.`}</div>
+      <div className="sub">{sub}</div>
 
       <div className="title-input">
         <Input
           id="onboarding-input"
           onInput={handleInput}
-          placeholder={`${regionName} 주민이 관심있는 장소`}
+          placeholder={placeholder}
           value={input.value}
           onClick={() => Mixpanel.track("온보딩A - 텍스트박스 클릭")}
         />

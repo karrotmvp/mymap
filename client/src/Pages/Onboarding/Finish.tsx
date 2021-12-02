@@ -35,7 +35,15 @@ const Finish = () => {
   let title = "";
   let sub = <div />;
 
-  if (onboardingType === "2") {
+  if (onboardingType === "1") {
+    title = "알려주셔서 감사해요!";
+    sub = (
+      <div className="sub">
+        {`알려주신 테마에 대한 장소를 찾으면
+        채팅으로 알려드릴게요.`}
+      </div>
+    );
+  } else if (onboardingType === "2") {
     title = "알려주셔서 감사해요!";
     if (regionGroup?.find((region) => region === "471abc99b378")) {
       // 서초

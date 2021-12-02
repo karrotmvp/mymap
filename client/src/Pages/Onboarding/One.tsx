@@ -1,14 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ChangeEvent, useEffect } from "react";
 import { useHistory } from "react-router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { postPost } from "../../api/post";
-import { useGetRegion } from "../../api/region";
-import { Back, LogoTypo, SearchClose } from "../../assets";
+import { mini } from "../../App";
+import { Close, LogoTypo, SearchClose } from "../../assets";
 import Header from "../../Components/Header";
 import useInput from "../../Hooks/useInput";
-import { OnboardingSelected, RegionId, ViewerInfo } from "../../Shared/atom";
 import {
   Button,
   ButtonFooter,
@@ -18,15 +15,9 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
-import { funcNeedLogin } from "../../utils/preset";
 
-const One = ({ close }: { close: () => void }) => {
+const One = () => {
   const history = useHistory();
-
-  const regionId = useRecoilValue(RegionId);
-  const selected = useRecoilValue(OnboardingSelected);
-  const { data: regionName } = useGetRegion(regionId);
-  const setViewerInfo = useSetRecoilState(ViewerInfo);
 
   const input = useInput("");
 
@@ -80,12 +71,6 @@ const One = ({ close }: { close: () => void }) => {
   };
 
   useEffect(() => {
-    if (regionName) {
-      input.setValue("");
-    }
-  }, [regionName]);
-
-  useEffect(() => {
     const element = document.querySelector(
       "#onboarding-input"
     ) as HTMLTextAreaElement;
@@ -95,14 +80,14 @@ const One = ({ close }: { close: () => void }) => {
   return (
     <Wrapper>
       <Header>
-        <Back className="left-icon" onClick={close} />
+        <Close className="left-icon" onClick={() => mini.close()} />
         <LogoTypo />
       </Header>
 
       <div className="form">
         <Title>
-          {`추천하는 장소에 대해
-간단하게 설명해 주세요.`}
+          {`우리 동네에서 
+알고 싶은 테마는 무엇인가요?`}
         </Title>
 
         <div className="sub">
@@ -113,7 +98,7 @@ const One = ({ close }: { close: () => void }) => {
           <Input
             id="onboarding-input"
             onInput={handleInput}
-            placeholder={`${regionName} 주민이 관심있는 장소`}
+            placeholder={"혼밥하기 좋은 식당 있을까요?"}
             value={input.value}
             onClick={() => Mixpanel.track("온보딩A - 텍스트박스 클릭")}
           />
@@ -124,9 +109,9 @@ const One = ({ close }: { close: () => void }) => {
       <div className="example">
         우리 동네 이웃들은 이렇게 적었어요.
         <div>
-          {`일하러 가기 좋은 카페 모음
-반려동물과 함께 할 수 있는 장소
-직장인의 점심 맛집들`}
+          {`일하러 가기 좋은 카페가 궁금해요
+반려동물과 함께 할 수 있는 가게는 어딘가요?
+직장인의 점심 맛집을 알고 싶어요`}
         </div>
       </div>
 
@@ -159,14 +144,7 @@ const Wrapper = styled.div`
   }
   .title-input {
     position: relative;
-    margin-top: 2.4rem;
-    .error {
-      color: ${theme.color.red};
-      font-weight: 500;
-      font-size: 1.3rem;
-      line-height: 160%;
-      padding-top: 0.2rem;
-    }
+    margin-top: 3.6rem;
     .search-close {
       position: absolute;
       top: 0.3rem;
@@ -176,7 +154,7 @@ const Wrapper = styled.div`
   }
   .example {
     border-top: 1.6rem solid ${theme.color.gray1_5};
-    padding: 4.4rem 2rem 0 2rem;
+    padding: 1.4rem 2rem 0 2rem;
     font-weight: bold;
     font-size: 1.5rem;
     line-height: 150%;
