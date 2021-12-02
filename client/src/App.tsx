@@ -20,8 +20,6 @@ import { useEffect } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import ClosePage from "./Pages/ClosePage";
-import Select from "./legacy/Onboarding/Select";
-import Select2 from "./Pages/Onboarding2/Select";
 import Analytics from "react-router-ga";
 import { Close, LogoInactive } from "./assets";
 import styled, { keyframes } from "styled-components";
@@ -32,10 +30,12 @@ import { regions } from "./utils/const";
 import { useGetRegion } from "./api/region";
 import { getLogin } from "./api/user";
 import { Mixpanel } from "./utils/mixpanel";
-import Finish from "./legacy/Onboarding/Finish";
-import Finish2 from "./Pages/Onboarding2/Finish";
 import Alert from "./Components/Alert";
 import { handleClose } from "./utils/preset";
+
+import One from "./Pages/Onboarding/One";
+import Two from "./Pages/Onboarding/Two";
+import Finish from "./Pages/Onboarding/Finish";
 
 dayjs.locale("ko");
 
@@ -150,18 +150,21 @@ function App() {
             <Switch>
               <Route exact path="/" component={Main} />
               <Route exact path="/401" component={ClosePage} />
+
               <Route exact path="/detail/:postId" component={Detail} />
               <Route exact path="/detail/:postId/finish" component={Detail} />
+
               <Route exact path="/around" component={Around} />
+
               <Route exact path="/mypage" component={Mypage} />
+
               <Route exact path="/write" component={Write} />
-              <Route exact path="/onboarding" component={Select} />
-              <Route exact path="/onboarding/finish" component={Finish} />
-
-              <Route exact path="/onboarding2" component={Select2} />
-              <Route exact path="/onboarding2/finish" component={Finish2} />
-
               <Route path="/edit/:postId" component={Write} />
+
+              {/* 온보딩 */}
+              <Route exact path="/onboarding/1" component={One} />
+              <Route exact path="/onboarding/2" component={Two} />
+              <Route exact path="/onboarding/finish/:type" component={Finish} />
             </Switch>
             {isSaveModalOpened && <SaveModal />}
             {toastMessage.isToastShown && (

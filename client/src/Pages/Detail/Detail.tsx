@@ -106,10 +106,6 @@ const Detail = ({
       setPostToEdit(post);
       Mixpanel.track("상세글 진입", { postId: post.postId });
     }
-    console.log(
-      regionGroup,
-      regionGroup?.find((id) => id === post?.regionId)
-    );
   }, [post]);
 
   // 카드 클릭하면 해당 인덱스 지도뷰

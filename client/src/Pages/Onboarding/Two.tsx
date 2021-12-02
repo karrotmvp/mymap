@@ -1,0 +1,193 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { ChangeEvent, useEffect } from "react";
+import { useHistory } from "react-router";
+import { useRecoilValue } from "recoil";
+import styled from "styled-components";
+import { useGetRegion } from "../../api/region";
+import { Back, LogoTypo, SearchClose } from "../../assets";
+import Header from "../../Components/Header";
+import useInput from "../../Hooks/useInput";
+import { RegionId } from "../../Shared/atom";
+import {
+  Button,
+  ButtonFooter,
+  input,
+  theme,
+  Title,
+  WrapperWithHeader,
+} from "../../styles/theme";
+import { regionsGroup } from "../../utils/const";
+import { Mixpanel } from "../../utils/mixpanel";
+
+const Two = ({ close }: { close: () => void }) => {
+  const history = useHistory();
+
+  const regionId = useRecoilValue(RegionId);
+  const { data: regionName } = useGetRegion(regionId);
+
+  const input = useInput("");
+
+  const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    // textarea autosize
+    e.target.style.height = "5.4rem";
+    e.target.style.height = e.target.scrollHeight + "px";
+
+    input.setValue(e.target.value);
+  };
+
+  const removeInput = () => {
+    input.setValue("");
+    const element = document.querySelector(
+      "#onboarding-input"
+    ) as HTMLTextAreaElement;
+    element.style.height = "5.4rem";
+  };
+
+  let submitFlag = false;
+
+  const submitCheck = () => {
+    if (submitFlag) {
+      return submitFlag;
+    } else {
+      submitFlag = true;
+      return false;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (submitCheck()) return;
+
+    //   const body = {
+    //     title:
+    //       input.value !== ""
+    //         ? input.value
+    //         : `${regionName} 주민이 관심있는 장소`,
+    //     regionId,
+    //     share: true,
+    //     pins: selected.map((place) => {
+    //       return {
+    //         placeId: place.placeId,
+    //         latitude: place.coordinates.latitude,
+    //         longitude: place.coordinates.longitude,
+    //       };
+    //     }),
+    //   };
+    //   const data = await postPost(body);
+    //   if (data.postId) history.push(`/onboarding/finish`);
+    Mixpanel.track("온보딩2 - 다 적었어요");
+    history.push(`/onboarding/finish/2`);
+  };
+
+  useEffect(() => {
+    if (regionName) {
+      input.setValue("");
+    }
+  }, [regionName]);
+
+  useEffect(() => {
+    const element = document.querySelector(
+      "#onboarding-input"
+    ) as HTMLTextAreaElement;
+    element.focus();
+  }, []);
+
+  const regionGroup = regionsGroup
+    .map((region) => {
+      if (region.find((r) => r === regionId)) {
+        return [...region];
+      }
+      return [];
+    })
+    .find((group) => group.length > 0);
+
+  let title = <div />;
+  if (regionGroup?.find((region) => region === "471abc99b378")) {
+    // 서초
+    title = (
+      <div>
+        {`${regionName}에서 퇴근 후 
+문화생활을 즐기기 좋은 곳은 어디인가요?`}
+      </div>
+    );
+  } else if (regionGroup?.find((region) => region === "5424e9f7ec6d")) {
+    // 잠실
+    title = (
+      <div>
+        {`${regionName}에서
+자주 가는 친절한 병원은 어디인가요?`}
+      </div>
+    );
+  } else {
+    // 한남
+    title = (
+      <div>
+        {`${regionName}에서 친구들과, 연인과 가기 좋은
+분위기 최고 bar는 어디인가요?`}
+      </div>
+    );
+  }
+
+  return (
+    <Wrapper>
+      <Header>
+        <Back className="left-icon" onClick={close} />
+        <LogoTypo />
+      </Header>
+
+      <Title style={{ fontSize: "1.9rem", marginTop: "2.3rem" }}>{title}</Title>
+
+      <div className="sub">{`${regionName} 이웃에게 알려주세요.`}</div>
+
+      <div className="title-input">
+        <Input
+          id="onboarding-input"
+          onInput={handleInput}
+          placeholder={`${regionName} 주민이 관심있는 장소`}
+          value={input.value}
+          onClick={() => Mixpanel.track("온보딩A - 텍스트박스 클릭")}
+        />
+        <SearchClose className="search-close" onClick={removeInput} />
+      </div>
+
+      <ButtonFooter>
+        <Button className="button" onClick={handleSubmit}>
+          다 적었어요
+        </Button>
+      </ButtonFooter>
+    </Wrapper>
+  );
+};
+
+const Wrapper = styled.div`
+  ${WrapperWithHeader};
+  background-color: #fff;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  .sub {
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 150%;
+    letter-spacing: -2%;
+    color: ${theme.color.gray6};
+    margin-top: 1rem;
+  }
+  .title-input {
+    position: relative;
+    margin-top: 4rem;
+    .search-close {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.2rem;
+      fill: ${theme.color.gray2};
+    }
+  }
+`;
+
+const Input = styled.textarea<{ $error?: boolean }>`
+  ${input};
+  padding-right: 5rem;
+  height: 5.4rem;
+  background-color: ${theme.color.gray1};
+`;
+
+export default Two;
