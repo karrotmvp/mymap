@@ -77,9 +77,9 @@ const One = () => {
       </Header>
 
       <div className="form">
-        <Title>
-          {`우리 동네에서 
-알고 싶은 테마는 무엇인가요?`}
+        <Title style={{ color: theme.color.black, fontWeight: "bold" }}>
+          {`우리 동네에서 알고 싶은 테마는
+무엇인가요?`}
         </Title>
 
         <div className="sub">
