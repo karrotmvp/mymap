@@ -30,4 +30,14 @@ export class PinRepository extends Repository<Pin> {
         })
         return num;
     }
+
+    async findWithPostIds(postIds: number[]) {
+        const pins: Pin[] = await this.find({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId IN (:...postId)', { postId: postIds })
+            }
+        })
+        return pins;
+    }
 }
