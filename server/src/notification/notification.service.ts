@@ -44,16 +44,25 @@ export class NotificationService {
         await this.verificationNotificationRepository.save(newEntity);
     }
 
+    private *generator(start, end) {
+        for (let i = start; i <= end; i += 50) {
+            yield i;
+        }
+    }
+
     async createNotificationToAll(type: string) {
         const users: User[] = await this.userService.readAllUser();
         const uniqueIds: string[] = users.map(user => user.getUniqueId());
-        const userInfos = await this.userService.readUsersDetails(uniqueIds);
-        userInfos.map(async(userInfo) => {
-            await this.notificationQueue.add('notification_created', new Notification(userInfo.id, type, { "$(username)": userInfo.nickname }), {
-                attempts: 5,
-                backoff: 5000
-            })
+        for (let value of this.generator(0, users.length)) {
+            const slicedUniqueIds: string[] = uniqueIds.slice(value, value + 50);
+            const userInfos = await this.userService.readUsersDetails(slicedUniqueIds);
+            userInfos.map(async(userInfo) => {
+                await this.notificationQueue.add('notification_created', new Notification(userInfo.id, type, { "$(username)": userInfo.nickname }), {
+                    attempts: 5,
+                    backoff: 5000
+                })
         })
+        }
     }
 
     //뭘 어떻게 보내고 싶은지 확인하기
