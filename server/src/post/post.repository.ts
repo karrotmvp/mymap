@@ -62,5 +62,14 @@ export class PostRepository extends Repository<Post> {
         return posts.filter(post => post.pins.length !== 0);
     }
 
+    async findWithRegionIdAll(regionId: string[]): Promise<Post[]> {
+        const posts = await this.find({
+            where: (qb) => {
+                qb.where('regionId IN (:...regionId) AND share = true', { regionId: regionId })
+            }
+        })
+        return posts;
+    }
+
 
 }

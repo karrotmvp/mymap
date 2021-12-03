@@ -139,6 +139,13 @@ export class PostController {
         this.eventEmitter.emit(MyMapEvent.POST_PIN_UPDATED, new Event(req.user.userId, postIds));
     }
 
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
+    @Get('/pin/:regionId') 
+    async readRegionPins(@Param('regionId') regionId: string) {
+        return await this.postService.readRegionPins(regionId);
+    }
+
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Put('/:postId')

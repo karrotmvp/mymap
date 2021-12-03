@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { ApiCreatedResponse, ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiKeyAuthGuard } from "src/auth/apiKey.guard";
 import { Role } from "src/auth/role.enum";
 import { Roles } from "src/auth/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
@@ -31,4 +32,11 @@ export class SavedPlaceController {
     async createSavedPlaces(@Req() req: any, @Query('placeId') placeIds: string[]) {
         await this.placeService.createSavedPlaces(req.user.userId, placeIds);
     }
+
+    // Deprecated
+    // @UseGuards(ApiKeyAuthGuard)
+    // @Post('/pin')
+    // async convertToPins(@Query('userId') userId: number) {
+    //     await this.placeService.convertToPins(userId);
+    // }
 }

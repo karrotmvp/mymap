@@ -1,0 +1,12 @@
+{
+	"title": "$(username)님, 당장모아를 기억하시나요? ",
+	"text": "안녕하세요. '당장모아예요'.\n서비스에 대한 솔직한 의견을 듣고 싶어서, 당장모아 설문에 응해주셨거나, 방문해 주셨던 이웃분들께 연락을 드리게 되었어요.\n설문은 약 3분 정도 걸려요☺️\n설문 답변을 남겨주신 분들에게는 추첨을 통해 스타벅스 아메리카노 기프티콘을 드릴 예정이에요!\n여러분의 많은 참여 부탁드릴게요~",
+	"actions": [{
+		"type": "PRIMARY_BUTTON",
+		"payload": {
+			"text": "설문 참여하기",
+			"linkUrl": "towneers://web/ad/user_surveys/5681"
+		}
+	}],
+    "imageUrl": "https://mymap-admin.s3.ap-northeast-2.amazonaws.com/interview.png"
+}
