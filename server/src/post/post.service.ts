@@ -146,6 +146,13 @@ export class PostService {
         return await this.readPostList(userId, posts);
     }
 
+    async readRegionPins(regionId: string) {
+        const regions: string[] = await this.regionService.readNeighborRegion(regionId, 'MY');
+        const posts: Post[] = await this.postRepository.findWithRegionIdAll(regions);
+        const postIds: number[] = posts.map(post => post.postId);
+        const pins: Pin[] = await this.pinRepository.findWithPostIds(postIds);
+    }
+
     async deleteSavedPost(userId: number, postId: number) {
         const savedPost: SavedPost = await this.savedPostRepository.findWithPostId(userId, postId);
         if (!savedPost) throw new NotFoundException();
@@ -295,4 +302,19 @@ export class PostService {
     //         await this.postQueue.add('defaultPost_created', new Event(userId, null));
     //     }))
     // }
+
+    async saveToDefaultPost(userId: number, placeIds: string[]) {
+        const defaultPost: Post = await this.postRepository.findOne({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId })
+            }
+        })
+        const newPins: Pin[] = placeIds.map(placeId => {
+            const newPin = new Pin(null, placeId);
+            return newPin;
+        })
+        defaultPost.pins = newPins;
+        await this.postRepository.save(defaultPost);
+    }
 }

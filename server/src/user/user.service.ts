@@ -42,6 +42,10 @@ export class UserService {
         return await this.userRepository.findWithUserId(userId);
     }
 
+    async readAllUser(): Promise<User[]> {
+        return await this.userRepository.find();
+    }
+
     async readUserDetail(userId: number): Promise<UserDTO> {
         const user = await this.readUser(userId);
         const uniqueId = user.getUniqueId();
@@ -54,6 +58,29 @@ export class UserService {
                     const response = res.data?.data?.user
                     if (!response) throw new BadRequestException();
                     return new UserDTO(userId, response.nickname, response.profileImageUrl, null, null)
+                }),
+                catchError((err) => {
+                    throw new BadRequestException();
+                })
+            )
+        return await lastValueFrom(userDetail$);
+    }
+
+    async readUsersDetails(uniqueIds: string[]) {
+        const req_ids: string = uniqueIds.join(",");
+        const uri = this.configService.get('daangn.oapiuri') + 'users/by_ids';
+        const userDetail$ = this.httpService.get(uri, {
+            headers: {
+                'X-Api-Key': this.configService.get('daangn.api_key')
+            },
+            params: {
+                ids: req_ids
+            }
+        }).pipe(
+                map((res) => {
+                    const response = res.data?.data?.users
+                    if (!response) throw new BadRequestException();
+                    return response;
                 }),
                 catchError((err) => {
                     throw new BadRequestException();

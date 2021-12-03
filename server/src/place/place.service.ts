@@ -161,4 +161,16 @@ export class PlaceService {
         })
         await this.savePlaceRepository.save(newSavedPlaces);
     }
+
+    // Deprecated
+    // async convertToPins(userId: number) {
+    //     const savedPlaces: SavedPlace[] = await this.savePlaceRepository.find({
+    //         relations: ['user'],
+    //         where: (qb) => {
+    //             qb.where('SavedPlace__user.userId = :userId', { userId: userId })
+    //         }
+    //     })
+    //     const placeIds: string[] = savedPlaces.map(savedPlace => savedPlace.getPlaceId());
+    //     await this.postService.saveToDefaultPost(userId, placeIds);
+    // }
 }

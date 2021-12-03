@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { ApiKeyAuthGuard } from 'src/auth/apiKey.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -16,15 +16,21 @@ export class NotificationController {
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Post('/')
-    async createNotification(@Req() req: any, @Query('type') type: string) {
+    async createNotification(@Req() req: any, @Query('type') type: string, @Body() data: any) {
         if (!type) throw new BadRequestException();
-        await this.notificationService.createNotification(req.user.userId, type);
+        await this.notificationService.createNotification(req.user.userId, type, data);
     }
 
     @UseGuards(ApiKeyAuthGuard)
-    @Post('preopen')
+    @Post('/preopen')
     async createPreopenNotification() {
         await this.notificationService.createPreopenNotification();
+    }
+
+    @UseGuards(ApiKeyAuthGuard)
+    @Post('/all/:type')
+    async createNotificationToAll(@Param('type') type: string) {
+        await this.notificationService.createNotificationToAll(type);
     }
 
     @Roles(Role.Signed_User)
@@ -35,4 +41,11 @@ export class NotificationController {
     async createVerificationNotification(@Req() req: any, @Body() createVerificationNotificationDTO: CreateVerificationNotificationDTO) {
         await this.notificationService.createVerificationNotification(req.user.userId, createVerificationNotificationDTO);
     }
+
+    // @Roles(Role.Admin)
+    // @UseGuards(RolesGuard)
+    // @Post('/verification/one/:oneId')
+    // async sendVerificationOneMessage(@Param('oneId') oneIds: number[]) {
+    //     await this.notificationService.sendOneNotification(oneIds);
+    // }
 }

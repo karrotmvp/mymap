@@ -50,6 +50,7 @@
     "kafkajs": "^1.15.0",
     "mixpanel": "^0.13.0",
     "mysql2": "^2.3.0",
+    "p-throttle": "^5.0.0",
     "passport": "^0.5.0",
     "passport-daangn": "^1.0.11",
     "passport-headerapikey": "^1.2.2",
