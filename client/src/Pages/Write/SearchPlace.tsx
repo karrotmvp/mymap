@@ -20,6 +20,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Mixpanel } from "../../utils/mixpanel";
 import { useHistory } from "react-router";
 import { useGetSearch } from "../../api/place";
+import NoSearchBox from "../../Components/NoSearchResult/NoSearchBox";
 
 const SearchPlace = ({
   setIsSearchOpened,
@@ -142,9 +143,17 @@ const SearchPlace = ({
                 );
               })}
             </InfiniteScroll>
+            <NoSearchBox />
           </div>
         ) : (
-          <NoSearchView value={searchVal.value} />
+          <div className="no-search">
+            <NoSearch />
+            <div>
+              <span>{searchVal.value}</span>의 검색 결과가 없어요
+            </div>
+            <div>검색어를 다시 확인해주세요!</div>
+            <NoSearchBox />
+          </div>
         )
       ) : (
         <div className="empty">
@@ -163,18 +172,6 @@ const SearchPlace = ({
         />
       )}
     </Wrapper>
-  );
-};
-
-const NoSearchView = ({ value }: { value: string }) => {
-  return (
-    <div className="no-search">
-      <NoSearch />
-      <div>
-        <span>{value}</span>의 검색 결과가 없어요
-      </div>
-      <div>검색어를 다시 확인해주세요!</div>
-    </div>
   );
 };
 
