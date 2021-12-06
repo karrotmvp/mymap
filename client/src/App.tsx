@@ -36,6 +36,7 @@ import { handleClose } from "./utils/preset";
 import One from "./Pages/Onboarding/One";
 import Two from "./Pages/Onboarding/Two";
 import Finish from "./Pages/Onboarding/Finish";
+import Four from "./Pages/Onboarding/Four";
 
 dayjs.locale("ko");
 
@@ -164,6 +165,7 @@ function App() {
               {/* 온보딩 */}
               <Route exact path="/onboarding/one" component={One} />
               <Route exact path="/onboarding/two" component={Two} />
+              <Route exact path="/onboarding/four" component={Four} />
               <Route
                 exact
                 path="/onboarding/finish/:type/:id"
