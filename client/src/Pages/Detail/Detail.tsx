@@ -233,7 +233,7 @@ const Detail = ({
                 )}
                 <div>
                   <div className="name">
-                    {post?.user.userName}님이 추천하는 리스트예요.
+                    {post?.user.userName}님이 추천하는 장소예요.
                   </div>
                   <div className="date">
                     {dayjs(post?.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
