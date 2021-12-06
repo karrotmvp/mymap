@@ -215,7 +215,9 @@ const Detail = ({
               isMine={post?.user.userId === viewerInfo.userId}
             >
               <div className="post-title">
-                <Title>{post?.title}</Title>
+                <Title style={{ color: theme.color.black }}>
+                  {post?.title}
+                </Title>
                 <div className="content">{post?.contents}</div>
               </div>
 
