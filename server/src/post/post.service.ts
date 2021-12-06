@@ -17,6 +17,7 @@ import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
 import { PinDTO } from './dto/pin.dto';
 import { PostDTO } from './dto/post.dto';
+import { RegionPinsDTO } from './dto/region-pins.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { Pin } from './entities/pin.entity';
 import { Post } from './entities/post.entity';
@@ -146,11 +147,14 @@ export class PostService {
         return await this.readPostList(userId, posts);
     }
 
-    async readRegionPins(regionId: string) {
+    async readRegionPins(regionId: string): Promise<RegionPinsDTO> {
         const regions: string[] = await this.regionService.readNeighborRegion(regionId, 'MY');
         const posts: Post[] = await this.postRepository.findWithRegionIdAll(regions);
         const postIds: number[] = posts.map(post => post.postId);
         const pins: Pin[] = await this.pinRepository.findWithPostIds(postIds);
+        const coordinates = new CoordinatesDTO();
+        const detailPins: PinDTO[] = await this.readPinDetail(pins, coordinates);
+        return new RegionPinsDTO(detailPins, coordinates);
     }
 
     async deleteSavedPost(userId: number, postId: number) {

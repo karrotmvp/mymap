@@ -7,6 +7,7 @@ import { LoggerModule } from 'src/logger/logger.module';
 import { PostModule } from 'src/post/post.module';
 import { RegionModule } from 'src/region/region.module';
 import { UserModule } from 'src/user/user.module';
+import { NewPlaceRepository } from './newPlace.repository';
 import { PlaceController } from './place.controller';
 import { PlaceRepository } from './place.repository';
 import { PlaceService } from './place.service';
@@ -18,7 +19,7 @@ import { SavedPlaceRepository } from './savedPlace.repository';
   imports: [HttpModule.register({
     timeout: 5000,
   }), ConfigModule, LoggerModule, forwardRef(() => PostModule),
-  TypeOrmModule.forFeature([RecommendPlaceRepository, SavedPlaceRepository]),
+  TypeOrmModule.forFeature([RecommendPlaceRepository, SavedPlaceRepository, NewPlaceRepository]),
   UserModule,
   RegionModule
   ],
