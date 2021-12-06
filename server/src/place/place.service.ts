@@ -129,20 +129,20 @@ export class PlaceService {
 
     async readSavedPlaces(userId: number): Promise<PlaceDTO[]> {
         // A
-        // const pins: Pin[] = await this.postService.readPins(userId);
-        // const places: string[] = pins.map(pin => pin.getPlaceId());
-        // const placeIds: string[] = [...new Set(places)];
-        // return await this.readPlaces(placeIds, userId);
-        const savedPlaces: SavedPlace[] = await this.savePlaceRepository.find({
-            relations: ['user'],
-            where: (qb) => {
-                qb.where('SavedPlace__user.userId = :userId', { userId: userId })
-            }
-        })
-        const placeIds: string[] = savedPlaces.map(savedPlace => {
-            return savedPlace.getPlaceId()
-        })
+        const pins: Pin[] = await this.postService.readPins(userId);
+        const places: string[] = pins.map(pin => pin.getPlaceId());
+        const placeIds: string[] = [...new Set(places)];
         return await this.readPlaces(placeIds, userId);
+        // const savedPlaces: SavedPlace[] = await this.savePlaceRepository.find({
+        //     relations: ['user'],
+        //     where: (qb) => {
+        //         qb.where('SavedPlace__user.userId = :userId', { userId: userId })
+        //     }
+        // })
+        // const placeIds: string[] = savedPlaces.map(savedPlace => {
+        //     return savedPlace.getPlaceId()
+        // })
+        // return await this.readPlaces(placeIds, userId);
     }
 
     async createSavedPlaces(userId: number, placeIds: string[]): Promise<void> {

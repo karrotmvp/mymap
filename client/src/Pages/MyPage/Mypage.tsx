@@ -20,8 +20,8 @@ import OrangePlaceBox from "../../Components/OrangePlaceBox";
 import MyPlaces from "./MyPlaces";
 import { useGetMyPosts, useGetSavedPosts } from "../../api/post";
 import { Mixpanel } from "../../utils/mixpanel";
-import { useGetSavedPlaces } from "../../api/savedPlaces";
 import { handleClose } from "../../utils/preset";
+import { useGetPlaceSaved } from "../../api/place";
 
 const Tab = ({
   selectedTab,
@@ -73,7 +73,7 @@ const Mypage = () => {
   const [savedPostsHasMore, setSavedPostsHasMore] = useState(true);
   const [savedPostPage, setSavedPostPage] = useState(1);
 
-  const { data: myPlaces } = useGetSavedPlaces();
+  const { data: myPlaces } = useGetPlaceSaved();
   const {
     status: myPostsResultStatus,
     data: myPostsResult,
