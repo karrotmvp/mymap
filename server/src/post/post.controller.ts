@@ -15,6 +15,7 @@ import { CreatePinDTO } from './dto/create-pin.dto';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { FeedDTO } from './dto/feed.dto';
 import { PostDTO } from './dto/post.dto';
+import { RegionPinsDTO } from './dto/region-pins.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { Post as PostEntity } from './entities/post.entity';
 import { PostService } from './post.service';
@@ -142,7 +143,8 @@ export class PostController {
     @Roles(Role.Unsigned_User)
     @UseGuards(RolesGuard)
     @Get('/pin/:regionId') 
-    async readRegionPins(@Param('regionId') regionId: string) {
+    @ApiOkResponse({ description: '지역 내 핀 정보 모두 불러오기 성공', type: RegionPinsDTO })
+    async readRegionPins(@Param('regionId') regionId: string): Promise<RegionPinsDTO> {
         return await this.postService.readRegionPins(regionId);
     }
 

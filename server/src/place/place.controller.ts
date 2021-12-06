@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiHeader, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { EventEmitter2 } from 'eventemitter2';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/auth/role.enum';
@@ -9,6 +9,7 @@ import { Event } from 'src/event/event';
 import { MyMapEvent } from 'src/event/event-pub-sub';
 import { MyLogger } from 'src/logger/logger.service';
 import { UserService } from 'src/user/user.service';
+import { CreateNewPlaceDTO } from './dto/create-newPlace.dto';
 import { CreateRecommendPlaceDTO } from './dto/create-recommendPlace.dto';
 import { PlaceDTO } from './dto/place.dto';
 import { RegionPlaceDTO } from './dto/regionPlace.dto';
@@ -51,6 +52,15 @@ export class PlaceController {
     async readPlace(@Param('placeId') placeId: string) {
         this.logger.debug('placeId : ', placeId);
         return await this.placeService.readPlace(placeId);
+    }
+
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
+    @Post('/new/:regionId')
+    @ApiCreatedResponse({ description: '새로운 장소 등록 완료' })
+    @ApiBody({ description: '새로운 장소 등록 형식', type: CreateNewPlaceDTO })
+    async createNewPlace(@Param('regionId') regionId: string, @Body() createNewPlaceDTO: CreateNewPlaceDTO) {
+        await this.placeService.createNewPlace(regionId, createNewPlaceDTO);
     }
 
     // Deprecated
