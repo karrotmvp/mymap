@@ -45,15 +45,26 @@ export class PlaceService {
         return place;
     }
 
+    private *generator(start, end) {
+        for (let i = start; i <= end; i += 100) {
+            yield i;
+        }
+    }
+    
     async readPlaces(placeIds: string[], userId?: number): Promise<PlaceDTO[]> {
-        if (!placeIds || placeIds.length === 0) return [];
-        const places$ = await this.placeRepository.findWithIds(placeIds);
-        const places = await lastValueFrom(places$);
-        const promise = places.map(async(place) => {
-            place.savedNum = userId ? await this.postService.countMySavedPlaces(userId, place.placeId) : await this.postService.countSavedPlaces(place.placeId);
-        })
-        await Promise.all(promise);
-        return places;
+        const result = [];
+        if (!placeIds || placeIds.length === 0) return result;
+        for (let value of this.generator(0, placeIds.length)) {
+            const slicedPlaceIds: string[] = placeIds.slice(value, value + 100);
+            const places$ = await this.placeRepository.findWithIds(slicedPlaceIds);
+            const places = await lastValueFrom(places$);
+            const promise = places.map(async(place) => {
+                place.savedNum = userId ? await this.postService.countMySavedPlaces(userId, place.placeId) : await this.postService.countSavedPlaces(place.placeId);
+            })
+            await Promise.all(promise);
+            result.push(...places);
+        }
+        return result;
     }
 
     async searchPlace(query: string, regionId: string, page: number, perPage: number): Promise<PlaceDTO[]> {
