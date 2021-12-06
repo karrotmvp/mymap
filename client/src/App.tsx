@@ -34,9 +34,9 @@ import Alert from "./Components/Alert";
 import { handleClose } from "./utils/preset";
 
 import One from "./Pages/Onboarding/One";
-import Two from "./Pages/Onboarding/Two";
-import Finish from "./Pages/Onboarding/Finish";
 import Four from "./Pages/Onboarding/Four";
+import NewFinish from "./Pages/Onboarding/NewFinish";
+import NewTwo from "./Pages/Onboarding/NewTwo";
 
 dayjs.locale("ko");
 
@@ -164,12 +164,18 @@ function App() {
 
               {/* 온보딩 */}
               <Route exact path="/onboarding/one" component={One} />
-              <Route exact path="/onboarding/two" component={Two} />
+              <Route exact path="/onboarding/two" component={NewTwo} />
               <Route exact path="/onboarding/four" component={Four} />
-              <Route
+              {/* <Route
                 exact
                 path="/onboarding/finish/:type/:id"
                 component={Finish}
+              /> */}
+              {/* new 온보딩 2,4 */}
+              <Route
+                exact
+                path="/onboarding/finish/:type"
+                component={NewFinish}
               />
             </Switch>
             {isSaveModalOpened && <SaveModal />}
