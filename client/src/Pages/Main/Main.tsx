@@ -12,7 +12,7 @@ import { useRecoilValue } from "recoil";
 import { Installed, RegionId } from "../../Shared/atom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { WrapperWithFooter } from "../../styles/theme";
-import { useGetFeedPosts } from "../../api/post";
+import { useGetFeedPosts, useGetPostPin } from "../../api/post";
 import { Mixpanel } from "../../utils/mixpanel";
 import { handleClose } from "../../utils/preset";
 
@@ -70,6 +70,8 @@ const Main = () => {
 
   const [pins, setPins] = useState<PlaceType[] | []>([]);
   const [feedPins, setfeedPins] = useState<Pin[] | []>([]);
+  const { data: postpin } = useGetPostPin(regionId);
+
   useEffect(() => {
     const _pins: PlaceType[] = [];
     feedPosts?.forEach((post) => {
@@ -82,19 +84,15 @@ const Main = () => {
     setPins(_pins);
 
     const _feedPosts: Pin[] = [];
-    feedPosts?.forEach((post) =>
-      post.pins.forEach((pin) => {
-        if (!_feedPosts.find((p) => p.placeId === pin.place.placeId)) {
-          _feedPosts.push({
-            id: pin.pinId,
-            placeId: pin.place.placeId,
-            name: pin.place.name,
-            latitude: pin.place.coordinates.latitude,
-            longitude: pin.place.coordinates.longitude,
-          });
-        }
-      })
-    );
+    postpin?.pins?.forEach((pin) => {
+      _feedPosts.push({
+        id: pin.pinId,
+        placeId: pin.place.placeId,
+        name: pin.place.name,
+        latitude: pin.place.coordinates.latitude,
+        longitude: pin.place.coordinates.longitude,
+      });
+    });
     setfeedPins(_feedPosts);
   }, [feedPosts]);
 
