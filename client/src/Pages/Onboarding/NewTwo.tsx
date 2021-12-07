@@ -111,7 +111,12 @@ const NewTwo = () => {
       </Header>
 
       <Title
-        style={{ fontSize: "1.9rem", marginTop: "2.3rem", lineHeight: "160%" }}
+        style={{
+          color: theme.color.black,
+          fontSize: "1.9rem",
+          marginTop: "2.3rem",
+          lineHeight: "160%",
+        }}
       >
         {title}
       </Title>

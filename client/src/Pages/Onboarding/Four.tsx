@@ -89,7 +89,12 @@ const Four = () => {
       </Header>
 
       <Title
-        style={{ fontSize: "1.9rem", marginTop: "2.3rem", lineHeight: "160%" }}
+        style={{
+          color: theme.color.black,
+          fontSize: "1.9rem",
+          marginTop: "2.3rem",
+          lineHeight: "160%",
+        }}
       >
         {`${regionName} 주민 추천!
 꼭 가봐야 하는 ${regionName} 가게를 
