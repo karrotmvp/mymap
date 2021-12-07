@@ -52,7 +52,7 @@ let regionIdFromParmas =
   new URLSearchParams(window.location.search).get("region_id") ?? "";
 // 교보타워일 경우 서초동으로
 
-if (process.env.NODE_ENV === "development") regionIdFromParmas = "d9fa9866fe4f";
+if (process.env.NODE_ENV === "development") regionIdFromParmas = "471abc99b378";
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
 
 const code = new URLSearchParams(window.location.search).get("code");

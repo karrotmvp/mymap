@@ -7,7 +7,7 @@ import MainSlide from "./MainSlide";
 import MapView, { Pin } from "../../Components/MapView";
 import PinSlider from "../../Components/PinSlider";
 import { Back, Close, LogoTypo } from "../../assets";
-import { PlaceType, PostType } from "../../Shared/type";
+import { PostType } from "../../Shared/type";
 import { useRecoilValue } from "recoil";
 import { Installed, RegionId } from "../../Shared/atom";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -68,21 +68,10 @@ const Main = () => {
     }
   }, [startIdx, endIdx, regionId]);
 
-  const [pins, setPins] = useState<PlaceType[] | []>([]);
   const [feedPins, setfeedPins] = useState<Pin[] | []>([]);
   const { data: postpin } = useGetPostPin(regionId);
 
   useEffect(() => {
-    const _pins: PlaceType[] = [];
-    feedPosts?.forEach((post) => {
-      post.pins.forEach((pin) => {
-        if (!_pins.find((p) => p.placeId === pin.place.placeId)) {
-          _pins.push(pin.place);
-        }
-      });
-    });
-    setPins(_pins);
-
     const _feedPosts: Pin[] = [];
     postpin?.pins?.forEach((pin) => {
       _feedPosts.push({
@@ -94,7 +83,7 @@ const Main = () => {
       });
     });
     setfeedPins(_feedPosts);
-  }, [feedPosts]);
+  }, [postpin]);
 
   // 핀 선택
   const [isPinSelected, setIsPinSelected] = useState(false);
@@ -111,8 +100,8 @@ const Main = () => {
   const [current, setCurrent] = useState(-1);
   useEffect(() => {
     setCenter({
-      lat: pins[current]?.coordinates.latitude,
-      lng: pins[current]?.coordinates.longitude,
+      lat: feedPins[current]?.latitude,
+      lng: feedPins[current]?.longitude,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
@@ -187,10 +176,12 @@ const Main = () => {
           <Footer />
         </div>
       ) : (
-        current > -1 && (
+        current > -1 &&
+        postpin && (
           <PinSlider
             placeCardType="map"
-            {...{ pins, current, setCurrent, setCenter }}
+            {...{ current, setCurrent, setCenter }}
+            pins={postpin.pins.map((pin) => pin.place)}
           />
         )
       )}
