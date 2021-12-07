@@ -99,10 +99,6 @@ const NewTwo = () => {
     }
   }
 
-  useEffect(() => {
-    console.log("inputList", inputList);
-  }, [inputList]);
-
   return (
     <Wrapper>
       <Header>
