@@ -20,6 +20,10 @@ export class Two {
     placeNames: string;
 
     @ApiProperty()
+    @Column({ nullable: true })
+    type: string;
+
+    @ApiProperty()
     @Column({ default: 1 })
     placeNum: number;
 
