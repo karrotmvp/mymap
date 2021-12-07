@@ -25,14 +25,14 @@ export class VerificationController {
 
     @Post('/two')
     @ApiCreatedResponse({ description: 'two 응답 제출 완료', type: Two })
-    @ApiBody({ description: 'two 응답 형식', type: CreateTwoDTO })
+    @ApiBody({ description: 'two 응답 형식', type: [CreateTwoDTO] })
     async createTwoAnswer(@Body() createTwoDTO: CreateTwoDTO) {
         return await this.verificationService.createTwoAnswer(createTwoDTO);
     }
 
     @Post('/four')
     @ApiCreatedResponse({ description: 'four 응답 제출 완료', type: Four })
-    @ApiBody({ description: 'four 응답 형식', type: CreateFourDTO })
+    @ApiBody({ description: 'four 응답 형식', type: [CreateFourDTO] })
     async createFourAnswer(@Body() createFourDTO: CreateFourDTO) {
         return await this.verificationService.createFourAnswer(createFourDTO);
     }

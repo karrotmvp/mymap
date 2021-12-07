@@ -30,25 +30,23 @@ export class VerificationService {
 
     async createTwoAnswer(createTwoDTO: CreateTwoDTO) {
         const regionName = await this.regionService.readRegionName(createTwoDTO.regionId);
-        const newEntities: Two[] = createTwoDTO.placeNames.map(placeName => {
-            const newEntity = new Two();
-            newEntity.regionId = createTwoDTO.regionId;
-            newEntity.regionName = regionName;
-            newEntity.placeName = placeName;
-            return newEntity
-        })
-        return await this.twoRepository.save(newEntities);
+        const placeNames: string = createTwoDTO.placeNames.join(',');
+        const newEntity = new Two();
+        newEntity.regionId = createTwoDTO.regionId;
+        newEntity.regionName = regionName;
+        newEntity.placeNum = createTwoDTO.placeNames.length;
+        newEntity.placeNames = placeNames;
+        return await this.twoRepository.save(newEntity);
     }
 
     async createFourAnswer(createFourDTO: CreateFourDTO) {
         const regionName = await this.regionService.readRegionName(createFourDTO.regionId);
-        const newEntities: Four[] = createFourDTO.placeNames.map(placeName => {
-            const newEntity = new Four();
-            newEntity.regionId = createFourDTO.regionId;
-            newEntity.regionName = regionName;
-            newEntity.placeName = placeName;
-            return newEntity
-        })
-        return await this.fourRepository.save(newEntities);
+        const placeNames: string = createFourDTO.placeNames.join(',');
+        const newEntity = new Four();
+        newEntity.regionId = createFourDTO.regionId;
+        newEntity.regionName = regionName;
+        newEntity.placeNum = createFourDTO.placeNames.length;
+        newEntity.placeNames = placeNames;
+        return await this.fourRepository.save(newEntity);
     }
 }
