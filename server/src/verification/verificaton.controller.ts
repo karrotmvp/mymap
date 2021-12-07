@@ -1,7 +1,9 @@
 import { Body, Controller, Post, Query } from "@nestjs/common";
 import { ApiBody, ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
+import { CreateFourDTO } from "./dto/create-four.dto";
 import { CreateOneDTO } from "./dto/create-one.dto";
 import { CreateTwoDTO } from "./dto/create-two.dto";
+import { Four } from "./entities/four.entity";
 import { One } from "./entities/one.entity";
 import { Two } from "./entities/two.entity";
 import { VerificationService } from "./verification.service";
@@ -26,6 +28,13 @@ export class VerificationController {
     @ApiBody({ description: 'two 응답 형식', type: CreateTwoDTO })
     async createTwoAnswer(@Body() createTwoDTO: CreateTwoDTO) {
         return await this.verificationService.createTwoAnswer(createTwoDTO);
+    }
+
+    @Post('/four')
+    @ApiCreatedResponse({ description: 'four 응답 제출 완료', type: Four })
+    @ApiBody({ description: 'four 응답 형식', type: CreateFourDTO })
+    async createFourAnswer(@Body() createFourDTO: CreateFourDTO) {
+        return await this.verificationService.createFourAnswer(createFourDTO);
     }
 
 }

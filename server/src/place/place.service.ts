@@ -17,6 +17,9 @@ import { SavedPlace } from './entities/savedPlace.entity';
 import { User } from 'src/user/entities/user.entity';
 import { SavedPlaceRepository } from './savedPlace.repository';
 import { In } from 'typeorm';
+import { CreateNewPlaceDTO } from './dto/create-newPlace.dto';
+import { NewPlace } from './entities/newPlace.entity';
+import { NewPlaceRepository } from './newPlace.repository';
 
 @Injectable()
 export class PlaceService {
@@ -27,7 +30,8 @@ export class PlaceService {
         private readonly regionService: RegionService,
         private readonly recommendPlaceRepository: RecommendPlaceRepository,
         private readonly userService: UserService,
-        private readonly savePlaceRepository: SavedPlaceRepository
+        private readonly savePlaceRepository: SavedPlaceRepository,
+        private readonly newPlaceRepository: NewPlaceRepository
     ) {}
 
     private async convertId(regionId: string): Promise<number> {
@@ -171,6 +175,15 @@ export class PlaceService {
             return newSavedPlace;
         })
         await this.savePlaceRepository.save(newSavedPlaces);
+    }
+
+    async createNewPlace(regionId: string, createNewPlaceDTO: CreateNewPlaceDTO) {
+        const regionName: string = await this.regionService.readRegionName(regionId);
+        const newEntity: NewPlace = new NewPlace();
+        newEntity.regionId = regionId;
+        newEntity.regionName = regionName;
+        newEntity.placeName = createNewPlaceDTO.placeName;
+        await this.newPlaceRepository.save(newEntity);
     }
 
     // Deprecated

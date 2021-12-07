@@ -1,5 +1,5 @@
 import { Pin } from "../Components/MapView";
-import { FeedType, PostType } from "../Shared/type";
+import { FeedType, PostType, PinType } from "../Shared/type";
 import { DELETE, GET, POST, PUT } from "../utils/axios";
 import { useQuery } from "react-query";
 
@@ -31,6 +31,19 @@ export const putPost = async (postId: number, body: PostBody) => {
 export const deletePost = async (postId: number) => {
   return await DELETE(`api/post/${postId}`);
 };
+
+// 전체 핀 가져오기
+const getPostPin = async (regionId: string) => {
+  return (await GET(`api/post/pin/${regionId}`)) as {
+    pins: PinType[];
+    coordinates: {
+      latitude: number;
+      longitude: number;
+    };
+  };
+};
+export const useGetPostPin = (regionId: string) =>
+  useQuery(["useGetPostPin"], () => getPostPin(regionId));
 
 // 피드 가져오기
 interface GetFeedPostsParams {

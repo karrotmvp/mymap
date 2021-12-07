@@ -122,7 +122,7 @@ export const Title = styled.div`
   font-weight: 500;
   font-size: 2.1rem;
   line-height: 140%;
-  white-space: pre-wrap;
+  white-space: pre-line;
   letter-spacing: -2%;
   color: ${theme.color.gray7};
 `;

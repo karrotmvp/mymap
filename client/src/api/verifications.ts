@@ -14,11 +14,29 @@ export const postVerification1 = async (
 };
 
 // 온보딩2
+// export const postVerification2 = async (
+//   regionId: string,
+//   placeNames: string
+// ) => {
+//   return (await POST("api/verifications/two", { regionId, placeNames })) as {
+//     TwoId: number;
+//   };
+// };
+
 export const postVerification2 = async (
   regionId: string,
-  placeNames: string
+  placeNames: string[]
 ) => {
   return (await POST("api/verifications/two", { regionId, placeNames })) as {
     TwoId: number;
+  };
+};
+
+export const postVerification4 = async (
+  regionId: string,
+  placeNames: string[]
+) => {
+  return (await POST("api/verifications/four", { regionId, placeNames })) as {
+    FourId: number;
   };
 };

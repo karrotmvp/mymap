@@ -15,6 +15,7 @@ import {
   ViewerInfo,
   ReigonDiffModal,
   Installed,
+  IsProposeOpened,
 } from "./Shared/atom";
 import { useEffect } from "react";
 import dayjs from "dayjs";
@@ -33,9 +34,10 @@ import { Mixpanel } from "./utils/mixpanel";
 import Alert from "./Components/Alert";
 import { handleClose } from "./utils/preset";
 
-import One from "./Pages/Onboarding/One";
-import Two from "./Pages/Onboarding/Two";
-import Finish from "./Pages/Onboarding/Finish";
+import Four from "./Pages/Onboarding/Four";
+import NewFinish from "./Pages/Onboarding/NewFinish";
+import NewTwo from "./Pages/Onboarding/NewTwo";
+import Propose from "./Components/NoSearchResult/Propose";
 
 dayjs.locale("ko");
 
@@ -50,7 +52,7 @@ let regionIdFromParmas =
   new URLSearchParams(window.location.search).get("region_id") ?? "";
 // 교보타워일 경우 서초동으로
 
-if (process.env.NODE_ENV === "development") regionIdFromParmas = "471abc99b378";
+if (process.env.NODE_ENV === "development") regionIdFromParmas = "d9fa9866fe4f";
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
 
 const code = new URLSearchParams(window.location.search).get("code");
@@ -61,6 +63,8 @@ function App() {
   const setInstalled = useSetRecoilState(Installed);
 
   const { data: regionName } = useGetRegion(regionIdFromParmas);
+
+  const isOnboarding = window.location.pathname.split("/")[1] === "onboarding";
 
   useEffect(() => {
     setRegionId(regionIdFromParmas);
@@ -102,6 +106,7 @@ function App() {
   const [reigonDiffModal, setReigonDiffModal] = useRecoilState(ReigonDiffModal);
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
   const [detailId, setDetailId] = useRecoilState(DetailId);
+  const isProposeOpened = useRecoilValue(IsProposeOpened);
 
   useEffect(() => {
     if (toastMessage.isToastShown) {
@@ -121,8 +126,8 @@ function App() {
   // 미오픈 지역
   if (
     !regions.find((region) => region === regionId) &&
-    process.env.NODE_ENV !== "development" &&
-    !preload
+    !preload &&
+    !isOnboarding
   ) {
     return (
       <Wrapper>
@@ -162,21 +167,34 @@ function App() {
               <Route exact path="/edit/:postId" component={Write} />
 
               {/* 온보딩 */}
-              <Route exact path="/onboarding/one" component={One} />
-              <Route exact path="/onboarding/two" component={Two} />
-              <Route
+              {/* <Route exact path="/onboarding/one" component={One} /> */}
+              <Route exact path="/onboarding/two/:type" component={NewTwo} />
+              <Route exact path="/onboarding/four" component={Four} />
+              {/* <Route
                 exact
                 path="/onboarding/finish/:type/:id"
                 component={Finish}
+              /> */}
+              {/* new 온보딩 2,4 */}
+              <Route
+                exact
+                path="/onboarding/finish/:type"
+                component={NewFinish}
               />
             </Switch>
+
+            {/* 장소 테마에 저장 */}
             {isSaveModalOpened && <SaveModal />}
+
+            {/* 토스트 메시지 */}
             {toastMessage.isToastShown && (
               <Toast>
                 <div />
                 <div>{toastMessage.message}</div>
               </Toast>
             )}
+
+            {/* 상세페이지 */}
             {detailId && (
               <Detail
                 postId={detailId}
@@ -185,6 +203,11 @@ function App() {
                 }}
               />
             )}
+
+            {/* 장소 제안 */}
+            {isProposeOpened && <Propose />}
+
+            {/* 다른 지역 알림 */}
             {reigonDiffModal.isModalOpened && (
               <Alert
                 close={() =>
