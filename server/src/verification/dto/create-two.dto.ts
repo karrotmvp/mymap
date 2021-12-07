@@ -9,4 +9,7 @@ export class CreateTwoDTO {
     @ApiProperty()
     @IsNotEmpty()
     placeNames: string[];
+
+    @ApiProperty()
+    type: string;
 }

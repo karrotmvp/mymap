@@ -36,6 +36,7 @@ export class VerificationService {
         newEntity.regionName = regionName;
         newEntity.placeNum = createTwoDTO.placeNames.length;
         newEntity.placeNames = placeNames;
+        newEntity.type = createTwoDTO.type;
         return await this.twoRepository.save(newEntity);
     }
 
