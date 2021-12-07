@@ -11,14 +11,14 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
-import { regionsGroup } from "../../utils/const";
+import { onboardingRegionsGroup } from "../../utils/const";
 
 const NewFinish = () => {
   const { type } = useParams<{ type: string }>();
 
   const regionId = useRecoilValue(RegionId);
 
-  const regionGroup = regionsGroup
+  const regionGroup = onboardingRegionsGroup
     .map((region) => {
       if (region.find((r) => r === regionId)) {
         return [...region];
@@ -27,46 +27,46 @@ const NewFinish = () => {
     })
     .find((group) => group.length > 0);
 
-  let sub = <div />;
-  if (type === "two") {
-    if (regionGroup?.find((region) => region === "471abc99b378")) {
-      // 서초
-      sub = (
-        <div className="sub">
-          <span>'퇴근 후 문화생활 즐기기 좋은 곳'</span>
-          {`에 대한
-          다른 서초동 이웃들의 답변도 궁금하신가요?
-          채팅으로 알려드릴게요!`}
-        </div>
-      );
-    } else if (regionGroup?.find((region) => region === "5424e9f7ec6d")) {
-      sub = (
-        // 잠실
-        <div className="sub">
-          <span>'퇴근 후 문화생활 즐기기 좋은 곳'</span>
-          {`에 대한
-          다른 잠실동 이웃들의 답변도 궁금하신가요?
-          채팅으로 알려드릴게요!`}
-        </div>
-      );
+  let regionName = "";
+  if (regionGroup?.find((region) => region === "8b33856acaed")) {
+    regionName = "봉천동";
+  } else if (regionGroup?.find((region) => region === "b4b44131675a")) {
+    regionName = "성수동";
+  } else if (regionGroup?.find((region) => region === "d9fa9866fe4f")) {
+    regionName = "을지로동";
+  } else if (regionGroup?.find((region) => region === "f41c789605e4")) {
+    regionName = "연희동";
+  } else if (regionGroup?.find((region) => region === "b479c088a68d")) {
+    regionName = "연남동";
+  } else {
+    regionName = "신촌동";
+  }
+
+  let sub = "";
+  if (type === "twoa") {
+    if (regionName === "봉천동") {
+      sub = `간단히 저녁 먹을 수 있는 맛집을 알려주셔서 
+      감사해요. 봉천동에 당장모아가 오픈하게 되면 
+      봉천동 이웃에게 알려드릴게요!`;
     } else {
-      // 한남
-      sub = (
-        <div className="sub">
-          <span>'친구들과, 연인과 가기 좋은 분위기 최고 bar'</span>
-          {`에 대한
-        다른 한남동 이웃들의 답변도 궁금하신가요?
-        채팅으로 알려드릴게요!`}
-        </div>
-      );
+      sub = `자꾸 찾게 되는 디저트 가게를 알려주셔서 
+      감사해요. 성수동에 당장모아가 오픈하게 되면 
+      성수동 이웃에게 알려드릴게요!`;
+    }
+  }
+  if (type === "twob") {
+    if (regionName === "봉천동") {
+      sub = `공부할 때 자주 찾는 카페를 알려주셔서 
+      감사해요. 봉천동에 당장모아가 오픈하게 되면 
+      봉천동 이웃에게 알려드릴게요!`;
+    } else {
+      sub = `소스까지 남기지 않고 먹는 파스타 맛집을 알려주셔서 
+      감사해요. 성수동에 당장모아가 오픈하게 되면 
+      성수동 이웃에게 알려드릴게요!`;
     }
   } else if (type === "four") {
-    sub = (
-      <div className="sub">
-        {`연남동 추천 가게를 알려주셔서 감사해요. 
-    연남동에 당장모아가 오픈하게 되면 연남동 이웃에게 알려드릴게요!`}
-      </div>
-    );
+    sub = `${regionName} 추천 가게를 알려주셔서 감사해요. 
+    ${regionName}에 당장모아가 오픈하게 되면 알려드릴게요!`;
   }
 
   return (
@@ -79,7 +79,7 @@ const NewFinish = () => {
       <Title style={{ color: theme.color.orange, fontWeight: "bold" }}>
         알려주셔서 감사해요!
       </Title>
-      {sub}
+      <div className="sub">{sub}</div>
 
       <div className="center">
         <Onboarding />

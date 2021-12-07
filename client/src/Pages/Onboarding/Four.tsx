@@ -9,7 +9,7 @@ import {
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { useGetRegion } from "../../api/region";
+import { postVerification4 } from "../../api/verifications";
 import { mini } from "../../App";
 import { Close, LogoTypo, Plus, SearchClose } from "../../assets";
 import Header from "../../Components/Header";
@@ -22,12 +22,13 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
+import { onboardingRegionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
 
 const Four = () => {
   const history = useHistory();
-
   const regionId = useRecoilValue(RegionId);
+  const [inputList, setInputList] = useState<string[]>([""]);
 
   let submitFlag = false;
 
@@ -42,20 +43,39 @@ const Four = () => {
 
   const handleSubmit = async () => {
     if (submitCheck()) return;
-    history.push(`/onboarding/finish/four`);
+
+    const data = await postVerification4(regionId, inputList);
+    if (data.FourId) {
+      Mixpanel.track("온보딩4 - 제출 완료");
+      history.push(`/onboarding/finish/four`);
+    }
   };
-
-  const { data: regionName } = useGetRegion(regionId);
-
-  const [inputList, setInputList] = useState<string[]>([""]);
 
   const handleAddInput = () => {
     setInputList([...inputList, ""]);
   };
 
-  useEffect(() => {
-    console.log("inputList", inputList);
-  }, [inputList]);
+  const regionGroup = onboardingRegionsGroup
+    .map((region) => {
+      if (region.find((r) => r === regionId)) {
+        return [...region];
+      }
+      return [];
+    })
+    .find((group) => group.length > 0);
+
+  let regionName = "";
+  if (regionGroup?.find((region) => region === "b4b44131675a")) {
+    regionName = "성수동";
+  } else if (regionGroup?.find((region) => region === "d9fa9866fe4f")) {
+    regionName = "을지로동";
+  } else if (regionGroup?.find((region) => region === "f41c789605e4")) {
+    regionName = "연희동";
+  } else if (regionGroup?.find((region) => region === "b479c088a68d")) {
+    regionName = "연남동";
+  } else {
+    regionName = "신촌동";
+  }
 
   return (
     <Wrapper>

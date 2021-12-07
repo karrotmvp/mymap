@@ -6,10 +6,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { useGetRegion } from "../../api/region";
+import { postVerification2 } from "../../api/verifications";
 import { mini } from "../../App";
 import { Close, LogoTypo, Plus, SearchClose } from "../../assets";
 import Header from "../../Components/Header";
@@ -22,10 +22,12 @@ import {
   Title,
   WrapperWithHeader,
 } from "../../styles/theme";
+import { onboardingRegionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
 
 const NewTwo = () => {
   const history = useHistory();
+  const { type } = useParams<{ type: string }>();
 
   const regionId = useRecoilValue(RegionId);
 
@@ -42,16 +44,58 @@ const NewTwo = () => {
 
   const handleSubmit = async () => {
     if (submitCheck()) return;
-    history.push(`/onboarding/finish/Two`);
-  };
 
-  const { data: regionName } = useGetRegion(regionId);
+    const data = await postVerification2(regionId, inputList);
+    if (data.TwoId) {
+      Mixpanel.track("온보딩2 - 제출 완료");
+      if (type === "a") {
+        history.push(`/onboarding/finish/twoa`);
+      } else {
+        history.push(`/onboarding/finish/twob`);
+      }
+    }
+  };
 
   const [inputList, setInputList] = useState<string[]>([""]);
 
   const handleAddInput = () => {
     setInputList([...inputList, ""]);
   };
+
+  const regionGroup = onboardingRegionsGroup
+    .map((region) => {
+      if (region.find((r) => r === regionId)) {
+        return [...region];
+      }
+      return [];
+    })
+    .find((group) => group.length > 0);
+
+  let regionName = "";
+  let title = "";
+  if (regionGroup?.find((region) => region === "8b33856acaed")) {
+    regionName = "봉천동";
+    if (type === "a") {
+      title = `봉천동에서
+      간단히 저녁 먹을 수 있는 맛집을
+      알려주세요.`;
+    } else {
+      title = `봉천동에서
+      공부할 때 자주 찾는 카페를 
+      알려주세요.`;
+    }
+  } else {
+    regionName = "성수동";
+    if (type === "a") {
+      title = `성수동에서
+      자꾸 찾게 되는 디저트 가게를
+      알려주세요.`;
+    } else {
+      title = `성수동에서
+      소스까지 남기지 않고 먹는 파스타 맛집을
+      알려주세요.`;
+    }
+  }
 
   useEffect(() => {
     console.log("inputList", inputList);
@@ -67,9 +111,7 @@ const NewTwo = () => {
       <Title
         style={{ fontSize: "1.9rem", marginTop: "2.3rem", lineHeight: "160%" }}
       >
-        {`${regionName} 주민 추천!
-꼭 가봐야 하는 ${regionName} 가게를 
-알려주세요.`}
+        {title}
       </Title>
 
       <div className="inputs">
@@ -141,7 +183,7 @@ const CustomInput = ({
         className="input"
         onInput={handleInput}
         value={input}
-        placeholder={`추천하는 ${regionName} 가게 이름을 적어주세요.`}
+        placeholder={`가게 이름을 적어주세요.`}
         onClick={() => Mixpanel.track("온보딩A - 텍스트박스 클릭")}
       />
       <SearchClose className="search-close" onClick={removeInput} />

@@ -34,7 +34,6 @@ import { Mixpanel } from "./utils/mixpanel";
 import Alert from "./Components/Alert";
 import { handleClose } from "./utils/preset";
 
-import One from "./Pages/Onboarding/One";
 import Four from "./Pages/Onboarding/Four";
 import NewFinish from "./Pages/Onboarding/NewFinish";
 import NewTwo from "./Pages/Onboarding/NewTwo";
@@ -53,7 +52,7 @@ let regionIdFromParmas =
   new URLSearchParams(window.location.search).get("region_id") ?? "";
 // 교보타워일 경우 서초동으로
 
-if (process.env.NODE_ENV === "development") regionIdFromParmas = "471abc99b378";
+if (process.env.NODE_ENV === "development") regionIdFromParmas = "d9fa9866fe4f";
 if (regionIdFromParmas === "2b6112932ec1") regionIdFromParmas = "471abc99b378";
 
 const code = new URLSearchParams(window.location.search).get("code");
@@ -64,6 +63,8 @@ function App() {
   const setInstalled = useSetRecoilState(Installed);
 
   const { data: regionName } = useGetRegion(regionIdFromParmas);
+
+  const isOnboarding = window.location.pathname.split("/")[1] === "onboarding";
 
   useEffect(() => {
     setRegionId(regionIdFromParmas);
@@ -125,8 +126,8 @@ function App() {
   // 미오픈 지역
   if (
     !regions.find((region) => region === regionId) &&
-    process.env.NODE_ENV !== "development" &&
-    !preload
+    !preload &&
+    !isOnboarding
   ) {
     return (
       <Wrapper>
@@ -166,8 +167,8 @@ function App() {
               <Route exact path="/edit/:postId" component={Write} />
 
               {/* 온보딩 */}
-              <Route exact path="/onboarding/one" component={One} />
-              <Route exact path="/onboarding/two" component={NewTwo} />
+              {/* <Route exact path="/onboarding/one" component={One} /> */}
+              <Route exact path="/onboarding/two/:type" component={NewTwo} />
               <Route exact path="/onboarding/four" component={Four} />
               {/* <Route
                 exact
