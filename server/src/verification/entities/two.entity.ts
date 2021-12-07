@@ -20,7 +20,7 @@ export class Two {
     placeNames: string;
 
     @ApiProperty()
-    @Column()
+    @Column({ default: 1 })
     placeNum: number;
 
     @ApiProperty()
