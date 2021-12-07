@@ -26,6 +26,7 @@ import { Mixpanel } from "../../utils/mixpanel";
 import { useGetRegion } from "../../api/region";
 import { reducer } from "../../Shared/reducer";
 import { handleClose } from "../../utils/preset";
+import NoSearchBox from "../../Components/NoSearchResult/NoSearchBox";
 
 const Around = () => {
   const regionId = useRecoilValue(RegionId);
@@ -182,9 +183,17 @@ const Around = () => {
                         ))}
                       </div>
                     </InfiniteScroll>
+                    <NoSearchBox />
                   </div>
                 ) : (
-                  <NoSearchView value={searchVal.value} />
+                  <div className="no-search">
+                    <NoSearch />
+                    <div>
+                      <span>{searchVal.value}</span>의 검색 결과가 없어요
+                    </div>
+                    <div>검색어를 다시 확인해주세요!</div>
+                    <NoSearchBox style={{ marginTop: "1.6rem" }} />
+                  </div>
                 )
               ) : (
                 <div className="around-scroll">
@@ -330,17 +339,5 @@ const SearchInput = styled.input`
   background-color: ${theme.color.gray1_5};
   border-radius: 0.8rem;
 `;
-
-const NoSearchView = ({ value }: { value: string }) => {
-  return (
-    <div className="no-search">
-      <NoSearch />
-      <div>
-        <span>{value}</span>의 검색 결과가 없어요
-      </div>
-      <div>검색어를 다시 확인해주세요!</div>
-    </div>
-  );
-};
 
 export default Around;

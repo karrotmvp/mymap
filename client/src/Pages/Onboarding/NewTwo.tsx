@@ -6,10 +6,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { postVerification4 } from "../../api/verifications";
+import { postVerification2 } from "../../api/verifications";
 import { mini } from "../../App";
 import { Close, LogoTypo, Plus, SearchClose } from "../../assets";
 import Header from "../../Components/Header";
@@ -25,10 +25,11 @@ import {
 import { onboardingRegionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
 
-const Four = () => {
+const NewTwo = () => {
   const history = useHistory();
+  const { type } = useParams<{ type: string }>();
+
   const regionId = useRecoilValue(RegionId);
-  const [inputList, setInputList] = useState<string[]>([""]);
 
   let submitFlag = false;
 
@@ -44,12 +45,18 @@ const Four = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    const data = await postVerification4(regionId, inputList);
-    if (data.FourId) {
-      Mixpanel.track("온보딩4 - 제출 완료");
-      history.push(`/onboarding/finish/four`);
+    const data = await postVerification2(regionId, inputList);
+    if (data.TwoId) {
+      Mixpanel.track("온보딩2 - 제출 완료");
+      if (type === "a") {
+        history.push(`/onboarding/finish/twoa`);
+      } else {
+        history.push(`/onboarding/finish/twob`);
+      }
     }
   };
+
+  const [inputList, setInputList] = useState<string[]>([""]);
 
   const handleAddInput = () => {
     setInputList([...inputList, ""]);
@@ -65,17 +72,34 @@ const Four = () => {
     .find((group) => group.length > 0);
 
   let regionName = "";
-  if (regionGroup?.find((region) => region === "b4b44131675a")) {
-    regionName = "성수동";
-  } else if (regionGroup?.find((region) => region === "d9fa9866fe4f")) {
-    regionName = "을지로동";
-  } else if (regionGroup?.find((region) => region === "f41c789605e4")) {
-    regionName = "연희동";
-  } else if (regionGroup?.find((region) => region === "b479c088a68d")) {
-    regionName = "연남동";
+  let title = "";
+  if (regionGroup?.find((region) => region === "8b33856acaed")) {
+    regionName = "봉천동";
+    if (type === "a") {
+      title = `봉천동에서
+      간단히 저녁 먹을 수 있는 맛집을
+      알려주세요.`;
+    } else {
+      title = `봉천동에서
+      공부할 때 자주 찾는 카페를 
+      알려주세요.`;
+    }
   } else {
-    regionName = "신촌동";
+    regionName = "성수동";
+    if (type === "a") {
+      title = `성수동에서
+      자꾸 찾게 되는 디저트 가게를
+      알려주세요.`;
+    } else {
+      title = `성수동에서
+      소스까지 남기지 않고 먹는 파스타 맛집을
+      알려주세요.`;
+    }
   }
+
+  useEffect(() => {
+    console.log("inputList", inputList);
+  }, [inputList]);
 
   return (
     <Wrapper>
@@ -87,9 +111,7 @@ const Four = () => {
       <Title
         style={{ fontSize: "1.9rem", marginTop: "2.3rem", lineHeight: "160%" }}
       >
-        {`${regionName} 주민 추천!
-꼭 가봐야 하는 ${regionName} 가게를 
-알려주세요.`}
+        {title}
       </Title>
 
       <div className="inputs">
@@ -161,7 +183,7 @@ const CustomInput = ({
         className="input"
         onInput={handleInput}
         value={input}
-        placeholder={`추천하는 ${regionName} 가게 이름을 적어주세요.`}
+        placeholder={`가게 이름을 적어주세요.`}
         onClick={() => Mixpanel.track("온보딩A - 텍스트박스 클릭")}
       />
       <SearchClose className="search-close" onClick={removeInput} />
@@ -205,7 +227,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ $error?: boolean }>`
   ${input};
   padding-right: 5rem;
   height: 5.2rem;
@@ -214,4 +236,4 @@ const Input = styled.input`
   margin-bottom: 1rem;
 `;
 
-export default Four;
+export default NewTwo;
