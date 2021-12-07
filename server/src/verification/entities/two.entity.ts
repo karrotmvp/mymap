@@ -17,7 +17,11 @@ export class Two {
 
     @ApiProperty()
     @Column()
-    placeName: string;
+    placeNames: string;
+
+    @ApiProperty()
+    @Column()
+    placeNum: number;
 
     @ApiProperty()
     @CreateDateColumn()

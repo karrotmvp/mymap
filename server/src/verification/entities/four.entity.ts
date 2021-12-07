@@ -17,7 +17,11 @@ export class Four {
 
     @ApiProperty()
     @Column()
-    placeName: string;
+    placeNames: string;
+
+    @ApiProperty()
+    @Column()
+    placeNum: number;
 
     @ApiProperty()
     @CreateDateColumn()
