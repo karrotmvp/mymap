@@ -152,7 +152,7 @@ const SearchPlace = ({
               <span>{searchVal.value}</span>의 검색 결과가 없어요
             </div>
             <div>검색어를 다시 확인해주세요!</div>
-            <NoSearchBox />
+            <NoSearchBox style={{ marginTop: "1.6rem" }} />
           </div>
         )
       ) : (
@@ -246,7 +246,6 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100vh;
     position: fixed;
-    top: 0;
     & > div {
       font-size: 1.5rem;
       font-weight: 500;

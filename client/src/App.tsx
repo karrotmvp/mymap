@@ -15,6 +15,7 @@ import {
   ViewerInfo,
   ReigonDiffModal,
   Installed,
+  IsProposeOpened,
 } from "./Shared/atom";
 import { useEffect } from "react";
 import dayjs from "dayjs";
@@ -37,6 +38,7 @@ import One from "./Pages/Onboarding/One";
 import Four from "./Pages/Onboarding/Four";
 import NewFinish from "./Pages/Onboarding/NewFinish";
 import NewTwo from "./Pages/Onboarding/NewTwo";
+import Propose from "./Components/NoSearchResult/Propose";
 
 dayjs.locale("ko");
 
@@ -103,6 +105,7 @@ function App() {
   const [reigonDiffModal, setReigonDiffModal] = useRecoilState(ReigonDiffModal);
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
   const [detailId, setDetailId] = useRecoilState(DetailId);
+  const isProposeOpened = useRecoilValue(IsProposeOpened);
 
   useEffect(() => {
     if (toastMessage.isToastShown) {
@@ -178,13 +181,19 @@ function App() {
                 component={NewFinish}
               />
             </Switch>
+
+            {/* 장소 테마에 저장 */}
             {isSaveModalOpened && <SaveModal />}
+
+            {/* 토스트 메시지 */}
             {toastMessage.isToastShown && (
               <Toast>
                 <div />
                 <div>{toastMessage.message}</div>
               </Toast>
             )}
+
+            {/* 상세페이지 */}
             {detailId && (
               <Detail
                 postId={detailId}
@@ -193,6 +202,11 @@ function App() {
                 }}
               />
             )}
+
+            {/* 장소 제안 */}
+            {isProposeOpened && <Propose />}
+
+            {/* 다른 지역 알림 */}
             {reigonDiffModal.isModalOpened && (
               <Alert
                 close={() =>

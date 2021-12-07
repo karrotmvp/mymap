@@ -1,11 +1,15 @@
+import React from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { Back } from "../../assets";
+import { IsProposeOpened } from "../../Shared/atom";
 import { flexCenter, theme } from "../../styles/theme";
 
-const NoSearchBox = () => {
+const NoSearchBox = ({ style }: { style?: React.CSSProperties }) => {
+  const setIsProposeOpened = useSetRecoilState(IsProposeOpened);
   return (
-    <Wrapper>
-      <div>
+    <Wrapper {...{ style }}>
+      <div onClick={() => setIsProposeOpened(true)}>
         <div>
           <div>찾는 장소가 없나요?</div>
           <div>

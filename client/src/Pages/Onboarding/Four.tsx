@@ -185,7 +185,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Input = styled.input<{ $error?: boolean }>`
+const Input = styled.input`
   ${input};
   padding-right: 5rem;
   height: 5.2rem;

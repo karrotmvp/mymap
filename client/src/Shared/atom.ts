@@ -22,6 +22,11 @@ export const ViewerInfo = atom<UserType>({
   },
 });
 
+export const IsProposeOpened = atom({
+  key: "IsProposeOpened",
+  default: false,
+});
+
 export const OnboardingSelected = atom<PlaceType[]>({
   key: "OnboardingSelected",
   default: [],
