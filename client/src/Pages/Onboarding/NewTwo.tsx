@@ -44,22 +44,6 @@ const NewTwo = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    if (submitCheck()) return;
-
-    if (isSubmitable) {
-      const data = await postVerification2(regionId, inputList);
-      if (data.TwoId) {
-        Mixpanel.track("온보딩2 - 제출 완료");
-        if (type === "a") {
-          history.push(`/onboarding/finish/twoa`);
-        } else {
-          history.push(`/onboarding/finish/twob`);
-        }
-      }
-    }
-  };
-
   const handleAddInput = () => {
     setInputList([...inputList, ""]);
   };
@@ -98,6 +82,29 @@ const NewTwo = () => {
       알려주세요.`;
     }
   }
+
+  const handleSubmit = async () => {
+    if (submitCheck()) return;
+
+    if (isSubmitable) {
+      let bodyType = "";
+      if (regionName === "봉천동") {
+        bodyType = type === "a" ? "봉천동 - 간단한 저녁" : "봉천동 - 공부 카페";
+      } else {
+        bodyType =
+          type === "a" ? "성수동 - 디저트 가게" : "성수동 - 파스타 맛집";
+      }
+      const data = await postVerification2(regionId, inputList, bodyType);
+      if (data.TwoId) {
+        Mixpanel.track("온보딩2 - 제출 완료");
+        if (type === "a") {
+          history.push(`/onboarding/finish/twoa`);
+        } else {
+          history.push(`/onboarding/finish/twob`);
+        }
+      }
+    }
+  };
 
   return (
     <Wrapper>

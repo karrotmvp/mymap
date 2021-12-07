@@ -25,9 +25,14 @@ export const postVerification1 = async (
 
 export const postVerification2 = async (
   regionId: string,
-  placeNames: string[]
+  placeNames: string[],
+  type: string
 ) => {
-  return (await POST("api/verifications/two", { regionId, placeNames })) as {
+  return (await POST("api/verifications/two", {
+    regionId,
+    placeNames,
+    type,
+  })) as {
     TwoId: number;
   };
 };
