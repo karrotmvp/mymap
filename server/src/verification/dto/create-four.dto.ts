@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
-export class CreateTwoDTO {
+export class CreateFourDTO {
     @ApiProperty()
     @IsNotEmpty()
     regionId: string;

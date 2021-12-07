@@ -2,10 +2,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class Two {
+export class Four {
     @ApiProperty()
     @PrimaryGeneratedColumn()
-    TwoId: number;
+    FourId: number;
     
     @ApiProperty()
     @Column()
