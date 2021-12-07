@@ -32,6 +32,8 @@ const Four = () => {
 
   let submitFlag = false;
 
+  const isSubmitable = !(inputList.length === 1 && inputList[0] === "");
+
   const submitCheck = () => {
     if (submitFlag) {
       return submitFlag;
@@ -44,10 +46,12 @@ const Four = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    const data = await postVerification4(regionId, inputList);
-    if (data.FourId) {
-      Mixpanel.track("온보딩4 - 제출 완료");
-      history.push(`/onboarding/finish/four`);
+    if (isSubmitable) {
+      const data = await postVerification4(regionId, inputList);
+      if (data.FourId) {
+        Mixpanel.track("온보딩4 - 제출 완료");
+        history.push(`/onboarding/finish/four`);
+      }
     }
   };
 
@@ -103,12 +107,7 @@ const Four = () => {
       </div>
 
       <ButtonFooter>
-        <SubmitBtn
-          onClick={() => {
-            !(inputList.length === 0 && inputList[0] === "") && handleSubmit();
-          }}
-          $disabled={inputList.length === 1 && inputList[0] === ""}
-        >
+        <SubmitBtn onClick={handleSubmit} $disabled={!isSubmitable}>
           다 적었어요
         </SubmitBtn>
       </ButtonFooter>

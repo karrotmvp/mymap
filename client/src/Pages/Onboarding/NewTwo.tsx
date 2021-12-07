@@ -28,10 +28,12 @@ import { Mixpanel } from "../../utils/mixpanel";
 const NewTwo = () => {
   const history = useHistory();
   const { type } = useParams<{ type: string }>();
-
   const regionId = useRecoilValue(RegionId);
+  const [inputList, setInputList] = useState<string[]>([""]);
 
   let submitFlag = false;
+
+  const isSubmitable = !(inputList.length === 1 && inputList[0] === "");
 
   const submitCheck = () => {
     if (submitFlag) {
@@ -45,18 +47,18 @@ const NewTwo = () => {
   const handleSubmit = async () => {
     if (submitCheck()) return;
 
-    const data = await postVerification2(regionId, inputList);
-    if (data.TwoId) {
-      Mixpanel.track("온보딩2 - 제출 완료");
-      if (type === "a") {
-        history.push(`/onboarding/finish/twoa`);
-      } else {
-        history.push(`/onboarding/finish/twob`);
+    if (isSubmitable) {
+      const data = await postVerification2(regionId, inputList);
+      if (data.TwoId) {
+        Mixpanel.track("온보딩2 - 제출 완료");
+        if (type === "a") {
+          history.push(`/onboarding/finish/twoa`);
+        } else {
+          history.push(`/onboarding/finish/twob`);
+        }
       }
     }
   };
-
-  const [inputList, setInputList] = useState<string[]>([""]);
 
   const handleAddInput = () => {
     setInputList([...inputList, ""]);
@@ -125,12 +127,7 @@ const NewTwo = () => {
       </div>
 
       <ButtonFooter>
-        <SubmitBtn
-          onClick={() => {
-            !(inputList.length === 0 && inputList[0] === "") && handleSubmit();
-          }}
-          $disabled={inputList.length === 1 && inputList[0] === ""}
-        >
+        <SubmitBtn onClick={handleSubmit} $disabled={!isSubmitable}>
           다 적었어요
         </SubmitBtn>
       </ButtonFooter>
