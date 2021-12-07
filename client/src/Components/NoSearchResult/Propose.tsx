@@ -6,7 +6,6 @@ import { Back, SearchClose } from "../../assets";
 import useInput from "../../Hooks/useInput";
 import { IsProposeOpened, RegionId, ToastMessage } from "../../Shared/atom";
 import {
-  Button,
   ButtonFooter,
   input,
   SubmitBtn,
