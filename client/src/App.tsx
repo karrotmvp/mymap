@@ -32,7 +32,6 @@ import { useGetRegion } from "./api/region";
 import { getLogin } from "./api/user";
 import { Mixpanel } from "./utils/mixpanel";
 import Alert from "./Components/Alert";
-import { handleClose } from "./utils/preset";
 
 import Four from "./Pages/Onboarding/Four";
 import NewFinish from "./Pages/Onboarding/NewFinish";
@@ -102,7 +101,6 @@ function App() {
   }, []);
 
   const isSaveModalOpened = useRecoilValue(PlaceToSave).isModalOpened;
-  const installed = useRecoilValue(Installed);
   const [reigonDiffModal, setReigonDiffModal] = useRecoilState(ReigonDiffModal);
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
   const [detailId, setDetailId] = useRecoilState(DetailId);
@@ -132,7 +130,7 @@ function App() {
     return (
       <Wrapper>
         <Header>
-          <Close onClick={() => handleClose(installed)} className="left-icon" />
+          <Close onClick={() => mini.close()} className="left-icon" />
         </Header>
         <div className="center">
           <LogoInactive />
