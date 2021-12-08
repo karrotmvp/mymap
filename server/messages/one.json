@@ -5,7 +5,7 @@
 		"type": "PRIMARY_BUTTON",
 		"payload": {
 			"text": "지금 보러가기",
-			"linkUrl": "https://dev.daangn-mymap.com/detail/$(post_num)"
+			"linkUrl": "https://live.daangn-mymap.com/detail/$(post_num)"
 		}
 	}],
     "imageUrl": "https://mymap-admin.s3.ap-northeast-2.amazonaws.com/$(post_num).png"
