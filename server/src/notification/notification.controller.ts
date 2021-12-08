@@ -42,6 +42,13 @@ export class NotificationController {
         await this.notificationService.createVerificationNotification(req.user.userId, createVerificationNotificationDTO);
     }
 
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
+    @Post('/admin/verification/:type')
+    async sendNotification(@Param('type') type: string, @Query('userId') userId: number, @Body() data: any) {
+        await this.notificationService.createNotification(userId, type, data);
+    }
+
     // @Roles(Role.Admin)
     // @UseGuards(RolesGuard)
     // @Post('/verification/one/:oneId')

@@ -1,6 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
+import { UserDTO } from 'src/user/dto/user.dto';
 import { PreopenUser } from 'src/user/entities/preopen-user.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -22,6 +23,8 @@ export class NotificationService {
 
     async createNotification(userId: number, type: string, data: any) {
         const user: User = await this.userService.readUser(userId);
+        const userInfo: UserDTO = await this.userService.readUserDetail(userId);
+        data = { ...data, "$(username)": userInfo.getUserName() };
         this.notificationQueue.add('notification_created', new Notification(user.getUniqueId(), type, data));
     }
 
@@ -66,16 +69,16 @@ export class NotificationService {
     }
 
     //뭘 어떻게 보내고 싶은지 확인하기
-    async sendOneNotification(oneIds: number[]) {
-        const notifications: VerificationNotification[] = await this.verificationNotificationRepository.find({
-            relations: ['user'],
-            where: { id: In(oneIds), type: "one" }
-        })
-        notifications.map(async(notification) => {
-            await this.notificationQueue.add('verification_notification_created', new VerificationNotificationEvent(notification.user.getUniqueId(), "one", notification.id), {
-                attempts: 5,
-                backoff: 5000
-            })
-        })
-    }
+    // async sendOneNotification(oneIds: number[]) {
+    //     const notifications: VerificationNotification[] = await this.verificationNotificationRepository.find({
+    //         relations: ['user'],
+    //         where: { id: In(oneIds), type: "one" }
+    //     })
+    //     notifications.map(async(notification) => {
+    //         await this.notificationQueue.add('verification_notification_created', new VerificationNotificationEvent(notification.user.getUniqueId(), "one", notification.id), {
+    //             attempts: 5,
+    //             backoff: 5000
+    //         })
+    //     })
+    // }
 }
