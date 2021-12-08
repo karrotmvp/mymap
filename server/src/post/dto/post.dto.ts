@@ -16,6 +16,7 @@ export class PostDTO {
         this.pins = detailPins;
         this.coordinates = coordinates
         this.savedNum = savedNum;
+        this.createdAt = post.createdAt;
     }
 
     @ApiProperty({ example: 1 })
@@ -40,6 +41,8 @@ export class PostDTO {
     saved: boolean;
     @ApiProperty({ example: 0 })
     savedNum: number;
+    @ApiProperty()
+    createdAt: Date;
 
     public setSaved(saved: boolean) {
         this.saved = saved;
