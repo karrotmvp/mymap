@@ -21,7 +21,6 @@ import {
   PageBeforeWrite,
   RegionId,
   PostToEdit,
-  Installed,
 } from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
@@ -30,7 +29,6 @@ import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import { regionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
-import { handleClose } from "../../utils/preset";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -55,7 +53,6 @@ const Detail = ({
     fromWriteForm || fromDetail ? postIdFromParams : postIdFromProps!;
 
   const viewerInfo = useRecoilValue(ViewerInfo);
-  const installed = useRecoilValue(Installed);
 
   const [state, dispatch] = useReducer(reducer, {
     _t: "list",
@@ -151,19 +148,13 @@ const Detail = ({
                 })
               }
             />
-          ) : fromWriteForm || fromDetail ? (
+          ) : fromWriteForm ? (
             <Close
               className="left-icon"
               onClick={() => {
-                if (fromDetail) {
-                  handleClose(installed);
-                } else {
-                  history.push(
-                    pageBeforeWrite === "emptyTheme"
-                      ? "/mypage"
-                      : pageBeforeWrite
-                  );
-                }
+                history.push(
+                  pageBeforeWrite === "emptyTheme" ? "/mypage" : pageBeforeWrite
+                );
               }}
             />
           ) : (
