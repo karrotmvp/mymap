@@ -1,21 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
 import { Save, SaveActive } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
-import { PostIsSaved, RegionId, ViewerInfo } from "../../Shared/atom";
+import {
+  PostIsSaved,
+  RegionId,
+  ToastMessage,
+  ViewerInfo,
+} from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
 import { funcNeedLogin } from "../../utils/preset";
 
-const SaveButton = (post: PostType) => {
+const SaveButton = (post: PostType, fromDetail?: boolean) => {
   const [isSaved, setIsSaved] = useRecoilState(
     PostIsSaved(post.postId.toString())
   );
 
   const regionId = useRecoilValue(RegionId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
+  const setToastMessage = useSetRecoilState(ToastMessage);
 
   const handleSaveToggle = async () => {
     funcNeedLogin({
@@ -34,17 +42,26 @@ const SaveButton = (post: PostType) => {
   };
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);
 
+  useEffect(() => {
+    if (fromDetail && isSaved) {
+      setToastMessage({
+        isToastShown: true,
+        message: "저장한 테마는 나의 테마에서 볼 수 있어요",
+      });
+    }
+  }, [isSaved]);
+
   return (
     <Wrapper {...{ isSaved }}>
       {isSaved ? (
         <div className="button" onClick={debouncedIsSaved}>
-          <SaveActive className="icon" />
+          {!fromDetail && <SaveActive className="icon" />}
           <div>테마를 저장했어요</div>
         </div>
       ) : (
         <div className="button" onClick={debouncedIsSaved}>
-          <Save className="icon" />
-          <div>테마 저장하기</div>
+          {!fromDetail && <Save className="icon" />}
+          <div>{fromDetail ? "테마가 마음에 들어요" : "테마 저장하기"}</div>
         </div>
       )}
     </Wrapper>
