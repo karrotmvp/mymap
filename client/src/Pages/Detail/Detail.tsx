@@ -29,6 +29,8 @@ import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import { regionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
+import Detail571 from "./fake/Detail571";
+import Detail559 from "./fake/Detail559";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -148,7 +150,7 @@ const Detail = ({
                 })
               }
             />
-          ) : fromWriteForm ? (
+          ) : fromWriteForm || fromDetail ? (
             <Close
               className="left-icon"
               onClick={() => {
@@ -199,67 +201,86 @@ const Detail = ({
       </Header>
 
       <div className="content">
-        {match(state._t)
-          .with("list", () => (
-            <Wrapper
-              id="detail-scroll"
-              isMine={post?.user.userId === viewerInfo.userId}
-            >
-              <div className="post-title">
-                <Title style={{ color: theme.color.black }}>
-                  {post?.title}
-                </Title>
-                <div className="content">{post?.contents}</div>
-              </div>
-
-              <Profile>
-                {post?.user.profileImageUrl ? (
-                  <img
-                    className="photo"
-                    alt="profile"
-                    src={post?.user.profileImageUrl}
-                  />
+        {post &&
+          match(state._t)
+            .with("list", () => (
+              <Wrapper
+                id="detail-scroll"
+                isMine={post?.user.userId === viewerInfo.userId}
+              >
+                {fromDetail ? (
+                  postId === 571 ? (
+                    /* 서초 - 아이들을 위한 장소 */
+                    <Detail571 {...{ dispatch, post }} />
+                  ) : postId === 559 ? (
+                    /* 잠실 - 맛있고 예쁜 카페 */
+                    <Detail559 {...{ dispatch, post }} />
+                  ) : (
+                    /* 한남 - 우리 집 뽀삐와 같이 가는 식당들 */
+                    <div />
+                  )
                 ) : (
-                  <Thumbnail className="photo" />
-                )}
-                <div>
-                  <div className="name">
-                    {post?.user.userName}님이 추천하는 장소예요.
-                  </div>
-                  <div className="date">
-                    {dayjs(post?.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
-                    {post?.regionName}
-                  </div>
-                </div>
-              </Profile>
+                  <>
+                    <div className="post-title">
+                      <Title style={{ color: theme.color.black }}>
+                        {post?.title}
+                      </Title>
+                      <div className="content">{post?.contents}</div>
+                    </div>
 
-              <div className="cards">
-                {post?.pins.map((pin, i) => (
-                  <div key={pin.pinId} onClick={() => handleClickPlaceCard(i)}>
-                    <PlaceCard
-                      place={pin.place}
-                      type="list"
-                      isDifferentRegion={regionId !== post.regionId}
-                      postRegionName={post.regionName}
-                    />
-                  </div>
-                ))}
-              </div>
-            </Wrapper>
-          ))
-          .with(
-            "map",
-            () =>
-              post && (
-                <MapViewwithSlider
-                  places={post.pins.map((p) => p.place)}
-                  isDifferentRegion={regionId !== post.regionId}
-                  postRegionName={post.regionName}
-                  defaultCurrent={state.sliderCurrent}
-                />
-              )
-          )
-          .exhaustive()}
+                    <Profile>
+                      {post?.user.profileImageUrl ? (
+                        <img
+                          className="photo"
+                          alt="profile"
+                          src={post?.user.profileImageUrl}
+                        />
+                      ) : (
+                        <Thumbnail className="photo" />
+                      )}
+                      <div>
+                        <div className="name">
+                          {post?.user.userName}님이 추천하는 장소예요.
+                        </div>
+                        <div className="date">
+                          {dayjs(post?.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
+                          {post?.regionName}
+                        </div>
+                      </div>
+                    </Profile>
+
+                    <div className="cards">
+                      {post?.pins.map((pin, i) => (
+                        <div
+                          key={pin.pinId}
+                          onClick={() => handleClickPlaceCard(i)}
+                        >
+                          <PlaceCard
+                            place={pin.place}
+                            type="list"
+                            isDifferentRegion={regionId !== post.regionId}
+                            postRegionName={post.regionName}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </Wrapper>
+            ))
+            .with(
+              "map",
+              () =>
+                post && (
+                  <MapViewwithSlider
+                    places={post.pins.map((p) => p.place)}
+                    isDifferentRegion={regionId !== post.regionId}
+                    postRegionName={post.regionName}
+                    defaultCurrent={state.sliderCurrent}
+                  />
+                )
+            )
+            .exhaustive()}
       </div>
 
       {isEditModalOpened &&
@@ -359,10 +380,10 @@ const Wrapper = styled.div<{ isMine: boolean }>`
   background-color: #fff;
   overflow-y: scroll;
   height: 100vh;
-  padding-top: 3rem;
   padding-bottom: ${({ isMine }) => (isMine ? "9.2rem" : "14rem")};
   box-sizing: border-box;
   .post-title {
+    margin-top: 3rem;
     padding: 0 2rem;
     border-bottom: 1.6rem solid ${theme.color.gray1_5};
     padding-bottom: 3rem;
@@ -384,7 +405,14 @@ const Wrapper = styled.div<{ isMine: boolean }>`
   .cards {
     padding: 0 2rem;
     margin-top: 1.6rem;
+    margin-bottom: 0.9rem;
     ${gap("1.4rem", "column")}
+    .title {
+      margin-top: 3.2rem;
+      font-weight: 500;
+      font-size: 21px;
+      line-height: 30px;
+    }
   }
 `;
 

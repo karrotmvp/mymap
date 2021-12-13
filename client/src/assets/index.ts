@@ -56,3 +56,9 @@ export { ReactComponent as Carousel2 } from "./onboarding/carousel2.svg";
 export { ReactComponent as Carousel3 } from "./onboarding/carousel3.svg";
 
 export { ReactComponent as Onboarding } from "./onboarding/onboarding.svg";
+
+// verification 3
+export { ReactComponent as Certification } from "./fake/certification.svg";
+export { ReactComponent as FakePerson } from "./fake/fake-person.svg";
+export { ReactComponent as FakeWrite } from "./fake/fake-write.svg";
+export { ReactComponent as FakeCafe } from "./fake/fake-cafe.svg";
