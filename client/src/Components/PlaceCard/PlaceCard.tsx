@@ -30,7 +30,7 @@ const PlaceCard = ({
   place,
   className,
   type,
-  children,
+  // children,
   isDifferentRegion = false,
   postRegionName,
 }: PlaceCardProps) => {
@@ -78,31 +78,33 @@ const PlaceCard = ({
           />
         )}
       <div className="wrapper">
-        <div className="card-top">
-          <div className="category">
-            {place.category?.length > 0 ? (
-              place.category
-                ?.slice(0, 2)
-                .map((c) => <GrayTag key={c}>{c}</GrayTag>)
-            ) : (
-              <GrayTag>동네 장소</GrayTag>
-            )}
-          </div>
-          {type !== "write" && type !== "onboarding" && (
+        {type !== "write" && type !== "onboarding" && (
+          <div className="card-top">
+            <div className="name">{place.name}</div>
             <PlaceAdd
               onClick={(e) => {
                 e.stopPropagation();
                 clickPlaceAdd();
               }}
             />
-          )}
-          {children && children[0]}
-        </div>
+          </div>
+        )}
 
         <div className="card-bottom">
           <div>
             <PlaceInfo>
-              <div className="name">{place.name}</div>
+              {(type === "write" || type === "onboarding") && (
+                <div className="name">{place.name}</div>
+              )}
+              <div className="category">
+                {place.category?.length > 0 ? (
+                  place.category
+                    ?.slice(0, 2)
+                    .map((c) => <GrayTag key={c}>{c}</GrayTag>)
+                ) : (
+                  <GrayTag>동네 장소</GrayTag>
+                )}
+              </div>
               <div className="address">{place.address}</div>
             </PlaceInfo>
 
@@ -130,8 +132,6 @@ const PlaceCard = ({
                   {place.savedNum}개 테마에 저장된 장소예요.
                 </div>
               )}
-
-            {children && children[1]}
           </div>
 
           {place.images.length > 0 &&
@@ -175,28 +175,28 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
     padding: ${({ type }) => (type === "map" ? "1.5rem 1.3rem" : "1.5rem")};
     width: 100%;
     box-sizing: border-box;
+    .category {
+      margin-top: ${({ type }) => (type === "write" ? "1.4rem" : 0)};
+      display: flex;
+      ${gap("0.4rem")}
+    }
     .card-top {
       ${flexCenter};
       width: 100%;
       justify-content: space-between;
-      .category {
-        display: flex;
-        ${gap("0.4rem")}
-      }
+      margin-bottom: 1rem;
     }
     .card-bottom {
-      margin-top: 1rem;
       ${flexCenter};
       justify-content: space-between;
     }
-
     .name {
       font-size: 1.6rem;
       line-height: 2.3rem;
       font-weight: bold;
     }
     .address {
-      margin-top: 0.5rem;
+      margin-top: 0.9rem;
       color: gray;
       font-size: 1.3rem;
       color: ${theme.color.gray6};
@@ -239,8 +239,9 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
 
 const PlaceInfo = styled.div`
   display: flex;
+  height: 100%;
   flex-direction: column;
-  align-items: flex-start;
+  /* align-items: flex-start; */
 `;
 
 export default PlaceCard;
