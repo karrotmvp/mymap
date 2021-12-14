@@ -41,6 +41,8 @@ export { ReactComponent as UnlockAround } from "./unlock_around.svg";
 export { ReactComponent as Loading1 } from "./loading1.svg";
 export { ReactComponent as Loading2 } from "./loading2.svg";
 
+export { ReactComponent as Pin } from "./pin.svg";
+
 // onboarding
 export { ReactComponent as OneOne } from "./onboarding/1-1.svg";
 export { ReactComponent as OneTwo } from "./onboarding/1-2.svg";

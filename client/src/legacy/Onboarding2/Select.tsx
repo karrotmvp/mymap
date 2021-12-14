@@ -5,9 +5,8 @@ import styled from "styled-components";
 import { useGetAroundPlaces } from "../../api/place";
 import { useGetRegion } from "../../api/region";
 import { postSavedPlaces } from "../../api/savedPlaces";
-import { Close, LogoTypo, Unselect, Select as SelectIcon } from "../../assets";
+import { Close, LogoTypo } from "../../assets";
 import Header from "../../Components/Header";
-import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import {
   Installed,
   OnboardingSelected,
@@ -114,7 +113,7 @@ const Select = () => {
             key={place.placeId}
             onClick={() => handleSelect(place)}
           >
-            <PlaceCard {...{ place }} type="onboarding">
+            {/* <PlaceCard {...{ place }} type="onboarding">
               <div className="select-icon">
                 {isSelected(place.placeId) ? <SelectIcon /> : <Unselect />}
               </div>
@@ -123,7 +122,7 @@ const Select = () => {
               ) : (
                 <div />
               )}
-            </PlaceCard>
+            </PlaceCard> */}
           </div>
         ))}
       </div>

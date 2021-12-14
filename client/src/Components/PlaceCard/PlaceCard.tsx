@@ -1,7 +1,7 @@
 import { ReactChild } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { Call, PlaceAdd, Time } from "../../assets";
+import { Call, Pin, PlaceAdd, Time } from "../../assets";
 import {
   ReigonDiffModal,
   PlaceToSave,
@@ -15,7 +15,7 @@ import { funcNeedLogin } from "../../utils/preset";
 // 1: 작성하기
 // 2: 그외 지도뷰
 // 3: 일반뷰 리스트
-export type PlaceCardType = "write" | "map" | "list" | "onboarding";
+export type PlaceCardType = "write" | "map" | "list";
 
 interface PlaceCardProps {
   place: PlaceType;
@@ -69,16 +69,15 @@ const PlaceCard = ({
 
   return (
     <Wrapper {...{ className, type }}>
-      {place.images.length > 0 &&
-        (type === "list" || type === "onboarding") && (
-          <img
-            className="list-photo"
-            alt="thumbnail"
-            src={place.images[0].thumbnail}
-          />
-        )}
+      {place.images.length > 0 && type === "list" && (
+        <img
+          className="list-photo"
+          alt="thumbnail"
+          src={place.images[0].thumbnail}
+        />
+      )}
       <div className="wrapper">
-        {type !== "write" && type !== "onboarding" && (
+        {type !== "write" && (
           <div className="card-top">
             <div className="name">{place.name}</div>
             <PlaceAdd
@@ -93,9 +92,7 @@ const PlaceCard = ({
         <div className="card-bottom">
           <div>
             <PlaceInfo>
-              {(type === "write" || type === "onboarding") && (
-                <div className="name">{place.name}</div>
-              )}
+              {type === "write" && <div className="name">{place.name}</div>}
               <div className="category">
                 {place.category?.length > 0 ? (
                   place.category
@@ -105,44 +102,46 @@ const PlaceCard = ({
                   <GrayTag>동네 장소</GrayTag>
                 )}
               </div>
-              <div className="address">{place.address}</div>
+              {type !== "list" && (
+                <div className="address">{place.address}</div>
+              )}
             </PlaceInfo>
 
             {type === "list" && (
-              <>
+              <div className="list-info">
                 {place.phone && (
-                  <div className="sub-info phone">
+                  <div className="sub-info">
                     <Call />
                     <div>{place.phone}</div>
                   </div>
                 )}
                 {time && (
-                  <div className="sub-info time">
+                  <div className="sub-info">
                     <Time />
                     <div>{time}</div>
                   </div>
                 )}
-              </>
+                <div className="sub-info">
+                  <Pin />
+                  <div>{place.address}</div>
+                </div>
+              </div>
             )}
 
-            {type !== "write" &&
-              type !== "onboarding" &&
-              place.savedNum > 0 && (
-                <div className="recommend">
-                  {place.savedNum}개 테마에 저장된 장소예요.
-                </div>
-              )}
+            {type !== "write" && place.savedNum > 0 && (
+              <div className="recommend">
+                {place.savedNum}개 테마에 저장된 장소예요.
+              </div>
+            )}
           </div>
 
-          {place.images.length > 0 &&
-            type !== "list" &&
-            type !== "onboarding" && (
-              <img
-                className="photo"
-                alt="thumbnail"
-                src={place.images[0].thumbnail}
-              />
-            )}
+          {place.images.length > 0 && type !== "list" && (
+            <img
+              className="photo"
+              alt="thumbnail"
+              src={place.images[0].thumbnail}
+            />
+          )}
         </div>
       </div>
     </Wrapper>
@@ -152,13 +151,10 @@ const PlaceCard = ({
 const Wrapper = styled.div<{ type: PlaceCardType }>`
   background-color: ${theme.color.white};
   box-shadow: ${({ type }) =>
-    type !== "list" &&
-    type !== "onboarding" &&
-    "0px 0px 16px rgba(0, 0, 0, 0.15)"};
+    type !== "list" && "0px 0px 16px rgba(0, 0, 0, 0.15)"};
   border-radius: 1.2rem;
   border: ${({ type }) =>
-    (type === "list" || type === "onboarding") &&
-    `0.1rem solid ${theme.color.gray1_7}`};
+    type === "list" && `0.1rem solid ${theme.color.gray1_7}`};
   width: ${({ type }) =>
     type === "map" ? "30.3rem" : type === "write" ? "32rem" : "100%"};
 
@@ -211,29 +207,39 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
     background-color: lightgray;
     margin-left: 1.2rem;
   }
-  .sub-info {
+  .list-info {
+    margin-top: 1.2rem;
     display: flex;
-    align-items: center;
-    font-size: 1.3rem;
-    color: ${theme.color.gray6};
-    line-height: 145%;
-    letter-spacing: -2%;
+    flex-direction: column;
+    gap: 0.9rem;
     & > div {
-      margin-left: 1.1rem;
+      display: flex;
+      align-items: center;
+      font-size: 1.3rem;
+      color: ${theme.color.gray6};
+      letter-spacing: -2%;
+      svg {
+        min-width: 1.3rem;
+        max-width: 1.3rem;
+        margin-bottom: 0.25rem;
+      }
+      & > div {
+        line-height: 145%;
+        margin-left: 1.1rem;
+      }
+      &:last-child {
+        align-items: flex-start;
+      }
     }
   }
-  .phone {
-    margin-top: 0.6rem;
-  }
-  .time {
-    margin-top: 0.4rem;
-  }
+
   .recommend {
     font-size: 1.3rem;
     color: ${theme.color.orange};
     letter-spacing: -2%;
     margin-top: 1rem;
     line-height: 145%;
+    font-weight: ${({ type }) => (type === "list" ? 500 : 400)};
   }
 `;
 
@@ -241,7 +247,6 @@ const PlaceInfo = styled.div`
   display: flex;
   height: 100%;
   flex-direction: column;
-  /* align-items: flex-start; */
 `;
 
 export default PlaceCard;
