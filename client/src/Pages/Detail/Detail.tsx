@@ -31,6 +31,7 @@ import { regionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
 import Detail571 from "./fake/Detail571";
 import Detail559 from "./fake/Detail559";
+import Detail576 from "./fake/Detail576";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -217,7 +218,7 @@ const Detail = ({
                     <Detail559 {...{ dispatch, post }} />
                   ) : (
                     /* 한남 - 우리 집 뽀삐와 같이 가는 식당들 */
-                    <div />
+                    <Detail576 {...{ dispatch, post }} />
                   )
                 ) : (
                   <>
