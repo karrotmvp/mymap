@@ -128,9 +128,11 @@ export const Title = styled.div`
 `;
 
 export const GrayTag = styled.div`
+  ${flexCenter};
   font-size: 1.1rem;
   font-weight: 400;
-  padding: 0.45rem 1rem;
+  height: 2.2rem;
+  padding: 0 1rem;
   border-radius: 0.4rem;
   background-color: ${theme.color.gray1_5};
   color: ${theme.color.gray7};
@@ -139,9 +141,11 @@ export const GrayTag = styled.div`
   border: 0.1rem solid ${theme.color.gray1_7};
 `;
 export const OrangeTag = styled.div`
+  ${flexCenter};
   font-size: 1.1rem;
   font-weight: 400;
-  padding: 0.45rem 1rem;
+  height: 2.2rem;
+  padding: 0 1rem;
   border-radius: 0.4rem;
   background-color: ${theme.color.white};
   color: ${theme.color.orange};

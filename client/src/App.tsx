@@ -117,7 +117,7 @@ function App() {
     }
   }, [toastMessage.isToastShown]);
 
-  if (regionIdFromParmas === "") {
+  if (!preload && regionIdFromParmas === "") {
     return <ClosePage />;
   }
 
