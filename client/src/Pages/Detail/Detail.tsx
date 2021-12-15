@@ -209,17 +209,15 @@ const Detail = ({
                 id="detail-scroll"
                 isMine={post?.user.userId === viewerInfo.userId}
               >
-                {fromDetail ? (
-                  postId === 571 ? (
-                    /* 서초 - 아이들을 위한 장소 */
-                    <Detail571 {...{ dispatch, post }} />
-                  ) : postId === 559 ? (
-                    /* 잠실 - 맛있고 예쁜 카페 */
-                    <Detail559 {...{ dispatch, post }} />
-                  ) : (
-                    /* 한남 - 우리 집 뽀삐와 같이 가는 식당들 */
-                    <Detail576 {...{ dispatch, post }} />
-                  )
+                {postId === 571 ? (
+                  /* 서초 - 아이들을 위한 장소 */
+                  <Detail571 {...{ dispatch, post }} />
+                ) : postId === 559 ? (
+                  /* 잠실 - 맛있고 예쁜 카페 */
+                  <Detail559 {...{ dispatch, post }} />
+                ) : postId === 576 ? (
+                  /* 한남 - 우리 집 뽀삐와 같이 가는 식당들 */
+                  <Detail576 {...{ dispatch, post }} />
                 ) : (
                   <>
                     <div className="post-title">
