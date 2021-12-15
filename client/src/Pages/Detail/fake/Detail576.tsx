@@ -98,14 +98,42 @@ const Detail576 = ({
       </ProfileBox>
 
       <div className="content">
-        <div>
-          안녕하세요! 한남동 이웃 여러분 ☺️ 오늘은 한남동에서 일할 때 자주
-          찾았던 카페들을 소개하고 싶어요! 예전에 한남동에서 근무할 때, 집중이
-          안 되면 종종 찾던 카페들이 있는데요! 퇴사 후에도 잊지 못하고 가끔
-          색다른 공간에서의 집중이 필요하면 찾곤 한답니다. 꼭 일하러 오지
-          않더라도 조용해서 독서를 즐기거나📖, 나만의 시간이 필요할 때
-          방문하셔도 후회 없으실 거예요. 친구들이 ‘한남동에서 어디 카페가
-          좋아?’라고 물어볼 때 자신 있게 추천할 수 있는 5군데만 모았습니다!!
+        <div>안녕하세요 한남동 이웃 여러분!</div>
+        <div style={{ marginTop: "0.5rem" }}>
+          외식할 때 댕댕이를 두고 나가는 건 항상 슬픈 일이죠.. 저도 우리
+          초롱이가 계속 신경 쓰이더라고요🥺 그래서 반려동물과 함께 갈 수 있는
+          음식점들을 찾아보았어요.
+        </div>
+
+        <div style={{ marginTop: "2rem" }}>
+          <span>부곡 하와이:</span> 레트로 분위기의 포차. 야외 테라스가 있어
+          대형견도 가능해요!
+        </div>
+
+        <div style={{ marginTop: "0.5rem" }}>
+          <span>도노:</span> 피자 맛집👍 여기도 야외 테라스가 있어 대형견도
+          가능해요.
+        </div>
+        <div style={{ marginTop: "0.5rem" }}>
+          <span>더테이블키친:</span> 자리가 좁은 편이라 소형견만 가능해요. 여기
+          뇨끼 정말 맛있어요~!
+        </div>
+        <div style={{ marginTop: "0.5rem" }}>
+          <span>진저키친:</span> 여기도 자리가 좁은 편이라 소형견만 가능해요.
+          분위기도 좋고 사진 찍기 좋아요ㅎㅎ
+        </div>
+        <div style={{ marginTop: "0.5rem" }}>
+          <span>노스트레스버거:</span> 미국식 치즈버거 맛집!! 대형견도 가능하긴
+          하지만 공간이 조금 협소하고 웨이팅도 있는 편이에요.
+        </div>
+        <div style={{ marginTop: "0.5rem" }}>
+          <span>돈킹콩파치지:</span> 파스타와 치킨에 맥주를 곁들일 수 있는
+          집이에요! 매장이 넓고 대형견도 가능해요!!
+        </div>
+        <div style={{ marginTop: "0.5rem" }}>
+          <span>라샌독오스테리아:</span> 강아지 마스코트 답게 중형견, 소형견
+          입장이 가능한 곳이에요. 파스타랑 라자냐 먹으면서 분위기 좋게 와인
+          한잔까지~!
         </div>
         <div className="date">
           {dayjs(post.createdAt).format("YYYY년 MM월 DD일")}
@@ -166,6 +194,7 @@ const Wrapper = styled.div`
     font-size: 15px;
     color: ${theme.color.gray7};
     line-height: 170%;
+    white-space: pre-line;
     .date {
       margin-top: 1.8rem;
       font-size: 1.2rem;
@@ -173,6 +202,10 @@ const Wrapper = styled.div`
       line-height: 150%;
     }
     border-bottom: 1.6rem solid ${theme.color.gray1_5};
+    span {
+      color: ${theme.color.orange};
+      font-weight: 500;
+    }
   }
 `;
 
