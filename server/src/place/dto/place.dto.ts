@@ -6,7 +6,7 @@ export class PlaceDTO {
         this.placeId = place.id;
         this.name = place.name;
         this.phone = this.phoneNumberConvert(place.phone);
-        this.address = place.address;
+        this.address = place.address || place.jibunAddress;
         this.coordinates = place.coordinates;
         this.businessHoursFrom = place.businessHoursFrom;
         this.businessHoursTo = place.businessHoursTo;
