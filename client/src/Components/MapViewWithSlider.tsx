@@ -6,10 +6,12 @@ import PinSlider from "./PinSlider";
 
 const MapViewwithSlider = ({
   places,
+  postRegionId,
   postRegionName,
   defaultCurrent = 0,
 }: {
   places: PlaceType[];
+  postRegionId?: string;
   postRegionName?: string;
   defaultCurrent?: number;
 }) => {
@@ -61,6 +63,7 @@ const MapViewwithSlider = ({
           current,
           setCurrent,
           setCenter,
+          postRegionId,
           postRegionName,
         }}
       />

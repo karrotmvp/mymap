@@ -23,6 +23,7 @@ interface PlaceCardProps {
   className?: string;
   type: PlaceCardType;
   children?: ReactChild[];
+  postRegionId?: string;
   postRegionName?: string;
 }
 
@@ -30,6 +31,7 @@ const PlaceCard = ({
   place,
   className,
   type,
+  postRegionId,
   postRegionName,
 }: PlaceCardProps) => {
   let time =
@@ -60,7 +62,7 @@ const PlaceCard = ({
         regionId,
         afterFunc: () => {
           if (
-            !regionGroup?.find((region) => region === regionId) &&
+            !regionGroup?.find((id) => id === postRegionId) &&
             postRegionName
           ) {
             setIsReigonDiffModalShown({

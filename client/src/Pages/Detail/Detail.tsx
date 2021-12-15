@@ -251,6 +251,7 @@ const Detail = ({
                           <PlaceCard
                             place={pin.place}
                             type="list"
+                            postRegionId={post.regionId}
                             postRegionName={post.regionName}
                           />
                         </div>
@@ -266,6 +267,7 @@ const Detail = ({
                 post && (
                   <MapViewwithSlider
                     places={post.pins.map((p) => p.place)}
+                    postRegionId={post.regionId}
                     postRegionName={post.regionName}
                     defaultCurrent={state.sliderCurrent}
                   />

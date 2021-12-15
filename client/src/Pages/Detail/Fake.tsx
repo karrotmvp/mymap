@@ -268,6 +268,7 @@ const Fake = ({
             <PlaceCard
               place={pin.place}
               type="list"
+              postRegionId={post.regionId}
               postRegionName={post.regionName}
             />
           </div>
