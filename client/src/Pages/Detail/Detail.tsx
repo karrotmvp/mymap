@@ -251,7 +251,6 @@ const Detail = ({
                           <PlaceCard
                             place={pin.place}
                             type="list"
-                            isDifferentRegion={regionId !== post.regionId}
                             postRegionName={post.regionName}
                           />
                         </div>
@@ -267,7 +266,6 @@ const Detail = ({
                 post && (
                   <MapViewwithSlider
                     places={post.pins.map((p) => p.place)}
-                    isDifferentRegion={regionId !== post.regionId}
                     postRegionName={post.regionName}
                     defaultCurrent={state.sliderCurrent}
                   />

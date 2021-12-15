@@ -11,7 +11,6 @@ interface PinSliderProps {
   setCenter: Dispatch<SetStateAction<{ lat: number; lng: number }>>;
   placeCardType: PlaceCardType;
   style?: React.CSSProperties;
-  isDifferentRegion?: boolean;
   postRegionName?: string;
 }
 
@@ -22,7 +21,6 @@ const PinSlider = ({
   setCenter,
   placeCardType,
   style,
-  isDifferentRegion,
   postRegionName,
 }: PinSliderProps) => {
   const handleChangle = (index: number) => {
@@ -43,7 +41,7 @@ const PinSlider = ({
               place={pin}
               className="place-box"
               type={placeCardType}
-              {...{ isDifferentRegion, postRegionName }}
+              {...{ postRegionName }}
             />
           </div>
         ))}

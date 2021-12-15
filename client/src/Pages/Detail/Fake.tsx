@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import {
   Certification,
@@ -11,7 +10,6 @@ import {
   Thumbnail,
 } from "../../assets";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
-import { RegionId } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
@@ -37,8 +35,6 @@ const Fake = ({
   dispatch: React.Dispatch<Action>;
   post: PostType;
 }) => {
-  const regionId = useRecoilValue(RegionId);
-
   // 카드 클릭하면 해당 인덱스 지도뷰
   const handleClickPlaceCard = (idx: number) => {
     Mixpanel.track("검증3 - 장소카드 클릭");
@@ -273,7 +269,6 @@ const Fake = ({
             <PlaceCard
               place={pin.place}
               type="list"
-              isDifferentRegion={regionId !== post.regionId}
               postRegionName={post.regionName}
             />
           </div>

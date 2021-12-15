@@ -10,6 +10,7 @@ import {
 } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
+import { regionsGroup } from "../../utils/const";
 import { funcNeedLogin } from "../../utils/preset";
 
 // 1: 작성하기
@@ -22,7 +23,6 @@ interface PlaceCardProps {
   className?: string;
   type: PlaceCardType;
   children?: ReactChild[];
-  isDifferentRegion?: boolean;
   postRegionName?: string;
 }
 
@@ -30,8 +30,6 @@ const PlaceCard = ({
   place,
   className,
   type,
-  // children,
-  isDifferentRegion = false,
   postRegionName,
 }: PlaceCardProps) => {
   let time =
@@ -45,13 +43,26 @@ const PlaceCard = ({
   const setIsReigonDiffModalShown = useSetRecoilState(ReigonDiffModal);
 
   const setPlaceToSave = useSetRecoilState(PlaceToSave);
+
+  const regionGroup = regionsGroup
+    .map((region) => {
+      if (region.find((r) => r === regionId)) {
+        return [...region];
+      }
+      return [];
+    })
+    .find((group) => group.length > 0);
+
   const clickPlaceAdd = () => {
     funcNeedLogin({
       ...{
         setViewerInfo,
         regionId,
         afterFunc: () => {
-          if (isDifferentRegion && postRegionName) {
+          if (
+            !regionGroup?.find((region) => region === regionId) &&
+            postRegionName
+          ) {
             setIsReigonDiffModalShown({
               isModalOpened: true,
               postRegionName,
