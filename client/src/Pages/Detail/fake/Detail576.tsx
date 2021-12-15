@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import {
   Certification,
-  FakeChild,
+  FakeDog,
   FakePerson,
   FakeWrite,
   Thumbnail,
@@ -58,7 +58,7 @@ const Detail576 = ({
         <div className="profile">
           <div>
             <div className="name">
-              서초동 큐레이터 <span>라면</span>님은
+              한남동 큐레이터 <span>라면</span>님은
             </div>
           </div>
           <div className="thumbnail">
@@ -83,7 +83,7 @@ const Detail576 = ({
             </div>
           </div>
           <div>
-            <FakeChild />
+            <FakeDog />
             <div>
               반려동물과 항상 같이 다니는 <span>멍집사</span>예요.
             </div>

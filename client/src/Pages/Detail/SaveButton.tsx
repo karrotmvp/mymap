@@ -44,6 +44,7 @@ const SaveButton = (post: PostType, fromDetail?: boolean) => {
 
   useEffect(() => {
     if (fromDetail && isSaved) {
+      Mixpanel.track("검증3 - 마음에 들어요 클릭");
       setToastMessage({
         isToastShown: true,
         message: "저장한 테마는 나의 테마에서 볼 수 있어요",

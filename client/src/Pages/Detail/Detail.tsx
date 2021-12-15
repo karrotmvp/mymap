@@ -29,9 +29,7 @@ import { reducer } from "./index.reducer";
 import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import { regionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
-import Detail571 from "./fake/Detail571";
-import Detail559 from "./fake/Detail559";
-import Detail576 from "./fake/Detail576";
+import Fake from "./Fake";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -151,7 +149,7 @@ const Detail = ({
                 })
               }
             />
-          ) : fromWriteForm || fromDetail ? (
+          ) : fromWriteForm ? (
             <Close
               className="left-icon"
               onClick={() => {
@@ -182,11 +180,14 @@ const Detail = ({
           {state._t === "list" && (
             <div
               className="view-toggle"
-              onClick={() =>
+              onClick={() => {
                 dispatch({
                   _t: "toggle",
-                })
-              }
+                });
+                if (postId === 571 || postId === 559 || postId === 576) {
+                  Mixpanel.track("검증3 - 지도 버튼 클릭");
+                }
+              }}
             >
               <Map />
               지도
@@ -209,15 +210,8 @@ const Detail = ({
                 id="detail-scroll"
                 isMine={post?.user.userId === viewerInfo.userId}
               >
-                {postId === 571 ? (
-                  /* 서초 - 아이들을 위한 장소 */
-                  <Detail571 {...{ dispatch, post }} />
-                ) : postId === 559 ? (
-                  /* 잠실 - 맛있고 예쁜 카페 */
-                  <Detail559 {...{ dispatch, post }} />
-                ) : postId === 576 ? (
-                  /* 한남 - 우리 집 뽀삐와 같이 가는 식당들 */
-                  <Detail576 {...{ dispatch, post }} />
+                {postId === 571 || postId === 559 || postId === 576 ? (
+                  <Fake {...{ dispatch, post }} />
                 ) : (
                   <>
                     <div className="post-title">
