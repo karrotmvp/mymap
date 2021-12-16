@@ -42,6 +42,10 @@ export class UserService {
         return await this.userRepository.findWithUserId(userId);
     }
 
+    async readUsers(userIds: number[]) {
+        return await this.userRepository.findWithUserIds(userIds);
+    }
+
     async readAllUser(): Promise<User[]> {
         return await this.userRepository.find();
     }

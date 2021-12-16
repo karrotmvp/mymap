@@ -1,0 +1,12 @@
+{
+	"title": "$(username)님, 받아본 테마는 마음에 드셨나요?",
+	"text": "안녕하세요. '당장모아예요'.\n채팅으로 보내드린 테마에 대한 이웃분들의 솔직한 의견이 궁금해 연락드리게 되었어요.\n설문은 약 3분 정도 걸려요☺️\n설문 답변을 남겨주신 분들에게는 추첨을 통해 스타벅스 아메리카노 기프티콘을 드릴 예정이에요!\n더 나은 테마를 보내드릴 수 있도록 노력할게요🧡 여러분의 많은 참여 부탁드려요~",
+	"actions": [{
+		"type": "PRIMARY_BUTTON",
+		"payload": {
+			"text": "설문 참여하기",
+			"linkUrl": "towneers://web/ad/user_surveys/5846"
+		}
+	}],
+    "imageUrl": "https://mymap-admin.s3.ap-northeast-2.amazonaws.com/interview.png"
+}
