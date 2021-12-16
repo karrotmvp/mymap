@@ -211,8 +211,11 @@ const Detail = ({
                 isMine={post?.user.userId === viewerInfo.userId}
               >
                 {postId === 560 ||
+                postId === 555 ||
+                postId === 568 ||
                 postId === 570 ||
                 postId === 571 ||
+                postId === 573 ||
                 postId === 559 ||
                 postId === 576 ? (
                   <Fake {...{ dispatch, post }} />

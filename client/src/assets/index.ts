@@ -66,3 +66,4 @@ export { ReactComponent as FakeWrite } from "./fake/fake-write.svg";
 export { ReactComponent as FakeCafe } from "./fake/fake-cafe.svg";
 export { ReactComponent as FakeChild } from "./fake/fake-child.svg";
 export { ReactComponent as FakeDog } from "./fake/fake-dog.svg";
+export { ReactComponent as FakeMeat } from "./fake/fake-meat.svg";

@@ -5,6 +5,7 @@ import {
   FakeCafe,
   FakeChild,
   FakeDog,
+  FakeMeat,
   FakePerson,
   FakeWrite,
   Thumbnail,
@@ -53,6 +54,70 @@ const Fake = ({
 
   switch (post.postId) {
     // 잠실
+    case 555:
+      title = `‘삼겹살은 언제나 옳다🐽’️ 
+      오늘 저녁은 삼겹살 어때요?`;
+      info = (
+        <div>
+          고기에 진심인 <span>육식주의자</span>예요.
+        </div>
+      );
+      svg = <FakeMeat />;
+      imgUrl = "/fake-meat-img.svg";
+      content = (
+        <div className="content">
+          <div>안녕하세요 잠실동 이웃 여러분!</div>
+          <div style={{ marginTop: "0.5rem" }}>
+            삼겹살 싫어하는 분 계신가요?? 에이 설마.. 삼겹살은 언제나
+            옳다구요..!
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            오늘은 잠실에서 먹어본 돼지고기들 중 Top4를 뽑아서 소개시켜드리려
+            해요ㅎㅎ 돼지고기 구워서 된장찌개랑 한 입하면 그야말로 천국,,
+            동료들과의 회식으로도, 가족들과의 외식으로도 백점짜리 메뉴인 삼겹살!
+            오늘은 삼겹살에 소주 한 잔 어때요ㅎㅎ
+          </div>
+        </div>
+      );
+      break;
+
+    case 568:
+      title = `‘혼자서도 당당하게 고기먹자🍖’️ 
+      혼밥하기 좋은 식당
+      여러분께 소개할게요!`;
+      info = (
+        <div>
+          고기에 진심인 <span>육식주의자</span>예요.
+        </div>
+      );
+      svg = <FakeMeat />;
+      imgUrl = "/fake-meat-img.svg";
+      content = (
+        <div className="content">
+          <div>안녕하세요 잠실동 이웃 여러분!</div>
+          <div style={{ marginTop: "0.5rem" }}>
+            고기는 먹고 싶은데 일반 고깃집은 혼자가기 부담스럽죠😢
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            그래서 제가 혼자 갔을 때도 맘편히 배부르고 맛있게 먹을 수 있었던 두
+            군데를 추천드리려 해요! 바로 <span>신씨화로익스프레스</span>와{" "}
+            <span>프리미엄돼지고기 백석</span>이랍니다ㅎㅎ
+          </div>
+          <div style={{ marginTop: "2rem" }}>
+            <span>신씨화로익스프레스:</span> 1인 화로구이를 즐길 수 있는
+            식당이에요! 1인 좌석이 쭉 늘어져있는 구조라 혼자 고기 즐기기에
+            딱이랍니다ㅎㅎ
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            <span>프리미엄돼지고기 백석:</span> 여기는 점심특선이 진짜
+            찐이에요..! 삼겹살과 목살을 즐길 수 있는 생고기 정식, 훈제 막창을
+            즐길 수 있는 막창덮밥, 가브리살과 항정살도 즐길 수 있는 김치찜..!
+            여기도 1인 좌석이 마련되어있어 편하게 혼자서 먹을 수 있답니다ㅎㅎ
+          </div>
+        </div>
+      );
+      break;
+
     case 560:
       title = `‘우리 집 막내 초롱이와 
       같이 갈 수 있는 식당’️ 
@@ -80,6 +145,43 @@ const Fake = ({
           <div style={{ marginTop: "0.5rem" }}>
             든든한 브런치와 따뜻한 아메리카노를 우리 댕댕이랑 즐길 수 있다..?
             그곳은 낙원 아닐까요,,🥰
+          </div>
+        </div>
+      );
+      break;
+
+    case 559:
+      title = `분위기 좋고
+      커피와 디저트가 맛있는
+      '${post.title}'를 모았어요!`;
+      info = (
+        <div>
+          동네 카페만 찾아다니는 <span>카페 마스터</span>예요.
+        </div>
+      );
+      svg = <FakeCafe />;
+      imgUrl = "/fake-cafe-img.svg";
+      content = (
+        <div className="content">
+          <div>안녕하세요 잠실동 이웃 여러분!</div>
+          <div style={{ marginTop: "0.5rem" }}>
+            오늘은 잠실동 곳곳에서 찾은 분위기와 맛을 모두 갖춘 카페들을
+            소개드리려 해요!
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            저는 책을 읽거나 업무를 할 때도 카페를 찾지만, 끼니와 디저트를 한
+            번에 해결하고자 카페를 찾기도 하는데요! 분위기도 좋고 커피랑
+            디저트도 맛있는 카페를 발견하면 그렇게 기분이 좋을 수가 없더라고요
+            🥰
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            친구들과 분위기를 즐기고 싶을 때, 달달하고 맛있는 걸 먹고 싶을 때,
+            혼자만의 여유를 즐기고 싶을 때, 언제든 방문하셔도 후회 없으실
+            거예요. 친구들이 '잠실동에서 갈만한 카페 있어?'라고 물어볼 때 자신
+            있게 추천할 수 있는 장소들입니당!!
+          </div>
+          <div className="date">
+            {dayjs(post.createdAt).format("YYYY년 MM월 DD일")}
           </div>
         </div>
       );
@@ -126,45 +228,6 @@ const Fake = ({
       );
       break;
 
-    // 잠실
-    case 559:
-      title = `분위기 좋고
-      커피와 디저트가 맛있는
-      '${post.title}'를 모았어요!`;
-      info = (
-        <div>
-          동네 카페만 찾아다니는 <span>카페 마스터</span>예요.
-        </div>
-      );
-      svg = <FakeCafe />;
-      imgUrl = "/fake-cafe-img.svg";
-      content = (
-        <div className="content">
-          <div>안녕하세요 잠실동 이웃 여러분!</div>
-          <div style={{ marginTop: "0.5rem" }}>
-            오늘은 잠실동 곳곳에서 찾은 분위기와 맛을 모두 갖춘 카페들을
-            소개드리려 해요!
-          </div>
-          <div style={{ marginTop: "0.5rem" }}>
-            저는 책을 읽거나 업무를 할 때도 카페를 찾지만, 끼니와 디저트를 한
-            번에 해결하고자 카페를 찾기도 하는데요! 분위기도 좋고 커피랑
-            디저트도 맛있는 카페를 발견하면 그렇게 기분이 좋을 수가 없더라고요
-            🥰
-          </div>
-          <div style={{ marginTop: "0.5rem" }}>
-            친구들과 분위기를 즐기고 싶을 때, 달달하고 맛있는 걸 먹고 싶을 때,
-            혼자만의 여유를 즐기고 싶을 때, 언제든 방문하셔도 후회 없으실
-            거예요. 친구들이 '잠실동에서 갈만한 카페 있어?'라고 물어볼 때 자신
-            있게 추천할 수 있는 장소들입니당!!
-          </div>
-          <div className="date">
-            {dayjs(post.createdAt).format("YYYY년 MM월 DD일")}
-          </div>
-        </div>
-      );
-      break;
-
-    // 서초
     case 571:
       title = `우리 아이들이 놀 수 있는
       '${post.title}'예요.`;
@@ -210,6 +273,29 @@ const Fake = ({
           </div>
           <div className="date">
             {dayjs(post.createdAt).format("YYYY년 MM월 DD일")}
+          </div>
+        </div>
+      );
+      break;
+
+    case 573:
+      title = `믿음직스러운 정육점을 찾고 있나요?
+      ‘질좋은 정육점🥩’️
+      여러분께 소개할게요!`;
+      info = (
+        <div>
+          고기에 진심인 <span>육식주의자</span>예요.
+        </div>
+      );
+      svg = <FakeMeat />;
+      imgUrl = "/fake-meat-img.svg";
+      content = (
+        <div className="content">
+          <div>안녕하세요 서초동 이웃 여러분!</div>
+          <div style={{ marginTop: "0.5rem" }}>
+            마트 고기는 질이 안 좋은 경우가 허다하죠ㅠㅠ 비싼데 질은 안 좋아
+            보이니 꺼려지더라고요.. 그래서 제가 개인적으로 가보고 괜찮았던
+            정육점 두 군데를 추천드리려 해요ㅎㅎ
           </div>
         </div>
       );
