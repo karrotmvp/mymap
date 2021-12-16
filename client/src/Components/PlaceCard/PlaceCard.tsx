@@ -123,18 +123,18 @@ const PlaceCard = ({
             {type === "list" && (
               <div className="list-info">
                 {place.phone && (
-                  <div className="sub-info">
+                  <div>
                     <Call />
                     <div>{place.phone}</div>
                   </div>
                 )}
                 {time && (
-                  <div className="sub-info">
-                    <Time />
+                  <div>
+                    <Time className="time" />
                     <div>{time}</div>
                   </div>
                 )}
-                <div className="sub-info">
+                <div>
                   <Pin />
                   <div>{place.address}</div>
                 </div>
@@ -196,8 +196,12 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
       margin-bottom: 1rem;
     }
     .card-bottom {
-      ${flexCenter};
+      display: flex;
       justify-content: space-between;
+      & > div {
+        display: flex;
+        flex-direction: column;
+      }
     }
     .name {
       font-size: 1.6rem;
@@ -240,8 +244,11 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
         line-height: 145%;
         margin-left: 1.1rem;
       }
-      &:last-child {
+      &:not(:first-child) {
         align-items: flex-start;
+      }
+      .time {
+        margin-top: 0.1rem;
       }
     }
   }
