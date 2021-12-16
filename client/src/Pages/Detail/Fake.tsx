@@ -49,25 +49,95 @@ const Fake = ({
   let info = <div />;
   let svg = <div />;
   let imgUrl = "";
-  let content = <div />;
+  let content = <div className="content">{post.contents}</div>;
 
   switch (post.postId) {
+    // 잠실
+    case 560:
+      title = `‘우리 집 막내 초롱이와 
+      같이 갈 수 있는 식당’️ 
+      여러분께 소개할게요!`;
+      info = (
+        <div>
+          반려동물과 항상 같이 다니는 <span>멍집사</span>예요.
+        </div>
+      );
+      svg = <FakeDog />;
+      imgUrl = "/fake-dog-img.svg";
+      content = (
+        <div className="content">
+          <div>안녕하세요 잠실동 이웃 여러분!</div>
+          <div style={{ marginTop: "0.5rem" }}>
+            외식할 때 댕댕이를 두고 나가는 건 항상 슬픈 일이죠.. 저도 우리
+            초롱이가 계속 신경 쓰이더라고요🥺 그래서 반려동물과 함께 갈 수 있는
+            음식점들을 찾아보았어요.
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            저는 우리 초롱이랑 외출할 때는 빨리 먹고 나가야 하는 식당보다는 오래
+            여유를 즐길 수 있는 카페를 찾게되더라구요ㅎㅎ 그래서 샌드위치나
+            브런치를 파는 카페 위주로 모아봤어요~
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            든든한 브런치와 따뜻한 아메리카노를 우리 댕댕이랑 즐길 수 있다..?
+            그곳은 낙원 아닐까요,,🥰
+          </div>
+        </div>
+      );
+      break;
+
+    // 서초
+    case 570:
+      title = `‘우리 집 막내 초롱이와 
+      같이 갈 수 있는 카페’️ 
+      여러분께 소개할게요!`;
+      info = (
+        <div>
+          반려동물과 항상 같이 다니는 <span>멍집사</span>예요.
+        </div>
+      );
+      svg = <FakeDog />;
+      imgUrl = "/fake-dog-img.svg";
+      content = (
+        <div className="content">
+          <div>안녕하세요 서초동 이웃 여러분!</div>
+          <div style={{ marginTop: "0.5rem" }}>
+            외출할 때 댕댕이를 두고 나가는 건 항상 슬픈 일이죠.. 저도 우리
+            초롱이가 계속 신경 쓰이더라고요🥺 그래서 반려동물과 함께 갈 수 있는
+            카페들을 찾아보았어요.
+          </div>
+          <div style={{ marginTop: "2rem" }}>
+            <span>카페토다:</span> 여기 크림치즈 맛집이에요!! 베이글 샌드위치,
+            수프, 샌드위치 등 간단한 식사 메뉴도 많아서 좋은 것 같아요ㅎㅎ 물론
+            커피도 맛있답니다ㅋㅋ 맛있는 음식과 함께 댕댕이랑 즐거운 시간
+            보내봐요~
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            <span>{`밤부베이커리&브루잉:`}</span> 완전 넓고 큼지막한 카페예요!!
+            뷰 최고!! 빵도 완전 맛있어요ㅎㅎ 카페가 워낙 넓어서 대형견도 가능할
+            것 같아요~
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            <span>아워 헤르츠:</span> 여기는 강아지 굿즈들도 다양하게
+            판매하더라구요!! 사장님이 강쥐를 완전 좋아하시는 듯한..ㅎㅎ 대형견도
+            가능하대요! 귀여운 굿즈도 구경하고 맛있는 커피와 디저트도 즐길 수
+            있는 좋은 카페랍니당
+          </div>
+        </div>
+      );
+      break;
+
     // 잠실
     case 559:
       title = `분위기 좋고
       커피와 디저트가 맛있는
       '${post.title}'를 모았어요!`;
-
       info = (
         <div>
           동네 카페만 찾아다니는 <span>카페 마스터</span>예요.
         </div>
       );
-
       svg = <FakeCafe />;
-
       imgUrl = "/fake-cafe-img.svg";
-
       content = (
         <div className="content">
           <div>안녕하세요 잠실동 이웃 여러분!</div>
@@ -93,21 +163,18 @@ const Fake = ({
         </div>
       );
       break;
+
     // 서초
     case 571:
       title = `우리 아이들이 놀 수 있는
       '${post.title}'예요.`;
-
       info = (
         <div>
           방구석 탈출을 꿈꾸는 <span>4세 아이 엄마</span> 예요.
         </div>
       );
-
       svg = <FakeChild />;
-
       imgUrl = "/fake-child-img.svg";
-
       content = (
         <div className="content">
           <div>안녕하세요 서초동 이웃 여러분!</div>
@@ -147,22 +214,19 @@ const Fake = ({
         </div>
       );
       break;
+
     //한남
     case 576:
       title = `‘우리 집 막내 초롱이와 
       같이 갈 수 있는 식당’️ 
       여러분께 소개할게요!`;
-
       info = (
         <div>
           반려동물과 항상 같이 다니는 <span>멍집사</span>예요.
         </div>
       );
-
       svg = <FakeDog />;
-
       imgUrl = "/fake-dog-img.svg";
-
       content = (
         <div className="content">
           <div>안녕하세요 한남동 이웃 여러분!</div>

@@ -210,7 +210,11 @@ const Detail = ({
                 id="detail-scroll"
                 isMine={post?.user.userId === viewerInfo.userId}
               >
-                {postId === 571 || postId === 559 || postId === 576 ? (
+                {postId === 560 ||
+                postId === 570 ||
+                postId === 571 ||
+                postId === 559 ||
+                postId === 576 ? (
                   <Fake {...{ dispatch, post }} />
                 ) : (
                   <>
