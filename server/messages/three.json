@@ -1,0 +1,12 @@
+{
+    "title": "$(username)님, \"$(request_name)\" 에 대한 장소를 알려드릴게요!",
+    "text": "안녕하세요. '당장모아'예요.\n$(username)님이 물어봐 주셨던 \"$(request_name)\" 에 대한 장소들이 \"$(theme_name)\" 테마로 작성되었어요!\n지금 당장모아에 방문해서 구경해보세요~!",
+    "actions": [{
+        "type": "PRIMARY_BUTTON",
+        "payload": {
+            "text": "지금 보러가기",
+            "linkUrl": "https://live.daangn-mymap.com/detail/$(post_num)"
+        }
+    }],
+    "imageUrl": "https://mymap-admin.s3.ap-northeast-2.amazonaws.com/images/$(post_num).png"
+}

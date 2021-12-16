@@ -33,6 +33,12 @@ export class NotificationController {
         await this.notificationService.createNotificationToAll(type);
     }
 
+    @UseGuards(ApiKeyAuthGuard)
+    @Post('/admin/:type')
+    async createNotificationToUsers(@Param('type') type: string, @Query('userId') userIds: number[], @Body() data: any) {
+        await this.notificationService.createNotifications(userIds, type, data);
+    }
+
     @Roles(Role.Signed_User)
     @UseGuards(RolesGuard)
     @Post('/verification')
