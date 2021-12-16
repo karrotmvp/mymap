@@ -28,6 +28,18 @@ export class NotificationService {
         this.notificationQueue.add('notification_created', new Notification(user.getUniqueId(), type, data));
     }
 
+    async createNotifications(userIds: number[], type: string, data: any) {
+        const users: User[] = await this.userService.readUsers(userIds);
+        const uniqueIds: string[] = users.map(user => user.getUniqueId());
+        const userInfos = await this.userService.readUsersDetails(uniqueIds);
+        userInfos.map(async(userInfo) => {
+            await this.notificationQueue.add('notification_created', new Notification(userInfo.id, type, { "$(username)": userInfo.nickname, ...data }), {
+                attempts: 5,
+                backoff: 5000
+            })
+        })
+    }
+
     async createPreopenNotification() {
         const preopenUsers: User[] = await this.userService.readPreopenUsers();
         preopenUsers.map(async(preopenUser) => {
