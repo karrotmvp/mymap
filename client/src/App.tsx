@@ -118,7 +118,12 @@ function App() {
   }, [toastMessage.isToastShown]);
 
   if (!preload && regionIdFromParmas === "") {
-    return <ClosePage />;
+    regionIdFromParmas =
+      new URLSearchParams(window.location.search).get("region_id") ?? "";
+
+    if (regionIdFromParmas === "") {
+      return <ClosePage />;
+    }
   }
 
   // 미오픈 지역

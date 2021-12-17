@@ -30,6 +30,7 @@ import MapViewwithSlider from "../../Components/MapViewWithSlider";
 import { regionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
 import Fake from "./Fake";
+import { mini } from "../../App";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -63,6 +64,7 @@ const Detail = ({
   });
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
+  const [isCloseAlertOpened, setIsCloseAlertOpened] = useState(false);
   const regionId = useRecoilValue(RegionId);
 
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
@@ -149,13 +151,19 @@ const Detail = ({
                 })
               }
             />
-          ) : fromWriteForm ? (
+          ) : fromWriteForm || fromDetail ? (
             <Close
               className="left-icon"
               onClick={() => {
-                history.push(
-                  pageBeforeWrite === "emptyTheme" ? "/mypage" : pageBeforeWrite
-                );
+                if (fromDetail) {
+                  setIsCloseAlertOpened(true);
+                } else {
+                  history.push(
+                    pageBeforeWrite === "emptyTheme"
+                      ? "/mypage"
+                      : pageBeforeWrite
+                  );
+                }
               }}
             />
           ) : (
@@ -330,6 +338,26 @@ ${post?.regionName}에 인증해 주세요.`}
             취소
           </Button>
           <Button onClick={onDeleteConfirmClick}>삭제</Button>
+        </Alert>
+      )}
+
+      {isCloseAlertOpened && (
+        <Alert
+          close={() => setIsCloseAlertOpened(false)}
+          title={`${post?.regionName} 이웃이 추천하는 새로운 테마가 
+          만들어지면 알려드릴게요.`}
+        >
+          <Button className="white" onClick={() => mini.close()}>
+            그냥 나갈게요
+          </Button>
+          <Button
+            onClick={() => {
+              Mixpanel.track("풍피 상세 알림 - 좋아요");
+              mini.close();
+            }}
+          >
+            좋아요
+          </Button>
         </Alert>
       )}
 

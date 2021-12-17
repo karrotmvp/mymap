@@ -1,17 +1,23 @@
 import { MouseEventHandler, ReactChild } from "react";
+import { useRouteMatch } from "react-router";
 import styled from "styled-components";
 import { flexCenter, gap, theme } from "../styles/theme";
 
 interface AlertProps {
   close: MouseEventHandler;
   title: string;
-  sub: string;
+  sub?: string;
   children?: ReactChild | ReactChild[];
 }
 
 const Alert = ({ close, title, sub, children }: AlertProps) => {
+  const fromDetail =
+    useRouteMatch({
+      path: "/detail/:postId",
+    })?.isExact ?? false;
+
   return (
-    <Wrapper onClick={close}>
+    <Wrapper onClick={close} {...{ fromDetail }}>
       <div className="background" style={{ zIndex: 700 }} />
       <div className="alert">
         <div className="alert-wrapper" onClick={(e) => e.stopPropagation()}>
@@ -24,7 +30,7 @@ const Alert = ({ close, title, sub, children }: AlertProps) => {
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ fromDetail: boolean }>`
   .alert {
     ${flexCenter};
     position: fixed;
@@ -36,6 +42,7 @@ const Wrapper = styled.div`
     z-index: 700;
     padding: 2rem;
     box-sizing: border-box;
+    white-space: pre-line;
     .alert-wrapper {
       width: 100%;
       padding: 2rem;
@@ -44,7 +51,7 @@ const Wrapper = styled.div`
       .title {
         font-size: 1.6rem;
         font-weight: bold;
-        line-height: 135%;
+        line-height: ${({ fromDetail }) => (fromDetail ? "160%" : "135%")};
       }
       .sub {
         font-size: 1.4rem;
