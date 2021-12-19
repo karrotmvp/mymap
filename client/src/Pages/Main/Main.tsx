@@ -125,6 +125,7 @@ const Main = () => {
     setCenter({ lat: 0, lng: 0 });
     setIsPinSelected(false);
     setCurrent(-1);
+    setIsMapShown(false);
   };
 
   useEffect(() => {

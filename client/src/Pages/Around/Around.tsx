@@ -1,49 +1,112 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useReducer, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Back, Close, Map, NoSearch, Search, SearchClose } from "../../assets";
 import Footer from "../../Components/Footer";
 import Header from "../../Components/Header";
-import { Installed, RegionId } from "../../Shared/atom";
+import AroundSlide from "./AroundSlide";
+import MapView, { Pin } from "../../Components/MapView";
+import PinSlider from "../../Components/PinSlider";
+import { Close, MapBack, Search, SearchClose } from "../../assets";
 import { PlaceType } from "../../Shared/type";
+import { useRecoilValue } from "recoil";
+import { Installed, RegionId } from "../../Shared/atom";
+import InfiniteScroll from "react-infinite-scroll-component";
 import {
   flexCenter,
-  gap,
   input,
   theme,
-  Title,
-  WrapperWithHeaderFooter,
+  WrapperWithFooter,
 } from "../../styles/theme";
-import PlaceCard from "../../Components/PlaceCard/PlaceCard";
-import { match } from "ts-pattern";
-import MapViewwithSlider from "../../Components/MapViewWithSlider";
-import useDebounce from "../../Hooks/useDebounce";
-import useInput from "../../Hooks/useInput";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useGetAroundPlaces, useGetSearch } from "../../api/place";
 import { Mixpanel } from "../../utils/mixpanel";
-import { useGetRegion } from "../../api/region";
-import { reducer } from "../../Shared/reducer";
 import { handleClose } from "../../utils/preset";
-import NoSearchBox from "../../Components/NoSearchResult/NoSearchBox";
+import { useGetRegion } from "../../api/region";
+import useInput from "../../Hooks/useInput";
+import { useGetAroundPlaces, useGetSearch } from "../../api/place";
+import useDebounce from "../../Hooks/useDebounce";
 
 const Around = () => {
-  const regionId = useRecoilValue(RegionId);
   const installed = useRecoilValue(Installed);
+  const [isMapShown, setIsMapShown] = useState(false);
+  const regionId = useRecoilValue(RegionId);
   const { data: regionName } = useGetRegion(regionId);
-
-  const [state, dispatch] = useReducer(reducer, {
-    _t: "list",
-    sliderCurrent: 0,
-    isSelected: false,
+  const [center, setCenter] = useState<{ lat: number; lng: number }>({
+    lat: 37.3595704,
+    lng: 127.105399,
   });
 
+  const [aroundPins, setAroundPins] = useState<Pin[] | []>([]);
+  const { data: aroundPlaces } = useGetAroundPlaces(regionId);
+
+  useEffect(() => {
+    const _aroundPlaces: Pin[] = [];
+    aroundPlaces?.places?.forEach((place) => {
+      _aroundPlaces.push({
+        id: place.placeId,
+        placeId: place.placeId,
+        name: place.name,
+        latitude: place.coordinates.latitude,
+        longitude: place.coordinates.longitude,
+      });
+    });
+    setAroundPins(_aroundPlaces);
+    setCenter({
+      lat: aroundPlaces?.coordinates.latitude ?? 0,
+      lng: aroundPlaces?.coordinates.longitude ?? 0,
+    });
+  }, [aroundPlaces]);
+
+  // 핀 선택
+  const [isPinSelected, setIsPinSelected] = useState(false);
+  const handleSelectPin = (pin: Pin, idx: number) => {
+    setIsPinSelected(true);
+    setCenter({
+      lat: pin.latitude,
+      lng: pin.longitude,
+    });
+    setCurrent(idx);
+  };
+
+  // 카드 이동
+  const [current, setCurrent] = useState(-1);
+  useEffect(() => {
+    setCenter({
+      lat: aroundPins[current]?.latitude,
+      lng: aroundPins[current]?.longitude,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+
+  // scroll up
+  const [isScrollUp, setIsScrollUp] = useState(false);
+  useEffect(() => {
+    if (!isPinSelected) {
+      const targetElement = document.querySelector("#around-scroll")!;
+
+      const onScroll = () => {
+        setIsScrollUp(window.innerHeight - targetElement.scrollTop < 450);
+        setIsMapShown(targetElement.scrollTop <= 0);
+      };
+      targetElement.addEventListener("scroll", onScroll);
+      return () => targetElement.removeEventListener("scroll", onScroll);
+    }
+  }, [isPinSelected]);
+
+  const handleBack = () => {
+    setCenter({ lat: 0, lng: 0 });
+    setIsPinSelected(false);
+    setCurrent(-1);
+    setIsMapShown(false);
+  };
+
+  useEffect(() => {
+    Mixpanel.track("둘러보기 진입");
+  }, []);
+
+  // 검색
   const [resultHasMore, setResultHasMore] = useState(true);
   const [resultPage, setResultPage] = useState(1);
   const searchVal = useInput("");
   const [result, setResult] = useState<PlaceType[] | []>([]);
-
   const { data: searchResult, refetch: refetchSearchResult } = useGetSearch(
     regionId,
     {
@@ -51,8 +114,6 @@ const Around = () => {
       page: resultPage,
     }
   );
-  const { data: aroundPlaces } = useGetAroundPlaces(regionId);
-
   const getSearchItems = useCallback(async () => {
     await refetchSearchResult();
     if (searchResult) setResult(searchResult);
@@ -69,187 +130,96 @@ const Around = () => {
     setResultPage(resultPage + 1);
   };
 
-  // 카드 클릭하면 해당 인덱스 지도뷰
-  const handleClickPlaceCard = (idx: number) => {
-    dispatch({
-      _t: "select",
-      sliderCurrent: idx,
-      isSelected: true,
-    });
-  };
-
-  useEffect(() => {
-    const fetchResult = async () => {
-      await refetchSearchResult();
-      if (searchResult) {
-        if (searchResult.length < 1) {
-          setResultHasMore(false);
-          return;
-        }
-        setResult([...result, ...searchResult]);
-      }
-    };
-    if (searchVal.value.length > 0) fetchResult();
-  }, [resultPage]);
-
-  useEffect(() => {
-    Mixpanel.track("둘러보기 진입");
-  }, []);
-
   return (
-    <>
-      <Wrapper>
-        <Header title={`${regionName} 둘러보기`}>
-          {searchVal.value.length > 0 ||
-          state.isSelected ||
-          state._t === "map" ? (
-            <Back
-              className="left-icon"
-              onClick={() => {
-                if (state._t === "map")
-                  dispatch({
-                    _t: "toggle",
-                  });
-                else {
-                  searchVal.setValue("");
-                }
-              }}
-            />
-          ) : (
+    <Wrapper>
+      {isPinSelected ? (
+        <div className="map-back">
+          <MapBack onClick={handleBack} />
+        </div>
+      ) : (
+        <>
+          <Header title={regionName}>
             <Close
               className="left-icon"
               onClick={() => handleClose(installed)}
             />
-          )}
-          {searchVal.value.length > 0 && result.length === 0 ? (
-            <div />
-          ) : !(state.isSelected || searchVal.value.length > 0) ? (
-            state._t === "list" ? (
-              <div
-                className="view-toggle"
-                onClick={() =>
-                  dispatch({
-                    _t: "toggle",
-                  })
-                }
-              >
-                <Map />
-                지도
-              </div>
-            ) : (
-              <div />
-            )
-          ) : (
-            <div />
-          )}
-        </Header>
+          </Header>
+          <div className="search-box">
+            <Search className="search-icon" />
+            <SearchInput
+              value={searchVal.value}
+              onChange={searchVal.onChange}
+              placeholder="우리 동네 장소를 검색해봐요"
+            />
+            {searchVal.value.length > 0 && (
+              <SearchClose
+                className="search-close"
+                onClick={() => searchVal.setValue("")}
+              />
+            )}
+          </div>
+        </>
+      )}
 
-        {match(state._t)
-          .with("list", () => (
-            <>
-              <div className="search-box">
-                <Search className="search-icon" />
-                <SearchInput
-                  value={searchVal.value}
-                  onChange={searchVal.onChange}
-                  placeholder="우리 동네 장소를 검색해봐요"
-                />
-                {searchVal.value.length > 0 && (
-                  <SearchClose
-                    className="search-close"
-                    onClick={() => searchVal.setValue("")}
-                  />
-                )}
-              </div>
+      <div onClick={() => setIsMapShown(true)}>
+        <MapView
+          mapId="around"
+          height="100vh"
+          pins={aroundPins}
+          handleSelectPin={handleSelectPin}
+          center={center!}
+        />
+      </div>
 
-              {searchVal.value.length > 0 ? (
-                result.length > 0 ? (
-                  <div id="around-search-list">
-                    <InfiniteScroll
-                      dataLength={result.length}
-                      next={handleResultNext}
-                      hasMore={resultHasMore}
-                      loader={<div />}
-                      scrollableTarget="around-search-list"
-                    >
-                      <div className="result-cards">
-                        {result.map((place, i) => (
-                          <div
-                            key={place.placeId}
-                            onClick={() => handleClickPlaceCard(i)}
-                          >
-                            <PlaceCard type="list" {...{ place }} />
-                          </div>
-                        ))}
-                      </div>
-                    </InfiniteScroll>
-                    <NoSearchBox />
-                  </div>
-                ) : (
-                  <div className="no-search">
-                    <NoSearch />
-                    <div>
-                      <span>{searchVal.value}</span>의 검색 결과가 없어요
-                    </div>
-                    <div>검색어를 다시 확인해주세요!</div>
-                    <NoSearchBox style={{ marginTop: "1.6rem" }} />
-                  </div>
-                )
-              ) : (
-                <div className="around-scroll">
-                  <Title>{`${regionName}엔 이런 장소가 있어요`}</Title>
-                  <div className="sub">
-                    새로운 장소를 나만의 테마에 저장해요
-                  </div>
-
-                  <div className="cards">
-                    {aroundPlaces &&
-                      aroundPlaces.places.map((place, i) => (
-                        <div
-                          key={place.placeId}
-                          onClick={() => handleClickPlaceCard(i)}
-                        >
-                          <PlaceCard {...{ place }} type="list" />
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-            </>
-          ))
-          .with(
-            "map",
-            () =>
-              aroundPlaces && (
-                <MapViewwithSlider
-                  places={result.length > 0 ? result : aroundPlaces.places}
-                  defaultCurrent={state.sliderCurrent}
-                />
-              )
-          )
-          .exhaustive()}
-
-        <Footer />
-      </Wrapper>
-    </>
+      {!isPinSelected ? (
+        <>
+          <AroundScroll
+            id="around-scroll"
+            $isMapShown={isMapShown}
+            onClick={() => setIsMapShown(true)}
+          >
+            {aroundPlaces && (
+              <AroundSlide
+                {...{ isScrollUp, setIsMapShown }}
+                places={aroundPlaces.places}
+              />
+            )}
+          </AroundScroll>
+          <Footer />
+        </>
+      ) : (
+        current > -1 &&
+        aroundPlaces && (
+          <PinSlider
+            placeCardType="map"
+            {...{ current, setCurrent, setCenter }}
+            pins={aroundPlaces.places}
+          />
+        )
+      )}
+    </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  ${WrapperWithHeaderFooter};
-  overflow-y: scroll;
-  .view-toggle {
-    right: 2rem;
-  }
-  .pin-slider {
-    bottom: 8.4rem;
+  .map-back {
+    ${flexCenter};
+    position: fixed;
+    top: 0.8rem;
+    left: 0.8rem;
+    z-index: 800;
+    width: 3.4rem;
+    height: 3.4rem;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 0.1rem solid ${theme.color.gray3};
   }
   .search-box {
     border-bottom: 0.1rem solid ${theme.color.gray2};
     padding: 1.6rem 2rem;
     padding-top: 0.8rem;
     position: sticky;
-    top: 0;
+    top: 5rem;
     background-color: #fff;
     z-index: 100;
     .search-icon {
@@ -264,62 +234,20 @@ const Wrapper = styled.div`
       fill: ${theme.color.gray2_5};
     }
   }
-  .around-scroll {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100vh;
-    padding: 0 2rem;
-    padding-top: 14.7rem;
-    overflow-y: scroll;
-    box-sizing: border-box;
-    .sub {
-      margin-top: 0.4rem;
-      color: ${theme.color.gray5};
-      font-size: 1.6rem;
-      line-height: 2.24rem;
-      letter-spacing: -2%;
-    }
-  }
-  #around-search-list {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100vh;
-    padding-top: 11.7rem;
-    overflow-y: scroll;
-    box-sizing: border-box;
-    padding-bottom: 6.8rem;
-  }
-  .cards {
-    margin-top: 3rem;
-    padding-bottom: 8.4rem;
-    ${gap("1.4rem", "column")}
-  }
-  .result-cards {
-    margin-top: 1.4rem;
-    padding: 1.6rem 2rem;
-    ${gap("1.4rem", "column")}
-  }
-  .no-search {
-    ${flexCenter};
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    & > div {
-      font-size: 1.5rem;
-      font-weight: 500;
-      line-height: 160%;
-      color: ${theme.color.gray6};
-      & > span {
-        color: ${theme.color.orange};
-      }
-    }
-  }
+`;
+
+const AroundScroll = styled.div<{ $isMapShown: boolean }>`
+  ${WrapperWithFooter};
+  padding-bottom: 0;
+  transition: 0.5s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow-y: scroll;
+  margin-top: ${({ $isMapShown }) => ($isMapShown ? "calc(100vh - 11rem)" : 0)};
+  padding-top: ${({ $isMapShown }) =>
+    $isMapShown ? 0 : "calc(100vh - 42rem)"};
 `;
 
 const SearchInput = styled.input`
