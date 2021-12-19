@@ -57,12 +57,12 @@ const SaveButton = (post: PostType, fromDetail?: boolean) => {
       {isSaved ? (
         <div className="button" onClick={debouncedIsSaved}>
           {!fromDetail && <SaveActive className="icon" />}
-          <div>테마를 저장했어요</div>
+          <div>벌써 좋아한 테마에요</div>
         </div>
       ) : (
         <div className="button" onClick={debouncedIsSaved}>
           {!fromDetail && <Save className="icon" />}
-          <div>{fromDetail ? "마음에 들어요" : "테마 저장하기"}</div>
+          <div>마음에 들어요</div>
         </div>
       )}
     </Wrapper>

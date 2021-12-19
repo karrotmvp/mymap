@@ -31,6 +31,7 @@ export { ReactComponent as LogoTypo } from "./logo_typo.svg";
 export { ReactComponent as CreatePlus } from "./create_plus.svg";
 export { ReactComponent as PlaceAdd } from "./place_add.svg";
 export { ReactComponent as Search } from "./search.svg";
+export { ReactComponent as MapBack } from "./map-back.svg";
 
 export { ReactComponent as Unselect } from "./unselect.svg";
 export { ReactComponent as Select } from "./select.svg";

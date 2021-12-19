@@ -3,12 +3,22 @@ import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { deletePost, useGetPost } from "../../api/post";
-import { Back, Close, Delete, Edit, Map, More2, Thumbnail } from "../../assets";
+import {
+  Back,
+  Close,
+  Delete,
+  Edit,
+  Map,
+  MapBack,
+  More2,
+  Thumbnail,
+} from "../../assets";
 import Alert from "../../Components/Alert";
 import Header from "../../Components/Header";
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import {
   Button,
+  flexCenter,
   gap,
   theme,
   Title,
@@ -137,55 +147,51 @@ const Detail = ({
       animation={!fromWriteForm}
       isMine={post?.user.userId === viewerInfo.userId}
     >
-      <Header
-        style={{ zIndex: 600 }}
-        isMapView={!(state._t === "list" && state.isScrollUp)}
-      >
-        <>
-          {state._t === "map" ? (
-            <Back
-              className="left-icon"
-              onClick={() =>
-                dispatch({
-                  _t: "toggle",
-                })
-              }
-            />
-          ) : fromWriteForm || fromDetail ? (
-            <Close
-              className="left-icon"
-              onClick={() => {
-                if (fromDetail) {
-                  setIsCloseAlertOpened(true);
-                } else {
-                  history.push(
-                    pageBeforeWrite === "emptyTheme"
-                      ? "/mypage"
-                      : pageBeforeWrite
-                  );
-                }
-              }}
-            />
-          ) : (
-            <Back
-              className="left-icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (close) {
-                  close();
-                } else {
-                  history.push("/");
-                }
-              }}
-            />
-          )}
+      {state._t === "map" ? (
+        <div className="map-back">
+          <MapBack
+            onClick={() =>
+              dispatch({
+                _t: "toggle",
+              })
+            }
+          />
+        </div>
+      ) : (
+        <Header
+          style={{ zIndex: 600 }}
+          isMapView={!(state._t === "list" && state.isScrollUp)}
+        >
+          <>
+            {fromWriteForm || fromDetail ? (
+              <Close
+                className="left-icon"
+                onClick={() => {
+                  if (fromDetail) {
+                    setIsCloseAlertOpened(true);
+                  } else {
+                    history.push(
+                      pageBeforeWrite === "emptyTheme"
+                        ? "/mypage"
+                        : pageBeforeWrite
+                    );
+                  }
+                }}
+              />
+            ) : (
+              <Back
+                className="left-icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (close) {
+                    close();
+                  } else {
+                    history.push("/");
+                  }
+                }}
+              />
+            )}
 
-          {(state._t === "map" ||
-            (state._t === "list" && state.isScrollUp)) && (
-            <div className="post-title">{post?.title}</div>
-          )}
-
-          {state._t === "list" && (
             <div
               className="view-toggle"
               onClick={() => {
@@ -198,22 +204,22 @@ const Detail = ({
               }}
             >
               <Map />
-              지도
+              지도로 보기
             </div>
-          )}
-          {post?.user.userId === viewerInfo.userId && (
-            <More2
-              className="right-icon"
-              onClick={() => setIsEditModalOpened(true)}
-            />
-          )}
-        </>
-      </Header>
+            {post?.user.userId === viewerInfo.userId && (
+              <More2
+                className="right-icon"
+                onClick={() => setIsEditModalOpened(true)}
+              />
+            )}
+          </>
+        </Header>
+      )}
 
-      <div className="content">
-        {post &&
-          match(state._t)
-            .with("list", () => (
+      {post &&
+        match(state._t)
+          .with("list", () => (
+            <div className="content">
               <Wrapper
                 id="detail-scroll"
                 isMine={post?.user.userId === viewerInfo.userId}
@@ -275,21 +281,23 @@ const Detail = ({
                   </>
                 )}
               </Wrapper>
-            ))
-            .with(
-              "map",
-              () =>
-                post && (
+            </div>
+          ))
+          .with(
+            "map",
+            () =>
+              post && (
+                <div className="map">
                   <MapViewwithSlider
                     places={post.pins.map((p) => p.place)}
                     postRegionId={post.regionId}
                     postRegionName={post.regionName}
                     defaultCurrent={state.sliderCurrent}
                   />
-                )
-            )
-            .exhaustive()}
-      </div>
+                </div>
+              )
+          )
+          .exhaustive()}
 
       {isEditModalOpened &&
         (!regionGroup?.find((id) => id === post?.regionId) ? (
@@ -402,6 +410,25 @@ const Container = styled.div<{ isMine: boolean; animation?: boolean }>`
   left: 0;
   z-index: 700;
   height: 100vh;
+  .map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+  }
+  .map-back {
+    ${flexCenter};
+    position: fixed;
+    top: 0.8rem;
+    left: 0.8rem;
+    z-index: 800;
+    width: 3.4rem;
+    height: 3.4rem;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 0.1rem solid ${theme.color.gray3};
+  }
 `;
 
 const Wrapper = styled.div<{ isMine: boolean }>`
