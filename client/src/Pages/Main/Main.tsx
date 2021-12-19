@@ -200,7 +200,8 @@ const MainScroll = styled.div<{ $isMapShown: boolean }>`
   right: 0;
   overflow-y: scroll;
   margin-top: ${({ $isMapShown }) => ($isMapShown ? "calc(100vh - 11rem)" : 0)};
-  padding-top: ${({ $isMapShown }) => ($isMapShown ? 0 : "50vh")};
+  padding-top: ${({ $isMapShown }) =>
+    $isMapShown ? 0 : "calc(100vh - 42rem)"};
 `;
 
 export default Main;

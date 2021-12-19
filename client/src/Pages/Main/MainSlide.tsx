@@ -4,9 +4,11 @@ import Collection from "../../Components/Collection";
 import CreateButton from "../../Components/CreateButton";
 import { PostType } from "../../Shared/type";
 import { Dispatch, SetStateAction } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useGetRegion } from "../../api/region";
-import { RegionId } from "../../Shared/atom";
+import { DetailId, RegionId } from "../../Shared/atom";
+import { regionsGroup } from "../../utils/const";
+import { useGetPost } from "../../api/post";
 
 const MainSlide = ({
   isScrollUp,
@@ -19,6 +21,34 @@ const MainSlide = ({
 }) => {
   const regionId = useRecoilValue(RegionId);
   const { data: regionName } = useGetRegion(regionId);
+
+  let recommendPostId: number;
+  let recommendPostImg: string;
+  const regionGroup = regionsGroup
+    .map((region) => {
+      if (region.find((r) => r === regionId)) {
+        return [...region];
+      }
+      return [];
+    })
+    .find((group) => group.length > 0);
+
+  if (regionGroup?.find((region) => region === "471abc99b378")) {
+    // 서초
+    recommendPostId = 571;
+    recommendPostImg = "/fake-child-img.svg";
+  } else if (regionGroup?.find((region) => region === "5424e9f7ec6d")) {
+    // 잠실
+    recommendPostId = 559;
+    recommendPostImg = "/fake-cafe-img.svg";
+  } else {
+    // 한남
+    recommendPostId = 576;
+    recommendPostImg = "/fake-dog-img.svg";
+  }
+
+  const { data: recommendPost } = useGetPost(recommendPostId);
+  const setDetailId = useSetRecoilState(DetailId);
 
   return (
     <>
@@ -33,6 +63,25 @@ const MainSlide = ({
             <div />
           </div>
         )}
+
+        <div className="recommend">
+          <Title>이번 주 추천 테마예요</Title>
+          <div className="sub">
+            당장모아가 직접 선정한 추천 테마를 구경해 보세요
+          </div>
+          {recommendPost && (
+            <Recommend onClick={() => setDetailId(recommendPost.postId)}>
+              <img src={recommendPostImg} alt="recommend" />
+              <div className="recommend-info">
+                <div className="recommend-title">{recommendPost.title}</div>
+                <div className="recommend-user">
+                  <img src={recommendPost.user.profileImageUrl} alt="profile" />
+                  <div>{recommendPost.user.userName}</div>
+                </div>
+              </div>
+            </Recommend>
+          )}
+        </div>
 
         <div className="content">
           <Title className="main-title">{`${regionName} 이웃들이 만든
@@ -70,6 +119,7 @@ const Card = styled.div`
     top: 0;
     .main-title {
       padding-left: 2rem;
+      margin-top: 5rem;
     }
   }
   .rectangle {
@@ -81,6 +131,54 @@ const Card = styled.div`
       height: 0.3rem;
       position: absolute;
       top: 1.4rem;
+    }
+  }
+  .recommend {
+    width: 100%;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    padding-bottom: 5rem;
+    border-bottom: 1.6rem solid ${theme.color.gray1_5};
+    .sub {
+      margin-top: 0.5rem;
+      font-size: 14px;
+      line-height: 140%;
+      letter-spacing: -0.02em;
+      color: ${theme.color.gray5};
+    }
+  }
+`;
+
+const Recommend = styled.div`
+  position: relative;
+  margin-top: 3rem;
+  & > img {
+    width: 100%;
+    height: 19.9rem;
+    border-radius: 1rem;
+  }
+  .recommend-info {
+    position: absolute;
+    left: 1.3rem;
+    bottom: 1.3rem;
+    color: #ffffff;
+    img {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+    }
+    .recommend-title {
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 120%;
+    }
+    .recommend-user {
+      margin-top: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 13px;
+      line-height: 150%;
     }
   }
 `;
