@@ -6,7 +6,7 @@ import Header from "../../Components/Header";
 import AroundSlide from "./AroundSlide";
 import MapView, { Pin } from "../../Components/MapView";
 import PinSlider from "../../Components/PinSlider";
-import { Close, MapBack, Search, SearchClose } from "../../assets";
+import { Close, MapBack, NoSearch, Search, SearchClose } from "../../assets";
 import { PlaceType } from "../../Shared/type";
 import { useRecoilValue } from "recoil";
 import { Installed, RegionId } from "../../Shared/atom";
@@ -23,6 +23,8 @@ import { useGetRegion } from "../../api/region";
 import useInput from "../../Hooks/useInput";
 import { useGetAroundPlaces, useGetSearch } from "../../api/place";
 import useDebounce from "../../Hooks/useDebounce";
+import NoSearchBox from "../../Components/NoSearchResult/NoSearchBox";
+import PlaceList from "./PlaceList";
 
 const Around = () => {
   const installed = useRecoilValue(Installed);
@@ -197,6 +199,31 @@ const Around = () => {
           />
         )
       )}
+
+      {searchVal.value.length > 0 &&
+        (result.length > 0 ? (
+          <div id="around-search-list">
+            <InfiniteScroll
+              dataLength={result.length}
+              next={handleResultNext}
+              hasMore={resultHasMore}
+              loader={<div />}
+              scrollableTarget="around-search-list"
+            >
+              <PlaceList places={result} />
+            </InfiniteScroll>
+            <NoSearchBox />
+          </div>
+        ) : (
+          <div className="no-search">
+            <NoSearch />
+            <div>
+              <span>{searchVal.value}</span>의 검색 결과가 없어요
+            </div>
+            <div>검색어를 다시 확인해주세요!</div>
+            <NoSearchBox style={{ marginTop: "1.6rem" }} />
+          </div>
+        ))}
     </Wrapper>
   );
 };
@@ -232,6 +259,24 @@ const Wrapper = styled.div`
       right: 1.358rem;
       top: 0.4rem;
       fill: ${theme.color.gray2_5};
+    }
+  }
+  #around-search-list {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    padding-top: 14.7rem;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding-bottom: 8rem;
+    background-color: #fff;
+  }
+  .places {
+    margin-top: 2rem;
+    & > div:not(:first-child) {
+      border-top: 0.1rem solid ${theme.color.gray1_7};
     }
   }
 `;
