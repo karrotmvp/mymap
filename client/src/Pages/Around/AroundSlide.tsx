@@ -37,6 +37,7 @@ const Card = styled.div`
   min-height: 10vh;
   background-color: ${theme.color.white};
   padding-top: 4.1rem;
+  padding-bottom: 6.8rem;
   box-sizing: border-box;
   border-top-left-radius: 2rem;
   border-top-right-radius: 2rem;
