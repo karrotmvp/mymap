@@ -41,6 +41,7 @@ export { ReactComponent as MapBack } from "./map-back.svg";
 export { ReactComponent as HeartEmpty } from "./heart-empty.svg";
 export { ReactComponent as HeartEmptyWhite } from "./heart-empty-white.svg";
 export { ReactComponent as Heart } from "./heart.svg";
+export { ReactComponent as PlaceDetailEmpty } from "./place-detail-empty.svg";
 
 export { ReactComponent as Unselect } from "./unselect.svg";
 export { ReactComponent as Select } from "./select.svg";

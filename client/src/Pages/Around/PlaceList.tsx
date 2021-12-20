@@ -69,9 +69,13 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
                   )}
                 </div>
               </div>
-              <div className="save">
-                <span>1</span>명의 이웃이 저장했어요
-              </div>
+              {place.savedNum > 0 ? (
+                <div className="save">
+                  <span>{place.savedNum}</span>명의 이웃이 저장했어요
+                </div>
+              ) : (
+                <div className="no-save">가장 먼저 저장해 보세요!</div>
+              )}
             </div>
             {place.images[0]?.thumbnail && (
               <img
@@ -166,6 +170,12 @@ const Place = styled.div<{ hasImg: boolean }>`
       span {
         font-weight: 700;
       }
+    }
+    .no-save {
+      margin-top: 1.1rem;
+      color: ${theme.color.gray6};
+      font-size: 13px;
+      letter-spacing: -0.02em;
     }
   }
 

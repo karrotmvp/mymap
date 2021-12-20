@@ -2,7 +2,14 @@ import { useEffect, useRef } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { keyframes } from "styled-components";
 import { useGetPlaceDetail } from "../../api/place";
-import { Call, MapBack, Pin, PlaceAdd, Time } from "../../assets";
+import {
+  Call,
+  MapBack,
+  Pin,
+  PlaceAdd,
+  PlaceDetailEmpty,
+  Time,
+} from "../../assets";
 import Collection from "../../Components/Collection";
 import MapView from "../../Components/MapView";
 import {
@@ -147,18 +154,31 @@ const PlaceDetail = ({
           </div>
 
           <div className="posts">
-            <div className="title">
-              <span>{data?.name}</span> 가게가 저장된
-              <div>
-                <span>{data?.posts.posts.length}개</span> 테마예요
+            {data?.posts.posts && data?.posts.posts.length > 0 ? (
+              <div className="title">
+                <span>{data?.name}</span> 가게가 저장된
+                <div>
+                  <span>{data?.posts.posts.length}개</span> 테마예요
+                </div>
               </div>
+            ) : (
+              <div className="title">
+                아직 <span>{data?.name}</span> 가게가 저장된
+                <div>테마가 없어요</div>
+              </div>
+            )}
+          </div>
+          {data?.posts.posts && data?.posts.posts.length > 0 ? (
+            <div className="collections">
+              {data?.posts.posts.map((post) => (
+                <Collection key={post.postId} {...{ post }} />
+              ))}
             </div>
-          </div>
-          <div className="collections">
-            {data?.posts.posts.map((post) => (
-              <Collection key={post.postId} {...{ post }} />
-            ))}
-          </div>
+          ) : (
+            <div className="empty">
+              <PlaceDetailEmpty />
+            </div>
+          )}
         </div>
       </Slide>
     </Wrapper>
@@ -311,6 +331,12 @@ const Slide = styled.div`
       & > div:not(:first-child) {
         border-top: 0.1rem solid ${theme.color.gray1_7};
       }
+    }
+    .empty {
+      ${flexCenter};
+      width: 100%;
+      padding-top: 1.9rem;
+      padding-bottom: 3.9rem;
     }
   }
 `;
