@@ -277,6 +277,15 @@ const Detail = ({
                           />
                         </div>
                       ))}
+                      {/* {post?.user.userId === viewerInfo.userId && (
+                        <div
+                          className="add-button"
+                          onClick={() => setIsSearchOpened(true)}
+                        >
+                          <Plus className="add-icon" />
+                          가게 추가
+                        </div>
+                      )} */}
                     </div>
                   </>
                 )}
