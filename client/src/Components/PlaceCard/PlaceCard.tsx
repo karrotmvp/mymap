@@ -1,7 +1,7 @@
 import { ReactChild } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { Call, Pin, Save, Time } from "../../assets";
+import { Call, Pin, PlaceAdd, Time } from "../../assets";
 import {
   ReigonDiffModal,
   PlaceToSave,
@@ -44,7 +44,7 @@ const PlaceCard = ({
   const regionId = useRecoilValue(RegionId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
   const setIsReigonDiffModalShown = useSetRecoilState(ReigonDiffModal);
-
+  const setPlaceDetailId = useSetRecoilState(PlaceDetailId);
   const setPlaceToSave = useSetRecoilState(PlaceToSave);
 
   const regionGroup = regionsGroup
@@ -81,8 +81,6 @@ const PlaceCard = ({
     });
   };
 
-  const setPlaceDetailId = useSetRecoilState(PlaceDetailId);
-
   return (
     <Wrapper
       {...{ className, type }}
@@ -99,7 +97,7 @@ const PlaceCard = ({
         {type !== "write" && (
           <div className="card-top">
             <div className="name">{place.name}</div>
-            <Save
+            <PlaceAdd
               onClick={(e) => {
                 e.stopPropagation();
                 clickPlaceAdd();

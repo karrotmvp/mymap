@@ -112,6 +112,9 @@ const Detail = ({
   };
 
   useEffect(() => {
+    const targetElement = document.querySelector("#detail-scroll");
+    targetElement?.scrollTo(0, 0);
+
     if (post) {
       setPostToEdit(post);
       Mixpanel.track("상세글 진입", { postId: post.postId });
@@ -122,6 +125,7 @@ const Detail = ({
     if (fromWriteForm) refetchPost();
 
     const targetElement = document.querySelector("#detail-scroll");
+
     const onScroll = () => {
       dispatch({
         _t: "scroll",
@@ -184,6 +188,10 @@ const Detail = ({
               />
             )}
 
+            {state.isScrollUp && (
+              <div className="post-title">{post?.title}</div>
+            )}
+
             <div
               className="view-toggle"
               onClick={() => {
@@ -211,61 +219,60 @@ const Detail = ({
       {post &&
         match(state._t)
           .with("list", () => (
-            <div className="content">
-              <Wrapper
-                id="detail-scroll"
-                isMine={post?.user.userId === viewerInfo.userId}
-              >
-                {postId === 560 ||
-                postId === 555 ||
-                postId === 568 ||
-                postId === 570 ||
-                postId === 571 ||
-                postId === 573 ||
-                postId === 559 ||
-                postId === 576 ? (
-                  <Fake {...{ post }} />
-                ) : (
-                  <>
-                    <div className="post-title">
-                      <Title style={{ color: theme.color.black }}>
-                        {post?.title}
-                      </Title>
-                      <div className="content">{post?.contents}</div>
-                    </div>
+            <Wrapper
+              id="detail-scroll"
+              isMine={post?.user.userId === viewerInfo.userId}
+            >
+              {postId === 560 ||
+              postId === 555 ||
+              postId === 568 ||
+              postId === 570 ||
+              postId === 571 ||
+              postId === 573 ||
+              postId === 559 ||
+              postId === 576 ? (
+                <Fake {...{ post }} />
+              ) : (
+                <>
+                  <div className="post-title">
+                    <Title style={{ color: theme.color.black }}>
+                      {post?.title}
+                    </Title>
+                    <div className="content">{post?.contents}</div>
+                  </div>
 
-                    <Profile>
-                      {post?.user.profileImageUrl ? (
-                        <img
-                          className="photo"
-                          alt="profile"
-                          src={post?.user.profileImageUrl}
-                        />
-                      ) : (
-                        <Thumbnail className="photo" />
-                      )}
-                      <div>
-                        <div className="name">
-                          {post?.user.userName}님이 추천하는 장소예요.
-                        </div>
-                        <div className="date">
-                          {dayjs(post?.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
-                          {post?.regionName}
-                        </div>
+                  <Profile>
+                    {post?.user.profileImageUrl ? (
+                      <img
+                        className="photo"
+                        alt="profile"
+                        src={post?.user.profileImageUrl}
+                      />
+                    ) : (
+                      <Thumbnail className="photo" />
+                    )}
+                    <div>
+                      <div className="name">
+                        {post?.user.userName}님이 추천하는 장소예요.
                       </div>
-                    </Profile>
+                      <div className="date">
+                        {dayjs(post?.createdAt).format("YYYY년 MM월 DD일")} ·{" "}
+                        {post?.regionName}
+                      </div>
+                    </div>
+                  </Profile>
 
-                    <div className="cards">
-                      {post?.pins.map((pin, i) => (
-                        <PlaceCard
-                          key={pin.pinId}
-                          place={pin.place}
-                          type="list"
-                          postRegionId={post.regionId}
-                          postRegionName={post.regionName}
-                        />
-                      ))}
-                      {/* {post?.user.userId === viewerInfo.userId && (
+                  <div className="cards">
+                    {post?.pins.map((pin, i) => (
+                      <PlaceCard
+                        key={pin.pinId}
+                        place={pin.place}
+                        type="list"
+                        postRegionId={post.regionId}
+                        postRegionName={post.regionName}
+                      />
+                    ))}
+                    {/* {post?.user.userId === viewerInfo.userId && (
                         <div
                           className="add-button"
                           onClick={() => setIsSearchOpened(true)}
@@ -274,11 +281,10 @@ const Detail = ({
                           가게 추가
                         </div>
                       )} */}
-                    </div>
-                  </>
-                )}
-              </Wrapper>
-            </div>
+                  </div>
+                </>
+              )}
+            </Wrapper>
           ))
           .with(
             "map",

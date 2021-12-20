@@ -7,6 +7,7 @@ import { More, Plus } from "../../assets";
 import {
   DetailId,
   PageBeforeWrite,
+  PlaceDetailId,
   PostIsDefaultEmpty,
   PostIsSaved,
 } from "../../Shared/atom";
@@ -25,7 +26,7 @@ interface CollectionProps {
 const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
   const history = useHistory();
   const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
-
+  const setPlaceDetailId = useSetRecoilState(PlaceDetailId);
   const setDetailId = useSetRecoilState(DetailId);
   const [isSaved, setIsSaved] = useRecoilState(
     PostIsSaved(post.postId.toString())
@@ -62,7 +63,14 @@ const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
   };
 
   return (
-    <Wrapper onClick={() => post.pins.length > 0 && setDetailId(post.postId)}>
+    <Wrapper
+      onClick={() => {
+        if (post.pins.length > 0) {
+          setDetailId(post.postId);
+          setPlaceDetailId(null);
+        }
+      }}
+    >
       <div className="title-wrapper">
         <div style={{ width: "100%" }}>
           <div className="title">{post.title}</div>

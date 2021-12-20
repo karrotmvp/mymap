@@ -39,7 +39,7 @@ const Footer = () => {
       </FooterLink>
       <FooterLink to="/around" $isClicked={pathname === "/around"}>
         {pathname === "/around" ? <AroundActive /> : <Around />}
-        <div>장소 둘러보기</div>
+        <div>가게 둘러보기</div>
       </FooterLink>
       <FooterDiv onClick={clickMypage} $isClicked={pathname === "/mypage"}>
         {pathname === "/mypage" ? <MypageActive /> : <Mypage />}

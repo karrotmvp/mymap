@@ -2,7 +2,12 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useGetRegion } from "../../api/region";
 import { PlaceAddOrange, PlaceAddWhite } from "../../assets";
-import { PlaceToSave, RegionId, ViewerInfo } from "../../Shared/atom";
+import {
+  PlaceDetailId,
+  PlaceToSave,
+  RegionId,
+  ViewerInfo,
+} from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { theme, Title } from "../../styles/theme";
 import { funcNeedLogin } from "../../utils/preset";
@@ -12,6 +17,7 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
   const { data: regionName } = useGetRegion(regionId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
   const setPlaceToSave = useSetRecoilState(PlaceToSave);
+  const setPlaceDetailId = useSetRecoilState(PlaceDetailId);
 
   const clickPlaceAdd = (placeId: string) => {
     funcNeedLogin({
@@ -36,6 +42,7 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
       <div className="places">
         {places.map((place) => (
           <Place
+            onClick={() => setPlaceDetailId(place.placeId)}
             key={place.placeId}
             hasImg={place.images[0]?.thumbnail ? true : false}
           >

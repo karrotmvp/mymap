@@ -85,23 +85,25 @@ const PlaceDetail = ({
         <MapBack />
       </div>
       {data && (
-        <MapView
-          mapId="place-detail"
-          height="30rem"
-          pins={[
-            {
-              id: data.placeId,
-              placeId: data.placeId,
-              name: data.name,
-              latitude: data.coordinates.latitude,
-              longitude: data.coordinates.longitude,
-            },
-          ]}
-          center={{
-            lat: data.coordinates.latitude,
-            lng: data.coordinates.longitude,
-          }}
-        />
+        <div className="place-detail-map">
+          <MapView
+            mapId="place-detail"
+            height="30rem"
+            pins={[
+              {
+                id: data.placeId,
+                placeId: data.placeId,
+                name: data.name,
+                latitude: data.coordinates.latitude,
+                longitude: data.coordinates.longitude,
+              },
+            ]}
+            center={{
+              lat: data.coordinates.latitude,
+              lng: data.coordinates.longitude,
+            }}
+          />
+        </div>
       )}
       <Slide>
         <div>
@@ -177,9 +179,11 @@ const Wrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 700;
   width: 100%;
   height: 100vh;
+  background-color: #fff;
+  overflow-y: scroll;
   .map-back {
     ${flexCenter};
     position: fixed;
@@ -192,20 +196,22 @@ const Wrapper = styled.div`
     background-color: #fff;
     border: 0.1rem solid ${theme.color.gray3};
   }
+  .place-detail-map {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+  }
 `;
 
 const Slide = styled.div`
   width: 100%;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  min-height: 10vh;
+  margin-top: 26.7rem;
   overflow-y: scroll;
   & > div {
     width: 100%;
-    position: absolute;
-    margin-top: 26.7rem;
     min-height: 10vh;
     background-color: ${theme.color.white};
     box-sizing: border-box;
