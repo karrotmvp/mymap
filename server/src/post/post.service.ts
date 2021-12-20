@@ -64,7 +64,7 @@ export class PostService {
         if (!post) throw new BadRequestException();
         if (!post.getShare() && post.getUser().getUserId() !== userId) throw new BadRequestException();
         const user: UserDTO = await this.userService.readUserDetail(post.getUser().getUserId());
-        const detailPins: PinDTO[] = await this.readPinDetail(post.pins, coordinate);
+        const detailPins: PinDTO[] = await this.readPinDetail(post.pins, coordinate, userId);
         const savedNum: number = await this.savedPostRepository.countSavedNum(postId);
         const detailPost: PostDTO = new PostDTO(post, user, detailPins, coordinate, savedNum);
         const saved = userId ? await this.checkSaved(userId, postId) : null;
@@ -85,14 +85,14 @@ export class PostService {
         return feed;
     }
 
-    private async readPinDetail(pins: Pin[], coordinate: CoordinatesDTO): Promise<PinDTO[]> {
+    private async readPinDetail(pins: Pin[], coordinate: CoordinatesDTO, userId?: number): Promise<PinDTO[]> {
         let places: PlaceDTO[] = [];
         const placeIds:string[] = pins.map((pin: Pin) => pin.getPlaceId())
         if (placeIds.length > 1) {
-            places = await this.placeService.readPlaces(placeIds);
+            places = await this.placeService.readPlaces(placeIds, userId);
         }
         if (placeIds.length == 1) {
-            places.push(await this.placeService.readPlace(placeIds[0]));
+            places.push(await this.placeService.readPlace(placeIds[0], userId));
         }
         const detailPins: PinDTO[] = places.map((place: PlaceDTO) => {
             const placeId = place.placeId;
