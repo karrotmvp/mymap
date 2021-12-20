@@ -60,7 +60,7 @@ export class PlaceController {
     @ApiOkResponse({ description: '장소 상세 정보 불러오기 성공', type: PlaceDTO })
     // @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
     async readPlaceDetail(@Req() req: any, @Param('placeId') placeId: string) {
-        await this.placeService.readPlaceDetail(req.user.userId, placeId);
+        return await this.placeService.readPlaceDetail(req.user.userId, placeId);
     }
 
     @Roles(Role.Unsigned_User)
