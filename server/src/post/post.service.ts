@@ -358,7 +358,9 @@ export class PostService {
     async readPlacePosts(placeId: string, userId: number): Promise<FeedDTO> {
         const Pins: Pin[] = await this.pinRepository.find({
             relations: ['post'],
-            where: { placeId: placeId }
+            where: (qb) => {
+                qb.where('Pin__post.share = true and placeId = :placeId', { placeId: placeId })
+            }
         })
         const postIds: number[] = Pins.map(pin => pin.post.getPostId());
         const postIdsSet: number[] = [...new Set(postIds)];
