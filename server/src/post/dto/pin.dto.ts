@@ -13,6 +13,6 @@ export class PinDTO {
     pinId: number
     @ApiProperty({ example: "장소 한 줄평 "})
     review: string;
-    @ApiProperty()
+    @ApiProperty({ type: () => PlaceDTO })
     place: PlaceDTO;
 }
