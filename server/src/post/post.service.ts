@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bull';
-import { BadRequestException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { Queue } from 'bull';
 import { EventEmitter2 } from 'eventemitter2';
 import { Event } from 'src/event/event';
@@ -323,6 +323,19 @@ export class PostService {
         const deleteIds: number[] = existIds.filter(x => !postIds.includes(x));
         if (saveIds && saveIds.length) await this.savePinInPost(saveIds, pin, regionId, regionName);
         if (deleteIds && deleteIds.length) await this.deletePinInPost(deleteIds, pin);
+    }
+
+    async addPin(userId: number, postId: number, pin: CreatePinDTO, regionId: string) {
+        const post: Post = await this.postRepository.findOne(postId, { relations: ['user'] });
+        if (post.user.getUserId() !== userId) throw new ForbiddenException();
+        if (!post.getRegionId()) {
+            post.setRegionId(regionId);
+            const regionName = await this.regionService.readRegionName(regionId);
+            post.setRegionName(regionName);
+        }
+        const newPin: Pin[] = await this.pinRepository.savePins([pin]);
+        post.pins.push(...newPin);
+        await this.postRepository.save(post);
     }
 
     async readUserPostInfo(userId: number, regionId: string): Promise<Post[]> {
