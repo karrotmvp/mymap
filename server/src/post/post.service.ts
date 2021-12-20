@@ -189,6 +189,22 @@ export class PostService {
         })
     }
 
+    async readSavedPins(userId: number): Promise<Pin[]> {
+        const savedPosts: SavedPost[] = await this.savedPostRepository.find({
+            relations: ['user', 'post'],
+            where: (qb) => {
+                qb.where('SavedPost__user.userId = :userId AND SavedPost__post.share = true', { userId: userId })
+            }
+        })
+        const savedPostsIds: number[] = savedPosts.map(savedPost => savedPost.getPostId());
+        return await this.pinRepository.find({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId IN (:...postId)', { postId: savedPostsIds })
+            }
+        })
+    }
+
     async readPostNum(userId: number): Promise<number> {
         const postNum = await this.postRepository.count({
             relations: ['user'],
@@ -217,6 +233,23 @@ export class PostService {
                 qb.where('Pin__post.postId IN (:...postId) AND placeId = :placeId', { postId: postIds, placeId: placeId })
             }
         })
+    }
+
+    async setIsSaved(userId: number, placeId: string): Promise<boolean> {
+        const Myposts: Post[] = await this.postRepository.find({
+            relations: ['user'],
+            where: (qb) => {
+                qb.where('Post__user.userId = :userId', { userId: userId })
+            }
+        })
+        const MypostsIds: number[] = Myposts.map(mypost => mypost.getPostId());
+        const PinNums: number = await this.pinRepository.count({
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('Pin__post.postId IN (:...postId) AND placeId = :placeId', { postId: MypostsIds, placeId: placeId })
+            }
+        })
+        return PinNums > 0 ? true : false;
     }
 
     async readDeletedPost(postId: number): Promise<Post> {
