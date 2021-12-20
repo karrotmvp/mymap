@@ -354,4 +354,17 @@ export class PostService {
         defaultPost.pins = newPins;
         await this.postRepository.save(defaultPost);
     }
+
+    async readPlacePosts(placeId: string, userId: number): Promise<FeedDTO> {
+        const Pins: Pin[] = await this.pinRepository.find({
+            relations: ['post'],
+            where: { placeId: placeId }
+        })
+        const postIds: number[] = Pins.map(pin => pin.post.getPostId());
+        const postIdsSet: number[] = [...new Set(postIds)];
+        const posts: Post[] = await this.postRepository.find({
+            where: { postId: In(postIdsSet) }
+        })
+        return await this.readPostList(userId, posts);
+    }
 }

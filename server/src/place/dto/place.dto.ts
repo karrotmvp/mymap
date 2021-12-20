@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { FeedDTO } from "src/post/dto/feed.dto";
 import { CoordinatesDTO } from "./coordinates.dto";
 
 export class PlaceDTO {
@@ -53,8 +54,11 @@ export class PlaceDTO {
     @ApiProperty({ example: 0 })
     savedNum: number;
   
-	@ApiProperty()
-  	isSaved: boolean;
+	  @ApiProperty()
+    isSaved: boolean;
+  
+    @ApiProperty({ type: FeedDTO })
+    posts: FeedDTO;
 
     private phoneNumberConvert(phone: string): string {
       if (!phone) return;
