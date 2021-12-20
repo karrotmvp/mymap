@@ -43,13 +43,23 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
               <div>
                 <div className="title">{place.name}</div>
                 <div className="category">
-                  {place.category
-                    .slice(0, place.category.length - 1)
-                    .map((c) => (
-                      <div>{c}</div>
-                    ))}
-                  <div>·</div>
-                  {place.category[place.category.length - 1]}
+                  {place.category?.length > 0 ? (
+                    <>
+                      {place.category?.length > 2 && (
+                        <>
+                          {place.category
+                            .slice(0, place.category.length - 1)
+                            .map((c) => (
+                              <div>{c}</div>
+                            ))}
+                          <div>·</div>
+                        </>
+                      )}
+                      {place.category[place.category.length - 1]}
+                    </>
+                  ) : (
+                    "동네 장소"
+                  )}
                 </div>
               </div>
               <div className="save">
