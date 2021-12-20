@@ -28,12 +28,14 @@ const SearchPlace = ({
   places,
   setPlaces,
   postIdFromProps,
+  refetchDetail,
 }: {
   setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
   close: Function;
   places: PlaceType[];
   setPlaces?: Dispatch<SetStateAction<PlaceType[]>>;
   postIdFromProps?: number;
+  refetchDetail?: () => void;
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
@@ -170,7 +172,15 @@ const SearchPlace = ({
       {isMapOpened && place && (
         <PlaceMapView
           close={() => setIsMapOpened(false)}
-          {...{ place, setIsSearchOpened, places, setPlaces, postIdFromProps }}
+          closeSearch={() => close()}
+          {...{
+            place,
+            setIsSearchOpened,
+            places,
+            setPlaces,
+            postIdFromProps,
+            refetchDetail,
+          }}
         />
       )}
     </Wrapper>

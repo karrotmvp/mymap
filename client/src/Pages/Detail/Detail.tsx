@@ -383,7 +383,8 @@ ${post?.regionName}에 인증해 주세요.`}
         <SearchPlace
           places={post.pins.map((pin) => pin.place) ?? []}
           postIdFromProps={post.postId}
-          {...{ setIsSearchOpened }}
+          refetchDetail={() => refetchPost()}
+          {...{ setIsSearchOpened, refetchPost }}
           close={() => setIsSearchOpened(false)}
         />
       )}
@@ -498,7 +499,7 @@ const Wrapper = styled.div<{ isMine: boolean }>`
     line-height: 135%;
     font-weight: 500;
     margin-top: 1.4rem;
-    margin-bottom: -7rem;
+    margin-bottom: -5rem;
     color: ${theme.color.orange};
     .add-icon {
       position: absolute;
