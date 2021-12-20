@@ -140,6 +140,16 @@ export class PostController {
         this.eventEmitter.emit(MyMapEvent.POST_PIN_UPDATED, new Event(req.user.userId, postIds));
     }
 
+    @Roles(Role.Signed_User)
+    @UseGuards(RolesGuard)
+    @ApiOkResponse({ description: '핀 추가 성공' })
+    @ApiBody({ type: CreatePinDTO })
+    @ApiHeader({ 'name': 'Authorization', description: 'JWT token Bearer' })
+    @Put('/pin/:postId')
+    async addPin(@Req() req: any, @Param('postId') postId: number, @Body() pin: CreatePinDTO, @Query('regionId') regionId: string) {
+        await this.postService.addPin(req.user.userId, postId, pin, regionId);
+    }
+
     @Roles(Role.Unsigned_User)
     @UseGuards(RolesGuard)
     @Get('/pin/:regionId') 
