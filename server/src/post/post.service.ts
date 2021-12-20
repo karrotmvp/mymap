@@ -326,7 +326,7 @@ export class PostService {
     }
 
     async addPin(userId: number, postId: number, pin: CreatePinDTO, regionId: string) {
-        const post: Post = await this.postRepository.findOne(postId, { relations: ['user'] });
+        const post: Post = await this.postRepository.findOne(postId, { relations: ['user', 'pins'] });
         if (post.user.getUserId() !== userId) throw new ForbiddenException();
         if (!post.getRegionId()) {
             post.setRegionId(regionId);
