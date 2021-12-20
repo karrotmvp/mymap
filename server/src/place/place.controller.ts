@@ -56,6 +56,13 @@ export class PlaceController {
 
     @Roles(Role.Unsigned_User)
     @UseGuards(RolesGuard)
+    @Get('/detail/:placeId')
+    async readPlaceDetail(@Req() req: any, @Param('placeId') placeId: string) {
+        await this.placeService.readPlaceDetail(req.user.userId, placeId);
+    }
+
+    @Roles(Role.Unsigned_User)
+    @UseGuards(RolesGuard)
     @Post('/new/:regionId')
     @ApiCreatedResponse({ description: '새로운 장소 등록 완료' })
     @ApiBody({ description: '새로운 장소 등록 형식', type: CreateNewPlaceDTO })

@@ -42,10 +42,12 @@ export class PlaceService {
         return regionNum;
     }
 
-    async readPlace(placeId: string): Promise<PlaceDTO> {
+    async readPlace(placeId: string, userId?: number): Promise<PlaceDTO> {
         const place$ = await this.placeRepository.findOne(placeId);
         const place = await lastValueFrom(place$);
-        place.savedNum = await this.postService.countSavedPlaces(place.placeId);
+        place.savedNum = userId ? await this.postService.countMySavedPlaces(userId, place.placeId) : await this.postService.countSavedPlaces(place.placeId);
+        place.isSaved = userId ? await this.postService.setIsSaved(userId, place.placeId) : false;
+        // place.savedNum = await this.postService.countSavedPlaces(place.placeId);
         return place;
     }
 
@@ -70,6 +72,12 @@ export class PlaceService {
             result.push(...places);
         }
         return result;
+    }
+
+    async readPlaceDetail(userId: number, placeId: string): Promise<PlaceDTO> {
+        const placeInfo: PlaceDTO = await this.readPlace(placeId, userId);
+        placeInfo.posts = await this.postService.readPlacePosts(placeId, userId);
+        return placeInfo;
     }
 
     async searchPlace(query: string, regionId: string, page: number, perPage: number): Promise<PlaceDTO[]> {
