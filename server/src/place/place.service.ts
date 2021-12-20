@@ -45,7 +45,7 @@ export class PlaceService {
     async readPlace(placeId: string, userId?: number): Promise<PlaceDTO> {
         const place$ = await this.placeRepository.findOne(placeId);
         const place = await lastValueFrom(place$);
-        place.savedNum = userId ? await this.postService.countMySavedPlaces(userId, place.placeId) : await this.postService.countSavedPlaces(place.placeId);
+        place.savedNum = await this.postService.countSavedPlaces(place.placeId);
         place.isSaved = userId ? await this.postService.setIsSaved(userId, place.placeId) : false;
         // place.savedNum = await this.postService.countSavedPlaces(place.placeId);
         return place;
@@ -65,7 +65,7 @@ export class PlaceService {
             const places$ = await this.placeRepository.findWithIds(slicedPlaceIds);
             const places = await lastValueFrom(places$);
             const promise = places.map(async(place) => {
-                place.savedNum = userId ? await this.postService.countMySavedPlaces(userId, place.placeId) : await this.postService.countSavedPlaces(place.placeId);
+                place.savedNum = await this.postService.countSavedPlaces(place.placeId);
                 place.isSaved = userId ? await this.postService.setIsSaved(userId, place.placeId) : false;
             })
             await Promise.all(promise);

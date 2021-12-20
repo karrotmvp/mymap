@@ -26,7 +26,10 @@ export class PinRepository extends Repository<Pin> {
 
     async countPinsWithPlaceId(placeId: string) {
         const num = await this.count({
-            where: { placeId: placeId }
+            relations: ['post'],
+            where: (qb) => {
+                qb.where('placeId = :placeId AND Pin__post.share = true', { placeId: placeId })
+            }
         })
         return num;
     }
