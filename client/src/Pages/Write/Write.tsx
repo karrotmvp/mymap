@@ -37,7 +37,7 @@ const Write = () => {
 
   // 상세 -> 수정
   useEffect(() => {
-    setDetailId(null);
+    setDetailId([]);
   }, []);
 
   const { isExact: isWrite } =
@@ -194,8 +194,8 @@ const Write = () => {
       >
         <Close onClick={handleClose} className="left-icon" />
       </Header>
-      <Title>{`모아보고 싶은
-나만의 장소를 저장해요`}</Title>
+      <Title>{`추천하는 동네 가게를
+이웃에게도 알려주세요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
         만들고 싶은 테마 이름을 입력해 주세요.
@@ -214,10 +214,10 @@ const Write = () => {
         )}
       </div>
 
-      <div className="subtitle">지도에 저장할 장소를 추가해 주세요.</div>
-      <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
+      <div className="subtitle">지도에 저장할 가게를 추가해 주세요.</div>
+      <div className="explanation">최대 10개 가게를 추가할 수 있어요.</div>
 
-      {/* 추가된 장소들 */}
+      {/* 추가된 가게들 */}
       <div style={{ marginTop: "1.2rem" }}>
         {places?.map((place) => (
           <AddedList key={place.placeId} isImgExist={place.images.length > 0}>
@@ -240,7 +240,7 @@ const Write = () => {
       {places.length < 10 && (
         <div className="add-button" onClick={() => setIsSearchOpened(true)}>
           <Plus className="add-icon" />
-          장소 추가
+          가게 추가
         </div>
       )}
 

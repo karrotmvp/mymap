@@ -27,7 +27,7 @@ const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
   const history = useHistory();
   const setPageBeforeWrite = useSetRecoilState(PageBeforeWrite);
   const setPlaceDetailId = useSetRecoilState(PlaceDetailId);
-  const setDetailId = useSetRecoilState(DetailId);
+  const [detailId, setDetailId] = useRecoilState(DetailId);
   const [isSaved, setIsSaved] = useRecoilState(
     PostIsSaved(post.postId.toString())
   );
@@ -66,7 +66,7 @@ const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
     <Wrapper
       onClick={() => {
         if (post.pins.length > 0) {
-          setDetailId(post.postId);
+          setDetailId([...detailId, post.postId]);
           setPlaceDetailId(null);
         }
       }}

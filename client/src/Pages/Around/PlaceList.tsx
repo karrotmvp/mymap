@@ -12,7 +12,13 @@ import { PlaceType } from "../../Shared/type";
 import { theme, Title } from "../../styles/theme";
 import { funcNeedLogin } from "../../utils/preset";
 
-const PlaceList = ({ places }: { places: PlaceType[] }) => {
+const PlaceList = ({
+  places,
+  isResult = false,
+}: {
+  places: PlaceType[];
+  isResult?: boolean;
+}) => {
   const regionId = useRecoilValue(RegionId);
   const { data: regionName } = useGetRegion(regionId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
@@ -36,8 +42,14 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
 
   return (
     <Wrapper>
-      <Title className="around-title">{regionName}엔 이런 가게가 있어요</Title>
-      <div className="sub">이웃들이 자주 찾는 가게를 둘러보세요</div>
+      {!isResult && (
+        <>
+          <Title className="around-title" style={{ color: theme.color.black }}>
+            {regionName}엔 이런 가게가 있어요
+          </Title>
+          <div className="sub">이웃들이 자주 찾는 가게를 둘러보세요</div>
+        </>
+      )}
 
       <div className="places">
         {places.map((place) => (

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { keyframes } from "styled-components";
 import { useGetPlaceDetail } from "../../api/place";
@@ -33,9 +34,13 @@ const PlaceDetail = ({
   postRegionId?: string;
   postRegionName?: string;
 }) => {
+  const [time, setTime] = useState("");
+
   const { data } = useGetPlaceDetail(placeId);
   const setViewerInfo = useSetRecoilState(ViewerInfo);
   const regionId = useRecoilValue(RegionId);
+  const setIsReigonDiffModalShown = useSetRecoilState(ReigonDiffModal);
+  const setPlaceToSave = useSetRecoilState(PlaceToSave);
 
   const regionGroup = regionsGroup
     .map((region) => {
@@ -45,9 +50,6 @@ const PlaceDetail = ({
       return [];
     })
     .find((group) => group.length > 0);
-
-  const setIsReigonDiffModalShown = useSetRecoilState(ReigonDiffModal);
-  const setPlaceToSave = useSetRecoilState(PlaceToSave);
 
   const clickPlaceAdd = () => {
     funcNeedLogin({
@@ -74,15 +76,15 @@ const PlaceDetail = ({
     });
   };
 
-  const time = useRef("");
   useEffect(() => {
     if (data) {
-      time.current =
+      setTime(
         data.businessHoursFrom && data.businessHoursTo
           ? `${data.businessHoursFrom} - ${data.businessHoursTo}`
-          : "";
+          : ""
+      );
       if (data.businessHoursExtra)
-        time.current += ` ${data.businessHoursExtra}`;
+        setTime(time + ` ${data.businessHoursExtra}`);
     }
   }, [data]);
 
@@ -143,13 +145,15 @@ const PlaceDetail = ({
                 </div>
               )}
               {time && (
-                <div>
+                <div className="flex-start">
                   <Time className="time" />
-                  <div>{time.current}</div>
+                  <div>{time}</div>
                 </div>
               )}
-              <Pin />
-              <div>{data?.address}</div>
+              <div className="flex-start">
+                <Pin />
+                <div>{data?.address}</div>
+              </div>
             </div>
           </div>
 
@@ -282,6 +286,9 @@ const Slide = styled.div`
         display: flex;
         flex-direction: column;
         gap: 0.9rem;
+        .flex-start {
+          align-items: flex-start;
+        }
         & > div {
           display: flex;
           align-items: center;
@@ -296,9 +303,6 @@ const Slide = styled.div`
           & > div {
             line-height: 145%;
             margin-left: 1.1rem;
-          }
-          &:not(:first-child) {
-            align-items: flex-start;
           }
           .time {
             margin-top: 0.1rem;

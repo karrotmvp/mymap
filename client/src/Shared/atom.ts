@@ -41,9 +41,9 @@ export const PostIsDefaultEmpty = atomFamily({
   default: false,
 });
 
-export const DetailId = atom<number | null>({
+export const DetailId = atom<number[]>({
   key: "DetailId",
-  default: null,
+  default: [],
 });
 export const PlaceDetailId = atom<string | null>({
   key: "PlaceDetailId",

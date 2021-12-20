@@ -133,12 +133,12 @@ const PlaceCard = ({
                   </div>
                 )}
                 {time && (
-                  <div>
+                  <div className="flex-start">
                     <Time className="time" />
                     <div>{time}</div>
                   </div>
                 )}
-                <div>
+                <div className="flex-start">
                   <Pin />
                   <div>{place.address}</div>
                 </div>
@@ -233,6 +233,9 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
+    .flex-start {
+      align-items: flex-start;
+    }
     & > div {
       display: flex;
       align-items: center;
@@ -247,9 +250,6 @@ const Wrapper = styled.div<{ type: PlaceCardType }>`
       & > div {
         line-height: 145%;
         margin-left: 1.1rem;
-      }
-      &:not(:first-child) {
-        align-items: flex-start;
       }
       .time {
         margin-top: 0.1rem;

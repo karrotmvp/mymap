@@ -4,7 +4,7 @@ import Collection from "../../Components/Collection";
 import CreateButton from "../../Components/CreateButton";
 import { PostType } from "../../Shared/type";
 import { Dispatch, SetStateAction } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useGetRegion } from "../../api/region";
 import { DetailId, RegionId } from "../../Shared/atom";
 import { regionsGroup } from "../../utils/const";
@@ -48,7 +48,7 @@ const MainSlide = ({
   }
 
   const { data: recommendPost } = useGetPost(recommendPostId);
-  const setDetailId = useSetRecoilState(DetailId);
+  const [detailId, setDetailId] = useRecoilState(DetailId);
 
   return (
     <>
@@ -65,15 +65,24 @@ const MainSlide = ({
         )}
 
         <div className="recommend">
-          <Title>이번 주 추천 테마예요</Title>
+          <Title style={{ color: theme.color.black }}>
+            이번 주 추천 테마예요
+          </Title>
           <div className="sub">
             당장모아가 직접 선정한 추천 테마를 구경해 보세요
           </div>
           {recommendPost && (
-            <Recommend onClick={() => setDetailId(recommendPost.postId)}>
+            <Recommend
+              onClick={() => setDetailId([...detailId, recommendPost.postId])}
+            >
               <img src={recommendPostImg} alt="recommend" />
               <div className="recommend-info">
-                <div className="recommend-title">{recommendPost.title}</div>
+                <div className="recommend-title">
+                  {recommendPostId === 576
+                    ? `우리집 막내 초롱이와
+                같이 갈 수 있는 식당`
+                    : recommendPost.title}
+                </div>
                 <div className="recommend-user">
                   {recommendPost.user.userName}
                 </div>
@@ -119,6 +128,7 @@ const Card = styled.div`
     .main-title {
       padding-left: 2rem;
       margin-top: 5rem;
+      color: ${theme.color.black};
     }
   }
   .rectangle {
@@ -166,6 +176,7 @@ const Recommend = styled.div`
       font-size: 22px;
       line-height: 120%;
       text-shadow: 0px 9px 2px rgba(70, 52, 5, 0.5);
+      white-space: pre-line;
     }
     .recommend-user {
       margin-top: 1.2rem;

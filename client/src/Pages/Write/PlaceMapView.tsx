@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { useHistory, useParams } from "react-router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { putPostOnePin } from "../../api/post";
 import { Back, Plus } from "../../assets";
@@ -37,7 +37,7 @@ const PlaceMapView = ({
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
   const regionId = useRecoilValue(RegionId);
   const isDefaultEmpty = useRecoilValue(PostIsDefaultEmpty(postId));
-  const setDetailId = useSetRecoilState(DetailId);
+  const [detail, setDetailId] = useRecoilState(DetailId);
 
   const handleAddPlace = (place: PlaceType) => {
     if (pageBeforeWrite === "emptyTheme") {
@@ -57,8 +57,8 @@ const PlaceMapView = ({
           regionId,
           placeId: place.placeId,
         });
+        setDetailId([...detail, postIdFromProps]);
         close();
-        setDetailId(postIdFromProps);
       };
       addPlaceToTheme();
     }

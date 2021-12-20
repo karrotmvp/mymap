@@ -33,7 +33,7 @@ const Tab = ({
   const handleSelectedTab = (tab: "my" | "others") => {
     if (tab !== selectedTab) {
       Mixpanel.track(
-        `나의테마 - ${tab === "my" ? "내가 만든 테마" : "저장한 테마"}`
+        `나의테마 - ${tab === "my" ? "내가 만든 테마" : "좋아한 테마"}`
       );
     }
     setSelectedTab(tab);
@@ -51,7 +51,7 @@ const Tab = ({
         $isSelected={selectedTab === "others"}
         onClick={() => handleSelectedTab("others")}
       >
-        저장한 테마
+        좋아한 테마
       </TabBtn>
     </TabWrapper>
   );
@@ -224,7 +224,7 @@ const Mypage = () => {
           savedPostsResultStatus !== "loading" && (
             <div className="empty">
               <LogoInactive />
-              <div>{`아직 저장한 테마가 없어요.
+              <div>{`아직 좋아한 테마가 없어요.
 추천 테마에서 이웃의 테마를 구경해 봐요!`}</div>
             </div>
           )

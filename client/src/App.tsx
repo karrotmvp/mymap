@@ -201,14 +201,19 @@ function App() {
             )}
 
             {/* 상세페이지 */}
-            {detailId && (
-              <Detail
-                postId={detailId}
-                close={() => {
-                  setDetailId(null);
-                }}
-              />
-            )}
+            {detailId.length > 0 &&
+              detailId.map((detail) => (
+                <Detail
+                  postId={detail}
+                  close={() => {
+                    const idxToDelete = detailId.findIndex((p) => p === detail);
+                    setDetailId([
+                      ...detailId.slice(0, idxToDelete),
+                      ...detailId.slice(idxToDelete + 1, detailId.length),
+                    ]);
+                  }}
+                />
+              ))}
 
             {/* 장소상세페이지 */}
             {placeDetailId && (

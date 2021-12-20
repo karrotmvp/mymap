@@ -23,12 +23,12 @@ const MyPlaces = ({ places, close }: MyPlacesProps) => {
   });
 
   useEffect(() => {
-    Mixpanel.track("내가 저장한 장소 진입");
+    Mixpanel.track("좋아한 테마의 가게 진입");
   }, []);
 
   return (
     <Wrapper>
-      <Header title="내가 저장한 장소">
+      <Header title="좋아한 테마의 가게">
         <Back
           className="left-icon"
           onClick={() => {

@@ -228,7 +228,7 @@ const Around = () => {
               loader={<div />}
               scrollableTarget="around-search-list"
             >
-              <PlaceList places={result} />
+              <PlaceList places={result} isResult={true} />
             </InfiniteScroll>
             <NoSearchBox />
           </div>
@@ -260,13 +260,13 @@ const Wrapper = styled.div`
     border: 0.1rem solid ${theme.color.gray3};
   }
   .search-box {
-    border-bottom: 0.1rem solid ${theme.color.gray2};
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
     padding: 1.6rem 2rem;
     padding-top: 0.8rem;
     position: sticky;
     top: 5rem;
     background-color: #fff;
-    z-index: 100;
+    z-index: 90;
     .search-icon {
       position: absolute;
       top: 1.7rem;
@@ -285,7 +285,7 @@ const Wrapper = styled.div`
     left: 0;
     right: 0;
     height: 100vh;
-    padding-top: 14.7rem;
+    padding-top: 10rem;
     overflow-y: scroll;
     box-sizing: border-box;
     padding-bottom: 8rem;
