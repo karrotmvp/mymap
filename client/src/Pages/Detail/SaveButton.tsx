@@ -43,11 +43,11 @@ const SaveButton = (post: PostType, fromDetail?: boolean) => {
   const debouncedIsSaved = useDebounce(handleSaveToggle, 200);
 
   useEffect(() => {
-    if (fromDetail && isSaved) {
-      Mixpanel.track("검증3 - 마음에 들어요 클릭");
+    if (isSaved) {
+      Mixpanel.track("마음에 들어요 클릭");
       setToastMessage({
         isToastShown: true,
-        message: "저장한 테마는 나의 테마에서 볼 수 있어요",
+        message: "좋아한 테마는 나의 테마에서 볼 수 있어요",
       });
     }
   }, [isSaved]);
@@ -57,7 +57,7 @@ const SaveButton = (post: PostType, fromDetail?: boolean) => {
       {isSaved ? (
         <div className="button" onClick={debouncedIsSaved}>
           <Heart className="icon" />
-          <div>벌써 좋아한 테마에요</div>
+          <div>이미 좋아한 테마에요</div>
         </div>
       ) : (
         <div className="button" onClick={debouncedIsSaved}>

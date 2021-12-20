@@ -11,7 +11,7 @@ import { Integrations } from "@sentry/tracing";
 import { QueryClientProvider, QueryClient } from "react-query";
 
 Sentry.init({
-  dsn: "https://4f85a46b252644a590e9413fa9cd9b6b@o1046587.ingest.sentry.io/6023393",
+  dsn: "https://1b1631b2e8bb41879fc5fbc0453091c8@o1095030.ingest.sentry.io/6113737",
   integrations: [new Integrations.BrowserTracing()],
 
   // We recommend adjusting this value in production, or using tracesSampler

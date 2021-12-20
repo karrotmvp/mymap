@@ -113,7 +113,7 @@ function App() {
           isToastShown: false,
           message: "",
         });
-      }, 1000);
+      }, 1500);
     }
   }, [toastMessage.isToastShown]);
 

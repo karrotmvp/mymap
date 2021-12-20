@@ -50,6 +50,7 @@ export interface PlaceType {
   thumbnail: ImageType | null;
   images: ImageType[];
   savedNum: number;
+  isSaved: boolean;
 }
 
 export interface ImageType {

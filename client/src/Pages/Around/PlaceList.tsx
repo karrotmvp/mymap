@@ -1,7 +1,7 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useGetRegion } from "../../api/region";
-import { SaveSmall } from "../../assets";
+import { PlaceAddOrange, PlaceAddWhite } from "../../assets";
 import { PlaceToSave, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { theme, Title } from "../../styles/theme";
@@ -40,22 +40,20 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
             hasImg={place.images[0]?.thumbnail ? true : false}
           >
             <div>
-              <div className="title">{place.name}</div>
-              <div className="category">
-                {place.category.slice(0, place.category.length - 1).map((c) => (
-                  <div>{c}</div>
-                ))}
-                <div>·</div>
-                {place.category[place.category.length - 1]}
+              <div>
+                <div className="title">{place.name}</div>
+                <div className="category">
+                  {place.category
+                    .slice(0, place.category.length - 1)
+                    .map((c) => (
+                      <div>{c}</div>
+                    ))}
+                  <div>·</div>
+                  {place.category[place.category.length - 1]}
+                </div>
               </div>
               <div className="save">
-                <SaveSmall
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clickPlaceAdd(place.placeId);
-                  }}
-                />
-                저장한 이웃 <span>1</span>
+                <span>1</span>명의 이웃이 저장했어요
               </div>
             </div>
             {place.images[0]?.thumbnail && (
@@ -63,6 +61,23 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
                 className="photo"
                 alt="thumbnail"
                 src={place.images[0].thumbnail}
+              />
+            )}
+            {place.images[0]?.thumbnail ? (
+              <PlaceAddWhite
+                className="save-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clickPlaceAdd(place.placeId);
+                }}
+              />
+            ) : (
+              <PlaceAddOrange
+                className="save-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clickPlaceAdd(place.placeId);
+                }}
               />
             )}
           </Place>
@@ -94,13 +109,19 @@ const Wrapper = styled.div`
 
 const Place = styled.div<{ hasImg: boolean }>`
   width: 100%;
-  padding: 2rem 0;
+  padding: 2.5rem 0;
   display: flex;
   gap: 1.2rem;
   overflow: hidden;
   flex: 1;
+  position: relative;
+  height: 14rem;
+  box-sizing: border-box;
   & > div {
-    width: ${({ hasImg }) => (hasImg ? "calc(100% - 17.2rem)" : "100%")};
+    width: ${({ hasImg }) => (hasImg ? "calc(100% - 13rem)" : "100%")};
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .title {
       font-weight: 500;
       font-size: 16px;
@@ -110,7 +131,7 @@ const Place = styled.div<{ hasImg: boolean }>`
       overflow: hidden;
     }
     .category {
-      margin-top: 2rem;
+      margin-top: 0.8rem;
       display: flex;
       font-weight: 500;
       font-size: 12px;
@@ -125,9 +146,6 @@ const Place = styled.div<{ hasImg: boolean }>`
       color: ${theme.color.orange};
       font-size: 13px;
       letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 0.894rem;
       span {
         font-weight: 700;
       }
@@ -135,9 +153,15 @@ const Place = styled.div<{ hasImg: boolean }>`
   }
 
   .photo {
-    min-width: 16rem;
-    height: 9.5rem;
+    min-width: 11.4rem;
+    height: 9rem;
     border-radius: 0.8rem;
+  }
+
+  .save-btn {
+    position: absolute;
+    top: 1.9rem;
+    right: -0.5rem;
   }
 `;
 

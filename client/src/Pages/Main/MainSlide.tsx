@@ -75,8 +75,7 @@ const MainSlide = ({
               <div className="recommend-info">
                 <div className="recommend-title">{recommendPost.title}</div>
                 <div className="recommend-user">
-                  <img src={recommendPost.user.profileImageUrl} alt="profile" />
-                  <div>{recommendPost.user.userName}</div>
+                  {recommendPost.user.userName}
                 </div>
               </div>
             </Recommend>
@@ -162,18 +161,14 @@ const Recommend = styled.div`
     left: 1.3rem;
     bottom: 1.3rem;
     color: #ffffff;
-    img {
-      width: 1.8rem;
-      height: 1.8rem;
-      border-radius: 50%;
-    }
     .recommend-title {
       font-weight: bold;
-      font-size: 18px;
+      font-size: 22px;
       line-height: 120%;
+      text-shadow: 0px 9px 2px rgba(70, 52, 5, 0.5);
     }
     .recommend-user {
-      margin-top: 0.8rem;
+      margin-top: 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.8rem;
