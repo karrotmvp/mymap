@@ -64,6 +64,7 @@ export class PlaceService {
             const places = await lastValueFrom(places$);
             const promise = places.map(async(place) => {
                 place.savedNum = userId ? await this.postService.countMySavedPlaces(userId, place.placeId) : await this.postService.countSavedPlaces(place.placeId);
+                place.isSaved = userId ? await this.postService.setIsSaved(userId, place.placeId) : false;
             })
             await Promise.all(promise);
             result.push(...places);
@@ -144,7 +145,7 @@ export class PlaceService {
 
     async readSavedPlaces(userId: number): Promise<PlaceDTO[]> {
         // A
-        const pins: Pin[] = await this.postService.readPins(userId);
+        const pins: Pin[] = await this.postService.readSavedPins(userId);
         const places: string[] = pins.map(pin => pin.getPlaceId());
         const placeIds: string[] = [...new Set(places)];
         return await this.readPlaces(placeIds, userId);
