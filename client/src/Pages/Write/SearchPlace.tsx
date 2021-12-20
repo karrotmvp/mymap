@@ -27,11 +27,13 @@ const SearchPlace = ({
   close,
   places,
   setPlaces,
+  postIdFromProps,
 }: {
   setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
   close: Function;
   places: PlaceType[];
-  setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
+  setPlaces?: Dispatch<SetStateAction<PlaceType[]>>;
+  postIdFromProps?: number;
 }) => {
   const [isMapOpened, setIsMapOpened] = useState(false);
   const [place, setPlace] = useState<PlaceType | null>(null);
@@ -168,7 +170,7 @@ const SearchPlace = ({
       {isMapOpened && place && (
         <PlaceMapView
           close={() => setIsMapOpened(false)}
-          {...{ place, setIsSearchOpened, places, setPlaces }}
+          {...{ place, setIsSearchOpened, places, setPlaces, postIdFromProps }}
         />
       )}
     </Wrapper>
@@ -198,7 +200,7 @@ const PlaceInput = styled.div`
 
 const Wrapper = styled.div`
   position: fixed;
-  z-index: 200;
+  z-index: 600;
   top: 0;
   left: 0;
   width: 100%;

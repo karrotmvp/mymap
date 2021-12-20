@@ -110,3 +110,16 @@ export const putPostPin = async (
 ) => {
   return await PUT("api/post/pin", body, params);
 };
+
+// 한 테마에 장소 하나 추가
+export const putPostOnePin = async ({
+  postId,
+  regionId,
+  placeId,
+}: {
+  postId: number;
+  regionId: string;
+  placeId: string;
+}) => {
+  return await PUT(`api/post/pin/${postId}`, { placeId }, { regionId });
+};

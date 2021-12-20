@@ -11,6 +11,7 @@ import {
   Map,
   MapBack,
   More2,
+  Plus,
   Thumbnail,
 } from "../../assets";
 import Alert from "../../Components/Alert";
@@ -25,7 +26,7 @@ import {
   WrapperWithHeader,
 } from "../../styles/theme";
 import dayjs from "dayjs";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   ViewerInfo,
   PageBeforeWrite,
@@ -41,6 +42,7 @@ import { regionsGroup } from "../../utils/const";
 import { Mixpanel } from "../../utils/mixpanel";
 import Fake from "./Fake";
 import { mini } from "../../App";
+import SearchPlace from "../Write/SearchPlace";
 
 const Detail = ({
   postId: postIdFromProps,
@@ -75,9 +77,10 @@ const Detail = ({
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
   const [isCloseAlertOpened, setIsCloseAlertOpened] = useState(false);
-  const regionId = useRecoilValue(RegionId);
+  const [isSearchOpened, setIsSearchOpened] = useState(false);
 
-  const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
+  const regionId = useRecoilValue(RegionId);
+  const [pageBeforeWrite, setPageBeforeWrite] = useRecoilState(PageBeforeWrite);
   const setPostToEdit = useSetRecoilState(PostToEdit);
 
   const { data: post, refetch: refetchPost } = useGetPost(postId);
@@ -136,6 +139,11 @@ const Detail = ({
     targetElement?.addEventListener("scroll", onScroll);
     return () => targetElement?.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleAddPlace = () => {
+    setPageBeforeWrite("detail");
+    setIsSearchOpened(true);
+  };
 
   return (
     <Container
@@ -272,15 +280,14 @@ const Detail = ({
                         postRegionName={post.regionName}
                       />
                     ))}
-                    {/* {post?.user.userId === viewerInfo.userId && (
-                        <div
-                          className="add-button"
-                          onClick={() => setIsSearchOpened(true)}
-                        >
+
+                    {post?.user.userId === viewerInfo.userId &&
+                      post.pins.length < 10 && (
+                        <div className="add-button" onClick={handleAddPlace}>
                           <Plus className="add-icon" />
                           가게 추가
                         </div>
-                      )} */}
+                      )}
                   </div>
                 </>
               )}
@@ -370,6 +377,15 @@ ${post?.regionName}에 인증해 주세요.`}
             좋아요
           </Button>
         </Alert>
+      )}
+
+      {isSearchOpened && post && (
+        <SearchPlace
+          places={post.pins.map((pin) => pin.place) ?? []}
+          postIdFromProps={post.postId}
+          {...{ setIsSearchOpened }}
+          close={() => setIsSearchOpened(false)}
+        />
       )}
 
       {post?.user.userId !== viewerInfo.userId &&
@@ -470,6 +486,25 @@ const Wrapper = styled.div<{ isMine: boolean }>`
       font-weight: 500;
       font-size: 21px;
       line-height: 30px;
+    }
+  }
+  .add-button {
+    ${flexCenter};
+    position: relative;
+    border-radius: 1rem;
+    height: 5rem;
+    border: 0.1rem dashed ${theme.color.orange};
+    font-size: 1.4rem;
+    line-height: 135%;
+    font-weight: 500;
+    margin-top: 1.4rem;
+    margin-bottom: -7rem;
+    color: ${theme.color.orange};
+    .add-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      fill: ${theme.color.orange};
     }
   }
 `;

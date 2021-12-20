@@ -1,12 +1,13 @@
-import { Dispatch, MouseEventHandler, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useHistory, useParams } from "react-router";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { putPostPin } from "../../api/post";
+import { putPostOnePin } from "../../api/post";
 import { Back, Plus } from "../../assets";
 import MapView, { Pin } from "../../Components/MapView";
 import PlaceBox from "../../Components/PlaceCard/PlaceCard";
 import {
+  DetailId,
   PageBeforeWrite,
   PostIsDefaultEmpty,
   RegionId,
@@ -21,12 +22,14 @@ const PlaceMapView = ({
   close,
   places,
   setPlaces,
+  postIdFromProps,
 }: {
   place: PlaceType;
   setIsSearchOpened: Dispatch<SetStateAction<boolean>>;
-  close: MouseEventHandler;
+  close: () => void;
   places: PlaceType[];
-  setPlaces: Dispatch<SetStateAction<PlaceType[]>>;
+  setPlaces?: Dispatch<SetStateAction<PlaceType[]>>;
+  postIdFromProps?: number;
 }) => {
   const history = useHistory();
   const { postId } = useParams<{ postId: string }>();
@@ -34,25 +37,39 @@ const PlaceMapView = ({
   const pageBeforeWrite = useRecoilValue(PageBeforeWrite);
   const regionId = useRecoilValue(RegionId);
   const isDefaultEmpty = useRecoilValue(PostIsDefaultEmpty(postId));
+  const setDetailId = useSetRecoilState(DetailId);
 
   const handleAddPlace = (place: PlaceType) => {
-    Mixpanel.track("글작성 - 장소 추가 완료");
-    if (isDefaultEmpty) {
-      Mixpanel.track("기본테마 - 장소 추가 완료");
-    }
-
-    setPlaces([...places, place]);
-    setIsSearchOpened(false);
-
     if (pageBeforeWrite === "emptyTheme") {
       const addPlaceToEmptyTheme = async () => {
-        await putPostPin(
-          { postId: [parseInt(postId)], regionId },
-          { placeId: place.placeId }
-        );
+        await putPostOnePin({
+          postId: parseInt(postId),
+          regionId,
+          placeId: place.placeId,
+        });
         history.push(`/detail/${postId}/finish`);
       };
       addPlaceToEmptyTheme();
+    } else if (pageBeforeWrite === "detail" && postIdFromProps) {
+      const addPlaceToTheme = async () => {
+        await putPostOnePin({
+          postId: parseInt(postId),
+          regionId,
+          placeId: place.placeId,
+        });
+        close();
+        setDetailId(postIdFromProps);
+      };
+      addPlaceToTheme();
+    }
+    if (setPlaces) {
+      Mixpanel.track("글작성 - 장소 추가 완료");
+      if (isDefaultEmpty) {
+        Mixpanel.track("기본테마 - 장소 추가 완료");
+      }
+
+      setPlaces([...places, place]);
+      setIsSearchOpened(false);
     }
   };
 
