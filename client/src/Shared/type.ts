@@ -52,6 +52,9 @@ export interface PlaceType {
   savedNum: number;
   isSaved: boolean;
 }
+export interface PlaceDetailType extends PlaceType {
+  posts: FeedType;
+}
 
 export interface ImageType {
   id: string;

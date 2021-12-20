@@ -45,6 +45,10 @@ export const DetailId = atom<number | null>({
   key: "DetailId",
   default: null,
 });
+export const PlaceDetailId = atom<string | null>({
+  key: "PlaceDetailId",
+  default: null,
+});
 
 export const PlaceToSave = atom({
   key: "IsSaveModalOpened",

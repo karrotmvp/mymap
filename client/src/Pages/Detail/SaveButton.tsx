@@ -16,7 +16,7 @@ import { flexCenter, theme } from "../../styles/theme";
 import { Mixpanel } from "../../utils/mixpanel";
 import { funcNeedLogin } from "../../utils/preset";
 
-const SaveButton = (post: PostType, fromDetail?: boolean) => {
+const SaveButton = (post: PostType) => {
   const [isSaved, setIsSaved] = useRecoilState(
     PostIsSaved(post.postId.toString())
   );

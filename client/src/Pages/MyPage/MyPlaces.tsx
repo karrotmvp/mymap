@@ -22,15 +22,6 @@ const MyPlaces = ({ places, close }: MyPlacesProps) => {
     isSelected: false,
   });
 
-  // 카드 클릭하면 해당 인덱스 지도뷰
-  const handleClickPlaceCard = (idx: number) => {
-    dispatch({
-      _t: "select",
-      sliderCurrent: idx,
-      isSelected: true,
-    });
-  };
-
   useEffect(() => {
     Mixpanel.track("내가 저장한 장소 진입");
   }, []);
@@ -69,9 +60,7 @@ const MyPlaces = ({ places, close }: MyPlacesProps) => {
         .with("list", () => (
           <div className="cards">
             {places.map((place, i) => (
-              <div key={place.placeId} onClick={() => handleClickPlaceCard(i)}>
-                <PlaceCard {...{ place }} type="list" />
-              </div>
+              <PlaceCard key={place.placeId} {...{ place }} type="list" />
             ))}
           </div>
         ))
