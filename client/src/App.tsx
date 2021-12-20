@@ -16,6 +16,7 @@ import {
   ReigonDiffModal,
   Installed,
   IsProposeOpened,
+  PlaceDetailId,
 } from "./Shared/atom";
 import { useEffect } from "react";
 import dayjs from "dayjs";
@@ -37,6 +38,7 @@ import Four from "./Pages/Onboarding/Four";
 import NewFinish from "./Pages/Onboarding/NewFinish";
 import NewTwo from "./Pages/Onboarding/NewTwo";
 import Propose from "./Components/NoSearchResult/Propose";
+import PlaceDetail from "./Pages/PlaceDetail/PlaceDetail";
 
 dayjs.locale("ko");
 
@@ -104,6 +106,7 @@ function App() {
   const [reigonDiffModal, setReigonDiffModal] = useRecoilState(ReigonDiffModal);
   const [toastMessage, setToastMessage] = useRecoilState(ToastMessage);
   const [detailId, setDetailId] = useRecoilState(DetailId);
+  const [placeDetailId, setPlaceDetailId] = useRecoilState(PlaceDetailId);
   const isProposeOpened = useRecoilValue(IsProposeOpened);
 
   useEffect(() => {
@@ -207,7 +210,17 @@ function App() {
               />
             )}
 
-            {/* 가게 제안 */}
+            {/* 장소상세페이지 */}
+            {placeDetailId && (
+              <PlaceDetail
+                placeId={placeDetailId}
+                close={() => {
+                  setPlaceDetailId(null);
+                }}
+              />
+            )}
+
+            {/* 장소 제안 */}
             {isProposeOpened && <Propose />}
 
             {/* 다른 지역 알림 */}

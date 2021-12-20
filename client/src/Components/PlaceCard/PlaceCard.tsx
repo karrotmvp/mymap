@@ -7,6 +7,7 @@ import {
   PlaceToSave,
   RegionId,
   ViewerInfo,
+  PlaceDetailId,
 } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { flexCenter, gap, GrayTag, theme } from "../../styles/theme";
@@ -80,8 +81,13 @@ const PlaceCard = ({
     });
   };
 
+  const setPlaceDetailId = useSetRecoilState(PlaceDetailId);
+
   return (
-    <Wrapper {...{ className, type }}>
+    <Wrapper
+      {...{ className, type }}
+      onClick={() => setPlaceDetailId(place.placeId)}
+    >
       {place.images.length > 0 && type === "list" && (
         <img
           className="list-photo"

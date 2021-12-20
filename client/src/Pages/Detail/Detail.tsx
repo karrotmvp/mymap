@@ -118,15 +118,6 @@ const Detail = ({
     }
   }, [post]);
 
-  // 카드 클릭하면 해당 인덱스 지도뷰
-  const handleClickPlaceCard = (idx: number) => {
-    dispatch({
-      _t: "select",
-      sliderCurrent: idx,
-      isSelected: true,
-    });
-  };
-
   useEffect(() => {
     if (fromWriteForm) refetchPost();
 
@@ -148,14 +139,15 @@ const Detail = ({
       isMine={post?.user.userId === viewerInfo.userId}
     >
       {state._t === "map" ? (
-        <div className="map-back">
-          <MapBack
-            onClick={() =>
-              dispatch({
-                _t: "toggle",
-              })
-            }
-          />
+        <div
+          className="map-back"
+          onClick={() =>
+            dispatch({
+              _t: "toggle",
+            })
+          }
+        >
+          <MapBack />
         </div>
       ) : (
         <Header
@@ -232,7 +224,7 @@ const Detail = ({
                 postId === 573 ||
                 postId === 559 ||
                 postId === 576 ? (
-                  <Fake {...{ dispatch, post }} />
+                  <Fake {...{ post }} />
                 ) : (
                   <>
                     <div className="post-title">
@@ -265,17 +257,13 @@ const Detail = ({
 
                     <div className="cards">
                       {post?.pins.map((pin, i) => (
-                        <div
+                        <PlaceCard
                           key={pin.pinId}
-                          onClick={() => handleClickPlaceCard(i)}
-                        >
-                          <PlaceCard
-                            place={pin.place}
-                            type="list"
-                            postRegionId={post.regionId}
-                            postRegionName={post.regionName}
-                          />
-                        </div>
+                          place={pin.place}
+                          type="list"
+                          postRegionId={post.regionId}
+                          postRegionName={post.regionName}
+                        />
                       ))}
                       {/* {post?.user.userId === viewerInfo.userId && (
                         <div

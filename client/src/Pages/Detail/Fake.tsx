@@ -13,39 +13,8 @@ import {
 import PlaceCard from "../../Components/PlaceCard/PlaceCard";
 import { PostType } from "../../Shared/type";
 import { flexCenter, theme } from "../../styles/theme";
-import { Mixpanel } from "../../utils/mixpanel";
 
-type Action =
-  | {
-      _t: "toggle";
-    }
-  | {
-      _t: "scroll";
-      scrollY: number;
-    }
-  | {
-      _t: "select";
-      sliderCurrent: number;
-      isSelected: boolean;
-    };
-
-const Fake = ({
-  dispatch,
-  post,
-}: {
-  dispatch: React.Dispatch<Action>;
-  post: PostType;
-}) => {
-  // 카드 클릭하면 해당 인덱스 지도뷰
-  const handleClickPlaceCard = (idx: number) => {
-    Mixpanel.track("검증3 - 장소카드 클릭");
-    dispatch({
-      _t: "select",
-      sliderCurrent: idx,
-      isSelected: true,
-    });
-  };
-
+const Fake = ({ post }: { post: PostType }) => {
   let title = "";
   let info = <div />;
   let svg = <div />;
@@ -414,14 +383,13 @@ const Fake = ({
       <div className="cards">
         <div className="title">추천하는 가게들</div>
         {post.pins.map((pin, i) => (
-          <div key={pin.pinId} onClick={() => handleClickPlaceCard(i)}>
-            <PlaceCard
-              place={pin.place}
-              type="list"
-              postRegionId={post.regionId}
-              postRegionName={post.regionName}
-            />
-          </div>
+          <PlaceCard
+            key={pin.pinId}
+            place={pin.place}
+            type="list"
+            postRegionId={post.regionId}
+            postRegionName={post.regionName}
+          />
         ))}
       </div>
     </Wrapper>

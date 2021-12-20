@@ -57,7 +57,7 @@ export class PlaceDTO {
 	  @ApiProperty()
     isSaved: boolean;
   
-    @ApiProperty({ type: FeedDTO })
+    @ApiProperty({ type: () => FeedDTO })
     posts: FeedDTO;
 
     private phoneNumberConvert(phone: string): string {

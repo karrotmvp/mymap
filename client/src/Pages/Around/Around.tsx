@@ -135,8 +135,8 @@ const Around = () => {
   return (
     <Wrapper>
       {isPinSelected ? (
-        <div className="map-back">
-          <MapBack onClick={handleBack} />
+        <div className="map-back" onClick={handleBack}>
+          <MapBack />
         </div>
       ) : (
         <>

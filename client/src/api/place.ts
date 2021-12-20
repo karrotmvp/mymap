@@ -1,4 +1,4 @@
-import { PlaceType } from "../Shared/type";
+import { PlaceDetailType, PlaceType } from "../Shared/type";
 import { GET, POST } from "../utils/axios";
 import { useQuery } from "react-query";
 
@@ -38,5 +38,13 @@ export const useGetPlaceSaved = () =>
 
 // 장소 제안
 export const postPlaceNew = async (regionId: string, placeName: string) => {
-  await POST(`/api/place/new/${regionId}`, { placeName });
+  await POST(`api/place/new/${regionId}`, { placeName });
 };
+
+// 장소 상세
+const getPlaceDetail = async (placeId: string) => {
+  console.log(placeId);
+  return (await GET(`api/place/detail/${placeId}`)) as PlaceDetailType;
+};
+export const useGetPlaceDetail = (placeId: string) =>
+  useQuery(["useGetPlaceDetail"], () => getPlaceDetail(placeId));
