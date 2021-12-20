@@ -35,11 +35,9 @@ const Wrapper = styled.div`
 
   .place-name {
     margin-top: 0.8rem;
-    font-weight: 500;
-    color: ${theme.color.gray7};
     line-height: 150%;
     letter-spacing: -0.2%;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;

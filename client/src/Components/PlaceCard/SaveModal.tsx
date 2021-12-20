@@ -145,7 +145,7 @@ const SaveModal = () => {
         }
       />
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div>테마에 장소 추가</div>
+        <div>테마에 장소 저장하기</div>
         {state._t === "make" ? <div /> : <div onClick={handleSubmit}>저장</div>}
 
         <div className="list">

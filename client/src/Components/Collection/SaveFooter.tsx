@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
-import { Save2, SaveActive2, Secret } from "../../assets";
+import { Heart, HeartEmpty, Secret } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
 import { PostIsSaved, ViewerInfo, RegionId } from "../../Shared/atom";
 import { PostType } from "../../Shared/type";
@@ -56,13 +56,24 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
 
   return (
     <Wrapper>
+      {!isViewer && (
+        <div onClick={(e) => e.stopPropagation()}>
+          {isSaved ? (
+            <Heart onClick={debouncedIsSaved} />
+          ) : (
+            <HeartEmpty onClick={debouncedIsSaved} />
+          )}
+        </div>
+      )}
       <div className="saved-info">
         {isViewer ? (
           post.share ? (
             savedNum > 0 ? (
-              `${savedNum}명 이웃이 이 테마를 저장했어요`
+              <div>
+                <span>{savedNum}명</span> 이웃이 좋아하는 테마예요
+              </div>
             ) : (
-              "아직 저장한 이웃이 없어요"
+              "아직 좋아한 이웃이 없어요"
             )
           ) : (
             <div className="secret">
@@ -71,35 +82,33 @@ const SaveFooter = ({ post }: SaveFooterInterface) => {
             </div>
           )
         ) : savedNum > 0 ? (
-          `${savedNum}명 이웃이 이 테마를 저장했어요`
+          <div>
+            <span>{savedNum}명</span> 이웃이 좋아하는 테마예요
+          </div>
         ) : (
-          "가장 먼저 저장해 보세요!"
+          "가장 먼저 좋아해 보세요!"
         )}
       </div>
-      {!isViewer && (
-        <div onClick={(e) => e.stopPropagation()}>
-          {isSaved ? (
-            <SaveActive2 onClick={debouncedIsSaved} />
-          ) : (
-            <Save2 onClick={debouncedIsSaved} />
-          )}
-        </div>
-      )}
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  ${flexCenter};
-  justify-content: space-between;
+  display: flex;
+  align-items: center;
   margin-top: 1.2rem;
   height: 3.2rem;
+  gap: 0.922rem;
   padding: 0 2rem;
   .saved-info {
     color: ${theme.color.gray6};
     font-size: 1.4rem;
     font-weight: 500;
     line-height: 145%;
+    span {
+      font-weight: bold;
+      color: ${theme.color.orange};
+    }
   }
   .secret {
     ${flexCenter};

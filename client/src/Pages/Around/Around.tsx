@@ -279,6 +279,24 @@ const Wrapper = styled.div`
       border-top: 0.1rem solid ${theme.color.gray1_7};
     }
   }
+  .no-search {
+    ${flexCenter};
+    background-color: #fff;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    & > div {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 160%;
+      color: ${theme.color.gray6};
+      & > span {
+        color: ${theme.color.orange};
+      }
+    }
+  }
 `;
 
 const AroundScroll = styled.div<{ $isMapShown: boolean }>`

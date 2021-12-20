@@ -148,7 +148,7 @@ export const OrangeTag = styled.div`
   padding: 0 1rem;
   border-radius: 0.4rem;
   background-color: ${theme.color.white};
-  color: ${theme.color.orange};
+  color: ${theme.color.gray7};
   white-space: nowrap;
   text-overflow: ellipsis;
 `;

@@ -1,13 +1,32 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useGetRegion } from "../../api/region";
-import { RegionId } from "../../Shared/atom";
+import { SaveSmall } from "../../assets";
+import { PlaceToSave, RegionId, ViewerInfo } from "../../Shared/atom";
 import { PlaceType } from "../../Shared/type";
 import { theme, Title } from "../../styles/theme";
+import { funcNeedLogin } from "../../utils/preset";
 
 const PlaceList = ({ places }: { places: PlaceType[] }) => {
   const regionId = useRecoilValue(RegionId);
   const { data: regionName } = useGetRegion(regionId);
+  const setViewerInfo = useSetRecoilState(ViewerInfo);
+  const setPlaceToSave = useSetRecoilState(PlaceToSave);
+
+  const clickPlaceAdd = (placeId: string) => {
+    funcNeedLogin({
+      ...{
+        setViewerInfo,
+        regionId,
+        afterFunc: () => {
+          setPlaceToSave({
+            isModalOpened: true,
+            placeId: placeId,
+          });
+        },
+      },
+    });
+  };
 
   return (
     <Wrapper>
@@ -30,6 +49,12 @@ const PlaceList = ({ places }: { places: PlaceType[] }) => {
                 {place.category[place.category.length - 1]}
               </div>
               <div className="save">
+                <SaveSmall
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clickPlaceAdd(place.placeId);
+                  }}
+                />
                 저장한 이웃 <span>1</span>
               </div>
             </div>
@@ -99,8 +124,10 @@ const Place = styled.div<{ hasImg: boolean }>`
       margin-top: 1.1rem;
       color: ${theme.color.orange};
       font-size: 13px;
-      line-height: 145%;
       letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.894rem;
       span {
         font-weight: 700;
       }

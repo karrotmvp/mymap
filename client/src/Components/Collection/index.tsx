@@ -67,7 +67,10 @@ const Collection = ({ post, savedPosts, setSavedPosts }: CollectionProps) => {
         <div style={{ width: "100%" }}>
           <div className="title">{post.title}</div>
           <div className="author">
-            {post.user.userName} · {post.regionName}
+            <img src={post.user.profileImageUrl} alt="profile" />
+            <div>
+              <span>{post.user.userName}</span>님
+            </div>
           </div>
         </div>
         {post.pins.length > 0 && <More className="more-icon" />}
@@ -107,9 +110,9 @@ const Wrapper = styled.div`
 
     .title {
       max-width: 100%;
-      font-size: 1.6rem;
-      line-height: 120%;
       font-weight: bold;
+      font-size: 1.8rem;
+      line-height: 120%;
       white-space: nowrap;
       text-overflow: ellipsis;
       padding-right: 5rem;
@@ -117,10 +120,21 @@ const Wrapper = styled.div`
       overflow: hidden;
     }
     .author {
-      margin-top: 0.4rem;
-      font-size: 1.4rem;
+      margin-top: 0.8rem;
+      font-size: 1.3rem;
       line-height: 150%;
-      color: ${theme.color.gray6};
+      color: ${theme.color.gray5};
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      span {
+        color: ${theme.color.gray7};
+      }
+      img {
+        width: 1.8rem;
+        height: 1.8rem;
+        border-radius: 50%;
+      }
     }
     .more-icon {
       position: absolute;
@@ -134,7 +148,7 @@ const Wrapper = styled.div`
     width: 100%;
     overflow-x: scroll;
     overflow-y: hidden;
-    margin-top: 1.6rem;
+    margin-top: 2.1rem;
     padding-left: 2rem;
     box-sizing: border-box;
     ${gap("0.8rem")};

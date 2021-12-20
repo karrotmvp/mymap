@@ -50,7 +50,6 @@ const Write = () => {
   // SearchPlace
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
-  const [isShare, setIsShare] = useState<boolean>(true);
   const [places, setPlaces] = useState<PlaceType[] | []>([]);
 
   // remove place
@@ -105,7 +104,6 @@ const Write = () => {
     if (!isWrite && postToEdit) {
       inputVal.setValue(postToEdit.title);
       textareaVal.setValue(postToEdit.contents);
-      setIsShare(postToEdit.share);
       setPlaces(postToEdit.pins.map((pin) => pin.place));
     }
   }, []);
@@ -117,12 +115,11 @@ const Write = () => {
       inputVal.value &&
       !isInputOver &&
       !isTextareaOver &&
-      isShare !== null &&
       places.length > 0
     ) {
       setIsSubmittable(true);
     }
-  }, [inputVal.value, isInputOver, isTextareaOver, isShare, places]);
+  }, [inputVal.value, isInputOver, isTextareaOver, places]);
 
   const [isEditAlertOpened, setIsEditAlertOpened] = useState(false);
   const [isWriteAlertOpened, setIsWriteAlertOpened] = useState(false);
@@ -163,7 +160,7 @@ const Write = () => {
             title: inputVal.value,
             contents: textareaVal.value,
             regionId,
-            share: isShare as boolean,
+            share: true,
             pins: places.map((place) => {
               return {
                 placeId: place.placeId,
@@ -194,8 +191,8 @@ const Write = () => {
       >
         <Close onClick={handleClose} className="left-icon" />
       </Header>
-      <Title>{`모아보고 싶은
-나만의 장소를 저장해요`}</Title>
+      <Title>{`추천하는 동네 가게를
+이웃에게도 알려주세요`}</Title>
 
       <div className="subtitle" style={{ marginTop: "3.1rem" }}>
         만들고 싶은 테마 이름을 입력해 주세요.
@@ -267,25 +264,6 @@ const Write = () => {
         {isTextareaOver && (
           <div className="error">공백을 포함해 최대 100글자로 작성해주세요</div>
         )}
-      </div>
-
-      <div className="subtitle">동네 이웃에게 만든 테마를 공개할까요?</div>
-      <div className="explanation">
-        테마를 공개하면 서로 더 많은 정보를 나눌 수 있어요.
-      </div>
-      <div className="select-buttons">
-        <SelectBtn
-          onClick={() => setIsShare(true)}
-          $isSelected={isShare === true}
-        >
-          공개하기
-        </SelectBtn>
-        <SelectBtn
-          onClick={() => setIsShare(false)}
-          $isSelected={isShare === false}
-        >
-          나만보기
-        </SelectBtn>
       </div>
 
       {isEditAlertOpened && (
@@ -426,23 +404,6 @@ const Wrapper = styled.div`
     margin-top: 1.2rem;
     box-sizing: border-box;
   }
-`;
-
-const SelectBtn = styled.div<{ $isSelected: boolean }>`
-  ${flexCenter};
-  padding: 1.4rem;
-  border: 0.1rem solid
-    ${({ $isSelected }) =>
-      $isSelected ? theme.color.orange : theme.color.gray2};
-  background: ${({ $isSelected }) => $isSelected && "rgba(255, 121, 100, 0.1)"};
-  box-sizing: border-box;
-  border-radius: 1rem;
-  font-size: 1.4rem;
-  line-height: 135%;
-  width: 100%;
-  font-weight: 500;
-  color: ${({ $isSelected }) =>
-    $isSelected ? theme.color.orange : theme.color.gray7};
 `;
 
 const Input = styled.textarea<{ $error?: boolean }>`

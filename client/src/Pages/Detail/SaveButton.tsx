@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { deleteSavedPost, postSavedPost } from "../../api/post";
-import { Save, SaveActive } from "../../assets";
+import { Heart, HeartEmptyWhite } from "../../assets";
 import useDebounce from "../../Hooks/useDebounce";
 import {
   PostIsSaved,
@@ -56,12 +56,12 @@ const SaveButton = (post: PostType, fromDetail?: boolean) => {
     <Wrapper {...{ isSaved }}>
       {isSaved ? (
         <div className="button" onClick={debouncedIsSaved}>
-          {!fromDetail && <SaveActive className="icon" />}
+          <Heart className="icon" />
           <div>벌써 좋아한 테마에요</div>
         </div>
       ) : (
         <div className="button" onClick={debouncedIsSaved}>
-          {!fromDetail && <Save className="icon" />}
+          <HeartEmptyWhite className="icon" />
           <div>마음에 들어요</div>
         </div>
       )}
@@ -99,7 +99,7 @@ const Wrapper = styled.div<{ isSaved: boolean }>`
 
     .icon {
       position: absolute;
-      left: 0.6rem;
+      left: 1.545rem;
     }
   }
 `;

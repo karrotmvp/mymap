@@ -1,7 +1,7 @@
 import { ReactChild } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { Call, Pin, PlaceAdd, Time } from "../../assets";
+import { Call, Pin, Save, Time } from "../../assets";
 import {
   ReigonDiffModal,
   PlaceToSave,
@@ -93,7 +93,7 @@ const PlaceCard = ({
         {type !== "write" && (
           <div className="card-top">
             <div className="name">{place.name}</div>
-            <PlaceAdd
+            <Save
               onClick={(e) => {
                 e.stopPropagation();
                 clickPlaceAdd();
