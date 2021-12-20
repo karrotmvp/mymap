@@ -412,7 +412,7 @@ const Fake = ({
       {content}
 
       <div className="cards">
-        <div className="title">추천하는 장소들</div>
+        <div className="title">추천하는 가게들</div>
         {post.pins.map((pin, i) => (
           <div key={pin.pinId} onClick={() => handleClickPlaceCard(i)}>
             <PlaceCard

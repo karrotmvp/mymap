@@ -166,7 +166,7 @@ const Mypage = () => {
           <div className="title-wrapper">
             <div style={{ width: "100%" }}>
               <div className="title">
-                내가 저장한 <span>{myPlaces.length}</span>개 장소예요
+                좋아한 테마에 저장된 <span>{myPlaces.length}</span>개 장소예요
               </div>
             </div>
             <More className="more-icon" />

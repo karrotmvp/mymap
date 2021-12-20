@@ -211,10 +211,10 @@ const Write = () => {
         )}
       </div>
 
-      <div className="subtitle">지도에 저장할 장소를 추가해 주세요.</div>
-      <div className="explanation">최대 10개 장소를 추가할 수 있어요.</div>
+      <div className="subtitle">지도에 저장할 가게를 추가해 주세요.</div>
+      <div className="explanation">최대 10개 가게를 추가할 수 있어요.</div>
 
-      {/* 추가된 장소들 */}
+      {/* 추가된 가게들 */}
       <div style={{ marginTop: "1.2rem" }}>
         {places?.map((place) => (
           <AddedList key={place.placeId} isImgExist={place.images.length > 0}>
@@ -237,7 +237,7 @@ const Write = () => {
       {places.length < 10 && (
         <div className="add-button" onClick={() => setIsSearchOpened(true)}>
           <Plus className="add-icon" />
-          장소 추가
+          가게 추가
         </div>
       )}
 

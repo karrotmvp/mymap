@@ -143,7 +143,7 @@ const PlaceCard = ({
 
             {type !== "write" && place.savedNum > 0 && (
               <div className="recommend">
-                {place.savedNum}개 테마에 저장된 장소예요.
+                {place.savedNum}개 테마에 저장된 가게예요.
               </div>
             )}
           </div>

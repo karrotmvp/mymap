@@ -186,7 +186,7 @@ function App() {
               />
             </Switch>
 
-            {/* 장소 테마에 저장 */}
+            {/* 가게 테마에 저장 */}
             {isSaveModalOpened && <SaveModal />}
 
             {/* 토스트 메시지 */}
@@ -207,7 +207,7 @@ function App() {
               />
             )}
 
-            {/* 장소 제안 */}
+            {/* 가게 제안 */}
             {isProposeOpened && <Propose />}
 
             {/* 다른 지역 알림 */}
@@ -219,7 +219,7 @@ function App() {
                     postRegionName: "",
                   })
                 }
-                title={`${reigonDiffModal.postRegionName}에 있는 장소예요.`}
+                title={`${reigonDiffModal.postRegionName}에 있는 가게예요.`}
                 sub={`${reigonDiffModal.postRegionName}으로 인증 후 테마에 추가해 주세요.`}
               >
                 <Button

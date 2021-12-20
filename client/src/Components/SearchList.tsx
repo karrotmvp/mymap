@@ -28,7 +28,7 @@ const SearchList = ({
       </div>
       <div className="address">{place.address}</div>
       {isExist && (
-        <div className="exist">이미 만들고 있는 테마에 추가된 장소예요!</div>
+        <div className="exist">이미 만들고 있는 테마에 추가된 가게예요!</div>
       )}
     </Wrapper>
   );

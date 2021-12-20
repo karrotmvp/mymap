@@ -151,7 +151,7 @@ const Around = () => {
             <SearchInput
               value={searchVal.value}
               onChange={searchVal.onChange}
-              placeholder="우리 동네 장소를 검색해봐요"
+              placeholder="우리 동네 가게를 검색해봐요"
             />
             {searchVal.value.length > 0 && (
               <SearchClose

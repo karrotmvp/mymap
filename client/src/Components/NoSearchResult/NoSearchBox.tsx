@@ -11,10 +11,10 @@ const NoSearchBox = ({ style }: { style?: React.CSSProperties }) => {
     <Wrapper {...{ style }}>
       <div onClick={() => setIsProposeOpened(true)}>
         <div>
-          <div>찾는 장소가 없나요?</div>
+          <div>찾는 가게가 없나요?</div>
           <div>
-            {`아직 당근마켓에 등록되지 않은 장소예요.
-              원하는 장소를 당근마켓에 알려주세요.`}
+            {`아직 당근마켓에 등록되지 않은 가게예요.
+              원하는 가게를 당근마켓에 알려주세요.`}
           </div>
         </div>
         <Back className="no-search-icon" />

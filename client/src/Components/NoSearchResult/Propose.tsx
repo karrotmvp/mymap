@@ -23,16 +23,16 @@ const Propose = () => {
 
   return (
     <Wrapper>
-      <Header title="장소 제안">
+      <Header title="가게 제안">
         <Back className="left-icon" onClick={() => setIsProposeOpened(false)} />
       </Header>
 
       <Title
         style={{ fontSize: "2rem", lineHeight: "150%", marginTop: "5rem" }}
       >
-        원하는 장소를 당근마켓에 알려주세요.
+        원하는 가게를 당근마켓에 알려주세요.
       </Title>
-      <div className="sub">장소가 추가되면 알려드릴게요!</div>
+      <div className="sub">가게가 추가되면 알려드릴게요!</div>
 
       <div className="custom-input">
         <Input
@@ -54,11 +54,11 @@ const Propose = () => {
             postPlaceNew(regionId, input.value);
             setToastMessage({
               isToastShown: true,
-              message: "장소를 제안했어요",
+              message: "가게를 제안했어요",
             });
           }}
         >
-          장소 제안하기
+          가게 제안하기
         </SubmitBtn>
       </ButtonFooter>
     </Wrapper>
