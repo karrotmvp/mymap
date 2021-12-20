@@ -151,7 +151,8 @@ const Place = styled.div<{ hasImg: boolean }>`
   height: 14rem;
   box-sizing: border-box;
   & > div {
-    width: ${({ hasImg }) => (hasImg ? "calc(100% - 13rem)" : "100%")};
+    width: ${({ hasImg }) =>
+      hasImg ? "calc(100% - 13rem)" : "calc(100% - 4rem)"};
     display: flex;
     flex-direction: column;
     justify-content: space-between;

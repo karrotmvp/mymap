@@ -201,16 +201,24 @@ function App() {
             )}
 
             {/* 상세페이지 */}
-            {detailId.length > 0 &&
-              detailId.map((detail) => (
+            {detailId.list.length > 0 &&
+              detailId.list.map((detail) => (
                 <Detail
                   postId={detail}
                   close={() => {
-                    const idxToDelete = detailId.findIndex((p) => p === detail);
-                    setDetailId([
-                      ...detailId.slice(0, idxToDelete),
-                      ...detailId.slice(idxToDelete + 1, detailId.length),
-                    ]);
+                    const idxToDelete = detailId.list.findIndex(
+                      (p) => p === detail
+                    );
+                    setDetailId({
+                      list: [
+                        ...detailId.list.slice(0, idxToDelete),
+                        ...detailId.list.slice(
+                          idxToDelete + 1,
+                          detailId.list.length
+                        ),
+                      ],
+                      beforePlaceDetailId: null,
+                    });
                   }}
                 />
               ))}

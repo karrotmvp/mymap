@@ -73,7 +73,12 @@ const MainSlide = ({
           </div>
           {recommendPost && (
             <Recommend
-              onClick={() => setDetailId([...detailId, recommendPost.postId])}
+              onClick={() =>
+                setDetailId({
+                  list: [...detailId.list, recommendPost.postId],
+                  beforePlaceDetailId: null,
+                })
+              }
             >
               <img src={recommendPostImg} alt="recommend" />
               <div className="recommend-info">

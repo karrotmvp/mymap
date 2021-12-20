@@ -32,6 +32,8 @@ import {
   PageBeforeWrite,
   RegionId,
   PostToEdit,
+  DetailId,
+  PlaceDetailId,
 } from "../../Shared/atom";
 import { useRouteMatch, useHistory, useParams } from "react-router";
 import SaveButton from "./SaveButton";
@@ -78,6 +80,8 @@ const Detail = ({
   const [isDeleteAlertOpened, setIsDeleteAlertOpened] = useState(false);
   const [isCloseAlertOpened, setIsCloseAlertOpened] = useState(false);
   const [isSearchOpened, setIsSearchOpened] = useState(false);
+  const detailId = useRecoilValue(DetailId);
+  const setPlaceDetailId = useSetRecoilState(PlaceDetailId);
 
   const regionId = useRecoilValue(RegionId);
   const [pageBeforeWrite, setPageBeforeWrite] = useRecoilState(PageBeforeWrite);
@@ -188,16 +192,15 @@ const Detail = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   if (close) {
+                    if (detailId.beforePlaceDetailId) {
+                      setPlaceDetailId(detailId.beforePlaceDetailId);
+                    }
                     close();
                   } else {
                     history.push("/");
                   }
                 }}
               />
-            )}
-
-            {state.isScrollUp && (
-              <div className="post-title">{post?.title}</div>
             )}
 
             <div

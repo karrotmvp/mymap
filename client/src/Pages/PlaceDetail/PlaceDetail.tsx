@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { useGetPlaceDetail } from "../../api/place";
 import {
   Call,
@@ -189,17 +189,7 @@ const PlaceDetail = ({
   );
 };
 
-const slideFromLeft = keyframes`
-  0% {
-    margin-left: 100%;
-  }
-  100% {
-    margin-left: 0;
-  }
-`;
-
 const Wrapper = styled.div`
-  animation: ${slideFromLeft} 0.25s linear;
   position: fixed;
   top: 0;
   left: 0;

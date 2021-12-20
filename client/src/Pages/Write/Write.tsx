@@ -37,7 +37,7 @@ const Write = () => {
 
   // 상세 -> 수정
   useEffect(() => {
-    setDetailId([]);
+    setDetailId({ list: [], beforePlaceDetailId: null });
   }, []);
 
   const { isExact: isWrite } =
