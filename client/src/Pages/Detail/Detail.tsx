@@ -379,15 +379,17 @@ ${post?.regionName}에 인증해 주세요.`}
         </Alert>
       )}
 
-      {isSearchOpened && post && (
-        <SearchPlace
-          places={post.pins.map((pin) => pin.place) ?? []}
-          postIdFromProps={post.postId}
-          refetchDetail={() => refetchPost()}
-          {...{ setIsSearchOpened, refetchPost }}
-          close={() => setIsSearchOpened(false)}
-        />
-      )}
+      {isSearchOpened &&
+        post &&
+        regionGroup?.find((id) => id === post?.regionId) && (
+          <SearchPlace
+            places={post.pins.map((pin) => pin.place) ?? []}
+            postIdFromProps={post.postId}
+            refetchDetail={() => refetchPost()}
+            {...{ setIsSearchOpened, refetchPost }}
+            close={() => setIsSearchOpened(false)}
+          />
+        )}
 
       {post?.user.userId !== viewerInfo.userId &&
         post &&
