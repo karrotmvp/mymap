@@ -105,32 +105,50 @@ const Around = () => {
   }, []);
 
   // 검색
+  const searchVal = useInput("");
+
+  const [result, setResult] = useState<PlaceType[] | []>([]);
   const [resultHasMore, setResultHasMore] = useState(true);
   const [resultPage, setResultPage] = useState(1);
-  const searchVal = useInput("");
-  const [result, setResult] = useState<PlaceType[] | []>([]);
-  const { data: searchResult, refetch: refetchSearchResult } = useGetSearch(
-    regionId,
-    {
-      query: searchVal.value,
-      page: resultPage,
-    }
-  );
+
+  const { refetch: refetchSearchResult } = useGetSearch(regionId, {
+    query: searchVal.value,
+    page: resultPage,
+  });
+
   const getSearchItems = useCallback(async () => {
-    await refetchSearchResult();
-    if (searchResult) setResult(searchResult);
+    if (searchVal.value.length > 0) {
+      const data = await refetchSearchResult();
+      setResult(data.data ?? []);
+    }
   }, [searchVal.value]);
   const debouncedSearchVal = useDebounce(getSearchItems, 200);
 
   useEffect(() => {
     setResultPage(1);
     setResultHasMore(true);
-    if (searchVal.value.length > 0) debouncedSearchVal();
+    debouncedSearchVal();
   }, [searchVal.value]);
 
+  // 무한 스크롤
   const handleResultNext = () => {
     setResultPage(resultPage + 1);
   };
+  useEffect(() => {
+    const fetchResult = async () => {
+      const data = await refetchSearchResult();
+      if (data.data) {
+        if (data.data.length < 1) {
+          setResultHasMore(false);
+        } else {
+          setResult([...result, ...data.data]);
+        }
+      }
+    };
+    if (searchVal.value.length > 0) {
+      fetchResult();
+    }
+  }, [resultPage]);
 
   return (
     <Wrapper>
